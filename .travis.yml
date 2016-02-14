@@ -9,6 +9,6 @@
  before_script:
    - mkdir build
    - cd build
-   - qmake ..\minotaur.pro -r "CONFIG+=debug" "CONFIG+=qml_debug"
+   - qmake -o makefile ..\minotaur.pro
 
  script: make
