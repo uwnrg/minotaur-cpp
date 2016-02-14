@@ -12,9 +12,3 @@
    - cmake ..
 
  script: make
-
- notifications:
-   email:
-     - xxx@users.sourceforge.net
-   on_success: change
-   on_failure: always
