@@ -1,5 +1,7 @@
 # Minotaur C++ Reimplementation
-[![Build Status](https://travis-ci.org/Controls-UWNRG/minotaur-cpp.svg?branch=master)](https://travis-ci.org/Controls-UWNRG/minotaur-cpp)
+|  master  |  develop  |
+|:--------:|:---------:|
+|[![Build Status](https://travis-ci.org/Controls-UWNRG/minotaur-cpp.svg?branch=master)](https://travis-ci.org/Controls-UWNRG/minotaur-cpp)|[![Build Status](https://travis-ci.org/Controls-UWNRG/minotaur-cpp.svg?branch=develop)](https://travis-ci.org/Controls-UWNRG/minotaur-cpp)|
 
 ### C++ Migration
 #### Why C++? Why the migration?

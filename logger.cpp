@@ -1,5 +1,6 @@
 #include "logger.h"
 #include <ctime>
+#include <stdio.h>
 
 Logger::Logger() {
     //m_type = LogType::ERROR;
