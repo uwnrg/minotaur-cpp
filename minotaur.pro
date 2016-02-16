@@ -16,11 +16,13 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     controller.cpp \
     actuator.cpp \
-    logger.cpp
+    logger.cpp \
+    clock_time.cpp
 
 HEADERS  += mainwindow.h \
     controller.h \
     actuator.h \
-    logger.h
+    logger.h \
+    clock_time.h
 
 FORMS    += mainwindow.ui
