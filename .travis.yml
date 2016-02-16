@@ -12,3 +12,6 @@
    - qmake -o makefile ../minotaur.pro
 
  script: make
+ 
+ notifications:
+  slack: uwnrg:zSxSzV4CSAa1o8tA6jjMCJSP
