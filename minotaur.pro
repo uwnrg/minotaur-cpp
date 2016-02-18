@@ -10,19 +10,22 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = minotaur
 TEMPLATE = app
+DESTDIR = builds
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    controller.cpp \
-    actuator.cpp \
-    logger.cpp \
-    clock_time.cpp
+SOURCES += \
+    code/main.cpp \
+    code/controller/actuator.cpp \
+    code/controller/controller.cpp \
+    code/gui/mainwindow.cpp \
+    code/utility/clock_time.cpp \
+    code/utility/logger.cpp
 
-HEADERS  += mainwindow.h \
-    controller.h \
-    actuator.h \
-    logger.h \
-    clock_time.h
+HEADERS  += \
+    code/controller/actuator.h \
+    code/controller/controller.h \
+    code/gui/mainwindow.h \
+    code/utility/clock_time.h \
+    code/utility/logger.h
 
-FORMS    += mainwindow.ui
+FORMS += code/gui/mainwindow.ui
