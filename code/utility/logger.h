@@ -2,6 +2,8 @@
 #define LOGGER_H
 #include <string>
 #include <iostream>
+#include <ctime>
+#include <stdio.h>
 
 #define TIME_CHAR_BUFFER 10
 
@@ -15,17 +17,15 @@ enum LogType {
 
 class Logger {
 public:
-    Logger();
-    bool Log(std::string message);
-    void SetType(LogType type) {m_type = type; }
-    ~Logger();
+    static bool Log(std::string message);
+    static void SetType(LogType type) {m_type = type; }
 
 private:
-    std::string m_buffer;
-    LogType m_type;
-    struct tm *m_timeinfo;
-    time_t m_rawtime;
-    std::string GetCurrentTime();
+    static std::string m_buffer;
+    static LogType m_type;
+    static struct tm *m_timeinfo;
+    static time_t m_rawtime;
+    static std::string GetCurrentTime();
 };
 
 #endif // LOGGER_H
