@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTextBrowser>
 
 #define DEFAULT_TITLE "minotaur"
 
@@ -15,6 +16,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0, const char* title = DEFAULT_TITLE);
+    QTextBrowser* GetLogView();
     ~MainWindow();
 
 private:
