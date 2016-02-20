@@ -1,19 +1,26 @@
 #include "logger.h"
-#include <ctime>
-#include <stdio.h>
 
 
 std::string Logger::m_buffer;
 LogType Logger::m_type;
 struct tm* Logger::m_timeinfo;
 time_t Logger::m_rawtime;
+QTextBrowser* Logger::log_text_browser = NULL;
+
+void Logger::SetStream(QTextBrowser* log_stream) {
+    log_text_browser = log_stream;
+}
 
 //TODO: Overload ostream operator
 bool Logger::Log (std::string message) {
     Logger::m_buffer = Logger::GetCurrentTime() + message;
-
-    std::cout << m_buffer << std::endl;
-
+    if (Logger::log_text_browser) {
+        //log it
+        log_text_browser->append(QString::fromStdString(m_buffer));
+    }
+    else {
+        std::cout << m_buffer << std::endl;
+    }
     return true;
 }
 
