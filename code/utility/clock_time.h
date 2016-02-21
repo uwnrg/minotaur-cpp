@@ -2,15 +2,16 @@
 #define CLOCK_TIME_H
 
 #include <ctime>
+#include <stdio.h>
+#include <string>
 
+#define TIME_CHAR_BUFFER 10
 class ClockTime {
 public:
-    inline ClockTime() { }
-    inline static void GetStringTime () { }
-    inline virtual ~ClockTime() { }
+    static std::string GetCurrentTime ();
 
 private:
-    static time_t* m_rawtime;
+    static time_t m_rawtime;
     static struct tm* m_timeinfo;
 };
 
