@@ -4,32 +4,26 @@
 #include <QTextBrowser>
 #include <QString>
 #include <iostream>
-#include <ctime>
-#include <stdio.h>
 
-#define TIME_CHAR_BUFFER 10
+#include "clock_time.h"
 
 enum LogType {
-    ERROR,
-    WARNING,
     INFO,
+    ERROR,
 
     NUM_LOG_TYPES
 };
 
 class Logger {
 public:
-    static bool Log(std::string message);
+    static bool Log(std::string message, LogType type = INFO);
     static void SetType(LogType type) {m_type = type; }
     static void SetStream(QTextBrowser* log_stream);
 
 private:
     static std::string m_buffer;
     static LogType m_type;
-    static QTextBrowser* log_text_browser;
-    static struct tm *m_timeinfo;
-    static time_t m_rawtime;
-    static std::string GetCurrentTime();
+    static QTextBrowser* m_outfield;
 };
 
 #endif // LOGGER_H
