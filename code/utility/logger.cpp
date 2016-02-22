@@ -3,9 +3,9 @@
 
 std::string Logger::m_buffer;
 LogType Logger::m_type;
-QTextBrowser* Logger::m_outfield = NULL;
+QTextEdit* Logger::m_outfield = NULL;
 
-void Logger::SetStream(QTextBrowser* log_stream) {
+void Logger::SetStream(QTextEdit* log_stream) {
     m_outfield = log_stream;
 }
 

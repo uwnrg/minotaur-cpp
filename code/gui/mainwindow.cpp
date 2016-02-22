@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
     ui->setupUi(this);
 }
 
-QTextBrowser* MainWindow::GetLogView() {
+QTextEdit* MainWindow::GetLogView() {
     return ui->log_viewer;
 }
 

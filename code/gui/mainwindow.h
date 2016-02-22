@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0, const char* title = DEFAULT_TITLE);
-    QTextBrowser* GetLogView();
+    QTextEdit* GetLogView();
     ~MainWindow();
 
 private:
