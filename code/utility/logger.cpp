@@ -2,7 +2,6 @@
 
 
 std::string Logger::m_buffer;
-LogType Logger::m_type;
 QTextEdit* Logger::m_outfield = NULL;
 
 void Logger::SetStream(QTextEdit* log_stream) {
@@ -11,19 +10,8 @@ void Logger::SetStream(QTextEdit* log_stream) {
 
 //TODO: Overload ostream operator
 bool Logger::Log (std::string message, LogType type) {
-    switch (type) {
-        case INFO:
-            Logger::m_buffer = ClockTime::GetCurrentTime() + message;
-            break;
-
-        case ERROR:
-            //TODO: Set custom color of to the buffer
-            break;
-
-        default:
-            //TODO: Address  unrecognised type here
-            break;
-    }
+    std::string color = Logger::GetTextColor(type);
+    Logger::m_buffer = "<font color=\"" + color + "\">" + ClockTime::GetCurrentTime() + message + "</font>";
 
     if (Logger::m_outfield) {
         //log it
