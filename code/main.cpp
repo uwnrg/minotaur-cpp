@@ -10,6 +10,8 @@ int main(int argc, char *argv[])
     Logger::SetStream(w->GetLogView());
     Logger::Log("Logger initialized.");
 
+    Logger::Log("ERROR: No controllers were found!", Logger::ERROR);
+
     w->show();
 
     return app.exec();

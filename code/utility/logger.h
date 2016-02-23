@@ -7,21 +7,19 @@
 
 #include "clock_time.h"
 
-enum LogType {
-    INFO,
-    ERROR,
-
-    NUM_LOG_TYPES
-};
-
 class Logger {
 public:
+    enum LogType {
+        INFO,
+        ERROR,
+
+        NUM_LOG_TYPES
+    };
     static bool Log(std::string message, LogType type = INFO);
     static void SetStream(QTextEdit* log_stream);
 
 private:
     static std::string m_buffer;
-    static LogType m_type;
     static QTextEdit* m_outfield;
     inline static std::string GetTextColor(LogType type) {
         switch (type) {
