@@ -12,6 +12,9 @@ TARGET = minotaur
 TEMPLATE = app
 DESTDIR = builds
 
+# Include third party libraries
+include (third-party/qextserialport.pri)
+
 
 SOURCES += \
     code/main.cpp \
