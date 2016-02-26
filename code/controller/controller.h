@@ -1,32 +1,31 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
+#include "../utility/logger.h"
 
-enum Mode {
-    EMMA,
-    SAM,
+namespace controller {
 
-    NUM_MODES
-};
-
-enum Dir {
-    UP,
-    DOWN,
-    RIGHT,
-    LEFT,
-
-    NUM_DIRS
-};
+}
 
 class Controller
 {
-
 public:
-    Controller(Mode);
-    void move(Dir);
-    void change_mode (Mode);
-    ~Controller();
-private:
-    Mode m_mode;
+    enum Mode {
+        EMMA,
+        SAM,
+
+        NUM_MODES
+    };
+
+    enum Dir {
+        UP,
+        DOWN,
+        RIGHT,
+        LEFT,
+
+        NUM_DIRS
+    };
+    // Common robot functions
+    virtual void move(Dir) {}
 };
 
 #endif // CONTROLLER_H
