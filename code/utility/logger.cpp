@@ -6,6 +6,7 @@ QTextEdit* Logger::m_outfield = NULL;
 
 void Logger::SetStream(QTextEdit* log_stream) {
     m_outfield = log_stream;
+    Logger::Log("Logger's stream has been set.");
 }
 
 //TODO: Overload ostream operator
