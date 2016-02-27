@@ -8,6 +8,10 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
     ui->setupUi(this);
 }
 
+QTextEdit* MainWindow::GetLogView() {
+    return ui->log_viewer;
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;

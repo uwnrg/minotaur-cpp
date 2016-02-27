@@ -7,13 +7,12 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     MainWindow *w = new MainWindow();
 
-    Logger *logger = new Logger();
+    Logger::SetStream(w->GetLogView());
+    Logger::Log("Logger initialized.");
+
+    Logger::Log("ERROR: No controllers were found!", Logger::ERROR);
+
     w->show();
 
-    //initialize all the controllers
-    std::string message = "Controllers initialized";
-    //bool shit = logger.Log(message);
-
-    //delete logger;
     return app.exec();
 }

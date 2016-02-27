@@ -1,34 +1,24 @@
 #include "logger.h"
-#include <ctime>
-#include <stdio.h>
 
-Logger::Logger() {
-    //m_type = LogType::ERROR;
-    m_buffer = "";
 
-    std::cout << Logger::GetCurrentTime() << "Logger initialized" << std::endl;
+std::string Logger::m_buffer;
+QTextEdit* Logger::m_outfield = NULL;
+
+void Logger::SetStream(QTextEdit* log_stream) {
+    m_outfield = log_stream;
 }
 
 //TODO: Overload ostream operator
-bool Logger::Log (std::string message) {
-    m_buffer = Logger::GetCurrentTime() + message;
+bool Logger::Log (std::string message, LogType type) {
+    std::string color = Logger::GetTextColor(type);
+    Logger::m_buffer = "<font color=\"" + color + "\">" + ClockTime::GetCurrentTime() + message + "</font>";
 
-    std::cout << m_buffer << std::endl;
-
+    if (Logger::m_outfield) {
+        //log it
+        m_outfield->append(QString::fromStdString(m_buffer));
+    }
+    else {
+        std::cout << m_buffer << std::endl;
+    }
     return true;
-}
-
-std::string Logger::GetCurrentTime() {
-    time(&m_rawtime);
-    m_timeinfo = localtime(&m_rawtime);
-
-    char clock_time [TIME_CHAR_BUFFER];
-    sprintf(clock_time, "%.2d:%.2d:%.2d ", m_timeinfo->tm_hour, m_timeinfo->tm_min, m_timeinfo->tm_sec);
-
-    std::string time_in_str(clock_time);
-
-    return time_in_str;
-}
-
-Logger::~Logger() {
 }
