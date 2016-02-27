@@ -2,10 +2,6 @@
 #define CONTROLLER_H
 #include "../utility/logger.h"
 
-namespace controller {
-
-}
-
 class Controller
 {
 public:
