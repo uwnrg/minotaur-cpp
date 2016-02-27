@@ -1,31 +1,36 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 #include <string>
+#include <QTextEdit>
+#include <QString>
 #include <iostream>
 
-#define TIME_CHAR_BUFFER 10
-
-enum LogType {
-    ERROR,
-    WARNING,
-    INFO,
-
-    NUM_LOG_TYPES
-};
+#include "clock_time.h"
 
 class Logger {
 public:
-    Logger();
-    bool Log(std::string message);
-    void SetType(LogType type) {m_type = type; }
-    ~Logger();
+    enum LogType {
+        INFO,
+        ERROR,
+
+        NUM_LOG_TYPES
+    };
+    static bool Log(std::string message, LogType type = INFO);
+    static void SetStream(QTextEdit* log_stream);
 
 private:
-    std::string m_buffer;
-    LogType m_type;
-    struct tm *m_timeinfo;
-    time_t m_rawtime;
-    std::string GetCurrentTime();
+    static std::string m_buffer;
+    static QTextEdit* m_outfield;
+    inline static std::string GetTextColor(LogType type) {
+        switch (type) {
+            case INFO:
+                return "black";
+            case ERROR:
+                return "red";
+            default:
+                return "black";
+        }
+    }
 };
 
 #endif // LOGGER_H
