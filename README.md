@@ -12,7 +12,8 @@ C++ is not an angel either. However, good structural foundations in a powerful o
 * Cross-platform development and deployment
 * Maintainable object-oriented design and architecture
 * Abstracted implementation and approachable interface
-* High-speed architecture for real-time data crunching (read image recognition)  
+* High-speed architecture for real-time data crunching (read image recognition)
+* Expose controller API that listens to Python scripts for quick navigation deployment
 
 ### Development
 #### Setup
@@ -34,6 +35,8 @@ cd build
 qmake -o makefile ../minotaur.pro
 make
 ```
+**Visual Studio**: If you want to develop on Visual Studio and don't already have Qt setup there, (for VS 2013 and older) download the Qt Visual Studio Add-in from [here](http://download.qt.io/official_releases/vsaddin/). If you are using **Visual Studio 2015** or above, you need to download this [package](https://visualstudiogallery.msdn.microsoft.com/c89ff880-8509-47a4-a262-e4fa07168408) instead. Then restart Visual Studio, click on the Qt menu, go to options and add your Qt versions.  
+Once you have Qt setup, go to `QT5`->`Open Qt Project File (.pro)` and open `minotaur.pro` from this repository and you are all set!
 ###### Cygwin
 Make sure you have the following packages installed:
 * `xorg-server`
