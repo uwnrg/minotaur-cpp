@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QTextBrowser>
 
+#include "actuatorsetup.h"
+
 #define DEFAULT_TITLE "minotaur"
 
 namespace Ui {
@@ -19,8 +21,15 @@ public:
     QTextEdit* GetLogView();
     ~MainWindow();
 
+public slots:
+    void OpenActuatorSetup();
+
+private slots:
+    void on_move_button_clicked();
+
 private:
     Ui::MainWindow *ui;
+    ActuatorSetup *actuator_setup_window;
 };
 
 #endif // MAINWINDOW_H
