@@ -4,11 +4,11 @@
 #include "controller.h"
 #include "qextserialport.h"
 
+#define BYTE_RANGE	256
+#define DATA_SIZE	4
 
-#define BAUD_RATE 9600
-#define INSTR_SIZE 6
-#define DATA_SIZE 4
-#define BYTE_RANGE 256
+// For Zaber, settings must be: 9600 baud, no hand shaking, 8 data bits, no parity, one stop bit.
+const PortSettings DEFAULT_SETTINGS = { BAUD9600, DATA_8, PAR_NONE, STOP_1, FLOW_XONXOFF, 10 };
 
 
 class QextSerialPort;
@@ -16,10 +16,10 @@ class QextSerialPort;
 class Actuator : public Controller
 {
 public:
-    Actuator(const QString& serial_port, QextSerialPort::QueryMode mode = QextSerialPort::EventDriven, QObject * parent = 0);
+    Actuator(const QString& serial_port, const PortSettings& settings = DEFAULT_SETTINGS, QextSerialPort::QueryMode mode = QextSerialPort::EventDriven);
 
-    void SetSerPort(const QString& serial_port);
-    QString* GetAvailablePorts() const;
+    int SetSerPort(const QString& serial_port);
+	int ChangeSettings(const PortSettings& settings);
     void Move(Controller::Dir);
     ~Actuator();
 
