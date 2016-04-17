@@ -1,27 +1,34 @@
+#include <thread>
+#include <chrono>
+
 #include "actuator.h"
 #include "../utility/logger.h"
 
 Actuator::Actuator(const QString& serial_port, const PortSettings& settings, QextSerialPort::QueryMode mode) {
     m_serial_port = new QextSerialPort(serial_port, settings, mode);
+	m_invert_x = 1;
+	m_invert_y = 1;
     //on successful connection
     if (m_serial_port->lastError() == 0) {
-        Logger::Log(serial_port.toStdString() + " successfully opened!", Logger::INFO);
+        Logger::log(serial_port.toStdString() + " successfully opened!", Logger::INFO);
         m_serial_port->flush();
+		// Send a renumbering request for the devices
+		setDeviceNumber();
     }
     else {
-        Logger::Log("ERROR: " + serial_port.toStdString() + " could not be opened! " + m_serial_port->errorString().toStdString(), Logger::ERROR);
+        Logger::log("ERROR: " + serial_port.toStdString() + " could not be opened! " + m_serial_port->errorString().toStdString(), Logger::ERROR);
     }
 }
 
-char* const Actuator::ConvertDataToBytes(long int data) {
+char* const Actuator::convertDataToBytes(long int data) {
 	if (data < 0) {
-		data = IntPow(BYTE_RANGE, 4) + data;
+		data = intPow(BYTE_RANGE, 4) + data;
 	}
 
 	char result[DATA_SIZE];
 	
 	for (int i = DATA_SIZE - 1; i >= 0; ++i) {
-		int temp = IntPow(BYTE_RANGE, i);
+		int temp = intPow(BYTE_RANGE, i);
 		result[i] = data / temp;
 		data = data - temp;
 	}
@@ -29,20 +36,25 @@ char* const Actuator::ConvertDataToBytes(long int data) {
 	return result;
 }
 
-void Actuator::SetDeviceNumber() {
-	char instr[6];
+void Actuator::setDeviceNumber() {
+	char instr[] = { 0, 2, 0, 0, 0, 0 };
+	
+	m_serial_port->write(instr);
+
+	m_x_device = 0;
+	m_y_device = 1;
 }
 
-int const Actuator::IntPow(int x, int p) {
+int const Actuator::intPow(int x, int p) {
 	if (p == 0) return 1;
 	if (p == 1) return x;
 
-	int tmp = IntPow(x, p / 2);
+	int tmp = intPow(x, p / 2);
 	if (p % 2 == 0) return tmp * tmp;
 	else return x * tmp * tmp;
 }
 
-int Actuator::SetSerPort(const QString& serial_port) {
+int Actuator::setSerPort(const QString& serial_port) {
 	if (m_serial_port->portName() == serial_port) {
 		return 0;
 	}
@@ -54,13 +66,13 @@ int Actuator::SetSerPort(const QString& serial_port) {
 	
 	m_serial_port->setPortName(serial_port);
 	if (m_serial_port->lastError() != 0) {
-		Logger::Log(m_serial_port->errorString().toStdString(), Logger::ERROR);
+		Logger::log(m_serial_port->errorString().toStdString(), Logger::ERROR);
 		return -1;
 	}
 	return 0;
 }
 
-int Actuator::ChangeSettings(const PortSettings& settings) {
+int Actuator::changeSettings(const PortSettings& settings) {
 	m_serial_port->setBaudRate(settings.BaudRate);
 	m_serial_port->setDataBits(settings.DataBits);
 	m_serial_port->setParity(settings.Parity);
@@ -69,18 +81,59 @@ int Actuator::ChangeSettings(const PortSettings& settings) {
 	m_serial_port->setTimeout(settings.Timeout_Millisec);
 
 	if (m_serial_port->lastError() != 0) {
-		Logger::Log(m_serial_port->errorString().toStdString(), Logger::ERROR);
+		Logger::log(m_serial_port->errorString().toStdString(), Logger::ERROR);
 		return -1;
 	}
 	return 0;
+}
+
+void Actuator::invertDevices() {
+	unsigned char temp = m_x_device;
+	m_x_device = m_y_device;
+	m_y_device = temp;
 }
 
 Actuator::~Actuator() {
     delete m_serial_port;
 }
 
-void Actuator::Move(Controller::Dir) {
+void Actuator::move(Vector2i dir, int time) {
+	std::thread x(Actuator::moveActuator, m_serial_port, m_x_device, dir.x, time);
+	std::thread y(Actuator::moveActuator, m_serial_port, m_y_device, dir.y, time);
 
+	// Wait for the threads to finish before exiting the function
+	x.join();
+	y.join();
+
+	Logger::log("Moved { " + std::to_string(dir.x) + ", " + std::to_string(dir.y) + " } in " + std::to_string(time) + " milliseconds.", Logger::INFO);
+}
+
+void Actuator::moveActuator(QextSerialPort* ser_port, const unsigned char device, const int value, const int time) {
+	std::chrono::milliseconds sleep_step = std::chrono::milliseconds(time / value);
+	char* instr = new char(CMD_SIZE + DATA_SIZE);
+
+	// Setup device and command numbers
+	instr[0] = device;
+	instr[1] = ZaberCmd::REL_MOVE;
+
+	char* data = convertDataToBytes(STEP_FACTOR);
+
+	for (int i = 0; i < DATA_SIZE; i++) {
+		instr[i + 2] = data[i];
+	}
+
+
+	for (int i = value; i > 0; i--) {
+		if (ser_port->isOpen()) {
+			ser_port->write(instr, CMD_SIZE + DATA_SIZE);
+		}
+		else {
+			Logger::log("ERROR: Failed to write to serial port " + (ser_port->portName()).toStdString() + "because it's not open.", Logger::ERROR);
+			return;
+		}
+
+		std::this_thread::sleep_for(sleep_step);
+	}
 }
 
 //TODO: Add static method for getting current configuration of a given port
