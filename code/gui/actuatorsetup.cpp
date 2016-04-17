@@ -71,7 +71,7 @@ void ActuatorSetup::OnSettingsApplied(){
 		ui->timeoutBox->value()
 	};
 
-	if (m_emma->ChangeSettings(settings) == 0) {
+	if (m_emma->changeSettings(settings) == 0) {
 		m_current_settings = settings;
 	}
 	else {
@@ -81,7 +81,7 @@ void ActuatorSetup::OnSettingsApplied(){
 
 void ActuatorSetup::OnPortNameChanged(const QString & name)
 {
-	m_emma->SetSerPort(name);
+	m_emma->setSerPort(name);
 }
 
 void ActuatorSetup::OnPortAddedOrRemoved()

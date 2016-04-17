@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     MainWindow *w = new MainWindow();
 
     //Set up logger
-    Logger::SetStream(w->GetLogView());
+    Logger::setStream(w->GetLogView());
 
     w->show();
 

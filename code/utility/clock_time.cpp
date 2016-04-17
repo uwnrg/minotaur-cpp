@@ -4,7 +4,7 @@
 time_t ClockTime::m_rawtime;
 struct tm* ClockTime::m_timeinfo;
 
-std::string ClockTime::GetCurrentTime() {
+std::string ClockTime::getCurrentTime() {
     time(&ClockTime::m_rawtime);
     ClockTime::m_timeinfo = localtime(&ClockTime::m_rawtime);
 

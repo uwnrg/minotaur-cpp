@@ -8,7 +8,7 @@
 #define TIME_CHAR_BUFFER 10
 class ClockTime {
 public:
-    static std::string GetCurrentTime ();
+    static std::string getCurrentTime ();
 
 private:
     static time_t m_rawtime;
