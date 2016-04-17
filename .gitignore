@@ -236,3 +236,4 @@ FakesAssemblies/
 
 # Visual Studio proj files
 *.vcxproj*
+*.sln
