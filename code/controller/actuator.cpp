@@ -98,41 +98,65 @@ Actuator::~Actuator() {
 }
 
 void Actuator::move(Vector2i dir, int time) {
-	std::thread x(Actuator::moveActuator, m_serial_port, m_x_device, dir.x, time);
-	std::thread y(Actuator::moveActuator, m_serial_port, m_y_device, dir.y, time);
+	std::promise<bool> error_x, error_y;
+	auto ferror_x = error_x.get_future();
+	auto ferror_y = error_y.get_future();
+
+	std::thread x_thread(Actuator::moveActuator, m_serial_port, m_x_device, dir.x, time, std::ref(error_x));
+	std::thread y_thread(Actuator::moveActuator, m_serial_port, m_y_device, dir.y, time, std::ref(error_y));
 
 	// Wait for the threads to finish before exiting the function
-	x.join();
-	y.join();
+	x_thread.join();
+	y_thread.join();
 
-	Logger::log("Moved { " + std::to_string(dir.x) + ", " + std::to_string(dir.y) + " } in " + std::to_string(time) + " milliseconds.", Logger::INFO);
-}
-
-void Actuator::moveActuator(QextSerialPort* ser_port, const unsigned char device, const int value, const int time) {
-	std::chrono::milliseconds sleep_step = std::chrono::milliseconds(time / value);
-	char* instr = new char(CMD_SIZE + DATA_SIZE);
-
-	// Setup device and command numbers
-	instr[0] = device;
-	instr[1] = ZaberCmd::REL_MOVE;
-
-	char* data = convertDataToBytes(STEP_FACTOR);
-
-	for (int i = 0; i < DATA_SIZE; i++) {
-		instr[i + 2] = data[i];
+	// Check if any errors were generated using the flags
+	bool success;
+	try {
+		success = (ferror_x.get() || ferror_y.get());
+	}
+	catch (std::exception& e) {
+		Logger::log(e.what(), Logger::ERROR);
+		success = false;
 	}
 
+	if (success) {
+		Logger::log("Moved { " + std::to_string(dir.x) + ", " + std::to_string(dir.y) + " } in " + std::to_string(time) + " milliseconds.", Logger::INFO);
+	}
+}
 
-	for (int i = value; i > 0; i--) {
-		if (ser_port->isOpen()) {
-			ser_port->write(instr, CMD_SIZE + DATA_SIZE);
-		}
-		else {
-			Logger::log("ERROR: Failed to write to serial port " + (ser_port->portName()).toStdString() + "because it's not open.", Logger::ERROR);
-			return;
+void Actuator::moveActuator(QextSerialPort* ser_port, const unsigned char device, const int value, const int time, std::promise<bool>& success) {
+	try {
+		std::chrono::milliseconds sleep_step = std::chrono::milliseconds(time / value);
+		char* instr = new char(CMD_SIZE + DATA_SIZE);
+
+		// Setup device and command numbers
+		instr[0] = device;
+		instr[1] = ZaberCmd::REL_MOVE;
+
+		char* data = convertDataToBytes(STEP_FACTOR);
+
+		for (int i = 0; i < DATA_SIZE; i++) {
+			instr[i + 2] = data[i];
 		}
 
-		std::this_thread::sleep_for(sleep_step);
+		// This is yet to be tested, sorry I don't have Zaber actuators at home :(
+		for (int i = value; i > 0; i--) {
+			if (ser_port->isOpen()) {
+				ser_port->write(instr, CMD_SIZE + DATA_SIZE);
+			}
+			else {
+				Logger::log("ERROR: Failed to write to serial port " + (ser_port->portName()).toStdString() + "because it's not open.", Logger::ERROR);
+				success.set_value(false);
+				return;
+			}
+
+			std::this_thread::sleep_for(sleep_step);
+		}
+
+		success.set_value(true);
+	}
+	catch (...) {
+		success.set_exception(std::current_exception());
 	}
 }
 

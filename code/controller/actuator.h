@@ -1,6 +1,8 @@
 #ifndef ACTUATOR_H
 #define ACTUATOR_H
 
+#include <future>
+
 #include "controller.h"
 #include "qextserialport.h"
 
@@ -47,7 +49,7 @@ private:
 	static char* const convertDataToBytes(long int data);
 	void setDeviceNumber();
 	static int const intPow(int x, int p);
-	static void moveActuator(QextSerialPort* ser_port, const unsigned char device, const int value, const int time);
+	static void moveActuator(QextSerialPort* ser_port, const unsigned char device, const int value, const int time, std::promise<bool>& success);
 };
 
 #endif // ACTUATOR_H
