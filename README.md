@@ -1,7 +1,7 @@
 # Minotaur C++ Reimplementation
 |  master  |  develop  |
 |:--------:|:---------:|
-|[![Build Status](https://travis-ci.org/Controls-UWNRG/minotaur-cpp.svg?branch=master)](https://travis-ci.org/Controls-UWNRG/minotaur-cpp)|[![Build Status](https://travis-ci.org/Controls-UWNRG/minotaur-cpp.svg?branch=develop)](https://travis-ci.org/Controls-UWNRG/minotaur-cpp)|
+|[![Build Status](https://travis-ci.org/Controls-UWNRG/minotaur-cpp.svg?branch=master)](https://travis-ci.org/uwnrg/minotaur-cpp)|[![Build Status](https://travis-ci.org/Controls-UWNRG/minotaur-cpp.svg?branch=develop)](https://travis-ci.org/uwnrg/minotaur-cpp)|
 
 ### Why C++? Why the migration?
 Python is situationally a great language. It feels intuitive when you're dealing with small programs. [It's all fresh in your head](http://qr.ae/Rgd6JH) since you are dealing with a minimal number of custom objects/types. However, as a project gets bigger, and extends to thousands of lines of code, it becomes extremely hard to look at a codebase that you are either unfamiliar with or haven't worked with in recent times. One of the main reasons for this is that Python is a [dynamically-typed language](https://en.wikipedia.org/wiki/Dynamic_programming_language). And also the fact that python has terrible object-oriented programming features is just more fuel to the fire. Let's not even talk about real-time performance of the language, that's a long rant.  
