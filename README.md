@@ -1,7 +1,7 @@
 # Minotaur C++ Reimplementation
 |  master  |  develop  |
 |:--------:|:---------:|
-|[![Build Status](https://travis-ci.org/Controls-UWNRG/minotaur-cpp.svg?branch=master)](https://travis-ci.org/uwnrg/minotaur-cpp)|[![Build Status](https://travis-ci.org/Controls-UWNRG/minotaur-cpp.svg?branch=develop)](https://travis-ci.org/uwnrg/minotaur-cpp)|
+|[![Build Status](https://travis-ci.org/uwnrg/minotaur-cpp.svg?branch=master)](https://travis-ci.org/uwnrg/minotaur-cpp)|[![Build Status](https://travis-ci.org/uwnrg/minotaur-cpp.svg?branch=develop)](https://travis-ci.org/uwnrg/minotaur-cpp)|
 
 ### Why C++? Why the migration?
 Python is situationally a great language. It feels intuitive when you're dealing with small programs. [It's all fresh in your head](http://qr.ae/Rgd6JH) since you are dealing with a minimal number of custom objects/types. However, as a project gets bigger, and extends to thousands of lines of code, it becomes extremely hard to look at a codebase that you are either unfamiliar with or haven't worked with in recent times. One of the main reasons for this is that Python is a [dynamically-typed language](https://en.wikipedia.org/wiki/Dynamic_programming_language). And also the fact that python has terrible object-oriented programming features is just more fuel to the fire. Let's not even talk about real-time performance of the language, that's a long rant.  
@@ -53,7 +53,7 @@ make
 When running `minotaur.exe`, however, you need to first launch an X11 window server. Simply run the `xinit` command and you should be greeted by a big window with a small terminal in it. How window server works is beyond the scope of this document, you can read up on it if you are interesting. Anyways, once in the new terminal, you can run `./minotaur.exe` to launch the program.
 
 #### Contributing
-Any help would be greatly appreciated. The entire code base is pretty big, there is a lot of code to be rewritten. If you want to help out, let [me](https://github.com/sadmansk) know and we will figure something out. I will be adding a C++ Style guide and best practices document fairly shortly.
+Any help would be greatly appreciated. The entire code base is pretty big, there is a lot of code to be rewritten. If you want to help out, let [me](https://github.com/sadmansk) know and we will figure something out. We will be following [this](https://sadmansk.gitbooks.io/cpp-best-practices/content/) style guide, so please read it before contributing.
 
 #### License
 ```
