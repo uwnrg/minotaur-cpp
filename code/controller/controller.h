@@ -5,6 +5,7 @@
 struct Vector2i {
 	int x = 0;
 	int y = 0;
+	Vector2i(int x, int y) : x(x), y(y) {};
 	// TODO: Add ostream operator overloading
 };
 
@@ -34,10 +35,9 @@ public:
 		NUM_AXES
 	};
     // Common robot functions
-	void move(Dir);
+	static Vector2i move(Dir);
 	void invertAxis(Axis);
-	virtual void move(Vector2i, int time = 0) { }
-
+	
 protected:
 	int m_invert_x, m_invert_y;
 };

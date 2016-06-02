@@ -18,14 +18,14 @@ class ActuatorSetup : public QDialog
     Q_OBJECT
 
 public:
-    explicit ActuatorSetup(QWidget *parent = 0);
-    ~ActuatorSetup();
+	ActuatorSetup(Actuator *controller, QWidget *parent = 0);
+	~ActuatorSetup();
 
 private Q_SLOTS:
-	void OnPortNameChanged(const QString &name);
-	void OnSettingsApplied();
+	void onPortNameChanged(const QString &name);
+	void onSettingsApplied();
 
-	void OnPortAddedOrRemoved();
+	void onPortAddedOrRemoved();
 
 private:
 	Ui::ActuatorSetup *ui;

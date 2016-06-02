@@ -1,26 +1,26 @@
 #include "controller.h"
 
-void Controller::move(Dir dir) {
-	Vector2i vector_dir;
+Vector2i Controller::move(Dir dir) {
+	Vector2i vector_dir(0, 0);
 
 	switch (dir) {
 	case UP:
-		vector_dir.y = m_invert_y;
+		vector_dir.y = 1;
 		break;
 	case DOWN:
-		vector_dir.y = -1 * m_invert_y;
+		vector_dir.y = -1;
 		break;
 	case RIGHT:
-		vector_dir.x = m_invert_x;
+		vector_dir.x = 1;
 		break;
 	case LEFT:
-		vector_dir.x = -1 * m_invert_x;
+		vector_dir.x = -1;
 		break;
 	default:
 		Logger::log("Invalid direction specified for movement: " + dir, Logger::ERROR);
-		return;
+		return vector_dir;
 	}
-	move(vector_dir);
+	return vector_dir;
 }
 
 void Controller::invertAxis(Axis axis) {

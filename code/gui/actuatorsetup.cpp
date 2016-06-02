@@ -3,7 +3,7 @@
 #include "../controller/actuator.h"
 #include <QtCore>
 
-ActuatorSetup::ActuatorSetup(QWidget *parent) :
+ActuatorSetup::ActuatorSetup(Actuator *controller, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ActuatorSetup)
 {
@@ -39,7 +39,8 @@ ActuatorSetup::ActuatorSetup(QWidget *parent) :
 	ui->queryModeBox->addItem("EventDriven", QextSerialPort::EventDriven);
 
 	m_current_settings = { BAUD9600, DATA_8, PAR_NONE, STOP_1, FLOW_XONXOFF, 10 };
-	m_emma = new Actuator(ui->portBox->currentText(), m_current_settings);
+    controller = new Actuator(ui->portBox->currentText(), m_current_settings);
+	m_emma = controller;
 
 	m_enumerator = new QextSerialEnumerator(this);
 	m_enumerator->setUpNotifications();
@@ -56,12 +57,12 @@ ActuatorSetup::ActuatorSetup(QWidget *parent) :
 
 ActuatorSetup::~ActuatorSetup()
 {
-	delete m_emma;
+    delete m_emma;
     delete m_enumerator;
     delete ui;
 }
 
-void ActuatorSetup::OnSettingsApplied(){ 
+void ActuatorSetup::onSettingsApplied(){ 
 	PortSettings settings = {
 		(BaudRateType)ui->baudRateBox->itemData(ui->baudRateBox->currentIndex()).toInt(),
 		(DataBitsType)ui->dataBitsBox->itemData(ui->baudRateBox->currentIndex()).toInt(),
@@ -79,12 +80,12 @@ void ActuatorSetup::OnSettingsApplied(){
 	}
 }
 
-void ActuatorSetup::OnPortNameChanged(const QString & name)
+void ActuatorSetup::onPortNameChanged(const QString & name)
 {
 	m_emma->setSerPort(name);
 }
 
-void ActuatorSetup::OnPortAddedOrRemoved()
+void ActuatorSetup::onPortAddedOrRemoved()
 {
 	QString current = ui->portBox->currentText();
 

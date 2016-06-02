@@ -40,7 +40,12 @@
         <widget class="QComboBox" name="selected_direction">
          <item>
           <property name="text">
-           <string>Left</string>
+           <string>Up</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Down</string>
           </property>
          </item>
          <item>
@@ -50,12 +55,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Up</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Down</string>
+           <string>Left</string>
           </property>
          </item>
         </widget>
@@ -377,8 +377,8 @@ p, li { white-space: pre-wrap; }
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>183</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>150</x>

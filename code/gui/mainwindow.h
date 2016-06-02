@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTextBrowser>
 
+#include "../controller/controller.h"
 #include "actuatorsetup.h"
 
 #define DEFAULT_TITLE "minotaur"
@@ -30,6 +31,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     ActuatorSetup *actuator_setup_window;
+    Actuator *m_controller;
 };
 
 #endif // MAINWINDOW_H

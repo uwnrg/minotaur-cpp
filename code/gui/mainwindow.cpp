@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "../controller/actuator.h"
 
 MainWindow::MainWindow(QWidget *parent, const char *title) :
     QMainWindow(parent),
@@ -8,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
     ui->setupUi(this);
 
     // Setup subwindows
-    actuator_setup_window = new ActuatorSetup();
+    actuator_setup_window = new ActuatorSetup(m_controller);
 
 
     // Setup slot connections
@@ -30,7 +31,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_move_button_clicked()
 {
-
+	Controller::Dir dir = (Controller::Dir)ui->selected_direction->itemData(ui->selected_direction->currentIndex()).toInt();
+	m_controller->move(Controller::move(dir));
 }
 
 void MainWindow::OpenActuatorSetup()
