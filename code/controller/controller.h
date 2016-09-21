@@ -35,7 +35,7 @@ public:
 		NUM_AXES
 	};
     // Common robot functions
-	static Vector2i move(Dir);
+	static Vector2i toVec2(Dir);
 	void invertAxis(Axis);
 	
 protected:

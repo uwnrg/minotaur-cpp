@@ -31,8 +31,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_move_button_clicked()
 {
-	Controller::Dir dir = (Controller::Dir)ui->selected_direction->itemData(ui->selected_direction->currentIndex()).toInt();
-	m_controller->move(Controller::move(dir));
+	Controller::Dir dir = (Controller::Dir)ui->selected_direction->currentIndex();
+	m_controller->move(Controller::toVec2(dir));
 }
 
 void MainWindow::OpenActuatorSetup()

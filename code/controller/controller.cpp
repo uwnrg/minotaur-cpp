@@ -1,6 +1,6 @@
 #include "controller.h"
 
-Vector2i Controller::move(Dir dir) {
+Vector2i Controller::toVec2(Dir dir) {
 	Vector2i vector_dir(0, 0);
 
 	switch (dir) {
