@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <memory>
+
 #include <QMainWindow>
 #include <QTextBrowser>
 
@@ -31,7 +33,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     ActuatorSetup *actuator_setup_window;
-    Actuator *m_controller;
+    std::shared_ptr<Actuator> m_controller;
 };
 
 #endif // MAINWINDOW_H

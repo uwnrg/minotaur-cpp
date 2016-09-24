@@ -8,6 +8,10 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 {
     ui->setupUi(this);
 
+
+	//Set up logger
+	Logger::setStream(GetLogView());
+
     // Setup subwindows
     actuator_setup_window = new ActuatorSetup(m_controller);
 

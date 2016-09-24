@@ -3,7 +3,7 @@
 #include "../controller/actuator.h"
 #include <QtCore>
 
-ActuatorSetup::ActuatorSetup(Actuator *controller, QWidget *parent) :
+ActuatorSetup::ActuatorSetup(std::shared_ptr<Actuator> controller, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ActuatorSetup)
 {
@@ -39,7 +39,7 @@ ActuatorSetup::ActuatorSetup(Actuator *controller, QWidget *parent) :
 	ui->queryModeBox->addItem("EventDriven", QextSerialPort::EventDriven);
 
 	m_current_settings = { BAUD9600, DATA_8, PAR_NONE, STOP_1, FLOW_XONXOFF, 10 };
-    controller = new Actuator(ui->portBox->currentText(), m_current_settings);
+    controller = std::shared_ptr<Actuator>(new Actuator(ui->portBox->currentText(), m_current_settings));
 	m_emma = controller;
 
 	m_enumerator = new QextSerialEnumerator(this);
@@ -52,12 +52,14 @@ ActuatorSetup::ActuatorSetup(Actuator *controller, QWidget *parent) :
 	connect(m_enumerator, SIGNAL(deviceDiscovered(QextPortInfo)), SLOT(OnPortAddedOrRemoved()));
 	connect(m_enumerator, SIGNAL(deviceRemoved(QextPortInfo)), SLOT(OnPortAddedOrRemoved()));
 
+	Logger::log("Actuator initialized", Logger::INFO);
+
 	setWindowTitle(tr("Actuator Setup"));
 }
 
 ActuatorSetup::~ActuatorSetup()
 {
-    delete m_emma;
+    m_emma.reset();
     delete m_enumerator;
     delete ui;
 }

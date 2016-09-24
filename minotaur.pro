@@ -8,6 +8,9 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+# Use C++14 compiler
+CONFIG += c++14
+
 TARGET = minotaur
 TEMPLATE = app
 DESTDIR = builds

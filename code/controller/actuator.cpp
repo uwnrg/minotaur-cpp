@@ -27,10 +27,10 @@ char* const Actuator::convertDataToBytes(long int data) {
 
 	char result[DATA_SIZE];
 	
-	for (int i = DATA_SIZE - 1; i >= 0; ++i) {
+	for (int i = DATA_SIZE - 1; i >= 0; --i) {
 		int temp = intPow(BYTE_RANGE, i);
 		result[i] = data / temp;
-		data = data - temp;
+		data = data - temp * result[i];
 	}
 
 	return result;
@@ -97,22 +97,23 @@ Actuator::~Actuator() {
     delete m_serial_port;
 }
 
+void Actuator::move(Dir dir, int time) {
+	move(Controller::toVec2(dir), time);
+}
+
 void Actuator::move(Vector2i dir, int time) {
-	std::promise<bool> error_x, error_y;
-	auto ferror_x = error_x.get_future();
-	auto ferror_y = error_y.get_future();
-
-	std::thread x_thread(Actuator::moveActuator, m_serial_port, m_x_device, dir.x, time, std::ref(error_x));
-	std::thread y_thread(Actuator::moveActuator, m_serial_port, m_y_device, dir.y, time, std::ref(error_y));
-
-	// Wait for the threads to finish before exiting the function
-	x_thread.join();
-	y_thread.join();
-
-	// Check if any errors were generated using the flags
-	bool success;
+	bool success = false;
 	try {
-		success = (ferror_x.get() || ferror_y.get());
+		/* Threading code
+		std::thread x_thread(Actuator::moveActuator, m_serial_port, m_x_device, dir.x, time);
+		std::thread y_thread(Actuator::moveActuator, m_serial_port, m_y_device, dir.y, time);
+		
+		x_thread.join();
+		y_thread.join();
+		*/
+		// Temp code before multithreading
+		moveActuator('a', dir.x, time);
+		moveActuator('b', dir.y, time);
 	}
 	catch (std::exception& e) {
 		Logger::log(e.what(), Logger::ERROR);
@@ -122,11 +123,17 @@ void Actuator::move(Vector2i dir, int time) {
 	if (success) {
 		Logger::log("Moved { " + std::to_string(dir.x) + ", " + std::to_string(dir.y) + " } in " + std::to_string(time) + " milliseconds.", Logger::INFO);
 	}
+	else {
+		Logger::log("The movement { " + std::to_string(dir.x) + ", " + std::to_string(dir.y) + " } could not be completed.", Logger::ERROR);
+	}
 }
 
-void Actuator::moveActuator(QextSerialPort* ser_port, const unsigned char device, const int value, const int time, std::promise<bool>& success) {
+void Actuator::moveActuator(const unsigned char device, const int value, const int time) {
 	try {
-		std::chrono::milliseconds sleep_step = std::chrono::milliseconds(time / value);
+		std::chrono::milliseconds sleep_step = std::chrono::milliseconds(0);
+		if (value != 0) {
+			sleep_step = std::chrono::milliseconds(time / value); // still need to test negative steps
+		}
 		char* instr = new char(CMD_SIZE + DATA_SIZE);
 
 		// Setup device and command numbers
@@ -141,22 +148,19 @@ void Actuator::moveActuator(QextSerialPort* ser_port, const unsigned char device
 
 		// This is yet to be tested, sorry I don't have Zaber actuators at home :(
 		for (int i = value; i > 0; i--) {
-			if (ser_port->isOpen()) {
-				ser_port->write(instr, CMD_SIZE + DATA_SIZE);
+			if (m_serial_port->isOpen()) {
+				m_serial_port->write(instr, CMD_SIZE + DATA_SIZE);
 			}
 			else {
-				Logger::log("ERROR: Failed to write to serial port " + (ser_port->portName()).toStdString() + "because it's not open.", Logger::ERROR);
-				success.set_value(false);
-				return;
+				Logger::log("ERROR: Failed to write to serial port " + (m_serial_port->portName()).toStdString() + "because it's not open.", Logger::ERROR);
+				throw "Action could not be completed";
 			}
 
 			std::this_thread::sleep_for(sleep_step);
 		}
-
-		success.set_value(true);
 	}
 	catch (...) {
-		success.set_exception(std::current_exception());
+		throw std::current_exception();
 	}
 }
 

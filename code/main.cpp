@@ -8,8 +8,6 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     MainWindow *w = new MainWindow();
 
-    //Set up logger
-    Logger::setStream(w->GetLogView());
 
     w->show();
 

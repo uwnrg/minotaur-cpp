@@ -5,6 +5,7 @@
 #include "qextserialenumerator.h"
 
 #include <QDialog>
+#include <memory>
 
 class QextSerialEnumerator;
 class Actuator;
@@ -18,7 +19,7 @@ class ActuatorSetup : public QDialog
     Q_OBJECT
 
 public:
-	ActuatorSetup(Actuator *controller, QWidget *parent = 0);
+	ActuatorSetup(std::shared_ptr<Actuator> controller, QWidget *parent = 0);
 	~ActuatorSetup();
 
 private Q_SLOTS:
@@ -30,7 +31,7 @@ private Q_SLOTS:
 private:
 	Ui::ActuatorSetup *ui;
 	QTimer *timer;
-	Actuator *m_emma;
+	std::shared_ptr<Actuator> m_emma;
 	QextSerialEnumerator *m_enumerator;
 	PortSettings m_current_settings;
 };
