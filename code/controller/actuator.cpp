@@ -121,8 +121,8 @@ void Actuator::move(Vector2i dir, int time) {
 		y_thread.join();
 		*/
 		// Temp code before multithreading
-		moveActuator(m_x_device, dir.x, time);
-		moveActuator(m_y_device, dir.y, time);
+		moveActuator(m_x_device, dir.x_point, time);
+		moveActuator(m_y_device, dir.y_point, time);
 	}
 	catch (std::exception& e) {
 		Logger::log(e.what(), Logger::ERROR);
@@ -130,10 +130,10 @@ void Actuator::move(Vector2i dir, int time) {
 	}
 
 	if (success) {
-		Logger::log("Moved { " + std::to_string(dir.x) + ", " + std::to_string(dir.y) + " } in " + std::to_string(time) + " milliseconds.", Logger::INFO);
+		Logger::log("Moved { " + std::to_string(dir.x_point) + ", " + std::to_string(dir.y_point) + " } in " + std::to_string(time) + " milliseconds.", Logger::INFO);
 	}
 	else {
-		Logger::log("The movement { " + std::to_string(dir.x) + ", " + std::to_string(dir.y) + " } could not be completed.", Logger::ERROR);
+		Logger::log("The movement { " + std::to_string(dir.x_point) + ", " + std::to_string(dir.y_point) + " } could not be completed.", Logger::ERROR);
 	}
 }
 
