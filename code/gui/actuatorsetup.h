@@ -19,7 +19,7 @@ class ActuatorSetup : public QDialog
     Q_OBJECT
 
 public:
-	ActuatorSetup(std::shared_ptr<Actuator> controller, QWidget *parent = 0);
+	ActuatorSetup(std::shared_ptr<Actuator>& controller, QWidget *parent = 0);
 	~ActuatorSetup();
 
 private Q_SLOTS:

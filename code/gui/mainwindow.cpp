@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 
 	//Set up logger
 	Logger::setStream(GetLogView());
+	m_controller = std::shared_ptr<Actuator>(new Actuator);
+
+
 
     // Setup subwindows
     actuator_setup_window = new ActuatorSetup(m_controller);

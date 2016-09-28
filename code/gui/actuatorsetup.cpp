@@ -3,9 +3,10 @@
 #include "../controller/actuator.h"
 #include <QtCore>
 
-ActuatorSetup::ActuatorSetup(std::shared_ptr<Actuator> controller, QWidget *parent) :
+ActuatorSetup::ActuatorSetup(std::shared_ptr<Actuator>& controller, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ActuatorSetup)
+    ui(new Ui::ActuatorSetup),
+	m_emma(controller)
 {
     ui->setupUi(this);
 
@@ -39,8 +40,8 @@ ActuatorSetup::ActuatorSetup(std::shared_ptr<Actuator> controller, QWidget *pare
 	ui->queryModeBox->addItem("EventDriven", QextSerialPort::EventDriven);
 
 	m_current_settings = { BAUD9600, DATA_8, PAR_NONE, STOP_1, FLOW_XONXOFF, 10 };
-    controller = std::shared_ptr<Actuator>(new Actuator(ui->portBox->currentText(), m_current_settings));
-	m_emma = controller;
+	controller->setSerPort(ui->portBox->currentText());
+	controller->changeSettings(m_current_settings);;
 
 	m_enumerator = new QextSerialEnumerator(this);
 	m_enumerator->setUpNotifications();
