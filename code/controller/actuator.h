@@ -31,8 +31,8 @@ enum ZaberCmd {
 class Actuator : public Controller
 {
 public:
-    Actuator(const QString& serial_port, const PortSettings& settings = DEFAULT_SETTINGS, QextSerialPort::QueryMode mode = QextSerialPort::EventDriven);
-
+    Actuator(const QString& serial_port = "", const PortSettings& settings = DEFAULT_SETTINGS, QextSerialPort::QueryMode mode = QextSerialPort::EventDriven);
+	Actuator(const Actuator&);
     int setSerPort(const QString& serial_port);
 	int changeSettings(const PortSettings& settings);
 	void invertDevices();

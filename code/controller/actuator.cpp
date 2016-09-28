@@ -20,6 +20,15 @@ Actuator::Actuator(const QString& serial_port, const PortSettings& settings, Qex
     }
 }
 
+Actuator::Actuator(const Actuator& other) {
+	m_x_device = other.m_x_device;
+	m_y_device = other.m_y_device;
+	m_invert_x = other.m_invert_x;
+	m_invert_y = other.m_invert_y;
+
+	m_serial_port = other.m_serial_port;
+}
+
 char* const Actuator::convertDataToBytes(long int data) {
 	if (data < 0) {
 		data = intPow(BYTE_RANGE, 4) + data;
@@ -102,7 +111,7 @@ void Actuator::move(Dir dir, int time) {
 }
 
 void Actuator::move(Vector2i dir, int time) {
-	bool success = false;
+	bool success = true;
 	try {
 		/* Threading code
 		std::thread x_thread(Actuator::moveActuator, m_serial_port, m_x_device, dir.x, time);
@@ -112,8 +121,8 @@ void Actuator::move(Vector2i dir, int time) {
 		y_thread.join();
 		*/
 		// Temp code before multithreading
-		moveActuator('a', dir.x, time);
-		moveActuator('b', dir.y, time);
+		moveActuator(m_x_device, dir.x, time);
+		moveActuator(m_y_device, dir.y, time);
 	}
 	catch (std::exception& e) {
 		Logger::log(e.what(), Logger::ERROR);
@@ -152,8 +161,8 @@ void Actuator::moveActuator(const unsigned char device, const int value, const i
 				m_serial_port->write(instr, CMD_SIZE + DATA_SIZE);
 			}
 			else {
-				Logger::log("ERROR: Failed to write to serial port " + (m_serial_port->portName()).toStdString() + "because it's not open.", Logger::ERROR);
-				throw "Action could not be completed";
+				Logger::log("ERROR: Failed to write to serial port " + (m_serial_port->portName()).toStdString() + " because it's not open.", Logger::ERROR);
+				throw "Action could not be completed"; // TODO: Might want to figure out a better way than throwing exceptions, revisit after adding concurrency
 			}
 
 			std::this_thread::sleep_for(sleep_step);
