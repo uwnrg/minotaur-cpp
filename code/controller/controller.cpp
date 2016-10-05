@@ -5,16 +5,16 @@ Vector2i Controller::toVec2(Dir dir) {
 
 	switch (dir) {
 	case UP:
-		vector_dir.y_point = 1;
+		vector_dir.y_comp = 1;
 		break;
 	case DOWN:
-		vector_dir.y_point = -1;
+		vector_dir.y_comp = -1;
 		break;
 	case RIGHT:
-		vector_dir.x_point = 1;
+		vector_dir.x_comp = 1;
 		break;
 	case LEFT:
-		vector_dir.x_point = -1;
+		vector_dir.x_comp = -1;
 		break;
 	default:
 		Logger::log("Invalid direction specified for movement: " + dir, Logger::ERROR);

@@ -7,7 +7,7 @@
 #define BYTE_RANGE	256
 #define DATA_SIZE	4
 #define CMD_SIZE	2
-#define STEP_FACTOR 5
+#define STEP_FACTOR	5
 #define STEP_TIME	10
 
 // For Zaber, settings must be: 9600 baud, no hand shaking, 8 data bits, no parity, one stop bit.
@@ -16,7 +16,7 @@ const PortSettings DEFAULT_SETTINGS = { BAUD9600, DATA_8, PAR_NONE, STOP_1, FLOW
 
 class QextSerialPort;
 
-
+// Command mapping for Zaber T-LSR actuators http://www.zaber.com/wiki/Manuals/T-LSR
 enum ZaberCmd {
 	HOME = 1,
 	RENUMBER = 2,
@@ -31,11 +31,14 @@ enum ZaberCmd {
 class Actuator : public Controller
 {
 public:
-    Actuator(const QString& serial_port = "", const PortSettings& settings = DEFAULT_SETTINGS, QextSerialPort::QueryMode mode = QextSerialPort::EventDriven);
+    Actuator(const QString& serial_port = "",
+		const PortSettings& settings = DEFAULT_SETTINGS,
+		QextSerialPort::QueryMode mode = QextSerialPort::EventDriven);
+
 	Actuator(const Actuator&);
     int setSerPort(const QString& serial_port);
 	int changeSettings(const PortSettings& settings);
-	void invertDevices();
+	void switchDevices();
 	void move(Dir dir, int time = STEP_TIME);
 	void move(Vector2i dir, int time = STEP_TIME);
     ~Actuator();
@@ -46,7 +49,7 @@ private:
 
     //helper functions
 	static char* const convertDataToBytes(long int data);
-	void setDeviceNumber();
+	void resetDeviceNumber();
 	static int const intPow(int x, int p);
 	void moveActuator(unsigned char device, const int value, const int time);
 };

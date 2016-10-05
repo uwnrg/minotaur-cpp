@@ -3,9 +3,9 @@
 #include "../utility/logger.h"
 
 struct Vector2i {
-	int x_point = 0;
-	int y_point = 0;
-	Vector2i(int xp, int yp) : x_point(xp), y_point(yp) {};
+	int x_comp = 0;
+	int y_comp = 0;
+	Vector2i(int xp, int yp) : x_comp(xp), y_comp(yp) {};
 	// TODO: Add ostream operator overloading
 };
 

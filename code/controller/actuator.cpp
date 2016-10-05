@@ -12,8 +12,8 @@ Actuator::Actuator(const QString& serial_port, const PortSettings& settings, Qex
     if (m_serial_port->lastError() == 0) {
         Logger::log(serial_port.toStdString() + " successfully opened!", Logger::INFO);
         m_serial_port->flush();
-		// Send a renumbering request for the devices
-		setDeviceNumber();
+        // Send a renumbering request for the devices
+        resetDeviceNumber();
     }
     else {
         Logger::log("ERROR: " + serial_port.toStdString() + " could not be opened! " + m_serial_port->errorString().toStdString(), Logger::ERROR);
@@ -45,8 +45,8 @@ char* const Actuator::convertDataToBytes(long int data) {
 	return result;
 }
 
-void Actuator::setDeviceNumber() {
-	char instr[] = { 0, 2, 0, 0, 0, 0 };
+void Actuator::resetDeviceNumber() {
+	char instr[] = { 0, ZaberCmd::RENUMBER, 0, 0, 0, 0 };
 	
 	m_serial_port->write(instr);
 
@@ -96,7 +96,7 @@ int Actuator::changeSettings(const PortSettings& settings) {
 	return 0;
 }
 
-void Actuator::invertDevices() {
+void Actuator::switchDevices() {
 	unsigned char temp = m_x_device;
 	m_x_device = m_y_device;
 	m_y_device = temp;
@@ -113,7 +113,7 @@ void Actuator::move(Dir dir, int time) {
 void Actuator::move(Vector2i dir, int time) {
 	bool success = true;
 	try {
-		/* Threading code
+		/* TODO: Threading code
 		std::thread x_thread(Actuator::moveActuator, m_serial_port, m_x_device, dir.x, time);
 		std::thread y_thread(Actuator::moveActuator, m_serial_port, m_y_device, dir.y, time);
 		
@@ -121,8 +121,8 @@ void Actuator::move(Vector2i dir, int time) {
 		y_thread.join();
 		*/
 		// Temp code before multithreading
-		moveActuator(m_x_device, dir.x_point, time);
-		moveActuator(m_y_device, dir.y_point, time);
+		moveActuator(m_x_device, dir.x_comp, time);
+		moveActuator(m_y_device, dir.y_comp, time);
 	}
 	catch (std::exception& e) {
 		Logger::log(e.what(), Logger::ERROR);
@@ -130,10 +130,10 @@ void Actuator::move(Vector2i dir, int time) {
 	}
 
 	if (success) {
-		Logger::log("Moved { " + std::to_string(dir.x_point) + ", " + std::to_string(dir.y_point) + " } in " + std::to_string(time) + " milliseconds.", Logger::INFO);
+		Logger::log("Moved { " + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + " } in " + std::to_string(time) + " milliseconds.", Logger::INFO);
 	}
 	else {
-		Logger::log("The movement { " + std::to_string(dir.x_point) + ", " + std::to_string(dir.y_point) + " } could not be completed.", Logger::ERROR);
+		Logger::log("The movement { " + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + " } could not be completed.", Logger::ERROR);
 	}
 }
 
@@ -155,7 +155,7 @@ void Actuator::moveActuator(const unsigned char device, const int value, const i
 			instr[i + 2] = data[i];
 		}
 
-		// This is yet to be tested, sorry I don't have Zaber actuators at home :(
+		// TODO: This is yet to be tested, sorry I don't have Zaber actuators at home :(
 		for (int i = value; i > 0; i--) {
 			if (m_serial_port->isOpen()) {
 				m_serial_port->write(instr, CMD_SIZE + DATA_SIZE);
