@@ -39,7 +39,7 @@ public:
 	void invertAxis(Axis);
 	
 protected:
-	int m_invert_x, m_invert_y;
+	int m_invert_x, m_invert_y; // +1 for no inversion in the axis, -1 otherwise
 };
 
 #endif // CONTROLLER_H

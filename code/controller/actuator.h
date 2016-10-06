@@ -39,6 +39,7 @@ public:
     int setSerPort(const QString& serial_port);
 	int changeSettings(const PortSettings& settings);
 	void switchDevices();
+    // This is just a wrapper to convert from Dir enum to Vector2i parameter
 	void move(Dir dir, int time = STEP_TIME);
 	void move(Vector2i dir, int time = STEP_TIME);
     ~Actuator();
