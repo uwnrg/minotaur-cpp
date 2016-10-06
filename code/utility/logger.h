@@ -15,13 +15,13 @@ public:
 
         NUM_LOG_TYPES
     };
-    static bool Log(std::string message, LogType type = INFO);
-    static void SetStream(QTextEdit* log_stream);
+    static bool log(std::string message, LogType type = INFO);
+    static void setStream(QTextEdit* log_stream);
 
 private:
     static std::string m_buffer;
     static QTextEdit* m_outfield;
-    inline static std::string GetTextColor(LogType type) {
+    inline static std::string getTextColor(LogType type) {
         switch (type) {
             case INFO:
                 return "black";

@@ -34,13 +34,18 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="move_command_edit"/>
        </item>
        <item>
         <widget class="QComboBox" name="selected_direction">
          <item>
           <property name="text">
-           <string>Left</string>
+           <string>Up</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Down</string>
           </property>
          </item>
          <item>
@@ -50,12 +55,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Up</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Down</string>
+           <string>Left</string>
           </property>
          </item>
         </widget>
@@ -105,7 +105,7 @@ p, li { white-space: pre-wrap; }
     </layout>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
+  <widget class="QMenuBar" name="main_menu_bar">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -117,19 +117,19 @@ p, li { white-space: pre-wrap; }
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuSetup">
+   <widget class="QMenu" name="setup_menu">
     <property name="enabled">
      <bool>true</bool>
     </property>
     <property name="title">
      <string>Setup</string>
     </property>
-    <addaction name="actionEMMA_Actuator_mode"/>
-    <addaction name="actionEMMA_Solenoid_mode"/>
+    <addaction name="switch_to_actuator_mode"/>
+    <addaction name="switch_to_solenoid_mode"/>
     <addaction name="separator"/>
-    <addaction name="actionActuators"/>
+    <addaction name="setup_actuator"/>
     <addaction name="separator"/>
-    <addaction name="actionExit"/>
+    <addaction name="exit"/>
    </widget>
    <widget class="QMenu" name="menuVideo">
     <property name="enabled">
@@ -178,13 +178,13 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionHelp"/>
     <addaction name="actionAbout"/>
    </widget>
-   <addaction name="menuSetup"/>
+   <addaction name="setup_menu"/>
    <addaction name="menuVideo"/>
    <addaction name="menuEdit"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
-  <action name="actionEMMA_Actuator_mode">
+  <action name="switch_to_actuator_mode">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -198,7 +198,7 @@ p, li { white-space: pre-wrap; }
     <string>EMMA Actuator mode</string>
    </property>
   </action>
-  <action name="actionEMMA_Solenoid_mode">
+  <action name="switch_to_solenoid_mode">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -209,15 +209,15 @@ p, li { white-space: pre-wrap; }
     <string>EMMA Solenoid mode</string>
    </property>
   </action>
-  <action name="actionActuators">
+  <action name="setup_actuator">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Actuators</string>
    </property>
   </action>
-  <action name="actionExit">
+  <action name="exit">
    <property name="text">
     <string>Exit</string>
    </property>
@@ -369,5 +369,22 @@ p, li { white-space: pre-wrap; }
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>exit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>150</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
