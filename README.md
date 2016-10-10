@@ -53,7 +53,7 @@ make
 When running `minotaur.exe`, however, you need to first launch an X11 window server. Simply run the `xinit` command and you should be greeted by a big window with a small terminal in it. How window server works is beyond the scope of this document, you can read up on it if you are interesting. Anyways, once in the new terminal, you can run `./minotaur.exe` to launch the program.
 
 #### Contributing
-Any help would be greatly appreciated. The entire code base is pretty big, there is a lot of code to be rewritten. If you want to help out, let [me](https://github.com/sadmansk) know and we will figure something out. We will be following [this](https://sadmansk.gitbooks.io/cpp-best-practices/content/) style guide, so please read it before contributing.
+Please refer to the [Contributing Guidelines](CONTRIBUTING.md).
 
 #### License
 ```
