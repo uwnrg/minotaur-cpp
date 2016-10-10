@@ -4,10 +4,13 @@ Contributing Guidelines
 Before diving into the codebase, it's highly recommended that you have some basic knowledge
 about how OOP works in C++. Some concepts that you should know include inheritance, polymorphism,
 virtual members, etc. Knowledge of the C++ Standard Template Library (STL) is also helpful. [Effective
-STL](://www.amazon.ca/Effective-STL-Specific-Standard-Template/dp/0201749629) is a great book
+STL](https://www.amazon.ca/Effective-STL-Specific-Standard-Template/dp/0201749629) is a great book
 that covers useful STL concepts in depth.
 
-### Style Guide
+---
+
+Style Guide
+-----------
 > An excerpt from [C++ Best Practices](https://www.gitbook.com/book/sadmansk/cpp-best-practices/details)
 
 
@@ -20,7 +23,7 @@ C++ allows for arbitrary-length identifier names, so there's no reason to be ter
 
 are common examples. *snake_case* has the advantage that it can also work with spell checkers, if desired.
 
-## Common C++ Naming Conventions
+### Common C++ Naming Conventions
 
  * Types start with upper case: `MyClass`.
  * Functions and variables start with lower case: `myMethod`.
@@ -32,7 +35,7 @@ C++ Standard Library (and other well-known C++ libraries like [Boost](http://www
  * Template parameter names use camel case: `InputIterator`.
  * All other names use snake case: `unordered_map`.
 
-## Distinguish Private Object Data
+### Distinguish Private Object Data
 
 Name private data with a `m_` prefix to distinguish it from public data. `m_` stands for "member" data.
 
@@ -53,14 +56,14 @@ class PrivateSize
 
 
 
-## Don't Name Anything Starting With `_`
+### Don't Name Anything Starting With `_`
 
 If you do, you risk colliding with names reserved for compiler and standard library implementation use:
 
 http://stackoverflow.com/questions/228783/what-are-the-rules-about-using-an-underscore-in-a-c-identifier
 
 
-## Well-Formed Example
+### Well-Formed Example
 
 ```cpp
 class MyClass
@@ -83,16 +86,16 @@ private:
 
 
 
-## Enable Out-of-Source-Directory Builds
+### Enable Out-of-Source-Directory Builds
 
 Make sure generated files go into an output folder that is separate from the source folder.
 
 
-## Use `nullptr`
+### Use `nullptr`
 
 C++11 introduces `nullptr` which is a special value denoting a null pointer. This should be used instead of `0` or `NULL` to indicate a null pointer.
 
-## Comments
+### Comments
 
 Comment blocks should use `//`, not `/* */`. Using `//` makes it much easier to comment out a block of code while debugging.
 
@@ -116,14 +119,14 @@ int myFunc()
 
 which would be impossible if the function comment header used `/* */`.
 
-## Never Use `using namespace` in a Header File
+### Never Use `using namespace` in a Header File
 
 This causes the namespace you are `using` to be pulled into the namespace of all files that include the header file.
 It pollutes the namespace and it may lead to name collisions in the future.
 Writing `using namespace` in an implementation file is fine though.
 
 
-## Include Guards
+### Include Guards
 
 Header files must contain a distinctly-named include guard to avoid problems with including the same header multiple times and to prevent conflicts with headers from other projects.
 
@@ -143,7 +146,7 @@ You may also consider using the `#pragma once` directive instead which is quasi-
 It's short and makes the intent clear.
 
 
-## {} Are Required for Blocks.
+### {} Are Required for Blocks.
 Leaving them off can lead to semantic errors in the code.
 
 ```cpp
@@ -171,7 +174,7 @@ for (int i = 0; i < 15; ++i) {
 }
 ```
 
-## Keep Lines a Reasonable Length
+### Keep Lines a Reasonable Length
 
 ```cpp
 // Bad Idea
@@ -192,7 +195,7 @@ Such code is generally easier to read.
 It also makes it possible to have two separate files next to each other on one screen without having a tiny font.
 
 
-## Use "" for Including Local Files
+### Use "" for Including Local Files
 ... `<>` is [reserved for system includes](http://blog2.emptycrate.com/content/when-use-include-verses-include).
 
 ```cpp
@@ -215,7 +218,7 @@ It also makes it possible to have two separate files next to each other on one s
 #include "MyHeader.hpp"
 ```
 
-## Initialize Member Variables
+### Initialize Member Variables
 ...with the member initializer list.
 
 ```cpp
@@ -273,12 +276,12 @@ Prefer {} initialization over alternatives unless you have a strong reason not t
 Forgetting to initialize a member is a source of undefined behavior bugs which are often extremely hard to find.
 
 
-## Always Use Namespaces
+### Always Use Namespaces
 
 There is almost never a reason to declare an identifier in the global namespace. Instead, functions and classes should exist in an appropriately named namespace or in a class inside of a namespace. Identifiers which are placed in the global namespace risk conflicting with identifiers from other libraries (mostly C, which doesn't have namespaces).
 
 
-## Use the Correct Integer Type for Standard Library Features
+### Use the Correct Integer Type for Standard Library Features
 
 The standard library generally uses `std::size_t` for anything related to size. The size of `size_t` is implementation defined.
 
@@ -286,15 +289,15 @@ In general, using `auto` will avoid most of these issues, but not all.
 
 Make sure you stick with the correct integer types and remain consistent with the C++ standard library. It might not warn on the platform you are currently using, but it probably will when you change platforms.
 
-## Use .h and .cpp for Your File Extensions
+### Use .h and .cpp for Your File Extensions
 
 Ultimately this is a matter of preference, but .h and .cpp are widely recognized by various editors and tools. So the choice is pragmatic. Specifically, Visual Studio only automatically recognizes .cpp and .cxx for C++ files, and Vim doesn't necessarily recognize .cc as a C++ file.
 
-## Never Mix Tabs and Spaces
+### Never Mix Tabs and Spaces
 
 Some editors like to indent with a mixture of tabs and spaces by default. This makes the code unreadable to anyone not using the exact same tab indentation settings. Configure your editor so this does not happen. Tabs with a width of four spaces is preferred for indentation.
 
-## Never Put Code with Side Effects Inside an assert()
+### Never Put Code with Side Effects Inside an assert()
 
 ```cpp
 assert(registerSomeThing()); // make sure that registerSomeThing() returns true
@@ -303,12 +306,12 @@ assert(registerSomeThing()); // make sure that registerSomeThing() returns true
 The above code succeeds when making a debug build, but gets removed by the compiler when making a release build, giving you different behavior between debug and release builds.
 This is because `assert()` is a macro which expands to nothing in release mode.
 
-## Don't Be Afraid of Templates
+### Don't Be Afraid of Templates
 
 They can help you stick to [DRY principles](http://en.wikipedia.org/wiki/Don%27t_repeat_yourself).
 They should be preferred to macros, because macros do not honor namespaces, etc.
 
-## Use Operator Overloads Judiciously
+### Use Operator Overloads Judiciously
 
 Operator overloading was invented to enable expressive syntax. Expressive in the sense that adding two big integers looks like `a + b` and not `a.add(b)`. Another common example is std::string, where it is very common to concatenate two strings with `string1 + string2`.
 
@@ -326,20 +329,20 @@ Specifically, you should keep these things in mind:
 
 More tips regarding the implementation details of your custom operators can be found [here](http://courses.cms.caltech.edu/cs11/material/cpp/donnie/cpp-ops.html).
 
-## Avoid Implicit Conversions
+### Avoid Implicit Conversions
 
-### Single Parameter Constructors
+#### Single Parameter Constructors
 
 Single parameter constructors can be applied at compile time to automatically convert between types. This is handy for things like `std::string(const char *)` but should be avoided in general because they can add to accidental runtime overhead.
 
 Instead mark single parameter constructors as `explicit`, which requires them to be explicitly called.
 
-### Conversion Operators
+#### Conversion Operators
 
 Similarly to single parameter constructors, conversion operators can be called by the compiler and introduce unexpected overhead. They should also be marked as `explicit`.
 
 
-## Consider the Rule of Zero
+### Consider the Rule of Zero
 
 The Rule of Zero states that you do not provide any of the functions that the compiler can provide (copy constructor, assignment operator, move constructor, destructor, move constructor) unless the class you are constructing does some novel form of ownership.
 
