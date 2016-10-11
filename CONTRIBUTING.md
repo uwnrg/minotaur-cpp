@@ -11,7 +11,7 @@ that covers useful STL concepts in depth.
 
 Style Guide
 -----------
-> An excerpt from [C++ Best Practices](https://www.gitbook.com/book/sadmansk/cpp-best-practices/details)
+> An slightly modified excerpt from [C++ Best Practices](https://www.gitbook.com/book/sadmansk/cpp-best-practices/details)
 
 
 Consistency is the most important aspect of style. The second most important aspect is following a style that the average C++ programmer is used to reading.
@@ -69,21 +69,18 @@ http://stackoverflow.com/questions/228783/what-are-the-rules-about-using-an-unde
 class MyClass
 {
 public:
-  MyClass(int t_data)
-    : m_data(t_data)
-  {
-  }
+    MyClass(int t_data)
+        : m_data(t_data) {
+    }
 
-  int getData() const
-  {
-    return m_data;
-  }
+    int getData() const {
+        return m_data;
+    }
 
 private:
-  int m_data;
+    int m_data;
 };
 ```
-
 
 
 ### Enable Out-of-Source-Directory Builds
@@ -101,8 +98,8 @@ Comment blocks should use `//`, not `/* */`. Using `//` makes it much easier to 
 
 ```cpp
 // this function does something
-int myFunc()
-{
+int myFunc() {
+
 }
 ```
 
@@ -111,8 +108,8 @@ To comment out this function block during debugging we might do:
 ```cpp
 /*
 // this function does something
-int myFunc()
-{
+int myFunc() {
+
 }
 */
 ```
@@ -131,8 +128,8 @@ Writing `using namespace` in an implementation file is fine though.
 Header files must contain a distinctly-named include guard to avoid problems with including the same header multiple times and to prevent conflicts with headers from other projects.
 
 ```cpp
-#ifndef MYPROJECT_MYCLASS_HPP
-#define MYPROJECT_MYCLASS_HPP
+#ifndef MYPROJECT_MYCLASS_H_
+#define MYPROJECT_MYCLASS_H_
 
 namespace MyProject {
   class MyClass {
@@ -141,10 +138,6 @@ namespace MyProject {
 
 #endif
 ```
-
-You may also consider using the `#pragma once` directive instead which is quasi-standard across many compilers.
-It's short and makes the intent clear.
-
 
 ### {} Are Required for Blocks.
 Leaving them off can lead to semantic errors in the code.
@@ -173,6 +166,8 @@ for (int i = 0; i < 15; ++i) {
   std::cout << i << std::endl;
 }
 ```
+
+Also note that it's better to keep the opening parenthesis, `{` *not* on a new line. That helps save vertical space and makes the code easier to read.
 
 ### Keep Lines a Reasonable Length
 
@@ -223,16 +218,14 @@ It also makes it possible to have two separate files next to each other on one s
 
 ```cpp
 // Bad Idea
-class MyClass
-{
+class MyClass {
 public:
-  MyClass(int t_value)
-  {
-    m_value = t_value;
-  }
+    MyClass(int t_value) {
+        m_value = t_value;
+    }
 
 private:
-  int m_value;
+    int m_value;
 };
 
 
@@ -240,16 +233,14 @@ private:
 // C++'s member initializer list is unique to the language and leads to
 // cleaner code and potential performance gains that other languages cannot
 // match.
-class MyClass
-{
+class MyClass {
 public:
-  MyClass(int t_value)
-    : m_value(t_value)
-  {
-  }
+    MyClass(int t_value)
+        : m_value(t_value) {
+    }
 
 private:
-  int m_value;
+    int m_value;
 };
 ```
 
@@ -257,7 +248,7 @@ In C++11 you may consider always giving each member a default value, e.g. by wri
 ```cpp
 // ... //
 private:
-  int m_value = 0;
+    int m_value = 0;
 // ... //
 ```
 inside the class body. This makes sure that no constructor ever "forgets" to initialize a member object.
@@ -276,11 +267,6 @@ Prefer {} initialization over alternatives unless you have a strong reason not t
 Forgetting to initialize a member is a source of undefined behavior bugs which are often extremely hard to find.
 
 
-### Always Use Namespaces
-
-There is almost never a reason to declare an identifier in the global namespace. Instead, functions and classes should exist in an appropriately named namespace or in a class inside of a namespace. Identifiers which are placed in the global namespace risk conflicting with identifiers from other libraries (mostly C, which doesn't have namespaces).
-
-
 ### Use the Correct Integer Type for Standard Library Features
 
 The standard library generally uses `std::size_t` for anything related to size. The size of `size_t` is implementation defined.
@@ -295,7 +281,7 @@ Ultimately this is a matter of preference, but .h and .cpp are widely recognized
 
 ### Never Mix Tabs and Spaces
 
-Some editors like to indent with a mixture of tabs and spaces by default. This makes the code unreadable to anyone not using the exact same tab indentation settings. Configure your editor so this does not happen. Tabs with a width of four spaces is preferred for indentation.
+Some editors like to indent with a mixture of tabs and spaces by default. This makes the code unreadable to anyone not using the exact same tab indentation settings. Configure your editor so this does not happen. Tabs with a width of four spaces is a **MUST** for indentation for this project.
 
 ### Never Put Code with Side Effects Inside an assert()
 
