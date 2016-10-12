@@ -27,7 +27,7 @@ are common examples. *snake_case* has the advantage that it can also work with s
 
  * Types start with upper case: `MyClass`.
  * Functions and variables start with lower case: `myMethod`.
- * Constants are all upper case: `const double PI=3.14159265358979323;`.
+ * Constants are all upper case: `const double PI = 3.14159265358979323;`.
 
 C++ Standard Library (and other well-known C++ libraries like [Boost](http://www.boost.org/)) use these guidelines:
 
@@ -114,7 +114,8 @@ int myFunc() {
 */
 ```
 
-which would be impossible if the function comment header used `/* */`.
+which would be impossible if the function comment header used `/* */` (since the comment would only go until the first `*/`
+that is encountered.
 
 ### Never Use `using namespace` in a Header File
 
