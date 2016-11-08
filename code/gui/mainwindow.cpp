@@ -4,13 +4,13 @@
 
 MainWindow::MainWindow(QWidget *parent, const char *title) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    ui(new Ui::MainWindow) {
+
     ui->setupUi(this);
 
 
 	//Set up logger
-	Logger::setStream(GetLogView());
+	Logger::setStream(getLogView());
 	m_controller = std::shared_ptr<Actuator>(new Actuator);
 
 
@@ -20,29 +20,54 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 
 
     // Setup slot connections
-    connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(OpenActuatorSetup()));
+    connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
 }
 
-QTextEdit* MainWindow::GetLogView()
-{
+QTextEdit* MainWindow::getLogView() {
     return ui->log_viewer;
 }
 
-MainWindow::~MainWindow()
-{
+void MainWindow::keyPressEvent(QKeyEvent* e) {
+    // TODO: Eventually we would want to generalize the key events so that we can configure
+    // what keys we want to map. This is okay for now.
+    switch (e->key()) {
+        case Qt::Key_Up:
+            m_controller->move(Controller::Dir::UP);
+            break;
+           
+        case Qt::Key_Down:
+            m_controller->move(Controller::Dir::DOWN);
+            break;
+           
+        case Qt::Key_Right:
+            m_controller->move(Controller::Dir::RIGHT);
+            break;
+           
+        case Qt::Key_Left:
+            m_controller->move(Controller::Dir::LEFT);
+            break;
+
+        default:
+            // We don't do anything if the key pressed is not supported
+            // We could add a beep sound or something to indicate that, but not a priority.
+            break;
+    }
+           
+}
+
+
+MainWindow::~MainWindow() {
     // Destroy all subwindows
     delete actuator_setup_window;
 
     delete ui;
 }
 
-void MainWindow::on_move_button_clicked()
-{
+void MainWindow::on_move_button_clicked() {
 	Controller::Dir dir = (Controller::Dir)ui->selected_direction->currentIndex();
 	m_controller->move(Controller::toVec2(dir));
 }
 
-void MainWindow::OpenActuatorSetup()
-{
+void MainWindow::openActuatorSetup() {
     actuator_setup_window->show();
 }
