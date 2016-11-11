@@ -3,11 +3,11 @@
 #include "../controller/actuator.h"
 #include <QtCore>
 
-ActuatorSetup::ActuatorSetup(std::shared_ptr<Actuator>& controller, QWidget *parent) :
+ActuatorSetup::ActuatorSetup(
+	std::shared_ptr<Actuator>& controller, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ActuatorSetup),
-	m_emma(controller)
-{
+	m_emma(controller) {
     ui->setupUi(this);
 
 	//! [0]
@@ -36,41 +36,52 @@ ActuatorSetup::ActuatorSetup(std::shared_ptr<Actuator>& controller, QWidget *par
 	ui->stopBitsBox->addItem("1", STOP_1);
 	ui->stopBitsBox->addItem("2", STOP_2);
 
-	ui->queryModeBox->addItem("Polling", QextSerialPort::Polling);
-	ui->queryModeBox->addItem("EventDriven", QextSerialPort::EventDriven);
+	ui->queryModeBox->addItem("Polling", 
+		QextSerialPort::Polling);
+	ui->queryModeBox->addItem("EventDriven", 
+		QextSerialPort::EventDriven);
 
-	m_current_settings = { BAUD9600, DATA_8, PAR_NONE, STOP_1, FLOW_XONXOFF, 10 };
+	m_current_settings = { 
+		BAUD9600, DATA_8, PAR_NONE, STOP_1, FLOW_XONXOFF, 10 
+	};
 	controller->setSerPort(ui->portBox->currentText());
 	controller->changeSettings(m_current_settings);;
 
 	m_enumerator = new QextSerialEnumerator(this);
 	m_enumerator->setUpNotifications();
 
-	connect(ui->buttonBox, SIGNAL(accepted()), SLOT(OnSettingsApplied()));
+	connect(ui->buttonBox, SIGNAL(accepted()), 
+		SLOT(OnSettingsApplied()));
 	//TODO: Refresh to the current settings if button box is rejected
-	connect(ui->portBox, SIGNAL(editTextChanged(QString)), SLOT(OnPortNameChanged(QString)));
+	connect(ui->portBox, SIGNAL(editTextChanged(QString)), 
+		SLOT(OnPortNameChanged(QString)));
 
-	connect(m_enumerator, SIGNAL(deviceDiscovered(QextPortInfo)), SLOT(OnPortAddedOrRemoved()));
-	connect(m_enumerator, SIGNAL(deviceRemoved(QextPortInfo)), SLOT(OnPortAddedOrRemoved()));
+	connect(m_enumerator, SIGNAL(deviceDiscovered(QextPortInfo)), 
+		SLOT(OnPortAddedOrRemoved()));
+	connect(m_enumerator, SIGNAL(deviceRemoved(QextPortInfo)), 
+		SLOT(OnPortAddedOrRemoved()));
 
 	Logger::log("Actuator initialized", Logger::INFO);
 
 	setWindowTitle(tr("Actuator Setup"));
 }
 
-ActuatorSetup::~ActuatorSetup()
-{
+ActuatorSetup::~ActuatorSetup() {
     m_emma.reset();
     delete m_enumerator;
     delete ui;
 }
 
-void ActuatorSetup::onSettingsApplied(){ 
+void ActuatorSetup::onSettingsApplied() { 
 	PortSettings settings = {
-		(BaudRateType)ui->baudRateBox->itemData(ui->baudRateBox->currentIndex()).toInt(),
-		(DataBitsType)ui->dataBitsBox->itemData(ui->baudRateBox->currentIndex()).toInt(),
-		(ParityType)ui->parityBox->itemData(ui->parityBox->currentIndex()).toInt(),
-		(StopBitsType)ui->stopBitsBox->itemData(ui->stopBitsBox->currentIndex()).toInt(),
+		(BaudRateType)ui->baudRateBox->itemData(
+			ui->baudRateBox->currentIndex()).toInt(),
+		(DataBitsType)ui->dataBitsBox->itemData(
+			ui->baudRateBox->currentIndex()).toInt(),
+		(ParityType)ui->parityBox->itemData(
+			ui->parityBox->currentIndex()).toInt(),
+		(StopBitsType)ui->stopBitsBox->itemData(
+			ui->stopBitsBox->currentIndex()).toInt(),
 		FLOW_XONXOFF,
 		ui->timeoutBox->value()
 	};
@@ -83,13 +94,11 @@ void ActuatorSetup::onSettingsApplied(){
 	}
 }
 
-void ActuatorSetup::onPortNameChanged(const QString & name)
-{
+void ActuatorSetup::onPortNameChanged(const QString & name) {
 	m_emma->setSerPort(name);
 }
 
-void ActuatorSetup::onPortAddedOrRemoved()
-{
+void ActuatorSetup::onPortAddedOrRemoved() {
 	QString current = ui->portBox->currentText();
 
 	ui->portBox->blockSignals(true);

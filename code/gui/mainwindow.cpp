@@ -4,8 +4,7 @@
 
 MainWindow::MainWindow(QWidget *parent, const char *title) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
 
@@ -20,11 +19,11 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 
 
     // Setup slot connections
-    connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(OpenActuatorSetup()));
+    connect(ui->setup_actuator, SIGNAL(triggered()), 
+		this, SLOT(OpenActuatorSetup()));
 }
 
-QTextEdit* MainWindow::GetLogView()
-{
+QTextEdit* MainWindow::GetLogView() {
     return ui->log_viewer;
 }
 
