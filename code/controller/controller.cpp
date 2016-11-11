@@ -1,5 +1,8 @@
 #include "controller.h"
 
+Controller::Controller(int t_invert_x, int t_invert_y) :
+	m_invert_x(t_invert_x), m_invert_y(t_invert_y) {}
+
 Vector2i Controller::toVec2(Dir dir) {
 	Vector2i vector_dir(0, 0);
 
