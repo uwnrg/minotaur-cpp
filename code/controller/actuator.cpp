@@ -6,9 +6,8 @@
 
 Actuator::Actuator(const QString& serial_port,
 	const PortSettings& settings,
-	QextSerialPort::QueryMode mode) :
-	m_serial_port(new QextSerialPort(serial_port, settings, mode),
-	m_invert_x(1), m_invert_y(1) {
+	QextSerialPort::QueryMode mode) : Controller(1, 1), 
+	m_serial_port(new QextSerialPort(serial_port, settings, mode)) {
     //on successful connection
     if (m_serial_port->lastError() == 0) {
         Logger::log(serial_port.toStdString() 
@@ -26,8 +25,8 @@ Actuator::Actuator(const QString& serial_port,
 
 // Copy constructor
 Actuator::Actuator(const Actuator& other) :
+	Controller(other.m_invert_x, other.m_invert_y),
 	m_x_device(other.m_x_device), m_y_device(other.m_y_device),
-	m_invert_x(other.m_invert_x), m_invert_y(other.m_invert_y),
 	m_serial_port(other.m_serial_port) {}
 
 char* const Actuator::convertDataToBytes(long int data) {
