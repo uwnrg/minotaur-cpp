@@ -17,7 +17,8 @@ Vector2i Controller::toVec2(Dir dir) {
 		vector_dir.x_comp = -1;
 		break;
 	default:
-		Logger::log("Invalid direction specified for movement: " + dir, Logger::ERROR);
+		Logger::log("Invalid direction specified for movement: " 
+			+ dir, Logger::ERROR);
 		return vector_dir;
 	}
 	return vector_dir;
@@ -32,7 +33,8 @@ void Controller::invertAxis(Axis axis) {
 		m_invert_y *= -1;
 		break;
 	default:
-		Logger::log("Invalid axis specified for inversion: " + axis, Logger::ERROR);
+		Logger::log("Invalid axis specified for inversion: " 
+			+ axis, Logger::ERROR);
 		break;
 	}
 }

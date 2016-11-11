@@ -9,7 +9,10 @@ std::string ClockTime::getCurrentTime() {
     ClockTime::m_timeinfo = localtime(&ClockTime::m_rawtime);
 
     char clock_time [TIME_CHAR_BUFFER];
-    sprintf(clock_time, "%.2d:%.2d:%.2d ", ClockTime::m_timeinfo->tm_hour, ClockTime::m_timeinfo->tm_min, ClockTime::m_timeinfo->tm_sec);
+    sprintf(clock_time, "%.2d:%.2d:%.2d ", 
+		ClockTime::m_timeinfo->tm_hour, 
+		ClockTime::m_timeinfo->tm_min, 
+		ClockTime::m_timeinfo->tm_sec);
 
     std::string time_in_str(clock_time);
 

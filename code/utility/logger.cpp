@@ -12,7 +12,8 @@ void Logger::setStream(QTextEdit* log_stream) {
 //TODO: Overload ostream operator
 bool Logger::log (std::string message, LogType type) {
     std::string color = Logger::getTextColor(type);
-    Logger::m_buffer = "<font color=\"" + color + "\">" + ClockTime::getCurrentTime() + message + "</font>";
+    Logger::m_buffer = "<font color=\"" + color + "\">" 
+		+ ClockTime::getCurrentTime() + message + "</font>";
 
     if (Logger::m_outfield != nullptr) {
         //log it

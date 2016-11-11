@@ -10,8 +10,11 @@
 #define STEP_FACTOR	5
 #define STEP_TIME	10
 
-// For Zaber, settings must be: 9600 baud, no hand shaking, 8 data bits, no parity, one stop bit.
-const PortSettings DEFAULT_SETTINGS = { BAUD9600, DATA_8, PAR_NONE, STOP_1, FLOW_XONXOFF, 10 };
+// For Zaber, settings must be: 9600 baud, no hand shaking, 
+// 8 data bits, no parity, one stop bit.
+const PortSettings DEFAULT_SETTINGS = { 
+	BAUD9600, DATA_8, PAR_NONE, STOP_1, FLOW_XONXOFF, 10 
+};
 
 
 class QextSerialPort;
