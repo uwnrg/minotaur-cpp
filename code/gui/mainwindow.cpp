@@ -21,6 +21,21 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 
     // Setup slot connections
     connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
+
+	// setup focus and an event filter to capture key events
+	this->installEventFilter(this);
+	this->setFocus();
+}
+
+bool MainWindow::eventFilter(QObject *object, QEvent *event)
+{
+	// When the GUI gets focused, we assign the focus to this object, necessary for correctly
+	// receiving key events
+	if (event->type() == QEvent::FocusIn)
+	{
+		this->setFocus();
+	}
+	return false;
 }
 
 QTextEdit* MainWindow::getLogView() {

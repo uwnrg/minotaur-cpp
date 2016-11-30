@@ -35,6 +35,7 @@ private:
     Ui::MainWindow *ui;
     ActuatorSetup *actuator_setup_window;
     std::shared_ptr<Actuator> m_controller;
+	bool eventFilter(QObject*, QEvent*);
 };
 
 #endif // MAINWINDOW_H
