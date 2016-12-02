@@ -12,13 +12,10 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 	//Set up logger
 	Logger::setStream(getLogView());
 	m_controller = std::shared_ptr<Actuator>(new Actuator);
-
-
-
+	
     // Setup subwindows
     actuator_setup_window = new ActuatorSetup(m_controller);
-
-
+	
     // Setup slot connections
     connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
 
@@ -27,12 +24,10 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 	this->setFocus();
 }
 
-bool MainWindow::eventFilter(QObject *object, QEvent *event)
-{
+bool MainWindow::eventFilter(QObject *object, QEvent *event) {
 	// When the GUI gets focused, we assign the focus to this object, necessary for correctly
 	// receiving key events
-	if (event->type() == QEvent::FocusIn)
-	{
+	if (event->type() == QEvent::FocusIn) {
 		this->setFocus();
 	}
 	return false;
