@@ -104,15 +104,15 @@ Actuator::~Actuator() {
     delete m_serial_port;
 }
 
-void Actuator::move(Dir dir, int t) {
-    move(Controller::toVec2(dir), t);
+void Actuator::move(Dir dir, int timer) {
+    move(Controller::toVec2(dir), timer);
 }
 
-void Actuator::move(Vector2i dir, int t) {
+void Actuator::move(Vector2i dir, int timer) {
     bool success = true;
     try {
-        std::future<void> x_thread(std::async(&Actuator::moveActuator, this, m_x_device, dir.x_comp, t));
-        std::future<void> y_thread(std::async(&Actuator::moveActuator, this, m_y_device, dir.y_comp, t));
+        std::future<void> x_thread(std::async(&Actuator::moveActuator, this, m_x_device, dir.x_comp, timer));
+        std::future<void> y_thread(std::async(&Actuator::moveActuator, this, m_y_device, dir.y_comp, timer));
 
         x_thread.get();
         y_thread.get();
@@ -123,8 +123,7 @@ void Actuator::move(Vector2i dir, int t) {
     }
 
     if (success) {
-        Logger::log("Moved { " + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + " } in " + std::to_string(t) + " milliseconds.", Logger::INFO);
-        Logger::log("Moved { " + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + " } in " + std::to_string(t) + " milliseconds.", Logger::INFO);
+        Logger::log("Moved { " + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + " } in " + std::to_string(timer) + " milliseconds.", Logger::INFO);
     }
     else {
         Logger::log("The movement { " + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + " } could not be completed.", Logger::ERROR);
