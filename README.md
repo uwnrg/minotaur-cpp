@@ -27,14 +27,22 @@ cd build
 qmake -o makefile ../minotaur.pro
 make
 ```
-###### Other systems
-If you are running a different distro, consult your package manager to see what package you need to install to get the Qt development tools. For Windows and Mac, the easiest way to get up and running is to download and install the [Qt Framework](http://www.qt.io/download/). You can also get Qt Creator in order to build the code with one button and use their form editor for easy GUI design. You can open the project by specifying the root directory and then build and run the code from there. If you want to build the code from the command line on a **Mac**, run the following commands in the root directory:
+
+###### Mac
+
+For **Mac** the easiest way to get up and running is to download and install the [Qt Framework](http://www.qt.io/download/). You can also get Qt Creator in order to build the code with one button and use their form editor for easy GUI design. You can open the project by specifying the root directory and then build and run the code from there. To build the code, run the following commands in the root directory:
 ```
 mkdir build
 cd build
-qmake -o makefile ../minotaur.pro
+qmake -spec macx-g++ ../minotaur.pro
 make
 ```
+The application will be in `/builds/` and named `minotaur.app`. Run it from the Finder since **Mac** treats applications like directories.
+
+###### Other systems
+
+If you are running a different linux distro, consult your package manager to see what package you need to install to get the Qt development tools. For Windows (and Mac), the easiest way to get up and running is to download and install the [Qt Framework](http://www.qt.io/download/). You can also get Qt Creator in order to build the code with one button and use their form editor for easy GUI design. You can open the project by specifying the root directory and then build and run the code from there.
+
 **Visual Studio**: If you want to develop on Visual Studio and don't already have Qt setup there, (for VS 2013 and older) download the Qt Visual Studio Add-in from [here](http://download.qt.io/official_releases/vsaddin/). If you are using **Visual Studio 2015** or above, you need to download this [package](https://visualstudiogallery.msdn.microsoft.com/c89ff880-8509-47a4-a262-e4fa07168408) instead. Then restart Visual Studio, click on the Qt menu, go to options and add your Qt versions.  
 Once you have Qt setup, go to `QT5`->`Open Qt Project File (.pro)` and open `minotaur.pro` from this repository and you are all set!
 ###### Cygwin
