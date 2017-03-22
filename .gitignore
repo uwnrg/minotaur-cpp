@@ -238,3 +238,5 @@ FakesAssemblies/
 # Visual Studio proj files
 *.vcxproj*
 *.sln
+
+*.DS_Store

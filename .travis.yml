@@ -1,36 +1,21 @@
- sudo: required
- dist: precise
  language: cpp
-
- matrix:
-    include:
-        - compiler: gcc
-          addons:
-            apt:
-              sources:
-                  - ubuntu-toolchain-r-test
-              packages:
-                  - g++-4.9
-          env: COMPILER=g++-4.9
-    include:
-        - compiler: gcc
-          addons:
-            apt:
-              sources:
-                  - ubuntu-toolchain-r-test
-              packages:
-                  - g++-5
-          env: COMPILER=g++-5
+ compiler: gcc
+ dist: trusty
 
  before_install:
+   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
    - sudo apt-get update -qq
+
+ install:
+   - sudo apt-get install -qq g++-6
+   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
    - sudo apt-get install -y qt4-dev-tools
 
- script: 
+ script:
    - mkdir build
    - cd build
    - qmake -o makefile ../minotaur.pro
    - make
- 
+
  notifications:
   slack: uwnrg:zSxSzV4CSAa1o8tA6jjMCJSP
