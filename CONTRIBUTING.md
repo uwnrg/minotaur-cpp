@@ -7,6 +7,31 @@ virtual members, etc. Knowledge of the C++ Standard Template Library (STL) is al
 STL](https://www.amazon.ca/Effective-STL-Specific-Standard-Template/dp/0201749629) is a great book
 that covers useful STL concepts in depth.
 
+Table of Contents
+-----------------
+* [Style Guide](#style-guide)
+  - [Common C++ Naming Conventions](#common-c++-naming-conventions)
+  - [Distinguish Private Object Data](#distinguish-private-object-data)
+  - [Don't name anything starting with `_`](#don't-name-anything-starting-with-_)
+  - [Enable out-of-source-directory builds](#enable-out-of-source-directory-builds)
+  - [Use `nullptr`](#use-nullptr)
+  - [Comments](#comments)
+  - [Never use `using namespace` in a header file](#never-use-using-namespace-in-a-header-file)
+  - [Include guards](#include-guards)
+  - [{} are required for blocks](#{}-are-required-for-blocks)
+  - [Keep lines a reasonable length](#keep-lines-a-reasonable-length)
+  - [Use "" for including local files](#use-""-for-including-local-files)
+  - [Initialize member variables](#initialize-member-variables)
+  - [Use the correct integer type for standard library features](#use-the-correct-integer-type-for-standard-library-features)
+  - [Use .h and .cpp for your file extensions](#use-.h-and-.cpp-for-your-file-extensions)
+  - [Never mix tabs and spaces](#never-mix-tabs-and-spaces)
+  - [Don't be afraid of templates](#don't-be-afraid-of-templates)
+  - [Use operator overloads judiciously](#use-operator-overloads-judisciously)
+  - [Avoid implicit conversions](#avoid-implicit-conversions)
+  - [Consider the rule of zero](#consider-the-rule-of-zero)
+
+* [Collaboration Guide](#collaboration-guide)
+
 ---
 
 Style Guide
@@ -336,3 +361,31 @@ The Rule of Zero states that you do not provide any of the functions that the co
 The goal is to let the compiler provide optimal versions that are automatically maintained when more member variables are added.
 
 The [original article](http://flamingdangerzone.com/cxx11/rule-of-zero/) provides the background, while a [follow up article](https://turingtester.wordpress.com/2015/06/27/cs-rule-of-zero/) explains techniques for implementing nearly 100% of the time.
+
+
+Collaboration Guide
+-------------------
+The basic steps to starting to work on a change and submitting it:
+
+1. Fork the repo
+2. Clone your fork
+3. Add the main repo as a remote (e.g. you can name it upstream)
+3. `git checkout -b branch_name` (make sure to use a descriptive name for your branch)
+4. Make your changes and commit them under the new branch
+5. `git pull --rebase upstream develop`
+6. `git push origin branch_name`
+7. Open a PR with a nice description.
+8. Make sure the build passes before asking for a review
+
+### Additional Notes:
+Make sure that every single commit messages reflect the purpose of the associated changes. The pull requests should also have relevant names with added description as necessary.
+
+### Submitting a PR and reviewing:
+The use of proper labels is highly encouraged, as well as using the assignee field
+for tracking task ownership. For example, assign yourself while the issue/PR is
+being worked on, as well as label it with `DO NOT MERGE`. When it's ready for
+review, assign the reviewer, and remove the `DO NOT MERGE` label. After back and
+forths (by changing assignments between the reviewer and reviewee), once the changes
+are approved, the reviewer labels the PR as reviewed and assigns the PR to the
+maintainer so they can merge the PR. After the merge is done, the maintainer will
+assign it back to the author to keep track of ownership in the Kanban board.
