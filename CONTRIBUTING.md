@@ -26,7 +26,7 @@ Table of Contents
   - [Use .h and .cpp for your file extensions](#use-h-and-cpp-for-your-file-extensions)
   - [Never mix tabs and spaces](#never-mix-tabs-and-spaces)
   - [Don't be afraid of templates](#dont-be-afraid-of-templates)
-  - [Use operator overloads judiciously](#use-operator-overloads-judisciously)
+  - [Use operator overloads judiciously](#use-operator-overloads-judiciously)
   - [Avoid implicit conversions](#avoid-implicit-conversions)
   - [Consider the rule of zero](#consider-the-rule-of-zero)
 
@@ -368,24 +368,25 @@ Collaboration Guide
 The basic steps to starting to work on a change and submitting it:
 
 1. Fork the repo
-2. Clone your fork
+2. Clone your fork from your local machine
 3. Add the main repo as a remote (e.g. you can name it upstream)
-3. `git checkout -b branch_name` (make sure to use a descriptive name for your branch)
-4. Make your changes and commit them under the new branch
-5. `git pull --rebase upstream develop`
-6. `git push origin branch_name`
-7. Open a PR with a nice description.
-8. Make sure the build passes before asking for a review
+4. `git checkout -b <branch_name>` (make sure to use a descriptive name for your branch)
+5. Make your changes and commit them under the new branch
+6. `git pull --rebase upstream develop`
+7. `git push origin <branch_name>`
+8. Open a PR with a nice description.
+9. Make sure the build passes before asking for a review
 
 ### Additional Notes:
-Make sure that every single commit messages reflect the purpose of the associated changes. The pull requests should also have relevant names with added description as necessary.
+Make sure that every single commit message reflects the purpose of the associated changes. The pull requests should also have relevant names with added description as necessary.
 
 ### Submitting a PR and reviewing:
 The use of proper labels is highly encouraged, as well as using the assignee field
 for tracking task ownership. For example, assign yourself while the issue/PR is
 being worked on, as well as label it with `DO NOT MERGE`. When it's ready for
 review, assign the reviewer, and remove the `DO NOT MERGE` label. After back and
-forths (by changing assignments between the reviewer and reviewee), once the changes
+forths (by changing assignments between the reviewer and reviewee) and once the changes
 are approved, the reviewer labels the PR as reviewed and assigns the PR to the
 maintainer so they can merge the PR. After the merge is done, the maintainer will
-assign it back to the author to keep track of ownership in the Kanban board.
+assign it back to the author to keep track of ownership in the Kanban board (which
+is found under the Projects tab on Github).
