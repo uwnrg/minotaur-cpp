@@ -75,7 +75,12 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_move_button_clicked() {
 	Controller::Dir dir = (Controller::Dir)ui->selected_direction->currentIndex();
-	m_controller->move(Controller::toVec2(dir));
+    try {
+        m_controller->move(Controller::toVec2(dir));
+    }
+    catch (std::exception& e) {
+        Logger::log(e.what(), Logger::ERROR);
+    }
 }
 
 void MainWindow::openActuatorSetup() {
