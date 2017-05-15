@@ -240,3 +240,9 @@ FakesAssemblies/
 *.sln
 
 *.DS_Store
+
+# CLion proj files
+.idea/
+
+# CMake file
+CMakeLists.txt

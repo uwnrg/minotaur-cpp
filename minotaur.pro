@@ -26,7 +26,8 @@ SOURCES += \
     code/gui/mainwindow.cpp \
     code/utility/clock_time.cpp \
     code/utility/logger.cpp \
-    code/gui/actuatorsetup.cpp
+    code/gui/actuatorsetup.cpp \
+    code/controller/simulator.cpp
 
 HEADERS  += \
     code/controller/actuator.h \
@@ -34,7 +35,8 @@ HEADERS  += \
     code/gui/mainwindow.h \
     code/utility/clock_time.h \
     code/utility/logger.h \
-    code/gui/actuatorsetup.h
+    code/gui/actuatorsetup.h \
+    code/controller/simulator.h
 
 FORMS += code/gui/mainwindow.ui \
     code/gui/actuatorsetup.ui
