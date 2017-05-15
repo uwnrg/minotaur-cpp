@@ -240,3 +240,6 @@ FakesAssemblies/
 *.sln
 
 *.DS_Store
+
+# CLion proj files
+.idea/
