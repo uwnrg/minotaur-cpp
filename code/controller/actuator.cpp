@@ -1,13 +1,11 @@
 #include <thread>
-#include <chrono>
 #include <future>
 
 #include <iostream>
 
 #include "actuator.h"
-#include "../utility/logger.h"
 
-Actuator::Actuator(const QString& serial_port, 
+Actuator::Actuator(const QString& serial_port,
     const PortSettings& settings, QextSerialPort::QueryMode mode) :
     Controller(1, 1), m_serial_port(new QextSerialPort(serial_port, settings, mode)) {
 
@@ -38,7 +36,7 @@ char* const Actuator::convertDataToBytes(long int data) {
 
     for (int i = DATA_SIZE - 1; i >= 0; --i) {
         int temp = intPow(BYTE_RANGE, i);
-        result[i] = data / temp;
+        result[i] = (char) (data / temp);
         data = data - temp * result[i];
     }
 
@@ -106,10 +104,6 @@ Actuator::~Actuator() {
     delete m_serial_port;
 }
 
-void Actuator::move(Dir dir, int timer) {
-    move(Controller::toVec2(dir), timer);
-}
-
 void Actuator::move(Vector2i dir, int timer) {
     bool success = true;
     Logger::log("Attempting move (" + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + ")", Logger::DEBUG);
@@ -120,11 +114,11 @@ void Actuator::move(Vector2i dir, int timer) {
         x_thread.get();
         y_thread.get();
     }
-    catch (const std::exception& e) {
+    catch (std::exception& e) {
         Logger::log(e.what(), Logger::ERROR);
         success = false;
     }
-    catch (const std::string& e) {
+    catch (char const *e) {
         Logger::log(e, Logger::DEBUG);
         success = false;
     }
@@ -163,14 +157,16 @@ void Actuator::moveActuator(const unsigned char device, const int value, const i
         for (int i = value; i > 0; i--) {
             if (m_serial_port->isOpen()) {
                 m_serial_port->write(instr, CMD_SIZE + DATA_SIZE);
-            }
-            else {
+            } else {
                 Logger::log("ERROR: Failed to write to serial port " + (m_serial_port->portName()).toStdString() + " because it's not open.", Logger::ERROR);
                 throw "Action could not be completed"; // TODO: Might want to figure out a better way than throwing exceptions, revisit after adding concurrency
             }
 
             std::this_thread::sleep_for(sleep_step);
         }
+    }
+    catch (char const *e) {
+        throw e;
     }
     catch (...) {
         throw std::current_exception();
