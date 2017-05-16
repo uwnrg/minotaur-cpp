@@ -5,8 +5,7 @@
 struct Vector2i {
 	int x_comp = 0;
 	int y_comp = 0;
-	Vector2i(int xp, int yp) : x_comp(xp), y_comp(yp) {};
-	// TODO: Add ostream operator overloading
+    Vector2i(int xp, int yp) : x_comp(xp), y_comp(yp) {}
 };
 
 class Controller
@@ -26,6 +25,13 @@ public:
         LEFT,	// x < 0
 
         NUM_DIRS
+    };
+
+    enum Type {
+        ACTUATOR,
+        SIMULATOR,
+
+        NUM_TYPES
     };
 
 	enum Axis {

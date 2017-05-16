@@ -30,6 +30,7 @@ public slots:
 
 private slots:
     void on_move_button_clicked();
+    void on_controller_button_clicked();
 
 private:
     Ui::MainWindow *ui;
