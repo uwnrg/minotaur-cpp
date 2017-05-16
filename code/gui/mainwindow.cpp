@@ -8,13 +8,15 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 
     ui->setupUi(this);
 
-
 	//Set up logger
 	Logger::setStream(getLogView());
-	m_controller = std::shared_ptr<Actuator>(new Actuator);
+	m_actuator = std::shared_ptr<Actuator>(new Actuator);
+	m_simulator = std::shared_ptr<Simulator>(new Simulator);
+
+	m_controller = m_actuator;
 	
     // Setup subwindows
-    actuator_setup_window = new ActuatorSetup(m_controller);
+    actuator_setup_window = new ActuatorSetup(m_actuator);
 	
     // Setup slot connections
     connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
@@ -81,6 +83,10 @@ void MainWindow::on_move_button_clicked() {
     catch (std::exception& e) {
         Logger::log(e.what(), Logger::ERROR);
     }
+}
+
+void MainWindow::on_controller_button_clicked() {
+    Controller::Type type = (Controller::Type)ui->controller_type->currentIndex();
 }
 
 void MainWindow::openActuatorSetup() {

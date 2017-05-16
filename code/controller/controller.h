@@ -2,11 +2,12 @@
 #define CONTROLLER_H
 #include "../utility/logger.h"
 
+#define STEP_TIME	10
+
 struct Vector2i {
 	int x_comp = 0;
 	int y_comp = 0;
-	Vector2i(int xp, int yp) : x_comp(xp), y_comp(yp) {};
-	// TODO: Add ostream operator overloading
+    Vector2i(int xp, int yp) : x_comp(xp), y_comp(yp) {}
 };
 
 class Controller
@@ -28,6 +29,13 @@ public:
         NUM_DIRS
     };
 
+    enum Type {
+        ACTUATOR,
+        SIMULATOR,
+
+        NUM_TYPES
+    };
+
 	enum Axis {
 		X,
 		Y,
@@ -37,6 +45,9 @@ public:
     // Common robot functions
 	static Vector2i toVec2(Dir);
 	void invertAxis(Axis);
+	// This is just a wrapper to convert from Dir enum to Vector2i parameter
+	void move(Dir dir, int timer = STEP_TIME);
+	virtual void move(Vector2i dir, int timer = STEP_TIME);
 	
 protected:
 	Controller(int t_invert_x, int t_invert_y);

@@ -3,13 +3,10 @@
 
 #include "controller.h"
 
-#define STEP_TIME 10
-
 class Simulator : public Controller {
 public:
-	Simulator(int t_invert_x, int t_invert_y);
-	void move(Dir dir, int time = STEP_TIME);
-    void move(Vector2i dir, int time = STEP_TIME);
+	Simulator(int t_invert_x = 1, int t_invert_y = 1);
+	void move(Vector2i dir, int timer = STEP_TIME);
 };
 
 #endif // SIMULATOR_H

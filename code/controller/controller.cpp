@@ -1,5 +1,9 @@
 #include "controller.h"
 
+std::ostream& operator<<(std::ostream& os, const Vector2i v) {
+    return os << '(' << v.x_comp << ',' << ' ' << v.y_comp << ')';
+}
+
 Controller::Controller(int t_invert_x, int t_invert_y) :
 	m_invert_x(t_invert_x), m_invert_y(t_invert_y) {}
 
@@ -38,4 +42,12 @@ void Controller::invertAxis(Axis axis) {
 		Logger::log("Invalid axis specified for inversion: " + axis, Logger::ERROR);
 		break;
 	}
+}
+
+void Controller::move(Dir dir, int timer) {
+	move(Controller::toVec2(dir), timer);
+}
+
+void Controller::move(Vector2i dir, int timer) {
+	throw std::string("Controller::move(Vector2i, int) is not implemented");
 }

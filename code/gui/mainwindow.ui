@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>301</width>
-    <height>367</height>
+    <width>650</width>
+    <height>506</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>290</y>
-      <width>281</width>
-      <height>46</height>
+      <x>40</x>
+      <y>300</y>
+      <width>561</width>
+      <height>58</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="instruction_interface">
@@ -35,6 +35,12 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QLineEdit" name="move_command_edit">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -45,6 +51,12 @@
        </item>
        <item>
         <widget class="QComboBox" name="selected_direction">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
          <item>
           <property name="text">
            <string>Up</string>
@@ -69,6 +81,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="move_button">
+         <property name="minimumSize">
+          <size>
+           <width>125</width>
+           <height>20</height>
+          </size>
+         </property>
          <property name="text">
           <string>Enter Instruction</string>
          </property>
@@ -82,8 +100,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
-      <width>281</width>
+      <y>20</y>
+      <width>621</width>
       <height>231</height>
      </rect>
     </property>
@@ -123,6 +141,56 @@ p, li { white-space: pre-wrap; }
      </item>
     </layout>
    </widget>
+   <widget class="QWidget" name="layoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>390</y>
+      <width>561</width>
+      <height>69</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="controller_interface">
+     <item>
+      <widget class="QLabel" name="controller_label">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Select controller&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="controller_layout">
+       <item>
+        <widget class="QComboBox" name="controller_type">
+         <item>
+          <property name="text">
+           <string>Actuator</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Simulator</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="controller_button">
+         <property name="minimumSize">
+          <size>
+           <width>125</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Select</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="main_menu_bar">
    <property name="enabled">
@@ -132,7 +200,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>301</width>
+     <width>650</width>
      <height>21</height>
     </rect>
    </property>
