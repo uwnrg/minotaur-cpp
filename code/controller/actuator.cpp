@@ -2,6 +2,8 @@
 #include <chrono>
 #include <future>
 
+#include <iostream>
+
 #include "actuator.h"
 #include "../utility/logger.h"
 
@@ -32,7 +34,7 @@ char* const Actuator::convertDataToBytes(long int data) {
         data = intPow(BYTE_RANGE, 4) + data;
     }
 
-    char result[DATA_SIZE];
+    static char result[DATA_SIZE];
 
     for (int i = DATA_SIZE - 1; i >= 0; --i) {
         int temp = intPow(BYTE_RANGE, i);
@@ -110,6 +112,7 @@ void Actuator::move(Dir dir, int timer) {
 
 void Actuator::move(Vector2i dir, int timer) {
     bool success = true;
+    Logger::log("Attempting move (" + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + ")", Logger::DEBUG);
     try {
         std::future<void> x_thread(std::async(&Actuator::moveActuator, this, m_x_device, dir.x_comp, timer));
         std::future<void> y_thread(std::async(&Actuator::moveActuator, this, m_y_device, dir.y_comp, timer));
@@ -117,8 +120,16 @@ void Actuator::move(Vector2i dir, int timer) {
         x_thread.get();
         y_thread.get();
     }
-    catch (std::exception& e) {
+    catch (const std::exception& e) {
         Logger::log(e.what(), Logger::ERROR);
+        success = false;
+    }
+    catch (const std::string& e) {
+        Logger::log(e, Logger::DEBUG);
+        success = false;
+    }
+    catch (...) {
+        Logger::log("Unexpected exception", Logger::DEBUG);
         success = false;
     }
 

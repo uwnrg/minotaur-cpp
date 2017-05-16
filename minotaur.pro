@@ -9,11 +9,12 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 # Use C++11 compiler
-QMAKE_CXXFLAGS += -std=c++11
+#QMAKE_CXXFLAGS += -std=c++11
 
 TARGET = minotaur
 TEMPLATE = app
 DESTDIR = builds
+CONFIG += c++11
 
 # Include third party libraries
 include (third-party/qextserialport.pri)

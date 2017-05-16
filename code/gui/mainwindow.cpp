@@ -78,6 +78,10 @@ void MainWindow::on_move_button_clicked() {
 	m_controller->move(Controller::toVec2(dir));
 }
 
+void MainWindow::on_controller_button_clicked() {
+    Controller::Type type = (Controller::Type)ui->controller_type->currentIndex();
+}
+
 void MainWindow::openActuatorSetup() {
     actuator_setup_window->show();
 }
