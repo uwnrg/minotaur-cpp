@@ -7,8 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>650</width>
-    <height>506</height>
+    <height>510</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>650</width>
+    <height>510</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>650</width>
+    <height>510</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Minotaur</string>
@@ -19,7 +31,7 @@
      <rect>
       <x>40</x>
       <y>300</y>
-      <width>561</width>
+      <width>571</width>
       <height>58</height>
      </rect>
     </property>
@@ -101,7 +113,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>621</width>
+      <width>631</width>
       <height>231</height>
      </rect>
     </property>
@@ -146,7 +158,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>40</x>
       <y>390</y>
-      <width>561</width>
+      <width>571</width>
       <height>69</height>
      </rect>
     </property>

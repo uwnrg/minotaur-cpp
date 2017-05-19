@@ -14,9 +14,11 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 	m_simulator = std::shared_ptr<Simulator>(new Simulator);
 
 	m_controller = m_actuator;
+    m_controller_type = Controller::Type::ACTUATOR;
 	
     // Setup subwindows
     actuator_setup_window = new ActuatorSetup(m_actuator);
+    simulator_window = new SimulatorWindow;
 	
     // Setup slot connections
     connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
@@ -67,10 +69,16 @@ void MainWindow::keyPressEvent(QKeyEvent* e) {
            
 }
 
+void MainWindow::mousePressEvent(QMouseEvent *event) {
+    // When the user clicks outside a widget,
+    // restore focus to the main window
+    this->setFocus();
+}
 
 MainWindow::~MainWindow() {
     // Destroy all subwindows
     delete actuator_setup_window;
+    delete simulator_window;
 
     delete ui;
 }
@@ -82,8 +90,35 @@ void MainWindow::on_move_button_clicked() {
 
 void MainWindow::on_controller_button_clicked() {
     Controller::Type type = (Controller::Type)ui->controller_type->currentIndex();
+    Logger::log("Switch controller button clicked", Logger::DEBUG);
+    // Do nothing if the same controller type is selected
+    if (m_controller_type == type) {
+        Logger::log("No controller change", Logger::DEBUG);
+        return;
+    }
+    m_controller_type = type;
+    switch(type) {
+    case Controller::Type::ACTUATOR:
+        // Switch to the actuator controller and hide the simulation window
+        Logger::log("Switching to ACTUATOR", Logger::DEBUG);
+        m_controller = m_actuator;
+        if (simulator_window->isVisible()) simulator_window->hide();
+        break;
+    case Controller::Type::SIMULATOR:
+        // Switch to the simulator controller and show the simulator window
+        Logger::log("Switching to SIMULATOR", Logger::DEBUG);
+        m_controller = m_simulator;
+        if (!simulator_window->isVisible()) simulator_window->show();
+        break;
+    default:
+        break;
+    }
 }
 
 void MainWindow::openActuatorSetup() {
     actuator_setup_window->show();
+}
+
+void MainWindow::openSimulator() {
+    simulator_window->show();
 }
