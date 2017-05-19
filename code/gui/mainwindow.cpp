@@ -17,8 +17,8 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
     m_controller_type = Controller::Type::ACTUATOR;
 	
     // Setup subwindows
-    actuator_setup_window = new ActuatorSetup(m_actuator);
-    simulator_window = new SimulatorWindow;
+    actuator_setup_window = new ActuatorSetup(m_actuator, this);
+    simulator_window = new SimulatorWindow(m_simulator, this);
 	
     // Setup slot connections
     connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
@@ -44,6 +44,7 @@ QTextEdit* MainWindow::getLogView() {
 void MainWindow::keyPressEvent(QKeyEvent* e) {
     // TODO: Eventually we would want to generalize the key events so that we can configure
     // what keys we want to map. This is okay for now.
+    Logger::log("Keypressed " + std::to_string(e->key()), Logger::DEBUG);
     switch (e->key()) {
         case Qt::Key_Up:
             m_controller->move(Controller::Dir::UP);
