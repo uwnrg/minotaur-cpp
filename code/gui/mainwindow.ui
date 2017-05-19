@@ -7,8 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>650</width>
-    <height>506</height>
+    <height>420</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>650</width>
+    <height>420</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>650</width>
+    <height>420</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Minotaur</string>
@@ -19,7 +31,7 @@
      <rect>
       <x>40</x>
       <y>300</y>
-      <width>561</width>
+      <width>571</width>
       <height>58</height>
      </rect>
     </property>
@@ -99,9 +111,9 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>20</y>
-      <width>621</width>
+      <width>611</width>
       <height>231</height>
      </rect>
     </property>
@@ -141,56 +153,6 @@ p, li { white-space: pre-wrap; }
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>390</y>
-      <width>561</width>
-      <height>69</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="controller_interface">
-     <item>
-      <widget class="QLabel" name="controller_label">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Select controller&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="controller_layout">
-       <item>
-        <widget class="QComboBox" name="controller_type">
-         <item>
-          <property name="text">
-           <string>Actuator</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Simulator</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="controller_button">
-         <property name="minimumSize">
-          <size>
-           <width>125</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Select</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="main_menu_bar">
    <property name="enabled">
@@ -212,7 +174,7 @@ p, li { white-space: pre-wrap; }
      <string>Setup</string>
     </property>
     <addaction name="switch_to_actuator_mode"/>
-    <addaction name="switch_to_solenoid_mode"/>
+    <addaction name="switch_to_simulator_mode"/>
     <addaction name="separator"/>
     <addaction name="setup_actuator"/>
     <addaction name="separator"/>
@@ -273,27 +235,27 @@ p, li { white-space: pre-wrap; }
   </widget>
   <action name="switch_to_actuator_mode">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>EMMA Actuator mode</string>
+    <string>SAM Actuator mode</string>
    </property>
   </action>
-  <action name="switch_to_solenoid_mode">
+  <action name="switch_to_simulator_mode">
    <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>EMMA Solenoid mode</string>
+    <string>Simulator mode</string>
    </property>
   </action>
   <action name="setup_actuator">

@@ -17,28 +17,28 @@ class QextSerialPort;
 
 // Command mapping for Zaber T-LSR actuators http://www.zaber.com/wiki/Manuals/T-LSR
 enum ZaberCmd {
-	HOME = 1,
-	RENUMBER = 2,
-	ABS_MOVE = 20,
-	REL_MOVE = 21,
-	CONST_SPEED_MOVE = 22,
-	STOP_MOVE = 23,
-	SET_CURRENT_POS = 45,
-	FIRM_VER = 51
+    HOME = 1,
+    RENUMBER = 2,
+    ABS_MOVE = 20,
+    REL_MOVE = 21,
+    CONST_SPEED_MOVE = 22,
+    STOP_MOVE = 23,
+    SET_CURRENT_POS = 45,
+    FIRM_VER = 51
 };
 
 class Actuator : public Controller
 {
 public:
     Actuator(const QString& serial_port = "",
-		const PortSettings& settings = DEFAULT_SETTINGS,
-		QextSerialPort::QueryMode mode = QextSerialPort::EventDriven);
+        const PortSettings& settings = DEFAULT_SETTINGS,
+        QextSerialPort::QueryMode mode = QextSerialPort::EventDriven);
 
-	Actuator(const Actuator&);
+    Actuator(const Actuator&);
     int setSerPort(const QString& serial_port);
-	int changeSettings(const PortSettings& settings);
-	void switchDevices();
-	void move(Vector2i dir, int timer = STEP_TIME);
+    int changeSettings(const PortSettings& settings);
+    void switchDevices();
+    void move(Vector2i dir, int timer);
     ~Actuator();
 
 private:
@@ -46,10 +46,10 @@ private:
     unsigned char m_x_device, m_y_device;
 
     //helper functions
-	static char* const convertDataToBytes(long int data);
-	void resetDeviceNumber();
-	static int const intPow(int x, int p);
-	void moveActuator(unsigned char device, const int value, const int time);
+    static char* const convertDataToBytes(long int data);
+    void resetDeviceNumber();
+    static int const intPow(int x, int p);
+    void moveActuator(unsigned char device, const int value, const int time);
 };
 
 #endif // ACTUATOR_H

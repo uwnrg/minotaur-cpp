@@ -18,12 +18,10 @@ public:
     };
     static bool log(std::string message, LogType type = INFO);
     static void setStream(QTextEdit* log_stream);
-    static bool isDebug();
 
 private:
     static std::string m_buffer;
     static QTextEdit* m_outfield;
-    static bool m_debug;
     inline static std::string getTextColor(LogType type) {
         switch (type) {
             case INFO:
