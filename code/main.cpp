@@ -1,6 +1,4 @@
 #include "gui/mainwindow.h"
-#include "utility/logger.h"
-#include "controller/actuator.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])

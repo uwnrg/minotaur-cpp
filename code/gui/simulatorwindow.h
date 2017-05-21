@@ -5,6 +5,7 @@
 #include <memory>
 
 class Simulator;
+class SimulatorScene;
 class MainWindow;
 
 namespace Ui {
@@ -22,6 +23,7 @@ public:
 
 private:
     Ui::SimulatorWindow *ui;
+    SimulatorScene *m_simulator_scene;
     std::shared_ptr<Simulator> m_simulator;
 };
 

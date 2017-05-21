@@ -1,6 +1,5 @@
 #include "logger.h"
 
-
 std::string Logger::m_buffer;
 QTextEdit* Logger::m_outfield = NULL;
 bool Logger::m_debug = true;
