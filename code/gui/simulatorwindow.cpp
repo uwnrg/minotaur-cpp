@@ -1,7 +1,7 @@
 #include "simulatorwindow.h"
 #include "ui_simulatorwindow.h"
 #include "mainwindow.h"
-#include "graphics/simulatorscene.h"
+#include "../graphics/simulatorscene.h"
 
 SimulatorWindow::SimulatorWindow(std::shared_ptr<Simulator>& simulator, QWidget *parent) :
     QDialog(parent),

@@ -31,8 +31,8 @@ SOURCES += \
     code/controller/simulator.cpp \
     code/gui/simulatorwindow.cpp \
     code/utility/vector2i.cpp \
-    code/gui/graphics/simulatorscene.cpp \
-    code/gui/graphics/robotgraphicsitem.cpp
+    code/graphics/simulatorscene.cpp \
+    code/graphics/robotgraphicsitem.cpp
 
 HEADERS  += \
     code/controller/actuator.h \
@@ -44,8 +44,8 @@ HEADERS  += \
     code/controller/simulator.h \
     code/gui/simulatorwindow.h \
     code/utility/vector2i.h \
-    code/gui/graphics/simulatorscene.h \
-    code/gui/graphics/robotgraphicsitem.h
+    code/graphics/simulatorscene.h \
+    code/graphics/robotgraphicsitem.h
 
 FORMS += code/gui/mainwindow.ui \
     code/gui/actuatorsetup.ui \

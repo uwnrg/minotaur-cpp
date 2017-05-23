@@ -1,8 +1,6 @@
 #include <thread>
 #include <future>
 
-#include <iostream>
-
 #include "actuator.h"
 
 Actuator::Actuator(const QString& serial_port,
@@ -32,7 +30,7 @@ char* const Actuator::convertDataToBytes(long int data) {
         data = intPow(BYTE_RANGE, 4) + data;
     }
 
-    static char result[DATA_SIZE];
+    char *result = new char[DATA_SIZE];
 
     for (int i = DATA_SIZE - 1; i >= 0; --i) {
         int temp = intPow(BYTE_RANGE, i);
@@ -164,6 +162,7 @@ void Actuator::moveActuator(const unsigned char device, const int value, const i
 
             std::this_thread::sleep_for(sleep_step);
         }
+        delete[] data;
     }
     catch (char const *e) {
         throw e;

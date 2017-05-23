@@ -2,8 +2,8 @@
 
 #include "simulatorscene.h"
 #include "robotgraphicsitem.h"
-#include "../../utility/logger.h"
-#include "../../controller/simulator.h"
+#include "../utility/logger.h"
+#include "../controller/simulator.h"
 
 SimulatorScene::SimulatorScene(std::shared_ptr<Simulator> &simulator_controller, QObject *parent) :
 		m_simulator_controller(simulator_controller),
@@ -24,5 +24,13 @@ void SimulatorScene::update() {
 	            Logger::DEBUG);
 	robot_graphics->setX(robot_pos.x_comp);
 	robot_graphics->setY(robot_pos.y_comp);
-	QGraphicsScene::update(QRectF(-400, 400, 800, 800));
+	QGraphicsScene::update(QRectF(-800, -800, 1600, 1600));
+}
+
+void SimulatorScene::render(QPainter *painter,
+                            const QRectF &target,
+                            const QRectF &source,
+                            Qt::AspectRatioMode aspectRatioMode) {
+    painter->fillRect(-800, -800, 1600, 1600, Qt::white);
+    QGraphicsScene::render(painter, target, source, aspectRatioMode);
 }
