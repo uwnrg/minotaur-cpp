@@ -26,11 +26,3 @@ void SimulatorScene::update() {
 	robot_graphics->setY(robot_pos.y_comp);
 	QGraphicsScene::update(QRectF(-800, -800, 1600, 1600));
 }
-
-void SimulatorScene::render(QPainter *painter,
-                            const QRectF &target,
-                            const QRectF &source,
-                            Qt::AspectRatioMode aspectRatioMode) {
-    painter->fillRect(-800, -800, 1600, 1600, Qt::white);
-    QGraphicsScene::render(painter, target, source, aspectRatioMode);
-}

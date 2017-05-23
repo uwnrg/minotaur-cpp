@@ -11,10 +11,6 @@ class SimulatorScene : public QGraphicsScene {
 public:
     SimulatorScene(std::shared_ptr<Simulator> &simulator_controller, QObject *parent);
     void update();
-    void render(QPainter *painter,
-                const QRectF &target = QRectF(),
-                const QRectF &source = QRectF(),
-                Qt::AspectRatioMode aspectRatioMode = Qt::KeepAspectRatio);
     ~SimulatorScene();
 
 private:
