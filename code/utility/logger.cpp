@@ -1,8 +1,13 @@
 #include "logger.h"
 
+#ifdef QT_DEBUG
+    bool Logger::m_debug = true;
+#else
+    bool Logger::m_debug = false;
+#endif
+
 std::string Logger::m_buffer;
 QTextEdit* Logger::m_outfield = NULL;
-bool Logger::m_debug = true;
 
 void Logger::setStream(QTextEdit* log_stream) {
     Logger::m_outfield = log_stream;
@@ -23,8 +28,4 @@ bool Logger::log (std::string message, LogType type) {
         std::cout << m_buffer << std::endl;
     }
     return true;
-}
-
-bool Logger::isDebug() {
-    return Logger::m_debug;
 }

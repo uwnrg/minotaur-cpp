@@ -14,7 +14,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = minotaur
 TEMPLATE = app
 DESTDIR = builds
-CONFIG += c++11
 
 # Include third party libraries
 include (third-party/qextserialport.pri)

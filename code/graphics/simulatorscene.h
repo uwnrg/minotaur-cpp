@@ -14,8 +14,8 @@ public:
     ~SimulatorScene();
 
 private:
-    std::shared_ptr<Simulator> m_simulator_controller;
     QGraphicsItem *robot_graphics;
+    std::shared_ptr<Simulator> m_simulator_controller;
 };
 
 #endif // SIMULATORSCENE_H
