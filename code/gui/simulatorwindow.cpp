@@ -3,23 +3,27 @@
 #include "mainwindow.h"
 #include "../graphics/simulatorscene.h"
 
-SimulatorWindow::SimulatorWindow(std::shared_ptr<Simulator>& simulator, QWidget *parent) :
+SimulatorWindow::SimulatorWindow(std::shared_ptr<Simulator> simulator, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::SimulatorWindow),
-    m_simulator(simulator) {
+    ui(new Ui::SimulatorWindow) {
     ui->setupUi(this);
 
-    m_simulator_scene = new SimulatorScene(m_simulator, ui->simulator_graphics_view);
-    m_simulator->setSimulatorScene(m_simulator_scene);
+    m_simulator_scene = new SimulatorScene(simulator, ui->simulator_graphics_view);
     ui->simulator_graphics_view->setScene(m_simulator_scene);
 }
 
 void SimulatorWindow::keyPressEvent(QKeyEvent *event) {
-    MainWindow *parent = (MainWindow*) parentWidget();
-    parent->keyPressEvent(event);
+    QWidget *parent = parentWidget();
+    if (!parent) return;
+    MainWindow *mainWindow = (MainWindow*) parentWidget();
+    mainWindow->keyPressEvent(event);
 }
 
 SimulatorWindow::~SimulatorWindow() {
     delete m_simulator_scene;
     delete ui;
+}
+
+SimulatorScene *SimulatorWindow::getSimulatorScene() {
+    return m_simulator_scene;
 }

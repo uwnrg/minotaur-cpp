@@ -40,6 +40,7 @@ public:
     Vector2i operator*(const int a);
 
     std::ostream &operator<<(std::ostream &os);
+    std::string to_string();
 };
 
 #endif // VECTOR2I_H

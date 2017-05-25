@@ -1,6 +1,6 @@
 #include "logger.h"
 
-#ifdef QT_DEBUG
+#ifndef NDEBUG
     bool Logger::m_debug = true;
 #else
     bool Logger::m_debug = false;

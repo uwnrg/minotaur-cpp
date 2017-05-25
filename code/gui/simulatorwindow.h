@@ -17,14 +17,14 @@ class SimulatorWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit SimulatorWindow(std::shared_ptr<Simulator>& controller, QWidget *parent = 0);
+    explicit SimulatorWindow(std::shared_ptr<Simulator> simulator, QWidget *parent = 0);
     void keyPressEvent(QKeyEvent*);
+    SimulatorScene *getSimulatorScene();
     ~SimulatorWindow();
 
 private:
     Ui::SimulatorWindow *ui;
     SimulatorScene *m_simulator_scene;
-    std::shared_ptr<Simulator> m_simulator;
 };
 
 #endif // SIMULATORWINDOW_H

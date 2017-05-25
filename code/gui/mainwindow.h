@@ -11,6 +11,7 @@
 #include "../controller/simulator.h"
 #include "actuatorsetup.h"
 #include "simulatorwindow.h"
+#include "../controller/controldelegator.h"
 
 #define DEFAULT_TITLE "minotaur"
 
@@ -29,7 +30,6 @@ public:
 
 public slots:
     void openActuatorSetup();
-    void openSimulator();
 
 private slots:
     // Button click events
@@ -41,11 +41,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     ActuatorSetup *actuator_setup_window;
-    SimulatorWindow *simulator_window;
-    std::shared_ptr<Controller> m_controller;
-	std::shared_ptr<Actuator> m_actuator;
-	std::shared_ptr<Simulator> m_simulator;
-    Controller::Type m_controller_type;
+    std::shared_ptr<ControlDelegator> m_control_delegator;
 	bool eventFilter(QObject*, QEvent*);
 };
 

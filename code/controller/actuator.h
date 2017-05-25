@@ -38,7 +38,7 @@ public:
     int setSerPort(const QString& serial_port);
 	int changeSettings(const PortSettings& settings);
 	void switchDevices();
-	void move(Vector2i dir, int timer = STEP_TIME);
+	void move(Vector2i dir, int timer);
     ~Actuator();
 
 private:

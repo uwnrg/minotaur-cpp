@@ -43,7 +43,3 @@ void Controller::invertAxis(Axis axis) {
 void Controller::move(Dir dir, int timer) {
 	move(Controller::toVec2(dir), timer);
 }
-
-void Controller::move(Vector2i dir, int timer) {
-	throw std::string("Controller::move(Vector2i, int) is not implemented");
-}

@@ -23,13 +23,6 @@ public:
         NUM_DIRS
     };
 
-    enum Type {
-        ACTUATOR,
-        SIMULATOR,
-
-        NUM_TYPES
-    };
-
 	enum Axis {
 		X,
 		Y,
@@ -39,9 +32,9 @@ public:
     // Common robot functions
 	static Vector2i toVec2(Dir);
 	void invertAxis(Axis);
+	virtual void move(Vector2i dir, int timer) = 0;
 	// This is just a wrapper to convert from Dir enum to Vector2i parameter
-	void move(Dir dir, int timer = STEP_TIME);
-	virtual void move(Vector2i dir, int timer = STEP_TIME);
+	virtual void move(Dir dir, int timer);
 
 protected:
 	Controller(int t_invert_x, int t_invert_y);
