@@ -12,6 +12,7 @@ public:
     enum LogType {
         INFO,
         ERROR,
+        DEBUG,
 
         NUM_LOG_TYPES
     };
@@ -21,12 +22,15 @@ public:
 private:
     static std::string m_buffer;
     static QTextEdit* m_outfield;
+    static bool m_debug;
     inline static std::string getTextColor(LogType type) {
         switch (type) {
             case INFO:
                 return "black";
             case ERROR:
                 return "red";
+            case DEBUG:
+                return "blue";
             default:
                 return "black";
         }
