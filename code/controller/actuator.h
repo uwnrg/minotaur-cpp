@@ -8,7 +8,6 @@
 #define DATA_SIZE	4
 #define CMD_SIZE	2
 #define STEP_FACTOR	5
-#define STEP_TIME	10
 
 // For Zaber, settings must be: 9600 baud, no hand shaking, 8 data bits, no parity, one stop bit.
 const PortSettings DEFAULT_SETTINGS = { BAUD9600, DATA_8, PAR_NONE, STOP_1, FLOW_XONXOFF, 10 };
@@ -39,9 +38,7 @@ public:
     int setSerPort(const QString& serial_port);
 	int changeSettings(const PortSettings& settings);
 	void switchDevices();
-    // This is just a wrapper to convert from Dir enum to Vector2i parameter
-	void move(Dir dir, int time = STEP_TIME);
-	void move(Vector2i dir, int time = STEP_TIME);
+	void move(Vector2i dir, int timer);
     ~Actuator();
 
 private:

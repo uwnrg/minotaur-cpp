@@ -1,5 +1,10 @@
 #include "logger.h"
 
+#ifndef NDEBUG
+    bool Logger::m_debug = true;
+#else
+    bool Logger::m_debug = false;
+#endif
 
 std::string Logger::m_buffer;
 QTextEdit* Logger::m_outfield = NULL;
@@ -11,6 +16,7 @@ void Logger::setStream(QTextEdit* log_stream) {
 
 //TODO: Overload ostream operator
 bool Logger::log (std::string message, LogType type) {
+    if (type == LogType::DEBUG && !Logger::m_debug) return false;
     std::string color = Logger::getTextColor(type);
     Logger::m_buffer = "<font color=\"" + color + "\">" + ClockTime::getCurrentTime() + message + "</font>";
 
