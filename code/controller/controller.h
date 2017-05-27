@@ -1,16 +1,11 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 #include "../utility/logger.h"
+#include "../utility/vector2i.h"
 
-struct Vector2i {
-	int x_comp = 0;
-	int y_comp = 0;
-	Vector2i(int xp, int yp) : x_comp(xp), y_comp(yp) {};
-	// TODO: Add ostream operator overloading
-};
+#define STEP_TIME	10
 
-class Controller
-{
+class Controller {
 public:
     enum Mode {
         EMMA,
@@ -37,7 +32,10 @@ public:
     // Common robot functions
 	static Vector2i toVec2(Dir);
 	void invertAxis(Axis);
-	
+	virtual void move(Vector2i dir, int timer) = 0;
+	// This is just a wrapper to convert from Dir enum to Vector2i parameter
+	virtual void move(Dir dir, int timer);
+
 protected:
 	Controller(int t_invert_x, int t_invert_y);
 	int m_invert_x, m_invert_y; // +1 for no inversion in the axis, -1 otherwise
