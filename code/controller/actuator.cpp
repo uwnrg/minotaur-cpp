@@ -108,7 +108,6 @@ void Actuator::move(Vector2i dir, int timer) {
     try {
         std::future<void> x_thread(std::async(&Actuator::moveActuator, this, m_x_device, dir.x_comp, timer));
         std::future<void> y_thread(std::async(&Actuator::moveActuator, this, m_y_device, dir.y_comp, timer));
-
         x_thread.get();
         y_thread.get();
     }
@@ -152,7 +151,7 @@ void Actuator::moveActuator(const unsigned char device, const int value, const i
         }
 
         // TODO: This is yet to be tested, sorry I don't have Zaber actuators at home :(
-        for (int i = value; i > 0; i--) {
+        for (int i = abs(value); i > 0; i--) {
             if (m_serial_port->isOpen()) {
                 m_serial_port->write(instr, CMD_SIZE + DATA_SIZE);
             } else {
