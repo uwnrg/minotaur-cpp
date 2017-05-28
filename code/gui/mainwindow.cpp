@@ -18,11 +18,13 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
     actuator_setup_window = new ActuatorSetup(m_actuator, this);
     simulator_window = new SimulatorWindow(m_simulator, this);
     m_simulator->setSimulatorScene(simulator_window->getSimulatorScene());
+    action_about_window = new ActionAbout();
 
     // Setup slot connections
     connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
     connect(ui->switch_to_actuator_mode, SIGNAL(triggered()), this, SLOT(switchToActuator()));
     connect(ui->switch_to_simulator_mode, SIGNAL(triggered()), this, SLOT(switchToSimulator()));
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(openActionAbout()));
 
     // setup focus and an event filter to capture key events
     this->installEventFilter(this);
@@ -123,4 +125,8 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
 
 void MainWindow::openActuatorSetup() {
     actuator_setup_window->show();
+}
+
+void MainWindow::openActionAbout() {
+    action_about_window->show();
 }
