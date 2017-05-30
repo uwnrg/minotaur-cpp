@@ -39,3 +39,7 @@ void Controller::invertAxis(Axis axis) {
 		break;
 	}
 }
+
+void Controller::move(Dir dir, int timer) {
+	move(Controller::toVec2(dir), timer);
+}

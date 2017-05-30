@@ -3,6 +3,7 @@
 
 #include "qextserialport.h"
 #include "qextserialenumerator.h"
+#include "../controller/actuator.h"
 
 #include <QDialog>
 #include <memory>

@@ -26,7 +26,12 @@ SOURCES += \
     code/gui/mainwindow.cpp \
     code/utility/clock_time.cpp \
     code/utility/logger.cpp \
-    code/gui/actuatorsetup.cpp
+    code/gui/actuatorsetup.cpp \
+    code/controller/simulator.cpp \
+    code/gui/simulatorwindow.cpp \
+    code/utility/vector2i.cpp \
+    code/graphics/simulatorscene.cpp \
+    code/graphics/robotgraphicsitem.cpp
 
 HEADERS  += \
     code/controller/actuator.h \
@@ -34,7 +39,13 @@ HEADERS  += \
     code/gui/mainwindow.h \
     code/utility/clock_time.h \
     code/utility/logger.h \
-    code/gui/actuatorsetup.h
+    code/gui/actuatorsetup.h \
+    code/controller/simulator.h \
+    code/gui/simulatorwindow.h \
+    code/utility/vector2i.h \
+    code/graphics/simulatorscene.h \
+    code/graphics/robotgraphicsitem.h
 
 FORMS += code/gui/mainwindow.ui \
-    code/gui/actuatorsetup.ui
+    code/gui/actuatorsetup.ui \
+    code/gui/simulatorwindow.ui

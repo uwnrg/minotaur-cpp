@@ -12,6 +12,7 @@ public:
     enum LogType {
         INFO,
         ERROR,
+        DEBUG,
 
         NUM_LOG_TYPES
     };
@@ -27,6 +28,8 @@ private:
                 return "black";
             case ERROR:
                 return "red";
+            case DEBUG:
+                return "blue";
             default:
                 return "black";
         }
