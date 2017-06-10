@@ -63,7 +63,8 @@ If you are running a different linux distro, consult your package manager to see
 what package you need to install to get the Qt development tools. For Windows (and
 Mac), the easiest way to get up and running is to download and install the
 [Qt Framework](http://www.qt.io/download/). You can also get Qt Creator in order
-to build the code with one button and use their form editor for easy GUI design.
+to build the code with one button and use their form editor for easy GUI design,
+but **make sure to install Qt 5.8** or newer in order to compile and run using Qt Creator.
 You can open the project by specifying the root directory and then build and run
 the code from there.
 
