@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_VERSION, 5.7): QT += widgets
 
 # Use C++11 compiler
 QMAKE_CXXFLAGS += -std=c++11
