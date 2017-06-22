@@ -243,6 +243,3 @@ FakesAssemblies/
 
 # CLion proj files
 .idea/
-
-# CMake file
-CMakeLists.txt

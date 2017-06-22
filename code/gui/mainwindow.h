@@ -11,6 +11,7 @@
 #include "../controller/simulator.h"
 #include "actuatorsetup.h"
 #include "simulatorwindow.h"
+#include "pythoninterpreter.h"
 
 #define DEFAULT_TITLE "minotaur"
 
@@ -29,6 +30,7 @@ public:
 
 public slots:
     void openActuatorSetup();
+    void openPythonInterpreter();
     inline void switchToActuator() { switchControllerTo(Controller::Type::ACTUATOR); }
     inline void switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }
 
@@ -42,6 +44,7 @@ private:
     Ui::MainWindow *ui;
     ActuatorSetup *actuator_setup_window;
     SimulatorWindow *simulator_window;
+    PythonInterpreter *python_interpreter_window;
     Controller::Type m_controller_type;
     std::shared_ptr<Controller> m_controller;
     std::shared_ptr<Actuator> m_actuator;
