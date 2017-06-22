@@ -13,16 +13,19 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 	m_simulator = std::shared_ptr<Simulator>(new Simulator(1, -1));
     m_controller = m_actuator;
     m_controller_type = Controller::Type::ACTUATOR;
+    m_script_engine = std::shared_ptr<ScriptEngine>(new ScriptEngine(m_controller));
 
     // Setup subwindows
     actuator_setup_window = new ActuatorSetup(m_actuator, this);
     simulator_window = new SimulatorWindow(m_simulator, this);
     m_simulator->setSimulatorScene(simulator_window->getSimulatorScene());
+    script_window = new ScriptWindow(m_script_engine);
 
     // Setup slot connections
     connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
     connect(ui->switch_to_actuator_mode, SIGNAL(triggered()), this, SLOT(switchToActuator()));
     connect(ui->switch_to_simulator_mode, SIGNAL(triggered()), this, SLOT(switchToSimulator()));
+    connect(ui->open_script_window, SIGNAL(triggered()), this, SLOT(openScriptWindow()));
 
     // setup focus and an event filter to capture key events
     this->installEventFilter(this);
@@ -123,4 +126,8 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
 
 void MainWindow::openActuatorSetup() {
     actuator_setup_window->show();
+}
+
+void MainWindow::openScriptWindow() {
+    script_window->show();
 }

@@ -246,3 +246,4 @@ FakesAssemblies/
 
 # CMake file
 CMakeLists.txt
+*.swp
