@@ -9,6 +9,8 @@
 
 #include "../controller/controller.h"
 #include "../controller/simulator.h"
+#include "../script-engine/scriptengine.h"
+
 #include "actuatorsetup.h"
 #include "simulatorwindow.h"
 #include "pythoninterpreter.h"
@@ -43,12 +45,14 @@ private Q_SLOTS:
 private:
     Ui::MainWindow *ui;
     ActuatorSetup *actuator_setup_window;
+    ScriptWindow *script_window;
     SimulatorWindow *simulator_window;
     PythonInterpreter *python_interpreter_window;
     Controller::Type m_controller_type;
     std::shared_ptr<Controller> m_controller;
     std::shared_ptr<Actuator> m_actuator;
     std::shared_ptr<Simulator> m_simulator;
+    std::shared_ptr<ScriptEngine> m_script_engine;
 	bool eventFilter(QObject*, QEvent*);
     void switchControllerTo(Controller::Type const type);
 };

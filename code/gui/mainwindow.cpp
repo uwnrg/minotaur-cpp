@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 	m_simulator = std::shared_ptr<Simulator>(new Simulator(1, -1));
     m_controller = m_actuator;
     m_controller_type = Controller::Type::ACTUATOR;
+    m_script_engine = std::shared_ptr<ScriptEngine>(new ScriptEngine(m_controller));
 
     // Bind controller to Python Engine
     EmbeddedController::getInstance().bind_controller(&m_controller);
@@ -26,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
     simulator_window = new SimulatorWindow(m_simulator, this);
     python_interpreter_window = new PythonInterpreter(this);
     m_simulator->setSimulatorScene(simulator_window->getSimulatorScene());
+    script_window = new ScriptWindow(m_script_engine);
 
     // Setup slot connections
     connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));

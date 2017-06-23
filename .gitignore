@@ -243,3 +243,4 @@ FakesAssemblies/
 
 # CLion proj files
 .idea/
+*.swp
