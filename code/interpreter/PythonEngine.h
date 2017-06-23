@@ -2,8 +2,15 @@
 #define MINOTAUR_CPP_PYTHONENGINE_H
 #undef slots // prevent Qt macro from interfering
 #define _hypot hypot // workaround for a bug in Python.h
+#define PyObject_GetAttrString(object, strName) PyObject_GetAttrString(object, strName)
+#define PyObject_SetAttrString(object, strName, value) PyObject_SetAttrString(object, strName, value)
+
 #include <Python.h>
-#include <QTextEdit>
+
+#include <string>
+#include <memory>
+
+#include <code/controller/controller.h>
 
 class PythonEngine {
 public:
@@ -11,22 +18,29 @@ public:
         static PythonEngine engine;
         return engine;
     }
-    void setStream(QTextEdit *output_stream);
-
 private:
-    std::string m_buffer;
-    QTextEdit *m_outfield;
-
     PyObject *m_main_module;
     PyObject *m_stdout;
     PyObject *m_stderr;
+    PyObject *m_stdout_value;
+    PyObject *m_stderr_value;
+
+    std::vector<std::pair<std::string, PyObject * (*)(void)>> m_embedded_modules;
 
     PythonEngine();
     ~PythonEngine();
 
+    std::string getStdout(bool clear = 1);
+    std::string getStderr(bool clear = 1);
 public:
     PythonEngine(PythonEngine const&) = delete;
     void operator=(PythonEngine const&) = delete;
+
+    void append_module(std::string name, PyObject * (*init_func)(void));
+    bool initialize();
+    bool stopEngine();
+    bool isReady();
+    bool run(std::string script, std::string *out, std::string *err);
 };
 
 

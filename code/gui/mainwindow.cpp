@@ -1,3 +1,5 @@
+#include <code/interpreter/PythonEngine.h>
+#include <code/interpreter/EmbeddedController.h>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -13,6 +15,11 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 	m_simulator = std::shared_ptr<Simulator>(new Simulator(1, -1));
     m_controller = m_actuator;
     m_controller_type = Controller::Type::ACTUATOR;
+
+    // Bind controller to Python Engine
+    EmbeddedController::getInstance().bind_controller(&m_controller);
+    PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
+    PythonEngine::getInstance().initialize();
 
     // Setup subwindows
     actuator_setup_window = new ActuatorSetup(m_actuator, this);

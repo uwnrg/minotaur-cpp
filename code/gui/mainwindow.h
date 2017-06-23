@@ -28,13 +28,13 @@ public:
     void keyPressEvent(QKeyEvent*);
     ~MainWindow();
 
-public slots:
+public Q_SLOTS:
     void openActuatorSetup();
     void openPythonInterpreter();
     inline void switchToActuator() { switchControllerTo(Controller::Type::ACTUATOR); }
     inline void switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }
 
-private slots:
+private Q_SLOTS:
     // Button click events
     void on_move_button_clicked();
     // Mouse events

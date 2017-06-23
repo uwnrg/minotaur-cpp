@@ -29,6 +29,8 @@ private:
 class InterpreterTextEdit : public QTextEdit {
 Q_OBJECT
 
+    std::string m_script;
+
 public:
     InterpreterTextEdit(QWidget *parent = 0);
     ~InterpreterTextEdit();
@@ -36,6 +38,10 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *e) override;
     void focusInEvent(QFocusEvent *e) override;
+
+private:
+    void parseScript();
+    bool isValidChar(char c);
 };
 
 #endif // PYTHONINTERPRETER_H

@@ -71,7 +71,7 @@ set(FORM_FILES
         code/gui/actuatorsetup.ui
         code/gui/mainwindow.ui
         code/gui/pythoninterpreter.ui
-        code/gui/simulatorwindow.ui code/interpreter/PythonEngine.cpp code/interpreter/PythonEngine.h)
+        code/gui/simulatorwindow.ui code/interpreter/PythonEngine.cpp code/interpreter/PythonEngine.h code/interpreter/EmbeddedController.cpp code/interpreter/EmbeddedController.h)
 
 add_python_target(code/scripts/robot.py)
 
