@@ -1,4 +1,4 @@
-#include "interpreter/PythonEngine.h"
+#include "code/interpreter/pythonengine.h"
 
 #include "gui/mainwindow.h"
 #include <QApplication>

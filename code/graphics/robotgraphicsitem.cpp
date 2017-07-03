@@ -1,7 +1,9 @@
 #include "robotgraphicsitem.h"
 
 RobotGraphicsItem::RobotGraphicsItem() : QGraphicsEllipseItem(0, 0, 15, 15) {
+}
 
+RobotGraphicsItem::~RobotGraphicsItem() {
 }
 
 void RobotGraphicsItem::paint(QPainter *painter,

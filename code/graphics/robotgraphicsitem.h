@@ -9,6 +9,7 @@
 class RobotGraphicsItem : public QGraphicsEllipseItem {
 public:
 	RobotGraphicsItem();
+	~RobotGraphicsItem();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 };
 

@@ -1,4 +1,4 @@
-#include "EmbeddedController.h"
+#include "embeddedcontroller.h"
 
 EmbeddedController::EmbeddedController() :
         m_controller_ptr(nullptr) {}

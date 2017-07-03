@@ -1,4 +1,4 @@
-#include "PythonEngine.h"
+#include "pythonengine.h"
 
 PythonEngine::PythonEngine() {
 }
@@ -63,6 +63,7 @@ bool PythonEngine::initialize() {
 }
 
 bool PythonEngine::stopEngine() {
+    if (!Py_IsInitialized()) return 1;
     Logger::log("Stopping Python engine", Logger::DEBUG);
     Py_Finalize();
     m_main_module = nullptr;

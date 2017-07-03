@@ -1,4 +1,4 @@
-#include <code/interpreter/PythonEngine.h>
+#include <code/interpreter/pythonengine.h>
 #include "pythoninterpreter.h"
 #include "ui_pythoninterpreter.h"
 

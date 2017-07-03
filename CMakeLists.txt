@@ -30,12 +30,17 @@ set(SOURCE_FILES code/main.cpp
 
         code/gui/actuatorsetup.cpp
         code/gui/mainwindow.cpp
-        code/gui/pythoninterpreter.cpp
+        code/gui/scriptwindow.cpp
         code/gui/simulatorwindow.cpp
 
         code/utility/clock_time.cpp
         code/utility/logger.cpp
         code/utility/vector2i.cpp
+
+        code/interpreter/interpretertextedit.cpp
+        code/interpreter/embeddedcontroller.cpp
+        code/interpreter/pythonengine.cpp
+        code/interpreter/resultstextdisplay.cpp
 
         third-party/qextserialport.cpp
         third-party/qextserialport_win.cpp
@@ -53,12 +58,17 @@ set(HEADER_FILES
 
         code/gui/actuatorsetup.h
         code/gui/mainwindow.h
-        code/gui/pythoninterpreter.h
+        code/gui/scriptwindow.h
         code/gui/simulatorwindow.h
 
         code/utility/clock_time.h
         code/utility/logger.h
         code/utility/vector2i.h
+
+        code/interpreter/interpretertextedit.h
+        code/interpreter/embeddedcontroller.h
+        code/interpreter/pythonengine.h
+        code/interpreter/resultstextdisplay.h
 
         third-party/qextserialport.h
         third-party/qextserialport_p.h
@@ -70,8 +80,8 @@ set(FORM_FILES
 
         code/gui/actuatorsetup.ui
         code/gui/mainwindow.ui
-        code/gui/pythoninterpreter.ui
-        code/gui/simulatorwindow.ui code/interpreter/PythonEngine.cpp code/interpreter/PythonEngine.h code/interpreter/EmbeddedController.cpp code/interpreter/EmbeddedController.h)
+        code/gui/scriptwindow.ui
+        code/gui/simulatorwindow.ui)
 
 add_python_target(code/scripts/robot.py)
 
