@@ -46,12 +46,12 @@ ActuatorSetup::ActuatorSetup(std::shared_ptr<Actuator>& controller, QWidget *par
 	m_enumerator = new QextSerialEnumerator(this);
 	m_enumerator->setUpNotifications();
 
-	connect(ui->buttonBox, SIGNAL(accepted()), SLOT(OnSettingsApplied()));
+	connect(ui->buttonBox, SIGNAL(accepted()), SLOT(onSettingsApplied()));
 	//TODO: Refresh to the current settings if button box is rejected
-	connect(ui->portBox, SIGNAL(editTextChanged(QString)), SLOT(OnPortNameChanged(QString)));
+	connect(ui->portBox, SIGNAL(editTextChanged(QString)), SLOT(onPortNameChanged(QString)));
 
-	connect(m_enumerator, SIGNAL(deviceDiscovered(QextPortInfo)), SLOT(OnPortAddedOrRemoved()));
-	connect(m_enumerator, SIGNAL(deviceRemoved(QextPortInfo)), SLOT(OnPortAddedOrRemoved()));
+	connect(m_enumerator, SIGNAL(deviceDiscovered(QextPortInfo)), SLOT(onPortAddedOrRemoved()));
+	connect(m_enumerator, SIGNAL(deviceRemoved(QextPortInfo)), SLOT(onPortAddedOrRemoved()));
 
 	Logger::log("Actuator initialized", Logger::INFO);
 
@@ -65,7 +65,7 @@ ActuatorSetup::~ActuatorSetup()
     delete ui;
 }
 
-void ActuatorSetup::onSettingsApplied(){ 
+void ActuatorSetup::onSettingsApplied(){
 	PortSettings settings = {
 		(BaudRateType)ui->baudRateBox->itemData(ui->baudRateBox->currentIndex()).toInt(),
 		(DataBitsType)ui->dataBitsBox->itemData(ui->baudRateBox->currentIndex()).toInt(),
