@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_VERSION, 5.7): QT += widgets
 
 # Use C++11 compiler
 QMAKE_CXXFLAGS += -std=c++11
@@ -32,7 +32,9 @@ SOURCES += \
     code/utility/vector2i.cpp \
     code/graphics/simulatorscene.cpp \
     code/graphics/robotgraphicsitem.cpp \
+    code/gui/scriptwindow.cpp \
     code/gui/actionabout.cpp \
+    code/script-engine/scriptengine.cpp \
 
 HEADERS  += \
     code/controller/actuator.h \
@@ -46,10 +48,19 @@ HEADERS  += \
     code/utility/vector2i.h \
     code/graphics/simulatorscene.h \
     code/graphics/robotgraphicsitem.h \
+    code/gui/scriptwindow.h \
+    code/script-engine/scriptengine.h \
     code/gui/actionabout.h \
 
 FORMS += code/gui/mainwindow.ui \
     code/gui/actuatorsetup.ui \
     code/gui/simulatorwindow.ui \
     code/gui/actionabout.ui \
+    code/gui/scriptwindow.ui \
 
+TARGET = minotaur
+TEMPLATE = app
+DESTDIR = builds
+
+# Include third party libraries
+include (third-party/qextserialport.pri)
