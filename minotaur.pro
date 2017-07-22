@@ -32,8 +32,8 @@ SOURCES += \
     code/utility/vector2i.cpp \
     code/graphics/simulatorscene.cpp \
     code/graphics/robotgraphicsitem.cpp \
-    code/gui/scriptwindow.cpp \
     code/gui/actionabout.cpp \
+    code/gui/scriptwindow.cpp \
     code/script-engine/scriptengine.cpp \
 
 HEADERS  += \
@@ -48,19 +48,12 @@ HEADERS  += \
     code/utility/vector2i.h \
     code/graphics/simulatorscene.h \
     code/graphics/robotgraphicsitem.h \
+    code/gui/actionabout.h \
     code/gui/scriptwindow.h \
     code/script-engine/scriptengine.h \
-    code/gui/actionabout.h \
 
 FORMS += code/gui/mainwindow.ui \
     code/gui/actuatorsetup.ui \
     code/gui/simulatorwindow.ui \
     code/gui/actionabout.ui \
     code/gui/scriptwindow.ui \
-
-TARGET = minotaur
-TEMPLATE = app
-DESTDIR = builds
-
-# Include third party libraries
-include (third-party/qextserialport.pri)
