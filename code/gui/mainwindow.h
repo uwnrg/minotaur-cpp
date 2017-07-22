@@ -13,6 +13,7 @@
 
 #include "actuatorsetup.h"
 #include "simulatorwindow.h"
+#include "actionabout.h"
 #include "scriptwindow.h"
 
 #define DEFAULT_TITLE "minotaur"
@@ -35,6 +36,7 @@ public slots:
     void openScriptWindow();
     inline void switchToActuator() { switchControllerTo(Controller::Type::ACTUATOR); }
     inline void switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }
+    void openActionAbout();
 
 private slots:
     // Button click events
@@ -48,6 +50,7 @@ private:
     ScriptWindow *script_window;
     SimulatorWindow *simulator_window;
     Controller::Type m_controller_type;
+    ActionAbout *action_about_window;
     std::shared_ptr<Controller> m_controller;
     std::shared_ptr<Actuator> m_actuator;
     std::shared_ptr<Simulator> m_simulator;
