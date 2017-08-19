@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
     // setup focus and an event filter to capture key events
     this->installEventFilter(this);
     this->setFocus();
+    this->setFixedSize(this->size());
 }
 
 bool MainWindow::eventFilter(QObject *object, QEvent *event) {
