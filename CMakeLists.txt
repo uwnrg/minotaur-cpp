@@ -11,10 +11,9 @@ cmake_minimum_required(VERSION 3.1.0)
 project(minotaur-cpp)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_PREFIX_PATH \\Users\\jeff.niu\\Qt\\5.7\\clang_64)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -std=c++11")
 
-#find_package(PythonLibs 3.6 EXACT REQUIRED)
+find_package(PythonLibs 3.6 EXACT REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
@@ -95,8 +94,7 @@ set(FORM_FILES
 add_python_target(code/scripts/robot.py)
 
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
-#include_directories(${PYTHON_INCLUDE_DIRS})
-include_directories(/usr/local/Cellar/python3/3.6.2/Frameworks/Python.framework/Versions/3.6/include/python3.6m)
+include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(third-party)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -107,8 +105,7 @@ get_target_property(QtCore_location Qt5::Core LOCATION)
 add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} ${THIRD_PARTY})
 
 target_link_libraries(minotaur-cpp Qt5::Widgets Qt5::Core Qt5::Gui)
-#target_link_libraries(minotaur-cpp ${PYTHON_LIBRARIES})
-target_link_libraries(minotaur-cpp /usr/local/Cellar/python3/3.6.2/Frameworks/Python.framework/Versions/3.6/lib/libpython3.6m.dylib)
+target_link_libraries(minotaur-cpp ${PYTHON_LIBRARIES})
 target_include_directories(minotaur-cpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(minotaur-cpp PRIVATE PYTHON_SCRIPT_DIR="${PYTHON_SCRIPT_DIR}")
 
