@@ -6,6 +6,13 @@ macro(add_python_target target)
     endforeach ()
 endmacro()
 
+if (APPLE)
+    # Apple hard sets these variables for system Python
+    unset(PYTHON_LIBRARY CACHE)
+    unset(PYTHON_INCLUDE_DIR CACHE)
+    unset(PYTHON_LIBRARIES CACHE)
+endif()
+
 cmake_minimum_required(VERSION 3.1.0)
 
 project(minotaur-cpp)
@@ -13,7 +20,7 @@ project(minotaur-cpp)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -std=c++11")
 
-find_package(PythonLibs 3.6 EXACT REQUIRED)
+find_package(PythonLibs 3 REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
