@@ -7,6 +7,10 @@ ActionAbout::ActionAbout(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QPixmap pix("/Users/william/UWNRG/minotaur-cpp/graphics/UWNRG.png");
+    ui->label_pic->setPixmap(pix);
+    ui->label_pic->setScaledContents(true);
+
     // make sure github link links to a website
     ui->textBrowser->setOpenExternalLinks(true);
 
