@@ -20,7 +20,7 @@ project(minotaur-cpp)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -std=c++11")
 
-find_package(PythonLibs 3 REQUIRED)
+find_package(PythonLibs 3.4 REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
@@ -57,6 +57,11 @@ if (WIN32)
             third-party/qextserialport_win.cpp)
 endif()
 if (APPLE)
+    set(THIRD_PARTY
+            third-party/qextserialenumerator_unix.cpp
+            third-party/qextserialport_unix.cpp)
+endif()
+if (UNIX)
     set(THIRD_PARTY
             third-party/qextserialenumerator_unix.cpp
             third-party/qextserialport_unix.cpp)
