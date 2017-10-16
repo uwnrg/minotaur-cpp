@@ -96,4 +96,5 @@ sudo apt-get install libegl1-mesa
 ```
 
 #### Running minotaur
-1. You can now run minotaur with `./minotaur-cpp`
+1. Build minotaur with `make`
+2. Run minotaur with `./minotaur-cpp`
