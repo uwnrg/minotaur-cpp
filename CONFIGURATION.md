@@ -17,7 +17,33 @@ environment on macOS Sierra 10.12.6 using Vagrant.
 5. Run `vagrant up`
 6. Run `vagrant ssh-config`
 
-### Configure the virtual environment
+### Automatically Configure the virtual environment
+1. Access the box using `vagrant ssh`
+2. Install git with `sudo apt-get install git`
+3. Clone the repo and configure with 
+
+```
+git clone https://github.com/mogball/minotaur-cpp.git
+cd minotaur-cpp
+chmod 755 setup.sh
+./setup.sh
+```
+
+4. To configure and run in the future, make sure to add Qt to your path
+
+```
+export PATH=/home/vagrant/Qt5.7.0/5.7/gcc_64/bin:$PATH
+
+```
+
+5. Then use the commands
+
+cmake CMakeLists.txt
+make
+./minotaur-cpp
+```
+
+### Manually Configure the virtual environment
 1. Access the box using `vagrant ssh`
 
 #### Installing Qt
@@ -38,7 +64,7 @@ well, the installer should open in a new window through `XQuartz`
 5. You can login, or click `Skip`
 6. Hit `Deselect All` and select only `Desktop gcc 64-bit`
 7. Accept and install; do not launch Qt Creator
-8. After install add Qt to the path with `export PATH=/home/vagrant/Qt5.7.0/5.7/gcc_64/bin:/$PATH`
+8. After install add Qt to the path with `export PATH=/home/vagrant/Qt5.7.0/5.7/gcc_64/bin:$PATH`
 
 #### Installing Python
 1. We require minimum Python 3.4, however Ubuntu 12.04 only goes up to Python 3.2
