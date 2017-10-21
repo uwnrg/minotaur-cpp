@@ -25,6 +25,10 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 
+if (Qt5_POSITION_INDEPENDENT_CODE)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
+
 set(SOURCE_FILES code/main.cpp
 
         code/controller/actuator.cpp
