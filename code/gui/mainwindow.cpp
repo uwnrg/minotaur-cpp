@@ -25,16 +25,19 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
     simulator_window = new SimulatorWindow(m_simulator, this);
     script_window = new ScriptWindow(this);
     m_simulator->setSimulatorScene(simulator_window->getSimulatorScene());
+    action_about_window = new ActionAbout();
 
     // Setup slot connections
     connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
     connect(ui->switch_to_actuator_mode, SIGNAL(triggered()), this, SLOT(switchToActuator()));
     connect(ui->switch_to_simulator_mode, SIGNAL(triggered()), this, SLOT(switchToSimulator()));
     connect(ui->start_python_interpreter, SIGNAL(triggered()), this, SLOT(openPythonInterpreter()));
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(openActionAbout()));
 
     // setup focus and an event filter to capture key events
     this->installEventFilter(this);
     this->setFocus();
+    this->setFixedSize(this->size());
 }
 
 bool MainWindow::eventFilter(QObject *object, QEvent *event) {
@@ -136,4 +139,8 @@ void MainWindow::openActuatorSetup() {
 
 void MainWindow::openPythonInterpreter() {
     script_window->show();
+}
+
+void MainWindow::openActionAbout() {
+    action_about_window->show();
 }

@@ -38,6 +38,7 @@ set(SOURCE_FILES code/main.cpp
         code/gui/mainwindow.cpp
         code/gui/scriptwindow.cpp
         code/gui/simulatorwindow.cpp
+        code/gui/actionabout.cpp
 
         code/utility/clock_time.cpp
         code/utility/logger.cpp
@@ -80,6 +81,7 @@ set(HEADER_FILES
         code/gui/mainwindow.h
         code/gui/scriptwindow.h
         code/gui/simulatorwindow.h
+        code/gui/actionabout.h
 
         code/utility/clock_time.h
         code/utility/logger.h
@@ -101,7 +103,8 @@ set(FORM_FILES
         code/gui/actuatorsetup.ui
         code/gui/mainwindow.ui
         code/gui/scriptwindow.ui
-        code/gui/simulatorwindow.ui)
+        code/gui/simulatorwindow.ui
+        code/gui/actionabout.ui)
 
 add_python_target(code/scripts/robot.py)
 

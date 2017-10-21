@@ -118,11 +118,9 @@ void Actuator::move(Vector2i dir, int timer) {
         Logger::log(e.what(), Logger::ERROR);
         success = false;
     }
-    catch (char const *e) {
-#ifndef NDEBUG
-        Logger::log(e, Logger::DEBUG);
+    catch (std::string e) {
+        Logger::log(e, Logger::ERROR);
         success = false;
-#endif
     }
     catch (...) {
 #ifndef NDEBUG
@@ -155,22 +153,27 @@ void Actuator::moveActuator(const unsigned char device, const int value, const i
         for (int i = 0; i < DATA_SIZE; i++) {
             instr[i + 2] = data[i];
         }
+        delete[] data;
+
 
         // TODO: This is yet to be tested, sorry I don't have Zaber actuators at home :(
         for (int i = abs(value); i > 0; i--) {
             if (m_serial_port->isOpen()) {
                 m_serial_port->write(instr, CMD_SIZE + DATA_SIZE);
             } else {
-                Logger::log("ERROR: Failed to write to serial port " + (m_serial_port->portName()).toStdString() +
-                            " because it's not open.", Logger::ERROR);
-                throw "Action could not be completed"; // TODO: Might want to figure out a better way than throwing exceptions, revisit after adding concurrency
+                delete instr;
+                std::string error_msg = "ERROR: Failed to write to serial port "
+                    + (m_serial_port->portName()).toStdString() +
+                    " because it's not open.";
+                throw error_msg;
             }
 
             std::this_thread::sleep_for(sleep_step);
         }
-        delete[] data;
+
+        delete instr;
     }
-    catch (char const *e) {
+    catch (std::string e) {
         throw e;
     }
     catch (...) {
