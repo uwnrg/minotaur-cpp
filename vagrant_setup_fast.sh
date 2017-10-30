@@ -23,6 +23,9 @@ g++ --version
 
 sudo apt-get install libudev-dev libxi6 libsm6 libxrender1 libegl1-mesa -y -qq
 
-cmake CMakeLists.txt
+cd ..
+mkdir cmake-build-debug
+cd cmake-build-debug
+cmake ../minotaur-cpp
 make
 ./minotaur-cpp

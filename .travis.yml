@@ -14,7 +14,10 @@ install:
   - sudo apt-get install libfontconfig1 mesa-common-dev libglu1-mesa-dev libudev-dev libxi6 libsm6 libxrender1 libegl1-mesa -y -qq
 
 script:
-  - cmake CMakeLists.txt
+  - cd ..
+  - mkdir cmake-build-debug
+  - cd cmake-build-debug
+  - cmake ../minotaur-cpp
   - make
 
 notifications:

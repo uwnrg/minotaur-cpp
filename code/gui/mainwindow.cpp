@@ -1,7 +1,8 @@
-#include <code/interpreter/embeddedcontroller.h>
-#include <code/interpreter/pythonengine.h>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+#include "../interpreter/embeddedcontroller.h"
+#include "../interpreter/pythonengine.h"
 
 MainWindow::MainWindow(QWidget *parent, const char *title) :
         QMainWindow(parent),

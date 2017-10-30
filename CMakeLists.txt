@@ -29,33 +29,15 @@ if (Qt5_POSITION_INDEPENDENT_CODE)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
-set(SOURCE_FILES code/main.cpp
-
-        code/controller/actuator.cpp
-        code/controller/controller.cpp
-        code/controller/simulator.cpp
-
-        code/graphics/robotgraphicsitem.cpp
-        code/graphics/simulatorscene.cpp
-
-        code/gui/actuatorsetup.cpp
-        code/gui/mainwindow.cpp
-        code/gui/scriptwindow.cpp
-        code/gui/simulatorwindow.cpp
-        code/gui/actionabout.cpp
-
-        code/utility/clock_time.cpp
-        code/utility/logger.cpp
-        code/utility/vector2i.cpp
-
-        code/interpreter/interpretertextedit.cpp
-        code/interpreter/embeddedcontroller.cpp
-        code/interpreter/pythonengine.cpp
-        code/interpreter/resultstextdisplay.cpp
-
+## Third Party files
+set(THIRD_PARTY_COMMON
+        third-party/qextserialport.h
+        third-party/qextserialport_p.h
+        third-party/qextserialport_global.h
+        third-party/qextserialenumerator.h
+        third-party/qextserialenumerator_p.h
         third-party/qextserialport.cpp
         third-party/qextserialenumerator.cpp)
-
 if (WIN32)
     set(THIRD_PARTY
             third-party/qextserialenumerator_win.cpp
@@ -72,43 +54,23 @@ if (UNIX)
             third-party/qextserialport_unix.cpp)
 endif()
 
-set(HEADER_FILES
+file(GLOB_RECURSE SOURCE_FILES
+        ${PROJECT_SOURCE_DIR}/code/*.cpp
+        ${PROJECT_SOURCE_DIR}/code/controller/*.cpp
+        ${PROJECT_SOURCE_DIR}/code/graphics/*.cpp
+        ${PROJECT_SOURCE_DIR}/code/gui/*.cpp
+        ${PROJECT_SOURCE_DIR}/code/interpreter/*.cpp
+        ${PROJECT_SOURCE_DIR}/code/utility/*.cpp)
 
-        code/controller/actuator.h
-        code/controller/controller.h
-        code/controller/simulator.h
+file(GLOB_RECURSE HEADER_FILES
+        ${PROJECT_SOURCE_DIR}/code/controller/*.h
+        ${PROJECT_SOURCE_DIR}/code/graphics/*.h
+        ${PROJECT_SOURCE_DIR}/code/gui/*.h
+        ${PROJECT_SOURCE_DIR}/code/interpreter/*.h
+        ${PROJECT_SOURCE_DIR}/code/utility/*.h)
 
-        code/graphics/robotgraphicsitem.h
-        code/graphics/simulatorscene.h
-
-        code/gui/actuatorsetup.h
-        code/gui/mainwindow.h
-        code/gui/scriptwindow.h
-        code/gui/simulatorwindow.h
-        code/gui/actionabout.h
-
-        code/utility/clock_time.h
-        code/utility/logger.h
-        code/utility/vector2i.h
-
-        code/interpreter/interpretertextedit.h
-        code/interpreter/embeddedcontroller.h
-        code/interpreter/pythonengine.h
-        code/interpreter/resultstextdisplay.h
-
-        third-party/qextserialport.h
-        third-party/qextserialport_p.h
-        third-party/qextserialport_global.h
-        third-party/qextserialenumerator.h
-        third-party/qextserialenumerator_p.h)
-
-set(FORM_FILES
-
-        code/gui/actuatorsetup.ui
-        code/gui/mainwindow.ui
-        code/gui/scriptwindow.ui
-        code/gui/simulatorwindow.ui
-        code/gui/actionabout.ui)
+file(GLOB_RECURSE FORM_FILES
+        ${PROJECT_SOURCE_DIR}/code/gui/*.ui)
 
 add_python_target(code/scripts/robot.py)
 
@@ -121,7 +83,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 get_target_property(QtCore_location Qt5::Core LOCATION)
-add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} ${THIRD_PARTY})
+add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} ${THIRD_PARTY} ${THIRD_PARTY_COMMON})
 
 target_link_libraries(minotaur-cpp Qt5::Widgets Qt5::Core Qt5::Gui)
 target_link_libraries(minotaur-cpp ${PYTHON_LIBRARIES})

@@ -6,7 +6,8 @@
 #include <Python.h>
 
 #include <memory>
-#include <code/controller/controller.h>
+
+#include "../controller/controller.h"
 
 class EmbeddedController {
 public:

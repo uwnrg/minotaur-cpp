@@ -10,7 +10,7 @@
 #include <string>
 #include <memory>
 
-#include <code/controller/controller.h>
+#include "../controller/controller.h"
 
 class PythonEngine {
 public:

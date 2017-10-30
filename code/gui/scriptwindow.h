@@ -4,9 +4,9 @@
 #include <QDialog>
 #include <memory>
 
-#include <code/interpreter/pythonengine.h>
-#include <code/interpreter/interpretertextedit.h>
-#include <code/interpreter/resultstextdisplay.h>
+#include "../interpreter/pythonengine.h"
+#include "../interpreter/interpretertextedit.h"
+#include "../interpreter/resultstextdisplay.h"
 
 namespace Ui {
     class ScriptWindow;
