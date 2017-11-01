@@ -12,6 +12,8 @@ public:
     ~InterpreterTextEdit();
 
 Q_SIGNALS:
+    // Signal when a script has been submitted
+    // to the engine by the interpreter window
     void scriptSubmitted();
 
 protected:

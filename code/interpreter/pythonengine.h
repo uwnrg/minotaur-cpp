@@ -19,6 +19,7 @@ public:
         return engine;
     }
 private:
+    // For redirecting Python output to results text display
     PyObject *m_main_module;
     PyObject *m_stdout;
     PyObject *m_stderr;
@@ -36,10 +37,12 @@ public:
     PythonEngine(PythonEngine const&) = delete;
     void operator=(PythonEngine const&) = delete;
 
+    // Add an embedded python module defined elsewhere, exposing it to interpreter
     void append_module(std::string name, PyObject * (*init_func)(void));
     bool initialize();
     bool stopEngine();
     bool isReady();
+    // Run the script and store the results
     bool run(std::string script, std::string *out, std::string *err);
 };
 

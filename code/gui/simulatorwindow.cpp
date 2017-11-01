@@ -11,6 +11,7 @@ SimulatorWindow::SimulatorWindow(std::shared_ptr<Simulator> simulator, QWidget *
 
     m_simulator_scene = new SimulatorScene(simulator, ui->simulator_graphics_view);
     ui->simulator_graphics_view->setScene(m_simulator_scene);
+    // Prevent resizing
     this->setFixedSize(this->size());
 }
 

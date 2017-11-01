@@ -24,6 +24,7 @@ public:
 
 private:
     Ui::SimulatorWindow *ui;
+    // Graphics scene for simulator
     SimulatorScene *m_simulator_scene;
 };
 

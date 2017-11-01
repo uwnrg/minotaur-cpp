@@ -11,6 +11,8 @@ public:
     ~ResultsTextDisplay();
 
 public Q_SLOTS:
+    // Slot for script submitted signal
+    // append script results/errors to the display
     void appendResults(const QString &script,
                        const QString &out,
                        const QString &err);

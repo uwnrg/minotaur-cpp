@@ -9,6 +9,7 @@ RobotGraphicsItem::~RobotGraphicsItem() {
 void RobotGraphicsItem::paint(QPainter *painter,
                               const QStyleOptionGraphicsItem *option,
                               QWidget *widget) {
+	// Paint a blue circle to represent the robot
 	painter->setBrush(QBrush(Qt::blue));
 	painter->drawEllipse((int) x(), (int) y(), 10, 10);
 }

@@ -2,13 +2,14 @@
 #define MINOTAUR_CPP_EMBEDDEDCONTROLLER_H
 
 #undef slots
-#define _hypot hypot
+#define _hypot hypot // hack to fix a bug with CPython
 #include <Python.h>
 
 #include <memory>
 
 #include "../controller/controller.h"
 
+// Singleton controller instance
 class EmbeddedController {
 public:
     static EmbeddedController &getInstance() {
@@ -17,12 +18,14 @@ public:
     }
 private:
     // The shared pointer that indicates which controller is active
+    // so that commands issued from the engine can be forwarded
     std::shared_ptr<Controller> *m_controller_ptr;
 
     EmbeddedController();
     ~EmbeddedController();
 
 public:
+    // Singleton
     EmbeddedController(EmbeddedController const &) = delete;
     void operator=(EmbeddedController const &) = delete;
 
@@ -44,10 +47,13 @@ namespace Embedded {
         return PyLong_FromLong(res);
     }
 
+    // Embedded python configuration which describes which methods
+    // should be exposed in which module
     static PyMethodDef emb_methods[]{
             {"move",  emb_move, METH_VARARGS, "Send move command to active controller."},
-            {nullptr, nullptr, 0,                                 nullptr}
+            {nullptr, nullptr, 0, nullptr}
     };
+    // Method 'move' is exposed in module 'emb' as 'emb.move'
     static PyModuleDef emb_module{
             PyModuleDef_HEAD_INIT, "emb", nullptr, -1, emb_methods,
             nullptr, nullptr, nullptr, nullptr

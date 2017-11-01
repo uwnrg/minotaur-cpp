@@ -7,6 +7,7 @@ PythonEngine::~PythonEngine() {
     if (Py_IsInitialized()) Py_Finalize();
 }
 
+// Get output from std out
 std::string PythonEngine::getStdout(bool clear) {
     m_stdout_value = PyObject_GetAttrString(m_stdout, "value");
     std::string str_val(PyUnicode_AsUTF8(m_stdout_value));
@@ -14,6 +15,7 @@ std::string PythonEngine::getStdout(bool clear) {
     return str_val;
 }
 
+// Get output from std error
 std::string PythonEngine::getStderr(bool clear) {
     m_stderr_value = PyObject_GetAttrString(m_stderr, "value");
     std::string str_val(PyUnicode_AsUTF8(m_stderr_value));

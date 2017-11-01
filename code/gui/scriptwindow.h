@@ -17,7 +17,7 @@ Q_OBJECT
 
 public:
     explicit ScriptWindow(QWidget *parent = 0);
-    ~ScriptWindow();
+    ~ScriptWindow() override;
 
 protected:
     void setVisible(bool visible);
@@ -26,14 +26,18 @@ protected:
 private Q_SLOTS:
     void resetInterpreter();
     void closeInterpreter();
+    // Run the current buffered script
     void runScript();
 
 Q_SIGNALS:
+    // Signal fired when the user submits a python script
     void scriptSubmitted(const QString &script, const QString &out, const QString &err);
 
 private:
     Ui::ScriptWindow *ui;
+    // Where the user enters python commands
     InterpreterTextEdit *m_interpreter_text_edit;
+    // Where the python output is displayed
     ResultsTextDisplay *m_results_text_display;
 };
 

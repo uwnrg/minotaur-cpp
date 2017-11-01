@@ -7,12 +7,14 @@ ScriptWindow::ScriptWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("Python Interpreter");
 
+    // Create text edit and text display
     m_interpreter_text_edit = new InterpreterTextEdit(this);
     m_results_text_display = new ResultsTextDisplay(this);
     ui->interpreterLayout->addWidget(m_interpreter_text_edit);
     ui->displayLayout->addWidget(m_results_text_display);
 
     QFont font;
+    // Make the font look like code
     font.setFamily("Courier");
     font.setStyleHint(QFont::Monospace);
     font.setFixedPitch(true);
@@ -25,6 +27,7 @@ ScriptWindow::ScriptWindow(QWidget *parent) :
     m_interpreter_text_edit->setTabStopWidth(tabStopWidth);
     m_results_text_display->setTabStopWidth(tabStopWidth);
 
+    // Connect signals to slots
     connect(ui->resetButton, SIGNAL(clicked()), this, SLOT(resetInterpreter()));
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(closeInterpreter()));
     connect(ui->runButton, SIGNAL(clicked()), this, SLOT(runScript()));
@@ -50,6 +53,7 @@ void ScriptWindow::reject() {
     QDialog::reject();
 }
 
+// Clear the interpreter text fields and restart the engine
 void ScriptWindow::resetInterpreter() {
     m_interpreter_text_edit->clear();
     m_results_text_display->clear();
@@ -62,12 +66,15 @@ void ScriptWindow::closeInterpreter() {
     this->reject();
 }
 
+// Parse a script from the interpreter text edit and send
+// to python engine, then display the results
 void ScriptWindow::runScript() {
     if (!PythonEngine::getInstance().isReady()) return;
     std::string script = m_interpreter_text_edit->toPlainText().toStdString();
     std::string *out = new std::string;
     std::string *err = new std::string;
     PythonEngine::getInstance().run(script, out, err);
+    // Emit signal to output display to append results
     Q_EMIT scriptSubmitted(
             QString::fromStdString(script),
             QString::fromStdString(*out),

@@ -44,8 +44,6 @@ public:
     void move(Dir dir, int timer = STEP_TIME);
     virtual void move(Vector2i dir, int timer = STEP_TIME) = 0;
 
-    // This is just a wrapper to convert from Dir enum to Vector2i parameter
-
 protected:
     Controller(int t_invert_x, int t_invert_y);
 
