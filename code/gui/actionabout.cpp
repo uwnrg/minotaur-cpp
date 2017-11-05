@@ -7,7 +7,7 @@ ActionAbout::ActionAbout(QWidget *parent) :
     ui(new Ui::ActionAbout)
 {
     ui->setupUi(this);
-    QPixmap pix("graphics/UWNRG.png");
+    QPixmap pix(":/graphics/img/UWNRG.png");
     ui->graphicsView->setFrameStyle(QFrame::NoFrame);
     ui->textBrowser->setFrameStyle(QFrame::NoFrame);
     ui->textBrowser2->setFrameStyle(QFrame::NoFrame);

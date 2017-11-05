@@ -57,3 +57,6 @@ FORMS += code/gui/mainwindow.ui \
     code/gui/simulatorwindow.ui \
     code/gui/actionabout.ui \
     code/gui/scriptwindow.ui \
+
+RESOURCES += \
+    images.qrc
