@@ -47,9 +47,8 @@ g++ --version
 sudo apt-get install libudev-dev libxi6 libsm6 libxrender1 libegl1-mesa -y -qq
 
 # Build and run
-cd ..
-mkdir cmake-build-debug
-cd cmake-build-debug
-cmake ../minotaur-cpp
+mkdir build
+cd build
+cmake ../
 make
 ./minotaur-cpp
