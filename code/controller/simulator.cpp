@@ -12,7 +12,7 @@ void Simulator::move(Vector2i dir, int timer) {
 #endif
     dir.x_comp *= m_invert_x;
     dir.y_comp *= m_invert_y;
-    robot_pos += dir * 10;
+    robot_pos += dir;
 
     // Update the graphics scene
     m_simulator_scene->update();

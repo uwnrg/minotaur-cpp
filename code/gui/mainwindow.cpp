@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "../interpreter/embeddedcontroller.h"
+#include "../interpreter/pythonengine.h"
+
 MainWindow::MainWindow(QWidget *parent, const char *title) :
         QMainWindow(parent),
         ui(new Ui::MainWindow) {
@@ -13,21 +16,24 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
 	m_simulator = std::shared_ptr<Simulator>(new Simulator(1, -1));
     m_controller = m_actuator;
     m_controller_type = Controller::Type::ACTUATOR;
-    m_script_engine = std::shared_ptr<ScriptEngine>(new ScriptEngine(m_controller));
+
+    // Bind controller to Python Engine
+    EmbeddedController::getInstance().bind_controller(&m_controller);
+    PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
 
     // Setup subwindows
     actuator_setup_window = new ActuatorSetup(m_actuator, this);
     simulator_window = new SimulatorWindow(m_simulator, this);
+    script_window = new ScriptWindow(this);
     m_simulator->setSimulatorScene(simulator_window->getSimulatorScene());
     action_about_window = new ActionAbout();
-    script_window = new ScriptWindow(m_script_engine);
 
     // Setup slot connections
     connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
     connect(ui->switch_to_actuator_mode, SIGNAL(triggered()), this, SLOT(switchToActuator()));
     connect(ui->switch_to_simulator_mode, SIGNAL(triggered()), this, SLOT(switchToSimulator()));
+    connect(ui->start_python_interpreter, SIGNAL(triggered()), this, SLOT(openPythonInterpreter()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(openActionAbout()));
-    connect(ui->open_script_window, SIGNAL(triggered()), this, SLOT(openScriptWindow()));
 
     // setup focus and an event filter to capture key events
     this->installEventFilter(this);
@@ -89,6 +95,7 @@ MainWindow::~MainWindow() {
     // Destroy all subwindows
     delete actuator_setup_window;
     delete simulator_window;
+    delete script_window;
     delete ui;
 }
 
@@ -131,10 +138,10 @@ void MainWindow::openActuatorSetup() {
     actuator_setup_window->show();
 }
 
-void MainWindow::openActionAbout() {
-    action_about_window->show();
+void MainWindow::openPythonInterpreter() {
+    script_window->show();
 }
 
-void MainWindow::openScriptWindow() {
-    script_window->show();
+void MainWindow::openActionAbout() {
+    action_about_window->show();
 }

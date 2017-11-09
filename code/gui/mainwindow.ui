@@ -177,6 +177,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="switch_to_simulator_mode"/>
     <addaction name="separator"/>
     <addaction name="setup_actuator"/>
+    <addaction name="start_python_interpreter"/>
     <addaction name="separator"/>
     <addaction name="exit"/>
    </widget>
@@ -417,9 +418,9 @@ p, li { white-space: pre-wrap; }
     <string>About</string>
    </property>
   </action>
-  <action name="open_script_window">
+  <action name="start_python_interpreter">
    <property name="text">
-    <string>Script Engine</string>
+    <string>Python Interpreter</string>
    </property>
   </action>
  </widget>

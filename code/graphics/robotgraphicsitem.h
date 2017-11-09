@@ -6,9 +6,11 @@
 #include <QStyleOptionGraphicsItem>
 #include <QWidget>
 
+// Graphics item that is drawn to represent the robot
 class RobotGraphicsItem : public QGraphicsEllipseItem {
 public:
 	RobotGraphicsItem();
+	~RobotGraphicsItem();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 };
 

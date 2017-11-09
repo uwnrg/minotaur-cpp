@@ -12,18 +12,19 @@ namespace Ui {
 class SimulatorWindow;
 }
 
-class SimulatorWindow : public QDialog
-{
+class SimulatorWindow : public QDialog {
     Q_OBJECT
 
 public:
     explicit SimulatorWindow(std::shared_ptr<Simulator> simulator, QWidget *parent = 0);
     void keyPressEvent(QKeyEvent*);
+    void reject();
     SimulatorScene *getSimulatorScene();
     ~SimulatorWindow();
 
 private:
     Ui::SimulatorWindow *ui;
+    // Graphics scene for simulator
     SimulatorScene *m_simulator_scene;
 };
 
