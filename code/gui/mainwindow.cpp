@@ -2,18 +2,17 @@
 #include "ui_mainwindow.h"
 
 #include "../interpreter/embeddedcontroller.h"
-#include "../interpreter/pythonengine.h"
 
-MainWindow::MainWindow(QWidget *parent, const char *title) :
+MainWindow::MainWindow(QWidget *parent, const char *) :
         QMainWindow(parent),
         ui(new Ui::MainWindow) {
 
     ui->setupUi(this);
 
-	//Set up logger
-	Logger::setStream(getLogView());
-	m_actuator = std::shared_ptr<Actuator>(new Actuator);
-	m_simulator = std::shared_ptr<Simulator>(new Simulator(1, -1));
+    //Set up logger
+    Logger::setStream(getLogView());
+    m_actuator = std::shared_ptr<Actuator>(new Actuator);
+    m_simulator = std::shared_ptr<Simulator>(new Simulator(1, -1));
     m_controller = m_actuator;
     m_controller_type = Controller::Type::ACTUATOR;
 
@@ -25,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
     actuator_setup_window = new ActuatorSetup(m_actuator, this);
     simulator_window = new SimulatorWindow(m_simulator, this);
     script_window = new ScriptWindow(this);
-    m_simulator->setSimulatorScene(simulator_window->getSimulatorScene());
+    //m_simulator->setSimulatorScene(simulator_window->getSimulatorScene());
     action_about_window = new ActionAbout();
 
     // Setup slot connections
@@ -41,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent, const char *title) :
     this->setFixedSize(this->size());
 }
 
-bool MainWindow::eventFilter(QObject *object, QEvent *event) {
+bool MainWindow::eventFilter(QObject *, QEvent *event) {
     // When the GUI gets focused, we assign the focus to this object, necessary for correctly
     // receiving key events
     if (event->type() == QEvent::FocusIn) {
@@ -55,11 +54,10 @@ QTextEdit *MainWindow::getLogView() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *e) {
-    // TODO: Eventually we would want to generalize the key events so that we can configure
-    // what keys we want to map. This is okay for now.
-#ifndef NDEBUG
-    Logger::log("Keypressed " + std::to_string(e->key()), Logger::DEBUG);
-#endif
+    if (e->isAutoRepeat()) {
+        return;
+    }
+    m_controller->keyPressed(e->key());
     switch (e->key()) {
         case Qt::Key_Up:
             m_controller->move(Controller::Dir::UP);
@@ -78,14 +76,18 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
             break;
 
         default:
-            // We don't do anything if the key pressed is not supported
-            // We could add a beep sound or something to indicate that, but not a priority.
             break;
     }
-
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *event) {
+void MainWindow::keyReleaseEvent(QKeyEvent *e) {
+    if (e->isAutoRepeat()) {
+        return;
+    }
+    m_controller->keyReleased(e->key());
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *) {
     // When the user clicks outside a widget,
     // restore focus to the main window
     this->setFocus();
@@ -99,8 +101,8 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::on_move_button_clicked() {
-    Controller::Dir dir = (Controller::Dir) ui->selected_direction->currentIndex();
+void MainWindow::onMoveButtonClicked() {
+    auto dir = (Controller::Dir) ui->selected_direction->currentIndex();
     m_controller->move(dir);
 }
 
@@ -116,21 +118,21 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
         return;
     }
     m_controller_type = type;
-    switch(type) {
-    case Controller::Type::ACTUATOR:
-        // Switch to the actuator controller and hide the simulation window
-        Logger::log("Switching to ACTUATOR", Logger::INFO);
-        m_controller = m_actuator;
-        if (simulator_window->isVisible()) simulator_window->hide();
-        break;
-    case Controller::Type::SIMULATOR:
-        // Switch to the simulator controller and show the simulator window
-        Logger::log("Switching to SIMULATOR", Logger::INFO);
-        m_controller = m_simulator;
-        if (!simulator_window->isVisible()) simulator_window->show();
-        break;
-    default:
-        break;
+    switch (type) {
+        case Controller::Type::ACTUATOR:
+            // Switch to the actuator controller and hide the simulation window
+            Logger::log("Switching to ACTUATOR", Logger::INFO);
+            m_controller = m_actuator;
+            if (simulator_window->isVisible()) { simulator_window->hide(); }
+            break;
+        case Controller::Type::SIMULATOR:
+            // Switch to the simulator controller and show the simulator window
+            Logger::log("Switching to SIMULATOR", Logger::INFO);
+            m_controller = m_simulator;
+            if (!simulator_window->isVisible()) { simulator_window->show(); }
+            break;
+        default:
+            break;
     }
 }
 

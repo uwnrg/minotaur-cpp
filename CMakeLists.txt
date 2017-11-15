@@ -60,6 +60,7 @@ file(GLOB_RECURSE SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/code/graphics/*.cpp
         ${PROJECT_SOURCE_DIR}/code/gui/*.cpp
         ${PROJECT_SOURCE_DIR}/code/interpreter/*.cpp
+        ${PROJECT_SOURCE_DIR}/code/simulator/*.cpp
         ${PROJECT_SOURCE_DIR}/code/utility/*.cpp)
 
 file(GLOB_RECURSE HEADER_FILES
@@ -67,6 +68,7 @@ file(GLOB_RECURSE HEADER_FILES
         ${PROJECT_SOURCE_DIR}/code/graphics/*.h
         ${PROJECT_SOURCE_DIR}/code/gui/*.h
         ${PROJECT_SOURCE_DIR}/code/interpreter/*.h
+        ${PROJECT_SOURCE_DIR}/code/simulator/*.h
         ${PROJECT_SOURCE_DIR}/code/utility/*.h)
 
 file(GLOB_RECURSE FORM_FILES

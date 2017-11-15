@@ -25,7 +25,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QGraphicsView" name="simulator_graphics_view">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -34,6 +34,7 @@
      <height>561</height>
     </rect>
    </property>
+   <layout class="QVBoxLayout" name="renderLayout"/>
   </widget>
  </widget>
  <resources/>
