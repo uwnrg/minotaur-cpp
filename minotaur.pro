@@ -35,6 +35,7 @@ SOURCES += \
     code/gui/pythoninterpreter.cpp \
     code/gui/actionabout.cpp \
     code/gui/scriptwindow.cpp \
+    code/gui/scripteditor.cpp
 
 HEADERS  += \
     code/controller/actuator.h \
@@ -51,6 +52,7 @@ HEADERS  += \
     code/gui/pythoninterpreter.h \
     code/gui/actionabout.h \
     code/gui/scriptwindow.h \
+    code/gui/scripteditor.h
 
 FORMS += code/gui/mainwindow.ui \
     code/gui/actuatorsetup.ui \
@@ -58,3 +60,4 @@ FORMS += code/gui/mainwindow.ui \
     code/gui/pythoninterpreter.ui \
     code/gui/actionabout.ui \
     code/gui/scriptwindow.ui \
+    code/gui/scripteditor.ui
