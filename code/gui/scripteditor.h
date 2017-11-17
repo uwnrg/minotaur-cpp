@@ -2,6 +2,7 @@
 #define SCRIPTEDITOR_H
 
 #include <QDialog>
+#include <code/interpreter/codeeditor.h>
 
 namespace Ui {
     class ScriptEditor;
@@ -40,7 +41,8 @@ private Q_SLOTS:
 
 private:
     Ui::ScriptEditor *ui;
-    QString m_activeFile;
+    CodeEditor *m_code_editor;
+    QString m_active_file;
 };
 
 #endif // SCRIPTEDITOR_H

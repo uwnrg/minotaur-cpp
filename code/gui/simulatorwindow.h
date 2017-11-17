@@ -17,10 +17,10 @@ class SimulatorWindow : public QDialog {
 
 public:
     explicit SimulatorWindow(std::shared_ptr<Simulator> simulator, QWidget *parent = 0);
-    void keyPressEvent(QKeyEvent*);
-    void reject();
+    void keyPressEvent(QKeyEvent*) override;
+    void reject() override;
     SimulatorScene *getSimulatorScene();
-    ~SimulatorWindow();
+    ~SimulatorWindow() override;
 
 private:
     Ui::SimulatorWindow *ui;

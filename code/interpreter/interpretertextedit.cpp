@@ -1,8 +1,14 @@
 #include "interpretertextedit.h"
 
-InterpreterTextEdit::InterpreterTextEdit(QWidget *parent) : QTextEdit(parent) {}
+InterpreterTextEdit::InterpreterTextEdit(QWidget *parent)
+        : CodeEditor(parent) {
+    QPalette palette = this->palette();
+    palette.setColor(QPalette::Base, QColor(39, 40, 34));
+    palette.setColor(QPalette::Text, QColor(248, 248, 242));
+    this->setPalette(palette);
+}
 
-InterpreterTextEdit::~InterpreterTextEdit() {}
+InterpreterTextEdit::~InterpreterTextEdit() = default;
 
 void InterpreterTextEdit::keyPressEvent(QKeyEvent *e) {
     // Submit a script when user press Shift + Enter
@@ -10,10 +16,10 @@ void InterpreterTextEdit::keyPressEvent(QKeyEvent *e) {
         && (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter)) {
         Q_EMIT scriptSubmitted();
     } else {
-        QTextEdit::keyPressEvent(e);
+        QPlainTextEdit::keyPressEvent(e);
     }
 }
 
 void InterpreterTextEdit::focusInEvent(QFocusEvent *e) {
-    QTextEdit::focusInEvent(e);
+    QPlainTextEdit::focusInEvent(e);
 }

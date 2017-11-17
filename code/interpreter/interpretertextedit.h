@@ -3,8 +3,11 @@
 
 #include <QTextEdit>
 #include <QKeyEvent>
+#include <QPlainTextEdit>
+#include "highlighter.h"
+#include "codeeditor.h"
 
-class InterpreterTextEdit : public QTextEdit {
+class InterpreterTextEdit : public CodeEditor {
 Q_OBJECT
 
 public:

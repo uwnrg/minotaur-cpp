@@ -74,7 +74,6 @@ file(GLOB_RECURSE FORM_FILES
 
 add_python_target(code/scripts/__init__.py)
 add_python_target(code/scripts/robot.py)
-add_python_target(code/scripts/testScript.py)
 
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${PYTHON_INCLUDE_DIRS})
