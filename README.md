@@ -87,6 +87,25 @@ argument.
 CMake might have a hard time finding the correct Python version because Apple. Ping me `@jeffniu22`
 if you've got any issues.
 
+# Setting up Minotaur on Ubuntu 16.04
+From a fresh install, you will need these packages
+
+```bash
+sudo apt install build-essential cmake python3 python3-dev qt5-default libudev-dev git
+```
+
+Then clone the repository and build with
+```bash
+git clone https://github.com/uwnrg/minotaur-cpp.git
+cd minotaur-cpp
+mkdir build
+cd build
+cmake ../
+make
+```
+
+And then run with `./minotaur-cpp`
+
 ### Contributing
 Please refer to the [Contributing Guidelines](CONTRIBUTING.md).
 
