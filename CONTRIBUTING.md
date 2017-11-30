@@ -392,7 +392,7 @@ assign it back to the author to keep track of ownership in the Kanban board (whi
 is found under the Projects tab on Github).
 
 # Configuring Vagrant Development Environment
-This file will describe the necessary steps to setup a virtual development
+These will describe the necessary steps to setup a virtual development
 environment on macOS Sierra 10.12.6 using Vagrant. The steps on other operating 
 systems should be the exact same except for installing vagrant.
 
@@ -417,7 +417,7 @@ systems should be the exact same except for installing vagrant.
 3. Clone the repo and configure with 
 
 ```
-git clone https://github.com/mogball/minotaur-cpp.git
+git clone https://github.com/uwnrg/minotaur-cpp.git
 cd minotaur-cpp
 chmod 755 setup.sh
 ./vagrant_setup.sh

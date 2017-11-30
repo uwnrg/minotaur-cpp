@@ -26,83 +26,66 @@ with the following goals in mind:
 
 Please checkout the *Projects* tab for information about roadmap and current progress.
 
-### Setup
+# Setting up Minotaur on Windows
+These will describe the basic steps for setting up an environment on Windows.
+Things may vary from PC to PC, though.
 
-#### Ubuntu
-```
-apt-get update -qq
-apt-get install qt4-dev-tools
-cd path/to/repository
-mkdir build
-cd build
-qmake -o makefile ../minotaur.pro
-make
-```
+### Installing Qt
+1. Download the Qt community edition and install a version at least 5.6
+2. I recommend 5.6 or 5.7 since the later versions take up much more space
+3. After installation completes set the `QT_DIR` environment variable, which would look
+something like `C:\Qt\%VERSION%\bin`.
+4. Add the some variable to `PATH`
 
-#### Mac
+### Installing Python
+1. Download and install Python 3.6
+2. You might want to add the python `include` and `lib` directories to your `PATH`
 
-For **Mac** the easiest way to get up and running is to download and install the
-[Qt Framework](http://www.qt.io/download/). You can also get Qt Creator in order
-to build the code with one button and use their form editor for easy GUI design.
-You can open the project by specifying the root directory and then build and run
-the code from there. To build the code, run the following commands in the root
-directory:
+### Running with CLion
+I recommend using CLion, since it's more self contained and does work for you.
 
-```
-mkdir build
-cd build
-qmake -spec macx-g++ ../minotaur.pro
-make
-```
-The application will be in `/builds/` and named `minotaur.app`. Run it from the
-Finder since **Mac** treats applications like directories.
+1. Download and install CLion, which is free for students
+2. If you don't have the Microsoft Visual Studio compiler on your machine
+you can either install MVS (yikes!) or follow these steps
+https://www.jetbrains.com/help/clion/quick-tutorial-on-configuring-clion-on-windows.html
+3. Make sure you install a relatively recent compiler version
 
-#### Other systems
+## Building Minotaur
+1. `git clone https://github.com/uwnrg/minotaur-cpp.git`
+2. Open the project in CLion by clicking `Import from sources`
+3. CLion will attempt to detect a compiler
+4. CLion will attempt to configure the cmake project
+5. If that goes well, you can build the project
+6. If you get any errors, ping me `@jeffniu22` on Slack
 
-If you are running a different linux distro, consult your package manager to see
-what package you need to install to get the Qt development tools. For Windows (and
-Mac), the easiest way to get up and running is to download and install the
-[Qt Framework](http://www.qt.io/download/). You can also get Qt Creator in order
-to build the code with one button and use their form editor for easy GUI design,
-but **make sure to install Qt 5.8** or newer in order to compile and run using Qt Creator.
-You can open the project by specifying the root directory and then build and run
-the code from there.
+# Setting up Minotaur on MacOS
+These will describe the basic steps for setting up an environment on MacOS.
+There may be issues if multiple versions of Python are installed on the system.
 
-**Visual Studio**: If you want to develop on Visual Studio and don't already have
-Qt setup there, (for VS 2013 and older) download the Qt Visual Studio Add-in from
-[here](http://download.qt.io/official_releases/vsaddin/). If you are using **Visual
-Studio 2015** or above, you need to download this
-[package](https://visualstudiogallery.msdn.microsoft.com/c89ff880-8509-47a4-a262-e4fa07168408)
-instead. Then restart Visual Studio, click on the Qt menu, go to options and add
-your Qt versions.
+### Installing Qt
+1. Download the Qt community edition and install a version at least 5.6
+2. I recommend 5.6 or 5.7 since the later versions take up much more space
 
-Once you have Qt setup, go to `QT5`->`Open Qt Project File (.pro)` and open `minotaur.pro` from this repository and you are all set!
+### Installing Python
+1. You can either download Python 3.6 from the website and install or
+2. Use `brew install python3`
+3. Verify the python version (minimum 3.4) with `python3 --version`
 
-#### Cygwin
-Make sure you have the following packages installed:
-* `xorg-server`
-* `xinit`
-* `mingw64-x86_64-qt4-qmake-4.x` (for Win64) or `mingw64-i686-qt4-qmake-4.x`
-    (for Win32)
+## Building Minotaur
+Here you can either install CLion and import the project (recommended) or
+1. `git clone https://github.com/uwnrg/minotaur-cpp.git`
+2. `cd minotaur-cpp`
+3. `mkdir build`
+4. `cd build`
+5. `cmake ../ -DCMAKE_PREFIX_PATH=/path/to/qt/%VERSION%/clang_64/lib/cmake`
+6. `make`
 
-Getting the GUI working is a little tricky if you never used a window server off
-**cygwin** before. However, it's just a few commands that you have to run to get
-it up and running. You can run **almost** the same commands as required by the
-**Mac** build from the root directory, the exception being `qmake4` instad of
-`qmake`:
+And then run with `./minotaur-cpp`. Note that if you're using CLion, go to 
+`Preference -> Build, Execution, Deployment -> CMake` and add the same `CMAKE_PREFIX_PATH`
+argument.
 
-```
-mkdir build
-cd build
-qmake4 -o makefile ../minotaur.pro
-make
-```
-
-When running `minotaur.exe`, however, you need to first launch an X11 window server.
-Simply run the `xinit` command and you should be greeted by a big window with a
-small terminal in it. How window server works is beyond the scope of this document,
-you can read up on it if you are interesting. Anyways, once in the new terminal,
-you can run `./minotaur.exe` to launch the program.
+CMake might have a hard time finding the correct Python version because Apple. Ping me `@jeffniu22`
+if you've got any issues.
 
 ### Contributing
 Please refer to the [Contributing Guidelines](CONTRIBUTING.md).
