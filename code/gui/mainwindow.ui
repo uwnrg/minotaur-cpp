@@ -108,7 +108,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="layoutWidget1">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -207,7 +207,6 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="open_script_window"/>
     <addaction name="separator"/>
     <addaction name="actionFigure_Eight"/>
     <addaction name="actionBox_Manoeuvre"/>

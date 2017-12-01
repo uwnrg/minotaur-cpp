@@ -22,7 +22,6 @@ private:
     std::shared_ptr<Controller> *m_controller_ptr;
 
     EmbeddedController();
-    ~EmbeddedController();
 
 public:
     // Singleton

@@ -44,12 +44,12 @@ protected:
      *
      * @param visible true if the window is being opened, false otherwise
      */
-    void setVisible(bool visible);
+    void setVisible(bool visible) override;
 
     /**
      * Shut down the python engine when the user exits.
      */
-    void reject();
+    void reject() override;
 
 private Q_SLOTS:
     /**
