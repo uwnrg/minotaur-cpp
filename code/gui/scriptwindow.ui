@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Python Interpreter</string>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
@@ -19,28 +19,21 @@
      <x>390</x>
      <y>10</y>
      <width>101</width>
-     <height>111</height>
+     <height>61</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="buttonPane">
     <item>
-     <widget class="QPushButton" name="openButton">
+     <widget class="QPushButton" name="openEditorButton">
       <property name="text">
-       <string>Open File...</string>
+       <string>Open Editor</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="saveButton">
+     <widget class="QPushButton" name="runFileButton">
       <property name="text">
-       <string>Save File</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="saveAsButton">
-      <property name="text">
-       <string>Save As...</string>
+       <string>Run File</string>
       </property>
      </widget>
     </item>

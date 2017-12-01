@@ -31,14 +31,14 @@ private:
     PythonEngine();
     ~PythonEngine();
 
-    std::string getStdout(bool clear = 1);
-    std::string getStderr(bool clear = 1);
+    std::string getStdout(bool clear = true);
+    std::string getStderr(bool clear = true);
 public:
     PythonEngine(PythonEngine const&) = delete;
     void operator=(PythonEngine const&) = delete;
 
     // Add an embedded python module defined elsewhere, exposing it to interpreter
-    void append_module(std::string name, PyObject * (*init_func)(void));
+    void append_module(std::string name, PyObject * (*init_func)());
     bool initialize();
     bool stopEngine();
     bool isReady();

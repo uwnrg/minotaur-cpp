@@ -1,4 +1,4 @@
-set(PYTHON_SCRIPT_DIR python-scripts)
+set(PYTHON_SCRIPT_DIR python_scripts)
 macro(add_python_target target)
     foreach (file ${target})
         get_filename_component(file_name ${file} NAME)
@@ -72,6 +72,7 @@ file(GLOB_RECURSE HEADER_FILES
 file(GLOB_RECURSE FORM_FILES
         ${PROJECT_SOURCE_DIR}/code/gui/*.ui)
 
+add_python_target(code/scripts/__init__.py)
 add_python_target(code/scripts/robot.py)
 
 include_directories(${Qt5Widgets_INCLUDE_DIRS})

@@ -19,16 +19,16 @@ void SimulatorWindow::keyPressEvent(QKeyEvent *event) {
     // Forward key press events to the main window
     QWidget *parent = parentWidget();
     if (!parent) return;
-    MainWindow *mainWindow = (MainWindow*) parent;
-    mainWindow->keyPressEvent(event);
+    MainWindow *main_window = (MainWindow*) parent;
+    main_window->keyPressEvent(event);
 }
 
 void SimulatorWindow::reject() {
     // When the user clicks exit, switch back to ACTUATOR
     QWidget *parent = parentWidget();
     if (!parent) return;
-    MainWindow *mainWindow = (MainWindow*) parent;
-    mainWindow->switchToActuator();
+    MainWindow *main_window = (MainWindow*) parent;
+    main_window->switchToActuator();
     QDialog::reject();
 }
 

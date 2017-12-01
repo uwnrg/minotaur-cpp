@@ -2,13 +2,17 @@
 #define MINOTAUR_CPP_RESULTSTEXTDISPLAY_H
 
 #include <QTextEdit>
+#include "codeeditor.h"
 
-class ResultsTextDisplay : public QTextEdit {
+class ResultsTextDisplay : public CodeEditor {
 Q_OBJECT
 
 public:
     ResultsTextDisplay(QWidget *parent = 0);
     ~ResultsTextDisplay();
+
+private:
+    void append(const QString &str);
 
 public Q_SLOTS:
     // Slot for script submitted signal
