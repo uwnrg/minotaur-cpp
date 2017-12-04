@@ -19,11 +19,13 @@ project(minotaur-cpp)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -std=c++11")
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(PythonLibs 3.4 REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
+find_package(Threads REQUIRED)
 
 if (Qt5_POSITION_INDEPENDENT_CODE)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -90,6 +92,7 @@ add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} ${THIR
 
 target_link_libraries(minotaur-cpp Qt5::Widgets Qt5::Core Qt5::Gui)
 target_link_libraries(minotaur-cpp ${PYTHON_LIBRARIES})
+target_link_libraries(minotaur-cpp "${CMAKE_THREAD_LIBS_INIT}")
 target_include_directories(minotaur-cpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(minotaur-cpp PRIVATE PYTHON_SCRIPT_DIR="${PYTHON_SCRIPT_DIR}")
 
