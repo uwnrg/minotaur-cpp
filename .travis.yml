@@ -4,19 +4,20 @@ dist: trusty
 sudo: false
 
 before_install:
+  - sudo add-apt-repository ppa:beineri/opt-qt551-trusty -y
   - sudo apt-get update -qq
   - g++ --version
   - python3 --version
   - cmake --version
 
 install:
-  - sudo apt-get install qtdeclarative5-dev -y -qq
+  - sudo apt-get install qt55declarative -y -qq
   - sudo apt-get install libfontconfig1 mesa-common-dev libglu1-mesa-dev libudev-dev libxi6 libsm6 libxrender1 libegl1-mesa -y -qq
 
 script:
   - mkdir build
   - cd build
-  - cmake ../
+  - cmake ../ -DCMAKE_PREFIX_PATH=/opt/qt55/lib/cmake
   - make
 
 notifications:

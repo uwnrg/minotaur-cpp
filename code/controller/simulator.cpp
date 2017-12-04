@@ -1,5 +1,4 @@
 #include "simulator.h"
-#include "../graphics/simulatorscene.h"
 
 Simulator::Simulator(int t_invert_x, int t_invert_y) :
         Controller(t_invert_x, t_invert_y) {
@@ -15,11 +14,7 @@ void Simulator::move(Vector2i dir, int timer) {
     robot_pos += dir;
 
     // Update the graphics scene
-    m_simulator_scene->update();
-}
-
-void Simulator::setSimulatorScene(SimulatorScene *simulator_scene) {
-    m_simulator_scene = simulator_scene;
+    //m_simulator_scene->update();
 }
 
 Vector2i *Simulator::getRobotPos() {
