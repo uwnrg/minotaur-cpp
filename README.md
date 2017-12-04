@@ -27,36 +27,35 @@ with the following goals in mind:
 Please checkout the *Projects* tab for information about roadmap and current progress.
 
 # Setting up Minotaur on Windows
-These will describe the basic steps for setting up an environment on Windows.
-Things may vary from PC to PC, though.
+These will describe the exact steps for setting up an environment
+on a clean installation of Windows 10.
 
-### Installing Qt
-1. Download the Qt community edition and install a version at least 5.6
-2. I recommend 5.6 or 5.7 since the later versions take up much more space
-3. After installation completes set the `QT_DIR` environment variable, which would look
-something like `C:\Qt\%VERSION%\bin`.
-4. Add the some variable to `PATH`
-
-### Installing Python
-1. Download and install Python 3.6
-2. You might want to add the python `include` and `lib` directories to your `PATH`
-
-### Running with CLion
-I recommend using CLion, since it's more self contained and does work for you.
-
-1. Download and install CLion, which is free for students
-2. If you don't have the Microsoft Visual Studio compiler on your machine
-you can either install MVS (yikes!) or follow these steps
-https://www.jetbrains.com/help/clion/quick-tutorial-on-configuring-clion-on-windows.html
-3. Make sure you install a relatively recent compiler version
-
-## Building Minotaur
-1. `git clone https://github.com/uwnrg/minotaur-cpp.git`
-2. Open the project in CLion by clicking `Import from sources`
-3. CLion will attempt to detect a compiler
-4. CLion will attempt to configure the cmake project
-5. If that goes well, you can build the project
-6. If you get any errors, ping me `@jeffniu22` on Slack
+1. Download and install Git `https://git-scm.com/download/win`
+2. Download and install Python 3.6 `https://www.python.org/downloads`
+    - Select `Add Python 3.6 to PATH`
+    - Under `Customize installation` ensure `Add Python to environment variables` and
+    `Precompiled standard library` are checked
+3. Download and install Qt `https://www1.qt.io/download-open-source`
+    - Choose only Qt 5.6 for `MinGW 4.9.2 32 bit`
+    - Qt ships with `g++.exe` and `mingw32-make.exe`
+4. Download and install CMake `https://cmake.org/download`
+    - Make sure to check `Add CMake to the system PATH`
+5. Add the Qt tools directory to the <strong>System</strong> PATH: `C:/Qt/tools/mingw492_32/bin`
+    - Make sure to restart PowerShell or cmd
+6. Clone the repo `git clone https://github.com/uwnrg/minotaur-cpp.git`
+    - `cd minotaur-cpp`
+    - `mkdir build`
+    - `cd build`
+7. The following variables are needed by `cmake`
+    - `CMAKE_PREFIX_PATH` points to Qt: `C:/Qt/5.6/mingw49_32/lib/cmake`
+    - `PYTHON_INCLUDE_DIRS` points to Python headers: `C:/Python36-32/include`
+    - `PYTHON_LIBRARY` points to Python library: `C:/Python36-32/libs/python36.lib`
+8. `cmake .. -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH="C:/Qt/5.6/mingw49_32/lib/cmake" -DPYTHON_INCLUDE_DIRS="C:/Python36-32/include" -DPYTHON_LIBRARY="C:/Python36-32/libs/python36.lib"`
+    - You can add these values to the <strong>System</strong> PATH or
+    - With CLion, you can add the flags to the build configuration or set them as environment variables
+9. `mingw32-make`
+10. Add the Qt 5.6 binaries to the <strong>System</strong> PATH: `C:/Qt/5.6/mingw49_32/bin`
+11. Double-click `minotaur-cpp.exe`
 
 # Setting up Minotaur on MacOS
 These will describe the basic steps for setting up an environment on MacOS.
