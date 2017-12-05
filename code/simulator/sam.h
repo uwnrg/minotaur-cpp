@@ -45,6 +45,11 @@ public:
     const vector2f &pos() const;
 
     /**
+     * @return SAM's current velocity
+     */
+    const vector2f &vel() const;
+
+    /**
      * @return the current magnetic field magnitude on SAM
      */
     const vector2f &mag() const;

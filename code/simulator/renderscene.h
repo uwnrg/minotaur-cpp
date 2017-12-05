@@ -63,6 +63,11 @@ public:
     const std::vector<Solenoid> *solenoids() const override;
 
     /**
+     * @return a pointer to the Sam instance.
+     */
+    const Sam *sam() const override;
+
+    /**
      * Start the ticker.
      */
     void startRender();

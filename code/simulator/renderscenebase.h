@@ -11,6 +11,7 @@
 #include "drawable.h"
 
 class Solenoid;
+class Sam;
 
 /**
  * Base render scene referenced by Drawables to
@@ -22,6 +23,7 @@ public:
 
     virtual vector2f center() const = 0;
     virtual const std::vector<Solenoid> *solenoids() const = 0;
+    virtual const Sam *sam() const = 0;
 };
 
 #endif //MINOTAUR_CPP_RENDERSCENEBASE_H

@@ -1,11 +1,11 @@
 #include <QPainter>
 #include <chrono>
-#include <sstream>
 
+#include "arrow.h"
 #include "renderscene.h"
+#include "statsdisplay.h"
 
 #include "../gui/mainwindow.h"
-#include "arrow.h"
 
 RenderScene::RenderScene(std::shared_ptr<Simulator> simulator, QWidget *parent)
         : QOpenGLWidget(parent),
@@ -66,6 +66,10 @@ const std::vector<Solenoid> *RenderScene::solenoids() const {
     return &m_solenoids;
 }
 
+const Sam *RenderScene::sam() const {
+    return &m_sam;
+}
+
 void RenderScene::paintEvent(QPaintEvent *event) {
     long long int timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()
@@ -80,13 +84,9 @@ void RenderScene::paintEvent(QPaintEvent *event) {
         solenoid.draw(&painter, event, deltaMillis, 2000);
     }
     m_sam.draw(&painter, event, deltaMillis, 2000);
-
-    std::stringstream ss;
-    ss << "(" << m_sam.mag().x() << ", " << m_sam.mag().y() << ")";
-    painter.setPen(Qt::white);
-    painter.drawText(QPoint(10, 10), QString::fromStdString(ss.str()));
-
     Arrow samForce(this, m_sam.pos(), m_sam.mag());
     samForce.draw(&painter, event, deltaMillis, 2000);
+    StatsDisplay statsDisplay(this);
+    statsDisplay.draw(&painter, event, deltaMillis, 2000);
     painter.end();
 }

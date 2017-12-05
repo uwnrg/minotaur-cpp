@@ -61,6 +61,11 @@ Sam::pos() const {
 }
 
 const typename Sam::vector2f &
+Sam::vel() const {
+    return m_vel;
+}
+
+const typename Sam::vector2f &
 Sam::mag() const {
     return m_mag;
 }
