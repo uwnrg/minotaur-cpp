@@ -15,7 +15,7 @@ Actuator::Actuator(const QString &serial_port,
         resetDeviceNumber();
     } else {
         Logger::log("ERROR: " + serial_port.toStdString() + " could not be opened! "
-                    + m_serial_port->errorString().toStdString(), Logger::ERROR);
+                    + m_serial_port->errorString().toStdString(), Logger::FATAL);
     }
 }
 
@@ -71,7 +71,7 @@ int Actuator::setSerPort(const QString &serial_port) {
 
     m_serial_port->setPortName(serial_port);
     if (m_serial_port->lastError() != 0) {
-        Logger::log(m_serial_port->errorString().toStdString(), Logger::ERROR);
+        Logger::log(m_serial_port->errorString().toStdString(), Logger::FATAL);
         return -1;
     }
     return 0;
@@ -86,7 +86,7 @@ int Actuator::changeSettings(const PortSettings &settings) {
     m_serial_port->setTimeout(settings.Timeout_Millisec);
 
     if (m_serial_port->lastError() != 0) {
-        Logger::log(m_serial_port->errorString().toStdString(), Logger::ERROR);
+        Logger::log(m_serial_port->errorString().toStdString(), Logger::FATAL);
         return -1;
     }
     return 0;
@@ -115,11 +115,11 @@ void Actuator::move(Vector2i dir, int timer) {
         y_thread.get();
     }
     catch (std::exception &e) {
-        Logger::log(e.what(), Logger::ERROR);
+        Logger::log(e.what(), Logger::FATAL);
         success = false;
     }
     catch (std::string e) {
-        Logger::log(e, Logger::ERROR);
+        Logger::log(e, Logger::FATAL);
         success = false;
     }
     catch (...) {
@@ -132,7 +132,7 @@ void Actuator::move(Vector2i dir, int timer) {
     if (success) {
         Logger::log("Moved " + dir.toString() + " in " + std::to_string(timer) + " milliseconds.", Logger::INFO);
     } else {
-        Logger::log("The movement " + dir.toString() + " could not be completed.", Logger::ERROR);
+        Logger::log("The movement " + dir.toString() + " could not be completed.", Logger::FATAL);
     }
 }
 

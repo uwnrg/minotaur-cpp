@@ -11,7 +11,7 @@ class Logger {
 public:
     enum LogType {
         INFO,
-        ERROR,
+        FATAL,
         DEBUG,
 
         NUM_LOG_TYPES
@@ -26,7 +26,7 @@ private:
         switch (type) {
             case INFO:
                 return "black";
-            case ERROR:
+            case FATAL:
                 return "red";
             case DEBUG:
                 return "blue";
