@@ -27,8 +27,8 @@ with the following goals in mind:
 Please checkout the *Projects* tab for information about roadmap and current progress.
 
 # Setting up Minotaur on Windows
-These will describe the exact steps for setting up an environment
-on a clean installation of Windows 10.
+These will describe the steps for setting up an environment on Windows.
+This has been tested on a clean installation of Windows 10.
 
 1. Download and install Git `https://git-scm.com/download/win`
 2. Download and install Python 3.6 `https://www.python.org/downloads`
@@ -42,20 +42,29 @@ on a clean installation of Windows 10.
     - Make sure to check `Add CMake to the system PATH`
 5. Add the Qt tools directory to the <strong>System</strong> PATH: `C:/Qt/tools/mingw492_32/bin`
     - Make sure to restart PowerShell or cmd
-6. Clone the repo `git clone https://github.com/uwnrg/minotaur-cpp.git`
+6. Add the Qt 5.6 binaries to the <strong>System</strong> PATH: `C:/Qt/5.6/mingw49_32/bin`
+7. Clone the repo `git clone https://github.com/uwnrg/minotaur-cpp.git`
     - `cd minotaur-cpp`
     - `mkdir build`
     - `cd build`
-7. The following variables are needed by `cmake`
+8. The following variables are needed by `cmake`
     - `CMAKE_PREFIX_PATH` points to Qt: `C:/Qt/5.6/mingw49_32/lib/cmake`
     - `PYTHON_INCLUDE_DIRS` points to Python headers: `C:/Python36-32/include`
     - `PYTHON_LIBRARY` points to Python library: `C:/Python36-32/libs/python36.lib`
-8. `cmake .. -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH="C:/Qt/5.6/mingw49_32/lib/cmake" -DPYTHON_INCLUDE_DIRS="C:/Python36-32/include" -DPYTHON_LIBRARY="C:/Python36-32/libs/python36.lib"`
-    - You can add these values to the <strong>System</strong> PATH or
-    - With CLion, you can add the flags to the build configuration or set them as environment variables
-9. `mingw32-make`
-10. Add the Qt 5.6 binaries to the <strong>System</strong> PATH: `C:/Qt/5.6/mingw49_32/bin`
+
+### Building Minotaur
+
+9. `cmake .. -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH="C:/Qt/5.6/mingw49_32/lib/cmake" -DPYTHON_INCLUDE_DIRS="C:/Python36-32/include" -DPYTHON_LIBRARY="C:/Python36-32/libs/python36.lib"`
+10. `mingw32-make`
 11. Double-click `minotaur-cpp.exe`
+
+### Post-setup
+1. You can add the Python `include` and `lib` directories to your <strong>System</strong> PATH or
+2. If you are using CLion, you can add `CMAKE_PREFIX_PATH`, `PYTHON_INCLUDE_DIRS` and `PYTHON_LIBRARY`
+as either environment variables or `cmake` flags
+3. If CLion can't find `g++` you can point it directly to the location in `Build, Execution, and Deployment`
+4. You can also set the `QTDIR` environment variable to `C:/Qt/5.6`
+5. You should now be able to build and run with CLion or `cmake .. -G "MinGW Makefiles"` and `mingw32-make`
 
 # Setting up Minotaur on MacOS
 These will describe the basic steps for setting up an environment on MacOS.
