@@ -1,5 +1,6 @@
 #include <QPainter>
 #include <chrono>
+#include <sstream>
 
 #include "renderscene.h"
 
@@ -44,6 +45,7 @@ void RenderScene::animate() {
 }
 
 void RenderScene::startRender() {
+    m_sam.reset();
     if (!m_timer.isActive()) {
         m_timer.start();
     }
@@ -78,6 +80,12 @@ void RenderScene::paintEvent(QPaintEvent *event) {
         solenoid.draw(&painter, event, deltaMillis, 2000);
     }
     m_sam.draw(&painter, event, deltaMillis, 2000);
+
+    std::stringstream ss;
+    ss << "(" << m_sam.mag().x() << ", " << m_sam.mag().y() << ")";
+    painter.setPen(Qt::white);
+    painter.drawText(QPoint(10, 10), QString::fromStdString(ss.str()));
+
     Arrow samForce(this, m_sam.pos(), m_sam.mag());
     samForce.draw(&painter, event, deltaMillis, 2000);
     painter.end();

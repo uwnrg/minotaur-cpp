@@ -19,8 +19,8 @@ void Sam::draw(QPainter *painter, QPaintEvent *, int elapsed, float scale) {
     for (auto &solenoid : *solenoids) {
         m_mag += solenoid.fieldAt(m_pos);
     }
-    float vel = sqrtf(m_vel.x() * m_vel.x() + m_vel.y() + m_vel.y());
-    if (vel > 1e-6) {
+    float vel = hypotf(m_vel.x(), m_vel.y());
+    if (vel > 0) {
         float sfric = gf * m_mass * m_fric;
         vector2f vfric(-sfric * m_vel.x() / vel, -sfric * m_vel.y() / vel);
         bool xdir = m_vel.x() > 0;
@@ -68,4 +68,10 @@ Sam::mag() const {
 void Sam::stop() {
     m_vel.setX(0);
     m_vel.setY(0);
+}
+
+void Sam::reset() {
+    m_pos.setX(0);
+    m_pos.setY(0);
+    stop();
 }

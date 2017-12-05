@@ -35,6 +35,11 @@ public:
     void stop();
 
     /**
+     * Reset SAM's position.
+     */
+    void reset();
+
+    /**
      * @return SAM's current position
      */
     const vector2f &pos() const;

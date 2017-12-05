@@ -4,7 +4,7 @@
 // Magnetic permeability of free space
 #define MU_0f ((float) M_PI * 4e-7f)
 // Coefficient of static friction
-#define MU_sf 15.0f
+#define MU_sf 1.0f
 // Gravitational field strength
 #define gf 9.809f
 
