@@ -8,7 +8,7 @@ StatsDisplay::StatsDisplay(RenderSceneBase *render_scene)
 
 void StatsDisplay::draw(QPainter *painter, QPaintEvent *, int, float) {
     QString pos, vel, mag;
-    const Sam *sam = m_render_scene->sam();
+    const SAMRobot *sam = m_render_scene->sam();
     char format[] = "(%.3g, %.3g)";
     pos.sprintf(format, sam->pos().x(), sam->pos().y());
     vel.sprintf(format, sam->vel().x(), sam->vel().y());

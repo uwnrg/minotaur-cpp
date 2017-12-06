@@ -8,7 +8,7 @@
  * This class represents SAM, a robot with an orientation and
  * position in the field.
  */
-class Sam : public Drawable {
+class SAMRobot : public Drawable {
 public:
     /**
      * Create an instance of SAM.
@@ -18,7 +18,7 @@ public:
      * @param mass   the mass of SAM
      * @param length the length of SAM (in meters), which is shaped as a square
      */
-    explicit Sam(RenderSceneBase *scene, float mu_s, float mass, float length);
+    explicit SAMRobot(RenderSceneBase *scene, float mu_s, float mass, float length);
 
     /**
      * Draw SAM.

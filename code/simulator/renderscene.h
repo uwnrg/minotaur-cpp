@@ -65,7 +65,7 @@ public:
     /**
      * @return a pointer to the Sam instance.
      */
-    const Sam *sam() const override;
+    const SAMRobot *sam() const override;
 
     /**
      * Start the ticker.
@@ -98,7 +98,7 @@ private:
     /**
      * Object representing the location of SAM.
      */
-    Sam m_sam;
+    SAMRobot m_sam;
 };
 
 

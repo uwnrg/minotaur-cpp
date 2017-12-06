@@ -10,7 +10,7 @@
 RenderScene::RenderScene(std::shared_ptr<Simulator> simulator, QWidget *parent)
         : QOpenGLWidget(parent),
           m_simulator(std::move(simulator)),
-          m_sam(this, MU_sf, 1e-3f, 0.01f) {
+          m_sam(this, MU_SF, 1e-3f, 0.01f) {
     m_elapsed = 0;
     setAutoFillBackground(false);
 
@@ -66,7 +66,7 @@ const std::vector<Solenoid> *RenderScene::solenoids() const {
     return &m_solenoids;
 }
 
-const Sam *RenderScene::sam() const {
+const SAMRobot *RenderScene::sam() const {
     return &m_sam;
 }
 

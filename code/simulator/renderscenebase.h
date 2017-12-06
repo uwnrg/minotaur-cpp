@@ -2,16 +2,16 @@
 #define MINOTAUR_CPP_RENDERSCENEBASE_H
 
 // Magnetic permeability of free space
-#define MU_0f ((float) M_PI * 4e-7f)
+#define MU_0F ((float) M_PI * 4e-7f)
 // Coefficient of static friction
-#define MU_sf 1.0f
+#define MU_SF 1.0f
 // Gravitational field strength
-#define gf 9.809f
+#define G_FIELD 9.809f
 
 #include "drawable.h"
 
 class Solenoid;
-class Sam;
+class SAMRobot;
 
 /**
  * Base render scene referenced by Drawables to
@@ -23,7 +23,7 @@ public:
 
     virtual vector2f center() const = 0;
     virtual const std::vector<Solenoid> *solenoids() const = 0;
-    virtual const Sam *sam() const = 0;
+    virtual const SAMRobot *sam() const = 0;
 };
 
 #endif //MINOTAUR_CPP_RENDERSCENEBASE_H

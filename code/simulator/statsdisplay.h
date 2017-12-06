@@ -1,5 +1,5 @@
-#ifndef MINOTAUR_CPP_STATISDISPLAY_H
-#define MINOTAUR_CPP_STATISDISPLAY_H
+#ifndef MINOTAUR_CPP_STATSDISPLAY_H
+#define MINOTAUR_CPP_STATSDISPLAY_H
 
 #include "drawable.h"
 #include "renderscenebase.h"
@@ -14,4 +14,4 @@ private:
     RenderSceneBase *m_render_scene;
 };
 
-#endif //MINOTAUR_CPP_STATISDISPLAY_H
+#endif //MINOTAUR_CPP_STATSDISPLAY_H
