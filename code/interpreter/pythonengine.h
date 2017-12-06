@@ -1,11 +1,10 @@
 #ifndef MINOTAUR_CPP_PYTHONENGINE_H
 #define MINOTAUR_CPP_PYTHONENGINE_H
-#undef slots // prevent Qt macro from interfering
-#define _hypot hypot // workaround for a bug in Python.h
+
+#include "python.h"
+
 #define PyObject_GetAttrString(object, strName) PyObject_GetAttrString(object, strName)
 #define PyObject_SetAttrString(object, strName, value) PyObject_SetAttrString(object, strName, value)
-
-#include <Python.h>
 
 #include <string>
 #include <memory>

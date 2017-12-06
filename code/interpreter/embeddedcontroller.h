@@ -1,9 +1,7 @@
 #ifndef MINOTAUR_CPP_EMBEDDEDCONTROLLER_H
 #define MINOTAUR_CPP_EMBEDDEDCONTROLLER_H
 
-#undef slots
-#define _hypot hypot // hack to fix a bug with CPython
-#include <Python.h>
+#include "python.h"
 
 #include <memory>
 
