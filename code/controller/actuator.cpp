@@ -123,9 +123,9 @@ void Actuator::move(Vector2i dir, int timer) {
         success = false;
     }
     catch (...) {
+        success = false;
 #ifndef NDEBUG
         Logger::log("Unexpected exception", Logger::DEBUG);
-        success = false;
 #endif
     }
 

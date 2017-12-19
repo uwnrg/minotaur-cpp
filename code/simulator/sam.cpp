@@ -1,5 +1,5 @@
 #include "sam.h"
-#include "solenoid.h"
+#include "simulatorSolenoid.h"
 
 SAMRobot::SAMRobot(RenderSceneBase *scene, float mu_s, float mass, float length)
         : m_renderScene(scene),
@@ -13,7 +13,7 @@ SAMRobot::SAMRobot(RenderSceneBase *scene, float mu_s, float mass, float length)
 void SAMRobot::draw(QPainter *painter, QPaintEvent *, int elapsed, float scale) {
     // Update phase
     float dt = elapsed / 1000.0f;
-    const std::vector<Solenoid> *solenoids = m_renderScene->solenoids();
+    const std::vector<SimulatorSolenoid> *solenoids = m_renderScene->solenoids();
     m_mag.setX(0);
     m_mag.setY(0);
     for (auto &solenoid : *solenoids) {

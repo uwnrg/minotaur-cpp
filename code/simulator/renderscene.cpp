@@ -62,7 +62,7 @@ RenderScene::center() const {
     return {width() / 2.0f, height() / 2.0f};
 }
 
-const std::vector<Solenoid> *RenderScene::solenoids() const {
+const std::vector<SimulatorSolenoid> *RenderScene::solenoids() const {
     return &m_solenoids;
 }
 

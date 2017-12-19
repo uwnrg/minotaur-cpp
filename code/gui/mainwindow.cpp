@@ -12,8 +12,9 @@ MainWindow::MainWindow(QWidget *parent, const char *) :
     //Set up logger
     Logger::setStream(getLogView());
     m_actuator = std::shared_ptr<Actuator>(new Actuator);
+    m_solenoid = std::shared_ptr<Solenoid>(new Solenoid);
     m_simulator = std::shared_ptr<Simulator>(new Simulator(1, -1));
-    m_controller = m_actuator;
+    m_controller = m_solenoid;
     m_controller_type = Controller::Type::ACTUATOR;
 
     // Bind controller to Python Engine

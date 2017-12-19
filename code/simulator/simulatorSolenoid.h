@@ -9,13 +9,13 @@
 #include "renderscenebase.h"
 
 /**
- * Solenoid class represents an electromagnetic that is
+ * SimulatorSolenoid class represents an electromagnetic that is
  * passed a current @code i @endcode to produce a magnetic
  * field that moves SAM.
  */
-class Solenoid : public Drawable {
+class SimulatorSolenoid : public Drawable {
 public:
-    Solenoid() = default;
+    SimulatorSolenoid() = default;
     /**
      * Create a solenoid.
      *
@@ -27,7 +27,7 @@ public:
      * @param l      the length of the solenoid
      * @param mu_rel the relative permeability of the solenoid
      */
-    Solenoid(const RenderSceneBase *scene,
+    SimulatorSolenoid(const RenderSceneBase *scene,
              const vector2f &P, float theta, float n, float R, float l, float mu_rel);
 
     /**
@@ -72,11 +72,11 @@ private:
      */
     float m_N;
     /**
-     * Solenoid radius in meters.
+     * SimulatorSolenoid radius in meters.
      */
     float m_radius;
     /**
-     * Solenoid length in meters.
+     * SimulatorSolenoid length in meters.
      */
     float m_len;
     /**

@@ -1,6 +1,6 @@
-#include "solenoid.h"
+#include "simulatorSolenoid.h"
 
-Solenoid::Solenoid(const RenderSceneBase *scene,
+SimulatorSolenoid::SimulatorSolenoid(const RenderSceneBase *scene,
                    const vector2f &P, float theta, float n, float R, float l, float mu_rel)
         : m_renderScene(scene),
           m_pos(P),
@@ -12,19 +12,19 @@ Solenoid::Solenoid(const RenderSceneBase *scene,
           m_I(0.0f) {
 }
 
-void Solenoid::setCurrent(float i) {
+void SimulatorSolenoid::setCurrent(float i) {
     m_I = i;
 }
 
-float Solenoid::getCurrent() {
+float SimulatorSolenoid::getCurrent() {
     return m_I;
 }
 
-inline float Solenoid::getA(float x, float y) const {
+inline float SimulatorSolenoid::getA(float x, float y) const {
     return powf((powf(x, 2.0f) + powf(y, 2.0f)), -1.5f);
 }
 
-void Solenoid::draw(QPainter *painter, QPaintEvent *, int, float scale) {
+void SimulatorSolenoid::draw(QPainter *painter, QPaintEvent *, int, float scale) {
     float s = sinf(m_theta);
     float c = cosf(m_theta);
     float l2 = m_len * scale / 2.0f;
@@ -47,8 +47,8 @@ void Solenoid::draw(QPainter *painter, QPaintEvent *, int, float scale) {
     painter->drawPolygon(vertices, 4);
 }
 
-typename Solenoid::vector2f
-Solenoid::fieldAt(const vector2f &Q) const {
+typename SimulatorSolenoid::vector2f
+SimulatorSolenoid::fieldAt(const vector2f &Q) const {
     vector2f Qp = rotate(translate(Q, m_pos), -m_theta);
     float k = MU_0F * m_mu * m_I * m_N * powf(m_radius, 2.0f) / 4.0f;
     float l2 = m_len / 2.0f;

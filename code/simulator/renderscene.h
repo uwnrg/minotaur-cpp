@@ -10,7 +10,7 @@
 #include "../controller/simulator.h"
 #include "renderscenebase.h"
 #include "drawable.h"
-#include "solenoid.h"
+#include "simulatorSolenoid.h"
 #include "sam.h"
 
 /**
@@ -60,7 +60,7 @@ public:
     /**
      * @return a vector of solenoids in the field
      */
-    const std::vector<Solenoid> *solenoids() const override;
+    const std::vector<SimulatorSolenoid> *solenoids() const override;
 
     /**
      * @return a pointer to the Sam instance.
@@ -94,7 +94,7 @@ private:
     /**
      * List of solenoids in the field.
      */
-    std::vector<Solenoid> m_solenoids;
+    std::vector<SimulatorSolenoid> m_solenoids;
     /**
      * Object representing the location of SAM.
      */
