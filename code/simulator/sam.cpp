@@ -1,7 +1,7 @@
 #include "sam.h"
 #include "solenoid.h"
 
-Sam::Sam(RenderSceneBase *scene, float mu_s, float mass, float length)
+SAMRobot::SAMRobot(RenderSceneBase *scene, float mu_s, float mass, float length)
         : m_renderScene(scene),
           m_fric(mu_s),
           m_mass(mass),
@@ -10,7 +10,7 @@ Sam::Sam(RenderSceneBase *scene, float mu_s, float mass, float length)
           m_vel(0, 0) {
 }
 
-void Sam::draw(QPainter *painter, QPaintEvent *, int elapsed, float scale) {
+void SAMRobot::draw(QPainter *painter, QPaintEvent *, int elapsed, float scale) {
     // Update phase
     float dt = elapsed / 1000.0f;
     const std::vector<Solenoid> *solenoids = m_renderScene->solenoids();
@@ -19,9 +19,9 @@ void Sam::draw(QPainter *painter, QPaintEvent *, int elapsed, float scale) {
     for (auto &solenoid : *solenoids) {
         m_mag += solenoid.fieldAt(m_pos);
     }
-    float vel = sqrtf(m_vel.x() * m_vel.x() + m_vel.y() + m_vel.y());
-    if (vel > 1e-6) {
-        float sfric = gf * m_mass * m_fric;
+    float vel = hypotf(m_vel.x(), m_vel.y());
+    if (vel > 0) {
+        float sfric = G_FIELD * m_mass * m_fric;
         vector2f vfric(-sfric * m_vel.x() / vel, -sfric * m_vel.y() / vel);
         bool xdir = m_vel.x() > 0;
         bool ydir = m_vel.y() > 0;
@@ -55,17 +55,28 @@ void Sam::draw(QPainter *painter, QPaintEvent *, int elapsed, float scale) {
     painter->drawPolygon(vertices, 4);
 }
 
-const typename Sam::vector2f &
-Sam::pos() const {
+const typename SAMRobot::vector2f &
+SAMRobot::pos() const {
     return m_pos;
 }
 
-const typename Sam::vector2f &
-Sam::mag() const {
+const typename SAMRobot::vector2f &
+SAMRobot::vel() const {
+    return m_vel;
+}
+
+const typename SAMRobot::vector2f &
+SAMRobot::mag() const {
     return m_mag;
 }
 
-void Sam::stop() {
+void SAMRobot::stop() {
     m_vel.setX(0);
     m_vel.setY(0);
+}
+
+void SAMRobot::reset() {
+    m_pos.setX(0);
+    m_pos.setY(0);
+    stop();
 }

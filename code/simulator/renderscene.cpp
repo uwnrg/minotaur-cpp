@@ -1,15 +1,16 @@
 #include <QPainter>
 #include <chrono>
 
+#include "arrow.h"
 #include "renderscene.h"
+#include "statsdisplay.h"
 
 #include "../gui/mainwindow.h"
-#include "arrow.h"
 
 RenderScene::RenderScene(std::shared_ptr<Simulator> simulator, QWidget *parent)
         : QOpenGLWidget(parent),
           m_simulator(std::move(simulator)),
-          m_sam(this, MU_sf, 1e-3f, 0.01f) {
+          m_sam(this, MU_SF, 1e-3f, 0.01f) {
     m_elapsed = 0;
     setAutoFillBackground(false);
 
@@ -44,6 +45,7 @@ void RenderScene::animate() {
 }
 
 void RenderScene::startRender() {
+    m_sam.reset();
     if (!m_timer.isActive()) {
         m_timer.start();
     }
@@ -64,6 +66,10 @@ const std::vector<Solenoid> *RenderScene::solenoids() const {
     return &m_solenoids;
 }
 
+const SAMRobot *RenderScene::sam() const {
+    return &m_sam;
+}
+
 void RenderScene::paintEvent(QPaintEvent *event) {
     long long int timeMillis = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()
@@ -80,5 +86,7 @@ void RenderScene::paintEvent(QPaintEvent *event) {
     m_sam.draw(&painter, event, deltaMillis, 2000);
     Arrow samForce(this, m_sam.pos(), m_sam.mag());
     samForce.draw(&painter, event, deltaMillis, 2000);
+    StatsDisplay statsDisplay(this);
+    statsDisplay.draw(&painter, event, deltaMillis, 2000);
     painter.end();
 }

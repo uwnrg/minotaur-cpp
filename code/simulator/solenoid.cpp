@@ -50,7 +50,7 @@ void Solenoid::draw(QPainter *painter, QPaintEvent *, int, float scale) {
 typename Solenoid::vector2f
 Solenoid::fieldAt(const vector2f &Q) const {
     vector2f Qp = rotate(translate(Q, m_pos), -m_theta);
-    float k = MU_0f * m_mu * m_I * m_N * powf(m_radius, 2.0f) / 4.0f;
+    float k = MU_0F * m_mu * m_I * m_N * powf(m_radius, 2.0f) / 4.0f;
     float l2 = m_len / 2.0f;
     float yp1 = Qp.y() - l2;
     float yp2 = Qp.y() + l2;
