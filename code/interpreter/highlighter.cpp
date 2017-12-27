@@ -76,6 +76,8 @@ HighLighter::HighLighter(QTextDocument *parent)
     rule.pattern = Regex("\".*\"");
     rule.format = m_quote_format;
     m_rules.append(rule);
+    rule.pattern = Regex("\'.*\'");
+    m_rules.append(rule);
 
     m_comment_format.setForeground(QColor(224, 216, 180));
     rule.pattern = Regex("#[^\\n]*");
