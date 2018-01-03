@@ -10,7 +10,7 @@
 
 #include "drawable.h"
 
-class Solenoid;
+class SimulatorSolenoid;
 class SAMRobot;
 
 /**
@@ -22,7 +22,7 @@ public:
     typedef typename Drawable::vector2f vector2f;
 
     virtual vector2f center() const = 0;
-    virtual const std::vector<Solenoid> *solenoids() const = 0;
+    virtual const std::vector<SimulatorSolenoid> *solenoids() const = 0;
     virtual const SAMRobot *sam() const = 0;
 };
 

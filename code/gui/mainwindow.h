@@ -9,6 +9,7 @@
 #include <unordered_map>
 
 #include "../controller/controller.h"
+#include "../controller/solenoid.h"
 #include "../controller/simulator.h"
 
 #include "actuatorsetup.h"
@@ -65,6 +66,7 @@ private:
     ActionAbout *action_about_window;
     std::shared_ptr<Controller> m_controller;
     std::shared_ptr<Actuator> m_actuator;
+    std::shared_ptr<Solenoid> m_solenoid;
     std::shared_ptr<Simulator> m_simulator;
 
     bool eventFilter(QObject *, QEvent *) override;

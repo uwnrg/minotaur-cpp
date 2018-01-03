@@ -19,6 +19,7 @@ public:
     enum Type {
         ACTUATOR,
         SIMULATOR,
+        SOLENOID,
 
         NUM_DELGATES
     };
