@@ -12,7 +12,7 @@ class ActionAbout : public QDialog
     Q_OBJECT
 
 public:
-    explicit ActionAbout(QWidget *parent = 0);
+    explicit ActionAbout(QWidget *parent = nullptr);
     ~ActionAbout();
 
 private:

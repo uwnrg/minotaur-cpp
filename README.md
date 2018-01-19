@@ -102,6 +102,9 @@ From a fresh install, you will need these packages
 sudo apt install build-essential cmake python3 python3-dev qt5-default libudev-dev git
 ```
 
+OpenCV is a requirement. Download and build OpenCV 3.3 from the open-source repo, or
+follow [these instructions](https://github.com/BVLC/caffe/wiki/OpenCV-3.3-Installation-Guide-on-Ubuntu-16.04).
+
 Then clone the repository and build with
 ```bash
 git clone https://github.com/uwnrg/minotaur-cpp.git

@@ -11,9 +11,9 @@ MainWindow::MainWindow(QWidget *parent, const char *) :
 
     //Set up logger
     Logger::setStream(getLogView());
-    m_actuator = std::shared_ptr<Actuator>(new Actuator);
-    m_solenoid = std::shared_ptr<Solenoid>(new Solenoid);
-    m_simulator = std::shared_ptr<Simulator>(new Simulator(1, -1));
+    m_actuator = std::make_shared<Actuator>();
+    m_solenoid = std::make_shared<Solenoid>();
+    m_simulator = std::make_shared<Simulator>(1, -1);
     m_controller = m_solenoid;
     m_controller_type = Controller::Type::SOLENOID;
 
@@ -22,11 +22,11 @@ MainWindow::MainWindow(QWidget *parent, const char *) :
     PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
 
     // Setup subwindows
-    actuator_setup_window = new ActuatorSetup(m_actuator, this);
-    simulator_window = new SimulatorWindow(m_simulator, this);
-    script_window = new ScriptWindow(this);
-    //m_simulator->setSimulatorScene(simulator_window->getSimulatorScene());
-    action_about_window = new ActionAbout();
+    m_actuator_setup_window = new ActuatorSetup(m_actuator, this);
+    m_simulator_window = new SimulatorWindow(m_simulator, this);
+    m_script_window = new ScriptWindow(this);
+    m_about_window = new ActionAbout(this);
+    m_camera_display = new CameraDisplay(this);
 
     // Setup slot connections
     connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent, const char *) :
     connect(ui->switch_to_simulator_mode, SIGNAL(triggered()), this, SLOT(switchToSimulator()));
     connect(ui->start_python_interpreter, SIGNAL(triggered()), this, SLOT(openPythonInterpreter()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(openActionAbout()));
+    connect(ui->actionWebcam_View, SIGNAL(triggered()), this, SLOT(openCameraDisplay()));
 
     // setup focus and an event filter to capture key events
     this->installEventFilter(this);
@@ -96,9 +97,11 @@ void MainWindow::mousePressEvent(QMouseEvent *) {
 
 MainWindow::~MainWindow() {
     // Destroy all subwindows
-    delete actuator_setup_window;
-    delete simulator_window;
-    delete script_window;
+    delete m_actuator_setup_window;
+    delete m_about_window;
+    delete m_simulator_window;
+    delete m_script_window;
+    delete m_camera_display;
     delete ui;
 }
 
@@ -124,13 +127,13 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
             // Switch to the actuator controller and hide the simulation window
             Logger::log("Switching to ACTUATOR", Logger::INFO);
             m_controller = m_actuator;
-            if (simulator_window->isVisible()) { simulator_window->hide(); }
+            if (m_simulator_window->isVisible()) { m_simulator_window->hide(); }
             break;
         case Controller::Type::SIMULATOR:
             // Switch to the simulator controller and show the simulator window
             Logger::log("Switching to SIMULATOR", Logger::INFO);
             m_controller = m_simulator;
-            if (!simulator_window->isVisible()) { simulator_window->show(); }
+            if (!m_simulator_window->isVisible()) { m_simulator_window->show(); }
             break;
         default:
             break;
@@ -138,13 +141,17 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
 }
 
 void MainWindow::openActuatorSetup() {
-    actuator_setup_window->show();
+    m_actuator_setup_window->show();
 }
 
 void MainWindow::openPythonInterpreter() {
-    script_window->show();
+    m_script_window->show();
 }
 
 void MainWindow::openActionAbout() {
-    action_about_window->show();
+    m_about_window->show();
+}
+
+void MainWindow::openCameraDisplay() {
+    m_camera_display->show();
 }

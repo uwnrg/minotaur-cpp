@@ -283,7 +283,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionWebcam_View">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Webcam View</string>

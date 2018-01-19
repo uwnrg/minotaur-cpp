@@ -16,6 +16,7 @@
 #include "simulatorwindow.h"
 #include "actionabout.h"
 #include "scriptwindow.h"
+#include "camera.h"
 
 #define DEFAULT_TITLE "minotaur"
 
@@ -43,11 +44,14 @@ public Q_SLOTS:
 
     void openPythonInterpreter();
 
+    void openActionAbout();
+
+    void openCameraDisplay();
+
     inline void switchToActuator() { switchControllerTo(Controller::Type::ACTUATOR); }
 
     inline void switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }
 
-    void openActionAbout();
 
 private Q_SLOTS:
 
@@ -59,11 +63,15 @@ private Q_SLOTS:
 
 private:
     Ui::MainWindow *ui;
-    ActuatorSetup *actuator_setup_window;
-    ScriptWindow *script_window;
-    SimulatorWindow *simulator_window;
+
+    ActuatorSetup *m_actuator_setup_window;
+    ScriptWindow *m_script_window;
+    SimulatorWindow *m_simulator_window;
+    ActionAbout *m_about_window;
+    CameraDisplay *m_camera_display;
+
     Controller::Type m_controller_type;
-    ActionAbout *action_about_window;
+
     std::shared_ptr<Controller> m_controller;
     std::shared_ptr<Actuator> m_actuator;
     std::shared_ptr<Solenoid> m_solenoid;
