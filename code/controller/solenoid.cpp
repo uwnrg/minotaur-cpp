@@ -5,7 +5,7 @@ Solenoid::Solenoid(const QString& serial_port): Controller(1, 1) {
     // TODO: change actuator setup to be used for general serial set up
     if ( serial_port.isEmpty() ) {
         // TODO: provide error if this does not succeed
-        stream.open("/dev/ttyACM0");        // manually changed to match port indicated in arduino IDE
+        stream.open("/dev/ttyACM1");        // manually changed to match port indicated in arduino IDE
     } else {
         stream.open(serial_port.toStdString());
     }
@@ -19,6 +19,7 @@ void Solenoid::move(Vector2i dir, int timer) {
     // TODO: user timer for movement control
     bool success = true;
 #ifndef NDEBUG
+	Logger::log("Moving Solenoid controller", Logger::DEBUG);
     Logger::log("Attempting move (" + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + ")",
                 Logger::DEBUG);
 #endif

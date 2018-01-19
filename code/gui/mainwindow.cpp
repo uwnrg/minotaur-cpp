@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent, const char *) :
     m_solenoid = std::shared_ptr<Solenoid>(new Solenoid);
     m_simulator = std::shared_ptr<Simulator>(new Simulator(1, -1));
     m_controller = m_solenoid;
-    m_controller_type = Controller::Type::ACTUATOR;
+    m_controller_type = Controller::Type::SOLENOID;
 
     // Bind controller to Python Engine
     EmbeddedController::getInstance().bind_controller(&m_controller);
