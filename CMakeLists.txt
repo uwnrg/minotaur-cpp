@@ -92,6 +92,8 @@ set(CMAKE_AUTOUIC ON)
 get_target_property(QtCore_location Qt5::Core LOCATION)
 add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} ${THIRD_PARTY} ${THIRD_PARTY_COMMON})
 
+target_compile_definitions(minotaur-cpp PRIVATE NDEBUG)
+
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 target_link_libraries(minotaur-cpp ${OpenCV_LIBS})

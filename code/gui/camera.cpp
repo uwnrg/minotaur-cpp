@@ -32,8 +32,9 @@ void Capture::timerEvent(QTimerEvent *ev) {
     Q_EMIT matReady(frame);
 }
 
-Converter::Converter(QObject *parent)
-    : QObject(parent) {}
+Converter::Converter(QObject *parent, CameraDisplay *display)
+    : QObject(parent),
+      m_display(display) {}
 
 void Converter::setProcessAll(bool process_all) {
     m_process_all = process_all;
@@ -52,9 +53,11 @@ void Converter::matDelete(void *mat) {
 }
 
 void Converter::queue(const cv::Mat &frame) {
-    /*if (m_frame.empty()) {
+#ifndef NDEBUG
+    if (m_frame.empty()) {
         qDebug() << "OpenCV Image Converter dropped a frame";
-    }*/
+    }
+#endif
     m_frame = frame;
     if (!m_timer.isActive()) {
         m_timer.start(0, this);
@@ -62,7 +65,11 @@ void Converter::queue(const cv::Mat &frame) {
 }
 
 void Converter::process(cv::Mat frame) {
-    cv::resize(frame, frame, cv::Size(), 1, 1, cv::INTER_AREA);
+    double scale = MIN(
+        (m_display->width() - 20) / (double) frame.size().width,
+        (m_display->height() - 20) / (double) frame.size().height
+    );
+    cv::resize(frame, frame, cv::Size(), scale, scale, cv::INTER_AREA);
     cv::cvtColor(frame, frame, CV_BGR2RGB);
     const QImage image(
         frame.data, frame.cols, frame.rows, static_cast<int>(frame.step),
@@ -87,9 +94,11 @@ ImageViewer::ImageViewer(QWidget *parent)
 }
 
 void ImageViewer::setImage(const QImage &img) {
-    /*if (m_img.isNull()) {
+#ifndef NDEBUG
+    if (m_img.isNull()) {
         qDebug() << "OpenCV Image Viewer dropped a frame";
-    }*/
+    }
+#endif
     m_img = img;
     if (m_img.size() != size()) {
         setFixedSize(m_img.size());
@@ -110,7 +119,8 @@ IThread::~IThread() {
 
 CameraDisplay::CameraDisplay(QWidget *parent, int camera)
     : QDialog(parent),
-      m_camera(camera) {
+      m_camera(camera),
+      m_converter(nullptr, this) {
     m_layout = new QVBoxLayout(this);
     m_image_viewer = new ImageViewer(this);
     setLayout(m_layout);
@@ -144,7 +154,7 @@ void CameraDisplay::setVisible(bool visible) {
     } else {
         pauseVideo();
     }
-    setFixedSize(800, 600);
+    setMinimumSize(800, 600);
     QDialog::setVisible(visible);
 }
 

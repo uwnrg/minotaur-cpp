@@ -17,6 +17,8 @@
 
 Q_DECLARE_METATYPE(cv::Mat);
 
+class CameraDisplay;
+
 class Capture : public QObject {
 Q_OBJECT
 
@@ -42,7 +44,7 @@ class Converter : public QObject {
 Q_OBJECT
 
 public:
-    explicit Converter(QObject *parent = nullptr);
+    explicit Converter(QObject *parent = nullptr, CameraDisplay *display = nullptr);
 
     void setProcessAll(bool process_all);
 
@@ -59,6 +61,7 @@ private:
 
     void timerEvent(QTimerEvent *ev) override;
 
+    CameraDisplay *m_display;
     QBasicTimer m_timer;
     cv::Mat m_frame;
     bool m_process_all = true;
