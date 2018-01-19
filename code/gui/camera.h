@@ -101,6 +101,8 @@ protected:
     void reject() override;
 
 private:
+    void pauseVideo();
+
     QVBoxLayout *m_layout;
     ImageViewer *m_image_viewer;
 

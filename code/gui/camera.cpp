@@ -1,13 +1,12 @@
 #include "camera.h"
 #include <QDebug>
 #include <QtGui/QPainter>
-#include <QtWidgets/QVBoxLayout>
 
 Capture::Capture(QObject *parent)
     : QObject(parent) {}
 
 void Capture::start(int cam) {
-    if (!m_video_capture) {
+    if (!m_video_capture || !m_video_capture->isOpened()) {
         m_video_capture.reset(new cv::VideoCapture(cam));
     }
     if (m_video_capture->isOpened()) {
@@ -18,6 +17,7 @@ void Capture::start(int cam) {
 
 void Capture::stop() {
     m_timer.stop();
+    m_video_capture->release();
 }
 
 void Capture::timerEvent(QTimerEvent *ev) {
@@ -115,6 +115,14 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera)
     m_image_viewer = new ImageViewer(this);
     setLayout(m_layout);
     m_layout->addWidget(m_image_viewer);
+
+    m_converter.setProcessAll(false);
+    m_capture_thread.start();
+    m_converter_thread.start();
+    m_capture.moveToThread(&m_capture_thread);
+    m_converter.moveToThread(&m_converter_thread);
+    QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
+    QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
 }
 
 CameraDisplay::~CameraDisplay() {
@@ -132,19 +140,19 @@ int CameraDisplay::getCamera() {
 
 void CameraDisplay::setVisible(bool visible) {
     if (visible) {
-        m_converter.setProcessAll(false);
-        m_capture_thread.start();
-        m_converter_thread.start();
-        m_capture.moveToThread(&m_capture_thread);
-        m_converter.moveToThread(&m_converter_thread);
-        QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
-        QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
         QMetaObject::invokeMethod(&m_capture, "start");
+    } else {
+        pauseVideo();
     }
     setFixedSize(800, 600);
     QDialog::setVisible(visible);
 }
 
 void CameraDisplay::reject() {
+    pauseVideo();
     QDialog::reject();
+}
+
+void CameraDisplay::pauseVideo() {
+    QMetaObject::invokeMethod(&m_capture, "stop");
 }
