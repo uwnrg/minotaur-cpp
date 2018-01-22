@@ -25,6 +25,8 @@ find_package(PythonLibs 3.4 REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
+find_package(Qt5Multimedia REQUIRED)
+find_package(Qt5MultimediaWidgets REQUIRED)
 find_package(Threads REQUIRED)
 
 if (Qt5_POSITION_INDEPENDENT_CODE)
@@ -58,20 +60,11 @@ endif()
 
 file(GLOB_RECURSE SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/code/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/controller/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/graphics/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/gui/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/interpreter/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/simulator/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/utility/*.cpp)
+        ${PROJECT_SOURCE_DIR}/code/**/*.cpp)
 
 file(GLOB_RECURSE HEADER_FILES
-        ${PROJECT_SOURCE_DIR}/code/controller/*.h
-        ${PROJECT_SOURCE_DIR}/code/graphics/*.h
-        ${PROJECT_SOURCE_DIR}/code/gui/*.h
-        ${PROJECT_SOURCE_DIR}/code/interpreter/*.h
-        ${PROJECT_SOURCE_DIR}/code/simulator/*.h
-        ${PROJECT_SOURCE_DIR}/code/utility/*.h)
+        ${PROJECT_SOURCE_DIR}/code/*.h
+        ${PROJECT_SOURCE_DIR}/code/**/*.h)
 
 file(GLOB_RECURSE FORM_FILES
         ${PROJECT_SOURCE_DIR}/code/gui/*.ui)
@@ -90,7 +83,13 @@ set(CMAKE_AUTOUIC ON)
 get_target_property(QtCore_location Qt5::Core LOCATION)
 add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} ${THIRD_PARTY} ${THIRD_PARTY_COMMON})
 
-target_link_libraries(minotaur-cpp Qt5::Widgets Qt5::Core Qt5::Gui)
+target_compile_definitions(minotaur-cpp PRIVATE NDEBUG)
+
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+target_link_libraries(minotaur-cpp ${OpenCV_LIBS})
+
+target_link_libraries(minotaur-cpp Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Multimedia Qt5::MultimediaWidgets)
 target_link_libraries(minotaur-cpp ${PYTHON_LIBRARIES})
 target_link_libraries(minotaur-cpp "${CMAKE_THREAD_LIBS_INIT}")
 target_include_directories(minotaur-cpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
