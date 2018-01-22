@@ -1,6 +1,9 @@
 #include "camera.h"
-#include <QDebug>
-#include <QtGui/QPainter>
+
+#include <QCamera>
+#include <QPainter>
+#include <QCameraInfo>
+#include <QAction>
 
 Capture::Capture(QObject *parent)
     : QObject(parent) {}
@@ -117,27 +120,43 @@ IThread::~IThread() {
     wait();
 }
 
-CameraDisplay::CameraDisplay(QWidget *parent, int camera)
+CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     : QDialog(parent),
-      m_camera(camera),
+      m_camera(camera_index),
       m_converter(nullptr, this) {
     m_layout = new QVBoxLayout(this);
     m_image_viewer = new ImageViewer(this);
-    setLayout(m_layout);
-    m_layout->addWidget(m_image_viewer);
+
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+#ifndef NDEBUG
+    qDebug() << "Found " << QCameraInfo::availableCameras().count() << "cameras" << endl;
+#endif
+    m_camera_list = new QComboBox(this);
+    m_camera_list->setMinimumSize(150, 30);
+    for (int i = 0; i < cameras.size(); ++i) {
+        m_camera_list->addItem(cameras[i].deviceName(), QVariant::fromValue(i));
+    }
 
     m_converter.setProcessAll(false);
     m_capture_thread.start();
     m_converter_thread.start();
     m_capture.moveToThread(&m_capture_thread);
     m_converter.moveToThread(&m_converter_thread);
+
+    setLayout(m_layout);
+    m_layout->addWidget(m_camera_list);
+    m_layout->addWidget(m_image_viewer);
+
     QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
     QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
+
+    connect(m_camera_list, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
 }
 
 CameraDisplay::~CameraDisplay() {
-    delete m_layout;
     delete m_image_viewer;
+    delete m_camera_list;
+    delete m_layout;
 }
 
 void CameraDisplay::setCamera(int camera) {
@@ -165,4 +184,9 @@ void CameraDisplay::reject() {
 
 void CameraDisplay::pauseVideo() {
     QMetaObject::invokeMethod(&m_capture, "stop");
+}
+
+void CameraDisplay::selectedCameraChanged(int camera_index) {
+    QMetaObject::invokeMethod(&m_capture, "stop");
+    QMetaObject::invokeMethod(&m_capture, "start", Q_ARG(int, camera_index));
 }

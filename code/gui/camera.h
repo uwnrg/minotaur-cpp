@@ -6,14 +6,15 @@
 #include <QWidget>
 #include <QDialog>
 #include <QThread>
-#include <QtCore/QBasicTimer>
-#include <QtCore/QArgument>
-#include <QtCore/QMetaType>
-#include <QtCore/QScopedPointer>
-#include <QtCore/QTimerEvent>
-#include <QtGui/QImage>
-#include <QtGui/QPaintEvent>
-#include <QtWidgets/QVBoxLayout>
+#include <QBasicTimer>
+#include <QArgument>
+#include <QMetaType>
+#include <QScopedPointer>
+#include <QTimerEvent>
+#include <QImage>
+#include <QPaintEvent>
+#include <QVBoxLayout>
+#include <QComboBox>
 
 Q_DECLARE_METATYPE(cv::Mat);
 
@@ -90,23 +91,27 @@ class CameraDisplay : public QDialog {
 Q_OBJECT
 
 public:
-    explicit CameraDisplay(QWidget *parent = nullptr, int camera = 0);
+    explicit CameraDisplay(QWidget *parent = nullptr, int camera_index = 0);
 
     ~CameraDisplay() override;
 
     void setCamera(int camera);
-    int getCamera();
 
+    int getCamera();
 
 protected:
     void setVisible(bool visible) override;
 
     void reject() override;
 
+protected Q_SLOTS:
+    void selectedCameraChanged(int camera_index);
+
 private:
     void pauseVideo();
 
     QVBoxLayout *m_layout;
+    QComboBox *m_camera_list;
     ImageViewer *m_image_viewer;
 
     int m_camera;

@@ -60,20 +60,11 @@ endif()
 
 file(GLOB_RECURSE SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/code/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/controller/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/graphics/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/gui/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/interpreter/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/simulator/*.cpp
-        ${PROJECT_SOURCE_DIR}/code/utility/*.cpp)
+        ${PROJECT_SOURCE_DIR}/code/**/*.cpp)
 
 file(GLOB_RECURSE HEADER_FILES
-        ${PROJECT_SOURCE_DIR}/code/controller/*.h
-        ${PROJECT_SOURCE_DIR}/code/graphics/*.h
-        ${PROJECT_SOURCE_DIR}/code/gui/*.h
-        ${PROJECT_SOURCE_DIR}/code/interpreter/*.h
-        ${PROJECT_SOURCE_DIR}/code/simulator/*.h
-        ${PROJECT_SOURCE_DIR}/code/utility/*.h)
+        ${PROJECT_SOURCE_DIR}/code/*.h
+        ${PROJECT_SOURCE_DIR}/code/**/*.h)
 
 file(GLOB_RECURSE FORM_FILES
         ${PROJECT_SOURCE_DIR}/code/gui/*.ui)
