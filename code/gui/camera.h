@@ -15,6 +15,7 @@
 #include <QPaintEvent>
 #include <QVBoxLayout>
 #include <QComboBox>
+#include <QPushButton>
 
 Q_DECLARE_METATYPE(cv::Mat);
 
@@ -107,11 +108,14 @@ protected:
 protected Q_SLOTS:
     void selectedCameraChanged(int camera_index);
 
+	void captureAndSave();
+
 private:
     void pauseVideo();
 
     QVBoxLayout *m_layout;
     QComboBox *m_camera_list;
+	QPushButton *m_capture_btn;
     ImageViewer *m_image_viewer;
 
     int m_camera;
