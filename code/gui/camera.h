@@ -17,6 +17,8 @@
 #include <QComboBox>
 #include <QPushButton>
 
+#include "../video/modify.h"
+
 Q_DECLARE_METATYPE(cv::Mat);
 
 class CameraDisplay;
@@ -31,7 +33,7 @@ public:
 
     Q_SIGNAL void matReady(const cv::Mat &);
 
-    Q_SLOT void start(int cam = 0);
+    Q_SLOT void start(int cam);
 
     Q_SLOT void stop();
 
@@ -75,6 +77,8 @@ Q_OBJECT
 public:
     explicit ImageViewer(QWidget *parent = nullptr);
 
+    const QImage &getImage();
+
     Q_SLOT void setImage(const QImage &img);
 
 private:
@@ -106,7 +110,7 @@ protected:
     void reject() override;
 
 protected Q_SLOTS:
-    void selectedCameraChanged(int camera_index);
+    void selectedCameraChanged(int list_index);
 
 	void captureAndSave();
 
@@ -118,7 +122,10 @@ private:
 	QPushButton *m_capture_btn;
     ImageViewer *m_image_viewer;
 
+    std::unique_ptr<VideoModifier> m_modifier;
+
     int m_camera;
+    int m_image_count = 0;
 
     Capture m_capture;
     Converter m_converter;
