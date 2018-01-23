@@ -136,7 +136,10 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
 	for (int i = 0; i < cameras.size(); ++i) {
 		m_camera_list->addItem(cameras[i].deviceName(), QVariant::fromValue(i));
 	}
-
+	m_effects_list = new QComboBox(this);
+	m_effects_list->setMinimumSize(150, 30);
+	m_effects_list->addItem("None", QVariant::fromValue(0));
+	m_effects_list->addItem("Squares", QVariant::fromValue(1));
 	m_converter.setProcessAll(false);
 	m_capture_thread.start();
 	m_converter_thread.start();
@@ -147,12 +150,14 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
 
 	setLayout(m_layout);
 	m_layout->addWidget(m_camera_list);
+	m_layout->addWidget(m_effects_list);
 	m_layout->addWidget(m_image_viewer);
 
 	QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
 	QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
 
 	connect(m_camera_list, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
+	connect(m_effects_list, SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
 	connect(m_capture_btn, SIGNAL(clicked()), this, SLOT(captureAndSave()));
 }
 
@@ -193,6 +198,15 @@ void CameraDisplay::pauseVideo() {
 void CameraDisplay::selectedCameraChanged(int camera_index) {
 	QMetaObject::invokeMethod(&m_capture, "stop");
 	QMetaObject::invokeMethod(&m_capture, "start", Q_ARG(int, camera_index));
+}
+
+void CameraDisplay::effectsChanged(int effect) {
+	switch(effect) {
+		case 0:
+			break;
+		case 1:
+			break;
+	}
 }
 
 void CameraDisplay::captureAndSave() {

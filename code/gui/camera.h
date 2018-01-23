@@ -108,6 +108,8 @@ protected:
 protected Q_SLOTS:
     void selectedCameraChanged(int camera_index);
 
+    void effectsChanged(int effect);
+
 	void captureAndSave();
 
 private:
@@ -115,8 +117,10 @@ private:
 
     QVBoxLayout *m_layout;
     QComboBox *m_camera_list;
+    QComboBox *m_effects_list;
 	QPushButton *m_capture_btn;
     ImageViewer *m_image_viewer;
+
 
     int m_camera;
 
@@ -124,6 +128,6 @@ private:
     Converter m_converter;
     IThread m_capture_thread;
     IThread m_converter_thread;
-};
+}; 
 
 #endif //MINOTAUR_CPP_CAMERA_H
