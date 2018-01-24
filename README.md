@@ -3,17 +3,6 @@
 |:--------:|:---------:|
 |[![Build Status](https://travis-ci.org/uwnrg/minotaur-cpp.svg?branch=master)](https://travis-ci.org/uwnrg/minotaur-cpp)|[![Build Status](https://travis-ci.org/uwnrg/minotaur-cpp.svg?branch=develop)](https://travis-ci.org/uwnrg/minotaur-cpp)|
 
-### Table of Contents
-
-* [Introduction](#introduction)
-* [Setup](#setup)
-  - [Ubuntu](#ubuntu)
-  - [Mac](#mac)
-  - [Other systems](#other-systems)
-  - [Cygwin](#cygwin)
-* [Contributing](#contributing)
-* [License](#license)
-
 ### Introduction
 Minotaur is the controls software for our microrobots. It is being actively developed
 with the following goals in mind:
@@ -79,6 +68,10 @@ There may be issues if multiple versions of Python are installed on the system.
 2. Use `brew install python3`
 3. Verify the python version (minimum 3.4) with `python3 --version`
 
+### Installing OpenCV 2
+1. OpenCV 2 is the supported version, although OpenCV 3 should work
+2. `brew install opencv@2` or `brew install opencv`
+
 ## Building Minotaur
 Here you can either install CLion and import the project (recommended) or
 1. `git clone https://github.com/uwnrg/minotaur-cpp.git`
@@ -99,20 +92,7 @@ if you've got any issues.
 From a fresh install, you will need these packages
 
 ```bash
-sudo apt install build-essential cmake python3 python3-dev qt5-default libudev-dev git
-```
-
-OpenCV is a requirement. We are going to download and build OpenCV 3.3 with the additional
-modules. Download [opencv-3.3](https://github.com/opencv/opencv/releases) and 
-[opencv_contrib-3.3](https://github.com/opencv/opencv_contrib/releases). Extract the folders
-and create a build directory. You might need some dependencies, which can be found 
-[here](https://github.com/BVLC/caffe/wiki/OpenCV-3.3-Installation-Guide-on-Ubuntu-16.04).
-
-```bash
-mkdir opencv-build
-cd opencv-build
-cmake -DOPENCV_EXTRA_MODULES_PATH=<opencv_contrib>/modules ..
-make -j5
+sudo apt install build-essential cmake python3 python3-dev qt5-default libudev-dev libopencv-dev
 ```
 
 Then clone the repository and build with
