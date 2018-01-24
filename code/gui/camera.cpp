@@ -155,8 +155,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
 
     m_effects_list = new QComboBox(this);
     m_effects_list->setMinimumSize(150, 30);
-    m_effects_list->addItem("None", QVariant::fromValue(0));
-    m_effects_list->addItem("Squares", QVariant::fromValue(1));
+    VideoModifier::addModifierList(m_effects_list);
 
     m_converter.setProcessAll(false);
     m_capture_thread.start();
