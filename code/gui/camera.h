@@ -1,6 +1,8 @@
 #ifndef MINOTAUR_CPP_CAMERA_H
 #define MINOTAUR_CPP_CAMERA_H
 
+#include <memory>
+
 #include <opencv2/opencv.hpp>
 
 #include <QWidget>
@@ -16,8 +18,6 @@
 #include <QVBoxLayout>
 #include <QComboBox>
 #include <QPushButton>
-
-#include "../video/modify.h"
 
 Q_DECLARE_METATYPE(cv::Mat);
 
@@ -121,8 +121,6 @@ private:
     QComboBox *m_camera_list;
 	QPushButton *m_capture_btn;
     ImageViewer *m_image_viewer;
-
-    std::unique_ptr<VideoModifier> m_modifier;
 
     int m_camera;
     int m_image_count = 0;

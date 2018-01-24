@@ -6,8 +6,6 @@
 #include <QAction>
 #include <QDir>
 
-#include "../video/tracker.h"
-
 Capture::Capture(QObject *parent)
     : QObject(parent) {}
 
@@ -165,7 +163,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     connect(m_camera_list, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
     connect(m_capture_btn, SIGNAL(clicked()), this, SLOT(captureAndSave()));
 
-    m_modifier = std::unique_ptr<VideoModifier>(new TrackerModifier);
+    //m_modifier = std::unique_ptr<VideoModifier>(new TrackerModifier);
 }
 
 CameraDisplay::~CameraDisplay() {

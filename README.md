@@ -105,7 +105,8 @@ sudo apt install build-essential cmake python3 python3-dev qt5-default libudev-d
 OpenCV is a requirement. We are going to download and build OpenCV 3.3 with the additional
 modules. Download [opencv-3.3](https://github.com/opencv/opencv/releases) and 
 [opencv_contrib-3.3](https://github.com/opencv/opencv_contrib/releases). Extract the folders
-and create a build directory.
+and create a build directory. You might need some dependencies, which can be found 
+[here](https://github.com/BVLC/caffe/wiki/OpenCV-3.3-Installation-Guide-on-Ubuntu-16.04).
 
 ```bash
 mkdir opencv-build
