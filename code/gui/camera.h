@@ -19,6 +19,8 @@
 #include <QComboBox>
 #include <QPushButton>
 
+#include "../video/modify.h"
+
 Q_DECLARE_METATYPE(cv::Mat);
 
 class CameraDisplay;
@@ -56,6 +58,8 @@ public:
 
     Q_SLOT void processFrame(const cv::Mat &frame);
 
+    Q_SLOT void modifierChanged(int modifier_index);
+
 private:
     static void matDelete(void *mat);
 
@@ -67,7 +71,10 @@ private:
 
     CameraDisplay *m_display;
     QBasicTimer m_timer;
+
     cv::Mat m_frame;
+    std::unique_ptr<VideoModifier> m_modifier;
+
     bool m_process_all = true;
 };
 
@@ -112,6 +119,8 @@ protected:
 protected Q_SLOTS:
     void selectedCameraChanged(int list_index);
 
+    void effectsChanged(int effect_index);
+
 	void captureAndSave();
 
 private:
@@ -119,6 +128,7 @@ private:
 
     QVBoxLayout *m_layout;
     QComboBox *m_camera_list;
+    QComboBox *m_effects_list;
 	QPushButton *m_capture_btn;
     ImageViewer *m_image_viewer;
 
@@ -129,6 +139,6 @@ private:
     Converter m_converter;
     IThread m_capture_thread;
     IThread m_converter_thread;
-};
+}; 
 
 #endif //MINOTAUR_CPP_CAMERA_H

@@ -6,6 +6,8 @@
 #include <QAction>
 #include <QDir>
 
+#include "../video/squares.h"
+
 Capture::Capture(QObject *parent)
     : QObject(parent) {}
 
@@ -55,6 +57,10 @@ void Converter::processFrame(const cv::Mat &frame) {
     }
 }
 
+void Converter::modifierChanged(int modifier_index) {
+    VideoModifier::attachModifier(m_modifier, modifier_index);
+}
+
 void Converter::matDelete(void *mat) {
     delete static_cast<cv::Mat *>(mat);
 }
@@ -76,6 +82,9 @@ void Converter::process(cv::Mat frame) {
         (m_display->width() - 20) / (double) frame.size().width,
         (m_display->height() - 20) / (double) frame.size().height
     );
+    if (m_modifier) {
+        m_modifier->modify(&frame);
+    }
     cv::resize(frame, frame, cv::Size(), scale, scale, cv::INTER_AREA);
     cv::cvtColor(frame, frame, CV_BGR2RGB);
     const QImage image(
@@ -144,6 +153,11 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
         m_camera_list->addItem(cameras[i].deviceName(), QVariant::fromValue(i));
     }
 
+    m_effects_list = new QComboBox(this);
+    m_effects_list->setMinimumSize(150, 30);
+    m_effects_list->addItem("None", QVariant::fromValue(0));
+    m_effects_list->addItem("Squares", QVariant::fromValue(1));
+
     m_converter.setProcessAll(false);
     m_capture_thread.start();
     m_converter_thread.start();
@@ -155,6 +169,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     setLayout(m_layout);
     m_layout->addWidget(m_capture_btn);
     m_layout->addWidget(m_camera_list);
+    m_layout->addWidget(m_effects_list);
     m_layout->addWidget(m_image_viewer);
 
     QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
@@ -162,8 +177,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
 
     connect(m_camera_list, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
     connect(m_capture_btn, SIGNAL(clicked()), this, SLOT(captureAndSave()));
-
-    //m_modifier = std::unique_ptr<VideoModifier>(new TrackerModifier);
+	connect(m_effects_list, SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
 }
 
 CameraDisplay::~CameraDisplay() {
@@ -214,6 +228,10 @@ void CameraDisplay::selectedCameraChanged(int list_index) {
     QCameraInfo camera = QCameraInfo::availableCameras()[list_index];
     QMetaObject::invokeMethod(&m_capture, "stop");
     QMetaObject::invokeMethod(&m_capture, "start", Q_ARG(int, getCameraIndex(camera)));
+}
+
+void CameraDisplay::effectsChanged(int effect_index) {
+    QMetaObject::invokeMethod(&m_converter, "modifierChanged", Q_ARG(int, effect_index));
 }
 
 void CameraDisplay::captureAndSave() {
