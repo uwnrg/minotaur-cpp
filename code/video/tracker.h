@@ -5,6 +5,10 @@
 
 class TrackerModifier : public VideoModifier {
 public:
+    TrackerModifier();
+
+    ~TrackerModifier();
+
     void modify(cv::Mat *img) override;
 
 private:
