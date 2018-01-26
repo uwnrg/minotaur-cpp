@@ -202,9 +202,12 @@ int getCameraIndex(const QCameraInfo &info) {
 
 void CameraDisplay::setVisible(bool visible) {
     if (visible) {
-        int camera_index = -1;
+        int camera_index = 0;
         if (!QCameraInfo::availableCameras().empty()) {
             camera_index = getCameraIndex(QCameraInfo::availableCameras()[0]);
+        }
+        if (camera_index >= 10) {
+            camera_index = 0;
         }
         QMetaObject::invokeMethod(&m_capture, "start", Q_ARG(int, camera_index));
     } else {

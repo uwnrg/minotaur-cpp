@@ -10,8 +10,9 @@
 class VideoModifier {
 public:
     enum {
-        NONE,
-        SQUARES
+        NONE = 0,
+        SQUARES = 1,
+        SHAPEDETECT = 2,
     };
 
     static void attachModifier(std::unique_ptr<VideoModifier> &ptr, int modifier);
