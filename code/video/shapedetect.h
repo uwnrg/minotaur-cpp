@@ -7,7 +7,7 @@
 
 #include "modify.h"
 
-class Shapedetect : public VideoModifier {
+class ShapeDetect : public VideoModifier {
 public:
     void modify(cv::Mat *img) override;
 };

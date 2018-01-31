@@ -2,16 +2,13 @@
 #include "squares.h"
 #include "shapedetect.h"
 
-#include <QDebug>
-
 void VideoModifier::attachModifier(std::unique_ptr<VideoModifier> &ptr, int modifier) {
-    qDebug() << "Switching to effect: " << modifier;
     switch(modifier) {
         case SQUARES:
             ptr.reset(new Squares);
             break;
         case SHAPEDETECT:
-            ptr.reset(new Shapedetect);
+            ptr.reset(new ShapeDetect);
             break;
         default:
             ptr.release();

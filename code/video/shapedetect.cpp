@@ -5,22 +5,13 @@
 //
 
 #include "shapedetect.h"
-
-#include "opencv2/core.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/objdetect.hpp"
-#include "opencv2/photo.hpp"
-
-#include <cmath>
-
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/objdetect.hpp>
+#include <opencv2/photo.hpp>
 #include <iostream>
-#include <stdio.h>
-
-const int minTriangleArea = 10;
-const int minSquareArea = 10;
-const int minCircleArea = 50;
 
 
 // Finds a cosine of angle between vectors from pt0->pt1 and pt0->pt2
@@ -40,8 +31,6 @@ static void drawShapes(cv::Mat& image, const std::vector<std::vector<cv::Point> 
         int n = (int)squares[i].size();
         polylines(image, &p, &n, 1, true, cvScalar(255,0,0), 3, cv::LINE_AA);
     }
-
-    cv::imshow(wndname, image);
 }
 
 // Displays text in the center of a contour
@@ -61,7 +50,8 @@ void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& cont
 }
 
 static cv::Mat findShapes(const cv::Mat& src, std::vector<std::vector<cv::Point> >& triangles,
-                          std::vector<std::vector<cv::Point> >& rectangles, std::vector<std::vector<cv::Point> >& circles)
+                          std::vector<std::vector<cv::Point> >& rectangles, std::vector<std::vector<cv::Point> >& circles,
+                          int minTriangleArea = 10, int minSquareArea = 10, int minCircleArea = 50)
 {
     triangles.clear();
     rectangles.clear();
@@ -185,10 +175,7 @@ static cv::Mat findShapes(const cv::Mat& src, std::vector<std::vector<cv::Point>
     return dst;
 }
 
-#include <QDebug>
-
-void Shapedetect::modify(cv::Mat *img) {
-    //qDebug() << "I love shapes ecksdee";
+void ShapeDetect::modify(cv::Mat *img) {
     const std::string wndname = "shape-detect";
 
     std::vector<std::vector<cv::Point> > triangles;
