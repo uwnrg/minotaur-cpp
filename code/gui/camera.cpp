@@ -197,15 +197,22 @@ int CameraDisplay::getCamera() {
 int getCameraIndex(const QCameraInfo &info) {
     QString name = info.deviceName();
     QChar index_char = name.at(name.length() - 1);
-    return index_char.unicode() - '0';
+    int index_unicode = index_char.unicode() - '0';
+
+    if (index_unicode >= 10) {
+        index_unicode = 0;
+    }
+
+    return index_unicode;
 }
 
 void CameraDisplay::setVisible(bool visible) {
     if (visible) {
-        int camera_index = -1;
+        int camera_index = 0;
         if (!QCameraInfo::availableCameras().empty()) {
             camera_index = getCameraIndex(QCameraInfo::availableCameras()[0]);
         }
+
         QMetaObject::invokeMethod(&m_capture, "start", Q_ARG(int, camera_index));
     } else {
         pauseVideo();
