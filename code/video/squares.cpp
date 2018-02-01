@@ -2,6 +2,8 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <QDebug>
+
 int thresh = 0;
 int N = 50;
 

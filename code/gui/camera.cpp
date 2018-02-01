@@ -197,12 +197,13 @@ int CameraDisplay::getCamera() {
 int getCameraIndex(const QCameraInfo &info) {
     QString name = info.deviceName();
     QChar index_char = name.at(name.length() - 1);
-    return index_char.unicode() - '0';
+    int index = index_char.unicode() - '0';
+    return index > 9 ? 0 : index;
 }
 
 void CameraDisplay::setVisible(bool visible) {
     if (visible) {
-        int camera_index = -1;
+        int camera_index = 0;
         if (!QCameraInfo::availableCameras().empty()) {
             camera_index = getCameraIndex(QCameraInfo::availableCameras()[0]);
         }
