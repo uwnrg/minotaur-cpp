@@ -55,7 +55,7 @@ endif()
 if (UNIX)
     set(THIRD_PARTY
             third-party/qextserialenumerator_unix.cpp
-            third-party/qextserialport_unix.cpp code/video/shapedetect.cpp code/video/shapedetect.h)
+            third-party/qextserialport_unix.cpp)
 endif()
 
 file(GLOB_RECURSE SOURCE_FILES

@@ -197,7 +197,8 @@ int CameraDisplay::getCamera() {
 int getCameraIndex(const QCameraInfo &info) {
     QString name = info.deviceName();
     QChar index_char = name.at(name.length() - 1);
-    return index_char.unicode() - '0';
+    int index = index_char.unicode() - '0';
+    return index > 9 ? 0 : index;
 }
 
 void CameraDisplay::setVisible(bool visible) {
@@ -205,9 +206,6 @@ void CameraDisplay::setVisible(bool visible) {
         int camera_index = 0;
         if (!QCameraInfo::availableCameras().empty()) {
             camera_index = getCameraIndex(QCameraInfo::availableCameras()[0]);
-        }
-        if (camera_index >= 10) {
-            camera_index = 0;
         }
         QMetaObject::invokeMethod(&m_capture, "start", Q_ARG(int, camera_index));
     } else {

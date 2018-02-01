@@ -1,7 +1,10 @@
-//
-// Created by Beini Fang on 2018-01-25.
-//
-
+/**
+ * Detects and tags, rectangles, triangles, and circles.
+ * Returns vertices of rectangles and triangles, and radius + center of circles
+ *
+ * @author Beini Fang
+ * @file shapedetect.h
+ */
 #ifndef MINOTAUR_CPP_SHAPEDETECT_H
 #define MINOTAUR_CPP_SHAPEDETECT_H
 

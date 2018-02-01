@@ -102,7 +102,6 @@ static void drawSquares(cv::Mat *image, const vector<vector<Point>> &squares) {
 }
 
 void Squares::modify(cv::Mat *img) {
-    qDebug() << "I love squares xd";
     vector<vector<Point>> squares;
     findSquares(img, squares);
     drawSquares(img, squares);
