@@ -245,3 +245,7 @@ FakesAssemblies/
 # CLion proj files
 .idea/
 *.swp
+
+# GOTURN tracker models
+goturn.prototxt
+goturn.caffemodel

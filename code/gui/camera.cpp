@@ -1,12 +1,11 @@
 #include "camera.h"
+#include "../uwnrg.h"
 
 #include <QCamera>
 #include <QPainter>
 #include <QCameraInfo>
 #include <QAction>
 #include <QDir>
-
-#include "../video/squares.h"
 
 Capture::Capture(QObject *parent)
     : QObject(parent) {}
@@ -66,11 +65,6 @@ void Converter::matDelete(void *mat) {
 }
 
 void Converter::queue(const cv::Mat &frame) {
-#ifndef NDEBUG
-    if (m_frame.empty()) {
-        qDebug() << "OpenCV Image Converter dropped a frame";
-    }
-#endif
     m_frame = frame;
     if (!m_timer.isActive()) {
         m_timer.start(0, this);
@@ -83,7 +77,7 @@ void Converter::process(cv::Mat frame) {
         (m_display->height() - 20) / (double) frame.size().height
     );
     if (m_modifier) {
-        m_modifier->modify(&frame);
+        m_modifier->modify(frame);
     }
     cv::resize(frame, frame, cv::Size(), scale, scale, cv::INTER_AREA);
     cv::cvtColor(frame, frame, CV_BGR2RGB);
@@ -92,7 +86,14 @@ void Converter::process(cv::Mat frame) {
         QImage::Format_RGB888, &matDelete, new cv::Mat(frame)
     );
     Q_ASSERT(image.constBits() == frame.data);
-    emit imageReady(image);
+    Q_EMIT imageReady(image);
+}
+
+void Converter::imageKeyEvent(int key) {
+    WHEN_DEBUG(qDebug() << "Key pressed: " << key);
+    if (m_modifier) {
+        m_modifier->forwardKeyEvent(key);
+    }
 }
 
 void Converter::timerEvent(QTimerEvent *ev) {
@@ -114,11 +115,6 @@ const QImage &ImageViewer::getImage() {
 }
 
 void ImageViewer::setImage(const QImage &img) {
-#ifndef NDEBUG
-    if (m_img.isNull()) {
-        qDebug() << "OpenCV Image Viewer dropped a frame";
-    }
-#endif
     m_img = img;
     if (m_img.size() != size()) {
         setFixedSize(m_img.size());
@@ -144,9 +140,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_image_viewer = new ImageViewer(this);
 
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
-#ifndef NDEBUG
-    qDebug() << "Found " << QCameraInfo::availableCameras().count() << "cameras" << endl;
-#endif
+    WHEN_DEBUG(qDebug() << "Found " << QCameraInfo::availableCameras().count() << "cameras" << endl);
     m_camera_list = new QComboBox(this);
     m_camera_list->setMinimumSize(150, 30);
     for (int i = 0; i < cameras.size(); ++i) {
@@ -173,10 +167,13 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
 
     QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
     QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
+    QObject::connect(this, &CameraDisplay::forwardKeyEvent, &m_converter, &Converter::imageKeyEvent);
 
     connect(m_camera_list, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
     connect(m_capture_btn, SIGNAL(clicked()), this, SLOT(captureAndSave()));
-	connect(m_effects_list, SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
+    connect(m_effects_list, SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
+
+    setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 }
 
 CameraDisplay::~CameraDisplay() {
@@ -215,6 +212,10 @@ void CameraDisplay::setVisible(bool visible) {
     QDialog::setVisible(visible);
 }
 
+void CameraDisplay::keyPressEvent(QKeyEvent *event) {
+    Q_EMIT forwardKeyEvent(event->key());
+}
+
 void CameraDisplay::reject() {
     pauseVideo();
     QDialog::reject();
@@ -236,12 +237,19 @@ void CameraDisplay::effectsChanged(int effect_index) {
 
 void CameraDisplay::captureAndSave() {
     QString file = QDir::currentPath() + QDir::separator() + "image" + QString::number(m_image_count) + ".png";
+#ifndef NDEBUG
     qDebug() << "Saving image " << m_image_count;
     qDebug() << "Target: " << file;
-    if(m_image_viewer->getImage().save(file)) {
+#endif
+    if (m_image_viewer->getImage().save(file)) {
         ++m_image_count;
+#ifndef NDEBUG
         qDebug() << "Image saved";
-    } else {
+#endif
+    }
+#ifndef NDEBUG
+    else {
         qDebug() << "Failed to save image";
     }
+#endif
 }

@@ -156,12 +156,12 @@ static cv::Mat findShapes(const cv::Mat &src, std::vector<std::vector<cv::Point>
     return dst;
 }
 
-void Shapedetect::modify(cv::Mat *img) {
-    std::vector<std::vector<cv::Point> > triangles;
-    std::vector<std::vector<cv::Point> > rectangles;
-    std::vector<std::vector<cv::Point> > circles;
+void ShapeDetect::modify(cv::Mat &img) {
+    std::vector<std::vector<cv::Point>> triangles;
+    std::vector<std::vector<cv::Point>> rectangles;
+    std::vector<std::vector<cv::Point>> circles;
 
-    *img = findShapes(*img, triangles, rectangles, circles);
+    img = findShapes(img, triangles, rectangles, circles);
     // Outline rectangles and triangles in blue
     //drawShapes(*img, triangles);
     //drawShapes(*img, rectangles);

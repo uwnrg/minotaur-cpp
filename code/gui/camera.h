@@ -60,6 +60,8 @@ public:
 
     Q_SLOT void modifierChanged(int modifier_index);
 
+    Q_SLOT void imageKeyEvent(int key);
+
 private:
     static void matDelete(void *mat);
 
@@ -116,12 +118,18 @@ protected:
 
     void reject() override;
 
+    void keyPressEvent(QKeyEvent *event) override;
+
 protected Q_SLOTS:
+
     void selectedCameraChanged(int list_index);
 
     void effectsChanged(int effect_index);
 
-	void captureAndSave();
+    void captureAndSave();
+
+Q_SIGNALS:
+    void forwardKeyEvent(int);
 
 private:
     void pauseVideo();
@@ -129,7 +137,7 @@ private:
     QVBoxLayout *m_layout;
     QComboBox *m_camera_list;
     QComboBox *m_effects_list;
-	QPushButton *m_capture_btn;
+    QPushButton *m_capture_btn;
     ImageViewer *m_image_viewer;
 
     int m_camera;
@@ -139,6 +147,6 @@ private:
     Converter m_converter;
     IThread m_capture_thread;
     IThread m_converter_thread;
-}; 
+};
 
 #endif //MINOTAUR_CPP_CAMERA_H
