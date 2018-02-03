@@ -1,0 +1,7 @@
+set(PYTHON_SCRIPT_DIR python_scripts)
+macro(add_python_target target)
+    foreach (file ${target})
+        get_filename_component(file_name ${file} NAME)
+        configure_file(${file} ${PYTHON_SCRIPT_DIR}/${file_name} COPYONLY)
+    endforeach ()
+endmacro()
