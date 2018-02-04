@@ -1,7 +1,9 @@
 #include <opencv2/opencv.hpp>
 
 #include "tracker.h"
-#include "../uwnrg.h"
+#ifndef NDEBUG
+#include <QDebug>
+#endif
 
 // CMake will try to find goturn.caffemodel and goturn.prototxt, which need
 // to be added separtaely. If these are found, the GOTURN tracker model
@@ -33,7 +35,9 @@ TrackerModifier::TrackerModifier()
             m_tracker = cv::TrackerMedianFlow::create();
             break;
         case Type::GOTURN:
-            WHEN_DEBUG(qDebug() << "Using GOTURN tracker");
+#ifndef NDEBUG
+            qDebug() << "Using GOTURN tracker";
+#endif
             m_tracker = cv::TrackerGOTURN::create();
             break;
         default:
@@ -44,12 +48,18 @@ TrackerModifier::TrackerModifier()
 TrackerModifier::~TrackerModifier() = default;
 
 void TrackerModifier::forwardKeyEvent(int key) {
-    WHEN_DEBUG(qDebug() << "Key event received");
+#ifndef NDEBUG
+    qDebug() << "Key event received";
+#endif
     if (key == Qt::Key_A) {
-        WHEN_DEBUG(qDebug() << "Switching to First Scan");
+#ifndef NDEBUG
+        qDebug() << "Switching to First Scan";
+#endif
         m_state = State::FIRST_SCAN;
     } else if (key == Qt::Key_S) {
-        WHEN_DEBUG(qDebug() << "Resetting tracker");
+#ifndef NDEBUG
+        qDebug() << "Resetting tracker";
+#endif
         m_state = State::UNINITIALIZED;
         m_bounding_box = {};
     }

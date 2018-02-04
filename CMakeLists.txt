@@ -82,7 +82,14 @@ get_target_property(QtCore_location Qt5::Core LOCATION)
 add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} ${THIRD_PARTY} ${THIRD_PARTY_COMMON})
 
 # Uncomment this line to compile in debug mode
-target_compile_definitions(minotaur-cpp PRIVATE NDEBUG)
+option(NO_DEBUG "Build minotaur without debugging output" OFF)
+if (NO_DEBUG)
+    log("Building without debugging")
+    target_compile_definitions(minotaur-cpp PRIVATE QT_NO_DEBUG)
+    target_compile_definitions(minotaur-cpp PRIVATE NDEBUG)
+else ()
+    log("Building with debugging on")
+endif ()
 
 # Attempt to find GOTURN files
 include(Goturn)
