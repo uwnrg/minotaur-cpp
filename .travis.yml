@@ -16,7 +16,7 @@ before_install:
 
 install:
   - sudo apt-get install qt5-default qtmultimedia5-dev -y -qq
-  - sudo apt-get install libfontconfig1 mesa-common-dev libglu1-mesa-dev libudev-dev libxi6 libsm6 libxrender1 libegl1-mesa -y -qq
+  - sudo apt-get install libfontconfig1 mesa-common-dev libglu1-mesa-dev libudev-dev libxi6 libsm6 libxrender1 libegl1-mesa libxine2 -y -qq
 
 script:
   - mkdir build

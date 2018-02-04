@@ -1,5 +1,4 @@
 #include "camera.h"
-#include "../uwnrg.h"
 
 #include <QCamera>
 #include <QPainter>
@@ -90,7 +89,9 @@ void Converter::process(cv::Mat frame) {
 }
 
 void Converter::imageKeyEvent(int key) {
-    WHEN_DEBUG(qDebug() << "Key pressed: " << key);
+#ifndef NDEBUG
+    qDebug() << "Key pressed: " << key;
+#endif
     if (m_modifier) {
         m_modifier->forwardKeyEvent(key);
     }
@@ -140,7 +141,9 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_image_viewer = new ImageViewer(this);
 
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
-    WHEN_DEBUG(qDebug() << "Found " << QCameraInfo::availableCameras().count() << "cameras" << endl);
+#ifndef NDEBUG
+    qDebug() << "Found " << QCameraInfo::availableCameras().count() << "cameras" << endl;
+#endif
     m_camera_list = new QComboBox(this);
     m_camera_list->setMinimumSize(150, 30);
     for (int i = 0; i < cameras.size(); ++i) {
