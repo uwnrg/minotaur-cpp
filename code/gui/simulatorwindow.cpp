@@ -47,7 +47,7 @@ void SimulatorWindow::reject() {
     QWidget *parent = parentWidget();
     if (!parent) return;
     MainWindow *main_window = (MainWindow*) parent;
-    main_window->switchToActuator();
+    main_window->switchToSolenoid();
     QDialog::reject();
 }
 
