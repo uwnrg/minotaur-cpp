@@ -161,7 +161,8 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_converter.moveToThread(&m_converter_thread);
 
     m_capture_btn = new QPushButton(this);
-
+    m_capture_btn->setText(tr("Take Picture"));
+    
     setLayout(m_layout);
     m_layout->addWidget(m_capture_btn);
     m_layout->addWidget(m_camera_list);
