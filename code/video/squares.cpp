@@ -20,14 +20,14 @@ static double angle(Point pt1, Point pt2, Point pt0) {
 
 // returns sequence of squares detected on the image.
 // the sequence is stored in the specified memory storage
-static void findSquares(cv::Mat *image, vector<vector<Point> > &squares) {
+static void findSquares(cv::Mat &image, vector<vector<Point> > &squares) {
     squares.clear();
 
-    Mat pyr, timg, gray0(image->size(), CV_8U), gray;
+    Mat pyr, timg, gray0(image.size(), CV_8U), gray;
 
     // down-scale and upscale the image to filter out the noise
-    pyrDown(*image, pyr, Size(image->cols / 2, image->rows / 2));
-    pyrUp(pyr, timg, image->size());
+    pyrDown(image, pyr, Size(image.cols / 2, image.rows / 2));
+    pyrUp(pyr, timg, image.size());
     vector<vector<Point>> contours;
 
     // find squares in every color plane of the image
@@ -93,15 +93,15 @@ static void findSquares(cv::Mat *image, vector<vector<Point> > &squares) {
 }
 
 // the function draws all the squares in the image
-static void drawSquares(cv::Mat *image, const vector<vector<Point>> &squares) {
+static void drawSquares(cv::Mat &image, const vector<vector<Point>> &squares) {
     for (const auto &square : squares) {
         const Point *p = &square[0];
         auto n = static_cast<int>(square.size());
-        polylines(*image, &p, &n, 1, true, Scalar(0, 255, 0), 3);
+        polylines(image, &p, &n, 1, true, Scalar(0, 255, 0), 3);
     }
 }
 
-void Squares::modify(cv::Mat *img) {
+void Squares::modify(cv::Mat &img) {
     vector<vector<Point>> squares;
     findSquares(img, squares);
     drawSquares(img, squares);
