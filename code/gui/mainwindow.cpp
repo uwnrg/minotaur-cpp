@@ -11,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent, const char *) :
 
     //Set up logger
     Logger::setStream(getLogView());
-    m_actuator = std::make_shared<Actuator>();
     m_solenoid = std::make_shared<Solenoid>();
     m_simulator = std::make_shared<Simulator>(1, -1);
     m_controller = m_solenoid;
@@ -22,15 +21,12 @@ MainWindow::MainWindow(QWidget *parent, const char *) :
     PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
 
     // Setup subwindows
-    m_actuator_setup_window = new ActuatorSetup(m_actuator, this);
     m_simulator_window = new SimulatorWindow(m_simulator, this);
     m_script_window = new ScriptWindow(this);
     m_about_window = new ActionAbout(this);
     m_camera_display = new CameraDisplay(this);
 
     // Setup slot connections
-    connect(ui->setup_actuator, SIGNAL(triggered()), this, SLOT(openActuatorSetup()));
-    connect(ui->switch_to_actuator_mode, SIGNAL(triggered()), this, SLOT(switchToActuator()));
     connect(ui->switch_to_simulator_mode, SIGNAL(triggered()), this, SLOT(switchToSimulator()));
     connect(ui->start_python_interpreter, SIGNAL(triggered()), this, SLOT(openPythonInterpreter()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(openActionAbout()));
@@ -97,7 +93,6 @@ void MainWindow::mousePressEvent(QMouseEvent *) {
 
 MainWindow::~MainWindow() {
     // Destroy all subwindows
-    delete m_actuator_setup_window;
     delete m_about_window;
     delete m_simulator_window;
     delete m_script_window;
@@ -123,10 +118,10 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
     }
     m_controller_type = type;
     switch (type) {
-        case Controller::Type::ACTUATOR:
-            // Switch to the actuator controller and hide the simulation window
-            Logger::log("Switching to ACTUATOR", Logger::INFO);
-            m_controller = m_actuator;
+        case Controller::Type::SOLENOID:
+            // Switch to the solenoid controller and hide the simulation window
+            Logger::log("Switching to SOLENOID", Logger::INFO);
+            m_controller = m_solenoid;
             if (m_simulator_window->isVisible()) { m_simulator_window->hide(); }
             break;
         case Controller::Type::SIMULATOR:
@@ -138,10 +133,6 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
         default:
             break;
     }
-}
-
-void MainWindow::openActuatorSetup() {
-    m_actuator_setup_window->show();
 }
 
 void MainWindow::openPythonInterpreter() {

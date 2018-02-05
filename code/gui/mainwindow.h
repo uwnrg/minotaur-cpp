@@ -12,7 +12,6 @@
 #include "../controller/solenoid.h"
 #include "../controller/simulator.h"
 
-#include "actuatorsetup.h"
 #include "simulatorwindow.h"
 #include "actionabout.h"
 #include "scriptwindow.h"
@@ -40,15 +39,13 @@ public:
 
 public Q_SLOTS:
 
-    void openActuatorSetup();
-
     void openPythonInterpreter();
 
     void openActionAbout();
 
     void openCameraDisplay();
 
-    inline void switchToActuator() { switchControllerTo(Controller::Type::ACTUATOR); }
+    inline void switchToSolenoid() { switchControllerTo(Controller::Type::SOLENOID); }
 
     inline void switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }
 
@@ -64,7 +61,6 @@ private Q_SLOTS:
 private:
     Ui::MainWindow *ui;
 
-    ActuatorSetup *m_actuator_setup_window;
     ScriptWindow *m_script_window;
     SimulatorWindow *m_simulator_window;
     ActionAbout *m_about_window;
@@ -73,7 +69,6 @@ private:
     Controller::Type m_controller_type;
 
     std::shared_ptr<Controller> m_controller;
-    std::shared_ptr<Actuator> m_actuator;
     std::shared_ptr<Solenoid> m_solenoid;
     std::shared_ptr<Simulator> m_simulator;
 

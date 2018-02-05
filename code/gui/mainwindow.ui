@@ -173,10 +173,8 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Setup</string>
     </property>
-    <addaction name="switch_to_actuator_mode"/>
     <addaction name="switch_to_simulator_mode"/>
     <addaction name="separator"/>
-    <addaction name="setup_actuator"/>
     <addaction name="start_python_interpreter"/>
     <addaction name="separator"/>
     <addaction name="exit"/>
@@ -235,20 +233,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="tools_menu"/>
    <addaction name="menuHelp"/>
   </widget>
-  <action name="switch_to_actuator_mode">
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
-   <property name="checked">
-    <bool>false</bool>
-   </property>
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>SAM Actuator mode</string>
-   </property>
-  </action>
   <action name="switch_to_simulator_mode">
    <property name="checkable">
     <bool>false</bool>
@@ -258,14 +242,6 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Simulator mode</string>
-   </property>
-  </action>
-  <action name="setup_actuator">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Actuators</string>
    </property>
   </action>
   <action name="exit">
