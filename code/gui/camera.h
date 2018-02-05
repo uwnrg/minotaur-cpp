@@ -131,13 +131,16 @@ protected Q_SLOTS:
 Q_SIGNALS:
     void forwardKeyEvent(int);
 
+	void recordAndSave();
+
 private:
     void pauseVideo();
 
     QVBoxLayout *m_layout;
     QComboBox *m_camera_list;
     QComboBox *m_effects_list;
-    QPushButton *m_capture_btn;
+	QPushButton *m_capture_btn;
+	QPushButton *m_record_btn;
     ImageViewer *m_image_viewer;
 
     int m_camera;
