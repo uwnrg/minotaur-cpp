@@ -161,9 +161,15 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_converter.moveToThread(&m_converter_thread);
 
     m_capture_btn = new QPushButton(this);
+    m_capture_btn->setText("Take Picture");
+
+
+    m_record_btn = new QPushButton(this);
+    m_record_btn->setText("Record Video");
 
     setLayout(m_layout);
     m_layout->addWidget(m_capture_btn);
+    m_layout->addWidget(m_record_btn);
     m_layout->addWidget(m_camera_list);
     m_layout->addWidget(m_effects_list);
     m_layout->addWidget(m_image_viewer);
@@ -175,6 +181,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     connect(m_camera_list, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
     connect(m_capture_btn, SIGNAL(clicked()), this, SLOT(captureAndSave()));
     connect(m_effects_list, SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
+    connect(m_record_btn, SIGNAL(clicked()), this, SLOT(recordAndSave()));
 
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 }
@@ -184,6 +191,7 @@ CameraDisplay::~CameraDisplay() {
     delete m_camera_list;
     delete m_layout;
     delete m_capture_btn;
+    delete m_record_btn;
 }
 
 void CameraDisplay::setCamera(int camera) {
@@ -255,4 +263,8 @@ void CameraDisplay::captureAndSave() {
         qDebug() << "Failed to save image";
     }
 #endif
+}
+
+void CameraDisplay::recordAndSave(){
+    qDebug() << "Recording Video";
 }
