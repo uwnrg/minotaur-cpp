@@ -68,9 +68,10 @@ There may be issues if multiple versions of Python are installed on the system.
 2. Use `brew install python3`
 3. Verify the python version (minimum 3.4) with `python3 --version`
 
-### Installing OpenCV 2
-1. OpenCV 2 is the supported version, although OpenCV 3 should work
-2. `brew install opencv@2` or `brew install opencv`
+### Installing OpenCV 3
+1. OpenCV 3 is the required version
+2. Build and install with `brew install opencv`
+3. Additional steps or dependencies (such as Python 2 and Python 3) listed [here](https://www.learnopencv.com/install-opencv3-on-macos)
 
 ## Building Minotaur
 Here you can either install CLion and import the project (recommended) or
@@ -95,6 +96,10 @@ From a fresh install, you will need these packages
 sudo apt install build-essential cmake python3 python3-dev qt5-default libudev-dev libopencv-dev
 ```
 
+You will need to build OpenCV 3 from source. Download the OpenCV 3 source
+and build. It is recommended to build with `USE_QT=ON` instead of GTK. 
+Additional instructions found [here](https://github.com/BVLC/caffe/wiki/OpenCV-3.3-Installation-Guide-on-Ubuntu-16.04).
+
 Then clone the repository and build with
 
 ```bash
@@ -113,6 +118,18 @@ If Qt is unable to detect cameras, make sure to run
 ```bash
 sudo apt install libqt5multimedia5-plugins
 ```
+
+### Using the GOTURN pretrained model
+The default tracker uses the MIL model, and may be configured to use other
+tracker models. However, using the GOTURN model requires downloading and
+adding to the working directory the architecture descriptor file `goturn.prototxt`
+and the pretrained model data `goturn.caffemodel`. The latter is about 350 MB.
+These files are hosted [here](https://github.com/Mogball/goturn-files). Once
+acquired, add them to the working directory of the `minotaur-cpp` binary or
+in the `CMakeLists.txt` directory.
+
+### Building with Debug output off
+Configure the CMake project with `cmake -DNO_DEBUG=ON ...`
 
 ### Contributing
 Please refer to the [Contributing Guidelines](CONTRIBUTING.md).
