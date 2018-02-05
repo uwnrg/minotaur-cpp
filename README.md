@@ -100,6 +100,10 @@ You will need to build OpenCV 3 from source. Download the OpenCV 3 source
 and build. It is recommended to build with `USE_QT=ON` instead of GTK. 
 Additional instructions found [here](https://github.com/BVLC/caffe/wiki/OpenCV-3.3-Installation-Guide-on-Ubuntu-16.04).
 
+Alternatively, if your computer is running `amd64` architecture with Ubuntu 16.04, a prebuilt Debian
+package can be found [here](https://github.com/Mogball/opencv3-debian). Note that additional
+dependencies may be required.
+
 Then clone the repository and build with
 
 ```bash
