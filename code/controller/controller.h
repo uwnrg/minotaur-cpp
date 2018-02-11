@@ -2,12 +2,14 @@
 #define CONTROLLER_H
 
 #include <unordered_map>
+#include <queue>
 #include "../utility/logger.h"
 #include "../utility/vector2i.h"
 
 #define STEP_TIME    10
 
-class Controller {
+class Controller: public QObject {
+Q_OBJECT
 public:
     enum Mode {
         EMMA,
@@ -50,11 +52,18 @@ public:
     void keyReleased(int key);
     bool isKeyDown(int key);
 
+    void queueInstruction(Dir dir);
+
+public Q_SLOTS:
+    void executeInstruction();
+
 protected:
     typedef typename std::unordered_map<int, bool> key_map;
     typedef typename std::pair<int, bool> key_press;
 
     Controller(int t_invert_x, int t_invert_y);
+
+    std::queue<Dir> m_directions;
 
     key_map m_keyMap{50};
     int m_invert_x, m_invert_y; // +1 for no inversion in the axis, -1 otherwise
