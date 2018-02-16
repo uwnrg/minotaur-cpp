@@ -70,18 +70,6 @@ bool Controller::isKeyDown(int key) {
     return it->second;
 }
 
-// Why isn't this method virtual?
 void Controller::move(Dir dir, int timer) {
     move(Controller::toVec2(dir), timer);
-}
-
-void Controller::queueInstruction(Dir dir) {
-    m_directions.emplace(dir);
-}
-
-void Controller::executeInstruction() {
-    if (!m_directions.empty()) {
-        move(Controller::toVec2(m_directions.front()));
-        m_directions.pop();
-    }
 }

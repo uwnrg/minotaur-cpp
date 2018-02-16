@@ -73,3 +73,14 @@ int Solenoid::vectorToBinary(Vector2i dir) {
 
     return direction;
 }
+
+void Solenoid::queueInstruction(Dir dir) {
+    m_directions.emplace(dir);
+}
+
+void Solenoid::executeInstruction() {
+    if (!m_directions.empty()) {
+        move(Controller::toVec2(m_directions.front()), STEP_TIME);
+        m_directions.pop();
+    }
+}
