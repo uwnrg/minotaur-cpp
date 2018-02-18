@@ -18,6 +18,12 @@ TrackerModifier::TrackerModifier()
     : m_bounding_box(287, 23, 100, 100),
       m_type(TRACKER_TYPE),
       m_state(State::UNINITIALIZED) {
+    reset_tracker();
+}
+
+TrackerModifier::~TrackerModifier() = default;
+
+void TrackerModifier::reset_tracker() {
     switch (m_type) {
         case Type::BOOSTING:
             m_tracker = cv::TrackerBoosting::create();
@@ -45,8 +51,6 @@ TrackerModifier::TrackerModifier()
     }
 }
 
-TrackerModifier::~TrackerModifier() = default;
-
 void TrackerModifier::forwardKeyEvent(int key) {
 #ifndef NDEBUG
     qDebug() << "Key event received";
@@ -60,6 +64,7 @@ void TrackerModifier::forwardKeyEvent(int key) {
 #ifndef NDEBUG
         qDebug() << "Resetting tracker";
 #endif
+        reset_tracker();
         m_state = State::UNINITIALIZED;
         m_bounding_box = {};
     }

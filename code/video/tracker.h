@@ -16,6 +16,9 @@ public:
     void forwardKeyEvent(int key) override;
 
 private:
+    void reset_tracker();
+
+private:
     enum Type {
         BOOSTING,
         MIL,
