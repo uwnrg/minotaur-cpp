@@ -11,11 +11,11 @@
 #include "../controller/controller.h"
 #include "../controller/solenoid.h"
 #include "../controller/simulator.h"
+#include "../camera/cameradisplay.h"
 
 #include "simulatorwindow.h"
 #include "actionabout.h"
 #include "scriptwindow.h"
-#include "camera.h"
 
 #define DEFAULT_TITLE "minotaur"
 
