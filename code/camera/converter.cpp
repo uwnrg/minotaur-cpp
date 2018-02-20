@@ -15,7 +15,7 @@ void Converter::setProcessAll(bool process_all) {
     m_process_all = process_all;
 }
 
-void Converter::processFrame(const cv::Mat &frame) {
+void Converter::processFrame(const cv::UMat &frame) {
     if (m_process_all) {
         process(frame);
     } else {
@@ -28,17 +28,17 @@ void Converter::modifierChanged(int modifier_index) {
 }
 
 void Converter::matDelete(void *mat) {
-    delete static_cast<cv::Mat *>(mat);
+    delete static_cast<cv::UMat *>(mat);
 }
 
-void Converter::queue(const cv::Mat &frame) {
+void Converter::queue(const cv::UMat &frame) {
     m_frame = frame;
     if (!m_timer.isActive()) {
         m_timer.start(0, this);
     }
 }
 
-void Converter::process(cv::Mat frame) {
+void Converter::process(cv::UMat frame) {
     double scale = MIN(
         (m_display->width() - 20) / (double) frame.size().width,
         (m_display->height() - 20) / (double) frame.size().height
@@ -49,10 +49,12 @@ void Converter::process(cv::Mat frame) {
     cv::resize(frame, frame, cv::Size(), scale, scale, cv::INTER_AREA);
     cv::cvtColor(frame, frame, CV_BGR2RGB);
     const QImage image(
-        frame.data, frame.cols, frame.rows, static_cast<int>(frame.step),
-        QImage::Format_RGB888, &matDelete, new cv::Mat(frame)
+        frame.getMat(1).data, frame.cols, frame.rows, static_cast<int>(frame.step),
+        QImage::Format_RGB888, &matDelete, new cv::UMat(frame)
     );
-    Q_ASSERT(image.constBits() == frame.data);
+#ifndef NDEBUG
+    Q_ASSERT(image.constBits() == frame.getMat(1).data);
+#endif
     Q_EMIT imageReady(image);
 }
 

@@ -7,6 +7,7 @@
 #include <opencv2/opencv.hpp>
 
 Q_DECLARE_METATYPE(cv::Mat);
+Q_DECLARE_METATYPE(cv::UMat);
 
 class Capture : public QObject {
     Q_OBJECT
@@ -16,7 +17,7 @@ public:
 
     Q_SIGNAL void started();
 
-    Q_SIGNAL void matReady(const cv::Mat &);
+    Q_SIGNAL void matReady(const cv::UMat &);
 
     Q_SLOT void start(int cam);
 

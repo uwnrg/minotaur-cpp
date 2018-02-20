@@ -11,7 +11,7 @@ public:
 
     ~TrackerModifier();
 
-    void modify(cv::Mat &img) override;
+    void modify(cv::UMat &img) override;
 
     void forwardKeyEvent(int key) override;
 

@@ -21,7 +21,7 @@ public:
 
     static void addModifierList(QComboBox *list);
 
-    virtual void modify(cv::Mat &img) = 0;
+    virtual void modify(cv::UMat &img) = 0;
 
     virtual void forwardKeyEvent(int);
 };

@@ -20,7 +20,7 @@ public:
 
     Q_SIGNAL void imageReady(const QImage &);
 
-    Q_SLOT void processFrame(const cv::Mat &frame);
+    Q_SLOT void processFrame(const cv::UMat &frame);
 
     Q_SLOT void modifierChanged(int modifier_index);
 
@@ -29,16 +29,16 @@ public:
 private:
     static void matDelete(void *mat);
 
-    void queue(const cv::Mat &frame);
+    void queue(const cv::UMat &frame);
 
-    void process(cv::Mat frame);
+    void process(cv::UMat frame);
 
     void timerEvent(QTimerEvent *ev) override;
 
     CameraDisplay *m_display;
     QBasicTimer m_timer;
 
-    cv::Mat m_frame;
+    cv::UMat m_frame;
     std::unique_ptr<VideoModifier> m_modifier;
 
     bool m_process_all = true;

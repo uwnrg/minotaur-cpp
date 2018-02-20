@@ -27,7 +27,7 @@ void Capture::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() != m_timer.timerId()) {
         return;
     }
-    cv::Mat frame;
+    cv::UMat frame;
     if (!m_video_capture->read(frame)) {
         m_timer.stop();
         return;

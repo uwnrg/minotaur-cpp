@@ -70,7 +70,7 @@ void TrackerModifier::forwardKeyEvent(int key) {
     }
 }
 
-void TrackerModifier::modify(cv::Mat &img) {
+void TrackerModifier::modify(cv::UMat &img) {
     if (m_state == State::UNINITIALIZED) {
         return;
     }
@@ -81,5 +81,5 @@ void TrackerModifier::modify(cv::Mat &img) {
         m_tracker->init(img, m_bounding_box);
         m_state = State::TRACKING;
     }
-    cv::rectangle(img, m_bounding_box, cv::Scalar(255, 0, 0));
+    cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
 }

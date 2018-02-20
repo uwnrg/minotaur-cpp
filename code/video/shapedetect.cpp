@@ -18,16 +18,14 @@ static double angle(cv::Point pt1, cv::Point pt2, cv::Point pt0) {
 }
 
 // Draws shapes (triangles and rectangles)
-static void drawShapes(cv::Mat &image, const std::vector<std::vector<cv::Point> > &squares) {
+static void drawShapes(cv::UMat &image, const std::vector<std::vector<cv::Point> > &squares) {
     for (const auto &square : squares) {
-        const cv::Point *p = &square[0];
-        auto n = static_cast<int>(squares.size());
-        polylines(image, &p, &n, 1, true, cvScalar(255, 0, 0), 3, cv::LINE_AA);
+        cv::polylines(image, cv::InputArrayOfArrays(square), true, cv::Scalar(255, 0, 0), 3, cv::LINE_AA);
     }
 }
 
 // Displays text in the center of a contour
-void setLabel(cv::Mat &im, const std::string &label, std::vector<cv::Point> &contour) {
+void setLabel(cv::UMat &im, const std::string &label, std::vector<cv::Point> &contour) {
     constexpr int font_face = cv::FONT_HERSHEY_SIMPLEX;
     constexpr double scale = 0.4;
     constexpr int thickness = 1;
@@ -37,14 +35,16 @@ void setLabel(cv::Mat &im, const std::string &label, std::vector<cv::Point> &con
     cv::Rect r = cv::boundingRect(contour);
 
     cv::Point pt(r.x + ((r.width - text.width) / 2), r.y + ((r.height + text.height) / 2));
-    cv::rectangle(im, pt + cv::Point(0, baseline), pt + cv::Point(text.width, -text.height), CV_RGB(255, 255, 255),
-                  CV_FILLED);
-    cv::putText(im, label, pt, font_face, scale, CV_RGB(0, 0, 0), thickness, 8);
+    cv::rectangle(im, pt + cv::Point(0, baseline), pt + cv::Point(text.width, -text.height), cv::Scalar(255, 255, 255),
+                  cv::FILLED);
+    cv::putText(im, label, pt, font_face, scale, cv::Scalar(0, 0, 0), thickness, 8);
 }
 
-static cv::Mat findShapes(const cv::Mat &src, std::vector<std::vector<cv::Point> > &triangles,
-                          std::vector<std::vector<cv::Point> > &rectangles,
-                          std::vector<std::vector<cv::Point> > &circles) {
+static cv::UMat findShapes(
+    const cv::UMat &src, std::vector<std::vector<cv::Point> > &triangles,
+    std::vector<std::vector<cv::Point> > &rectangles,
+    std::vector<std::vector<cv::Point> > &circles
+) {
     triangles.clear();
     rectangles.clear();
     circles.clear();
@@ -53,11 +53,11 @@ static cv::Mat findShapes(const cv::Mat &src, std::vector<std::vector<cv::Point>
      * Process image to find contours.
      */
     // Convert to grayscale
-    cv::Mat gray;
+    cv::UMat gray;
     cv::cvtColor(src, gray, CV_BGR2GRAY);
 
     // Use Canny instead of threshold to catch squares with gradient shading
-    cv::Mat bw;
+    cv::UMat bw;
 
     //Removes noise from photo
     cv::fastNlMeansDenoising(gray, bw, 35, 10,
@@ -74,7 +74,7 @@ static cv::Mat findShapes(const cv::Mat &src, std::vector<std::vector<cv::Point>
     // Find contours
     std::vector<std::vector<cv::Point> > contours;
     cv::findContours(bw.clone(), contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);    //(image, output, mode, method)
-    cv::drawContours(src, contours, -1, cvScalar(255, 0, 0), 2, CV_AA);
+    cv::drawContours(src, contours, -1, cv::Scalar(255, 0, 0), 2, CV_AA);
 
     //Close contours
     // std::vector<cv::Point> ConvexHullPoints;
@@ -84,7 +84,7 @@ static cv::Mat findShapes(const cv::Mat &src, std::vector<std::vector<cv::Point>
     // drawShapes(drawing, ConvexHullPoints, "Contours Convex Hull");
 
     std::vector<cv::Point> approx;
-    cv::Mat dst = src.clone();
+    cv::UMat dst = src.clone();
 
     /*
      * Shape detection using contours.
@@ -92,7 +92,7 @@ static cv::Mat findShapes(const cv::Mat &src, std::vector<std::vector<cv::Point>
     for (int i = 0; i < contours.size(); i++) {
         // Approximate contour with accuracy proportional
         // to the contour perimeter
-        cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.02, true);
+        cv::approxPolyDP(cv::UMat(contours[i]), approx, cv::arcLength(cv::UMat(contours[i]), true) * 0.02, true);
 
         // Skip small or non-convex objects
         // if (std::fabs(cv::contourArea(contours[i])) < 8 || !cv::isContourConvex(approx))
@@ -156,7 +156,7 @@ static cv::Mat findShapes(const cv::Mat &src, std::vector<std::vector<cv::Point>
     return dst;
 }
 
-void ShapeDetect::modify(cv::Mat &img) {
+void ShapeDetect::modify(cv::UMat &img) {
     std::vector<std::vector<cv::Point>> triangles;
     std::vector<std::vector<cv::Point>> rectangles;
     std::vector<std::vector<cv::Point>> circles;
