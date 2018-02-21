@@ -54,6 +54,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
 CameraDisplay::~CameraDisplay() {
     delete m_image_viewer;
     delete m_camera_list;
+    delete m_effects_list;
     delete m_layout;
     delete m_capture_btn;
 }

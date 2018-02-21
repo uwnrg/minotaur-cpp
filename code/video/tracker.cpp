@@ -15,7 +15,7 @@
 #endif
 
 TrackerModifier::TrackerModifier()
-    : m_bounding_box(287, 23, 100, 100),
+    : m_bounding_box(),
       m_type(TRACKER_TYPE),
       m_state(State::UNINITIALIZED) {
     reset_tracker();
