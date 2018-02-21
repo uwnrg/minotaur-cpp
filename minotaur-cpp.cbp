@@ -357,17 +357,14 @@
 		<Unit filename="/Users/Beini/minotaur-cpp/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/cmake/Util.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/cmake/Goturn.cmake">
 			<Option virtualFolder="CMake Files\cmake\"/>
 		</Unit>
 		<Unit filename="/Users/Beini/minotaur-cpp/cmake/Python.cmake">
 			<Option virtualFolder="CMake Files\cmake\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/cmake/Goturn.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/cmake/Util.cmake">
 			<Option virtualFolder="CMake Files\cmake\"/>
-		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Widgets\"/>
 		</Unit>
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Widgets\"/>
@@ -375,13 +372,19 @@
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Widgets\"/>
 		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Widgets\"/>
+		</Unit>
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Widgets\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
 		</Unit>
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QCocoaIntegrationPlugin.cmake">
@@ -429,18 +432,6 @@
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QWebpPlugin.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
-		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
-		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
-		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
-		</Unit>
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
 		</Unit>
@@ -450,19 +441,16 @@
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
-		</Unit>
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5MultimediaConfigVersion.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5MultimediaConfig.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Multimedia\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5MultimediaConfig.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5MultimediaConfigVersion.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Multimedia\"/>
 		</Unit>
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5Multimedia_AVFMediaPlayerServicePlugin.cmake">
@@ -480,10 +468,10 @@
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5Multimedia_QM3uPlaylistPlugin.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Multimedia\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Network\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Network\"/>
 		</Unit>
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Network/Qt5Network_QCoreWlanEnginePlugin.cmake">
@@ -492,10 +480,10 @@
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Network\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5MultimediaWidgets/Qt5MultimediaWidgetsConfigVersion.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5MultimediaWidgets/Qt5MultimediaWidgetsConfig.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5MultimediaWidgets\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5MultimediaWidgets/Qt5MultimediaWidgetsConfig.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5MultimediaWidgets/Qt5MultimediaWidgetsConfigVersion.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5MultimediaWidgets\"/>
 		</Unit>
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/share/OpenCV/OpenCVConfig-version.cmake">
@@ -504,10 +492,10 @@
 		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/share/OpenCV/OpenCVConfig.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\share\OpenCV\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/share/OpenCV/OpenCVModules.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/share/OpenCV/OpenCVModules-release.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\share\OpenCV\"/>
 		</Unit>
-		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/share/OpenCV/OpenCVModules-release.cmake">
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/share/OpenCV/OpenCVModules.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\usr\local\share\OpenCV\"/>
 		</Unit>
 		<Unit filename="/Users/Beini/minotaur-cpp/code/scripts/__init__.py">
