@@ -156,14 +156,12 @@ protected Q_SLOTS:
 
     void captureAndSave();
 
+    void recordButtonClicked();
+
+    void recordSaveFile();
+
 Q_SIGNALS:
     void forwardKeyEvent(int);
-
-//	void recordAndSave();
-
-	void recordButtonClicked();
-
-	void recordSaveFile();
 
 private:
     void pauseVideo();
