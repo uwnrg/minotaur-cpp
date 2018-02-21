@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="minotaur-cpp"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\usr\;CMake Files\..\..\..\usr\local\;CMake Files\..\..\..\usr\local\opt\;CMake Files\..\..\..\usr\local\opt\qt@5.7\;CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\;CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\;CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Widgets\;CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\;CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\;CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Multimedia\;CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Network\;CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5MultimediaWidgets\;CMake Files\..\..\..\usr\local\share\;CMake Files\..\..\..\usr\local\share\OpenCV\;CMake Files\code\;CMake Files\code\scripts\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/Beini/minotaur-cpp"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/Beini/minotaur-cpp"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/Beini/minotaur-cpp"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="minotaur-cpp">
+				<Option output="/Users/Beini/minotaur-cpp/minotaur-cpp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/Beini/minotaur-cpp"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DPYTHON_SCRIPT_DIR=&quot;python_scripts&quot;"/>
+					<Add option="-DQT_WIDGETS_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add option="-DQT_MULTIMEDIA_LIB"/>
+					<Add option="-DQT_NETWORK_LIB"/>
+					<Add option="-DQT_MULTIMEDIAWIDGETS_LIB"/>
+					<Add directory="/Users/Beini/minotaur-cpp"/>
+					<Add directory="/Users/Beini/minotaur-cpp/minotaur-cpp_autogen/include"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtWidgets.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtWidgets.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtGui.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtGui.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtCore.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtCore.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt@5.7/./mkspecs/macx-clang"/>
+					<Add directory="/System/Library/Frameworks/OpenGL.framework/Headers"/>
+					<Add directory="/usr/local/Frameworks/Python.framework/Versions/3.6/include/python3.6m"/>
+					<Add directory="/Users/Beini/minotaur-cpp/third-party"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/include/opencv"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtMultimedia.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtMultimedia.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtNetwork.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtNetwork.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtMultimediaWidgets.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtMultimediaWidgets.framework/Headers"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 minotaur-cpp"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="minotaur-cpp/fast">
+				<Option output="/Users/Beini/minotaur-cpp/minotaur-cpp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/Beini/minotaur-cpp"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DPYTHON_SCRIPT_DIR=&quot;python_scripts&quot;"/>
+					<Add option="-DQT_WIDGETS_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add option="-DQT_MULTIMEDIA_LIB"/>
+					<Add option="-DQT_NETWORK_LIB"/>
+					<Add option="-DQT_MULTIMEDIAWIDGETS_LIB"/>
+					<Add directory="/Users/Beini/minotaur-cpp"/>
+					<Add directory="/Users/Beini/minotaur-cpp/minotaur-cpp_autogen/include"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtWidgets.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtWidgets.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtGui.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtGui.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtCore.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtCore.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt@5.7/./mkspecs/macx-clang"/>
+					<Add directory="/System/Library/Frameworks/OpenGL.framework/Headers"/>
+					<Add directory="/usr/local/Frameworks/Python.framework/Versions/3.6/include/python3.6m"/>
+					<Add directory="/Users/Beini/minotaur-cpp/third-party"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/local/include/opencv"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtMultimedia.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtMultimedia.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtNetwork.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtNetwork.framework/Headers"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtMultimediaWidgets.framework"/>
+					<Add directory="/usr/local/opt/qt@5.7/lib/QtMultimediaWidgets.framework/Headers"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 minotaur-cpp/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="minotaur-cpp_autogen">
+				<Option working_dir="/Users/Beini/minotaur-cpp"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 minotaur-cpp_autogen"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Beini/minotaur-cpp/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/controller/controller.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/controller/controller.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/controller/simulator.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/controller/simulator.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/controller/solenoid.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/controller/solenoid.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/graphics/robotgraphicsitem.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/graphics/robotgraphicsitem.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/graphics/simulatorscene.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/graphics/simulatorscene.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/actionabout.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/actionabout.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/actionabout.ui">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/camera.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/camera.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/mainwindow.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/mainwindow.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/mainwindow.ui">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/scripteditor.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/scripteditor.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/scripteditor.ui">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/scriptwindow.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/scriptwindow.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/scriptwindow.ui">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/simulatorwindow.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/simulatorwindow.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/gui/simulatorwindow.ui">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/codeeditor.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/codeeditor.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/embeddedcontroller.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/embeddedcontroller.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/highlighter.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/highlighter.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/interpretertextedit.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/interpretertextedit.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/python.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/pythonengine.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/pythonengine.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/resultstextdisplay.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/interpreter/resultstextdisplay.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/main.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/arrow.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/arrow.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/drawable.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/renderscene.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/renderscene.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/renderscenebase.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/sam.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/sam.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/simulatorSolenoid.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/simulatorSolenoid.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/statsdisplay.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/simulator/statsdisplay.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/utility/clock_time.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/utility/clock_time.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/utility/logger.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/utility/logger.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/utility/vector2i.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/utility/vector2i.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/video/modify.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/video/modify.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/video/recorder.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/video/recorder.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/video/shapedetect.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/video/shapedetect.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/video/squares.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/video/squares.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/video/tracker.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/video/tracker.h">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/minotaur-cpp_autogen/mocs_compilation.cpp">
+			<Option target="minotaur-cpp"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/cmake/Util.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/cmake/Python.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/cmake/Goturn.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QCocoaIntegrationPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QDDSPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QICNSPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QMacJp2Plugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QTuioTouchPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QVirtualKeyboardPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5Gui_QWebpPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Gui\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5MultimediaConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Multimedia\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5MultimediaConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Multimedia\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5Multimedia_AVFMediaPlayerServicePlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Multimedia\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5Multimedia_AVFServicePlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Multimedia\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5Multimedia_AudioCaptureServicePlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Multimedia\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5Multimedia_CoreAudioPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Multimedia\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Multimedia/Qt5Multimedia_QM3uPlaylistPlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Multimedia\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Network\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Network\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Network/Qt5Network_QCoreWlanEnginePlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Network\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5Network\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5MultimediaWidgets/Qt5MultimediaWidgetsConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5MultimediaWidgets\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/opt/qt@5.7/lib/cmake/Qt5MultimediaWidgets/Qt5MultimediaWidgetsConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\opt\qt@5.7\lib\cmake\Qt5MultimediaWidgets\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/share/OpenCV/OpenCVConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\share\OpenCV\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/share/OpenCV/OpenCVConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\share\OpenCV\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/share/OpenCV/OpenCVModules.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\share\OpenCV\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/../../../usr/local/share/OpenCV/OpenCVModules-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\share\OpenCV\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/scripts/__init__.py">
+			<Option virtualFolder="CMake Files\code\scripts\"/>
+		</Unit>
+		<Unit filename="/Users/Beini/minotaur-cpp/code/scripts/robot.py">
+			<Option virtualFolder="CMake Files\code\scripts\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
