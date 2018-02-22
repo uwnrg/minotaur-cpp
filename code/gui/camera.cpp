@@ -5,9 +5,18 @@
 #include <QCameraInfo>
 #include <QAction>
 #include <QDir>
+#include <QFileDialog>
 
 Capture::Capture(QObject *parent)
     : QObject(parent) {}
+
+int Capture::capture_width() {
+    return static_cast<int>(m_video_capture->get(CV_CAP_PROP_FRAME_WIDTH));
+}
+
+int Capture::capture_height() {
+    return static_cast<int>(m_video_capture->get(CV_CAP_PROP_FRAME_HEIGHT));
+}
 
 void Capture::start(int cam) {
     if (cam < 0) {
@@ -55,6 +64,31 @@ void Converter::processFrame(const cv::Mat &frame) {
     }
 }
 
+void Converter::startRecording(QString file, int width, int height) {
+    constexpr int fps = 30;
+    m_recorder.reset(new Recorder(
+            file.toStdString(),
+            CV_FOURCC('M','J','P','G'),
+            fps,
+            cv::Size(width, height),
+            true)
+    );
+    connect(this, SIGNAL(frameProcessed(cv::Mat &)), m_recorder.get(), SLOT(image_received(cv::Mat &)));
+}
+
+void Converter::stopRecording() {
+    if (m_recorder) {
+        if (m_recorder->is_recording()) {
+            m_recorder->stop_recording();
+        }
+        m_recorder.reset();
+    }
+}
+
+bool Converter::is_recording() {
+    return m_recorder && m_recorder->is_recording();
+}
+
 void Converter::modifierChanged(int modifier_index) {
     VideoModifier::attachModifier(m_modifier, modifier_index);
 }
@@ -77,6 +111,11 @@ void Converter::process(cv::Mat frame) {
     );
     if (m_modifier) {
         m_modifier->modify(frame);
+    }
+    if (m_recorder && m_recorder->is_recording()) {
+        // If the recorder is active, forward the image
+        // to the recorder to write
+        Q_EMIT frameProcessed(frame);
     }
     cv::resize(frame, frame, cv::Size(), scale, scale, cv::INTER_AREA);
     cv::cvtColor(frame, frame, CV_BGR2RGB);
@@ -161,9 +200,14 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_converter.moveToThread(&m_converter_thread);
 
     m_capture_btn = new QPushButton(this);
+    m_capture_btn->setText("Take Picture");
+
+    m_record_btn = new QPushButton(this);
+    m_record_btn->setText("Record Video");
 
     setLayout(m_layout);
     m_layout->addWidget(m_capture_btn);
+    m_layout->addWidget(m_record_btn);
     m_layout->addWidget(m_camera_list);
     m_layout->addWidget(m_effects_list);
     m_layout->addWidget(m_image_viewer);
@@ -175,6 +219,10 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     connect(m_camera_list, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
     connect(m_capture_btn, SIGNAL(clicked()), this, SLOT(captureAndSave()));
     connect(m_effects_list, SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
+    connect(m_record_btn, SIGNAL(clicked()), this, SLOT(recordButtonClicked()));
+    connect(this, SIGNAL(beginRecording()), this, SLOT(recordSaveFile()));
+    connect(this, SIGNAL(recordFileAcquired(QString, int, int)), &m_converter, SLOT(startRecording(QString, int, int)));
+    connect(this, SIGNAL(stopRecording()), &m_converter, SLOT(stopRecording()));
 
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 }
@@ -184,6 +232,7 @@ CameraDisplay::~CameraDisplay() {
     delete m_camera_list;
     delete m_layout;
     delete m_capture_btn;
+    delete m_record_btn;
 }
 
 void CameraDisplay::setCamera(int camera) {
@@ -256,3 +305,22 @@ void CameraDisplay::captureAndSave() {
     }
 #endif
 }
+
+void CameraDisplay::recordButtonClicked() {
+    if (!m_converter.is_recording()) {
+        qDebug() << "Recording";
+        Q_EMIT beginRecording();
+        m_record_btn->setText("Stop Recording");
+    } else {
+        Q_EMIT stopRecording();
+        m_record_btn->setText("Record Video");
+    }
+}
+
+void CameraDisplay::recordSaveFile() {
+    QString file = QFileDialog::getSaveFileName(this, tr("Save Video"), QDir::currentPath(), tr("Videos (*.avi)")); //Opens save-file window
+    qDebug() << "Saving video " << m_video_count;
+    qDebug() << "Target: " << file;
+    Q_EMIT recordFileAcquired(file, m_capture.capture_width(), m_capture.capture_height());
+}
+
