@@ -1,3 +1,0 @@
-Options: 
-
-Options:-DCMAKE_PREFIX_PATH=/usr/local/opt/qt@5.7/lib/cmake
