@@ -84,15 +84,15 @@ static cv::UMat findShapes(
     // drawShapes(drawing, ConvexHullPoints, "Contours Convex Hull");
 
     std::vector<cv::Point> approx;
-    cv::UMat dst = src.clone();
+    cv::UMat dst(src.clone());
 
     /*
      * Shape detection using contours.
      */
     for (int i = 0; i < contours.size(); i++) {
-        // Approximate contour with accuracy proportional
-        // to the contour perimeter
-        cv::approxPolyDP(cv::UMat(contours[i]), approx, cv::arcLength(cv::UMat(contours[i]), true) * 0.02, true);
+        // Approximate contour with accuracy proportional to the contour parameter
+        // Using cv::Mat for now as cv::UMat does not have a move constructor for vectors of points
+        cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.02, true);
 
         // Skip small or non-convex objects
         // if (std::fabs(cv::contourArea(contours[i])) < 8 || !cv::isContourConvex(approx))
