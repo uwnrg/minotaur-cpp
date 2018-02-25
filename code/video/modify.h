@@ -7,6 +7,7 @@
 
 #include <QComboBox>
 
+
 class VideoModifier {
 public:
     enum {

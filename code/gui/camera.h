@@ -20,6 +20,7 @@
 #include <QPushButton>
 
 #include "../video/modify.h"
+#include "../video/recorder.h"
 
 Q_DECLARE_METATYPE(cv::Mat);
 
@@ -30,6 +31,10 @@ Q_OBJECT
 
 public:
     explicit Capture(QObject *parent = nullptr);
+
+    int capture_width();
+
+    int capture_height();
 
     Q_SIGNAL void started();
 
@@ -56,11 +61,25 @@ public:
 
     Q_SIGNAL void imageReady(const QImage &);
 
+    /**
+     * Signal emitted after a cv::Mat frame has been
+     * read from the VideoCapture and modified.
+     *
+     * @param img reference to processed image
+     */
+    Q_SIGNAL void frameProcessed(cv::Mat &img);
+
+    Q_SLOT void startRecording(QString file, int width, int height);
+
+    Q_SLOT void stopRecording();
+
     Q_SLOT void processFrame(const cv::Mat &frame);
 
     Q_SLOT void modifierChanged(int modifier_index);
 
     Q_SLOT void imageKeyEvent(int key);
+
+    bool is_recording();
 
 private:
     static void matDelete(void *mat);
@@ -76,6 +95,7 @@ private:
 
     cv::Mat m_frame;
     std::unique_ptr<VideoModifier> m_modifier;
+    std::unique_ptr<Recorder> m_recorder;
 
     bool m_process_all = true;
 };
@@ -113,12 +133,20 @@ public:
 
     int getCamera();
 
+
 protected:
     void setVisible(bool visible) override;
 
     void reject() override;
 
     void keyPressEvent(QKeyEvent *event) override;
+
+Q_SIGNALS:
+    void beginRecording();
+
+    void stopRecording();
+
+    void recordFileAcquired(QString file, int width, int height);
 
 protected Q_SLOTS:
 
@@ -127,6 +155,10 @@ protected Q_SLOTS:
     void effectsChanged(int effect_index);
 
     void captureAndSave();
+
+    void recordButtonClicked();
+
+    void recordSaveFile();
 
 Q_SIGNALS:
     void forwardKeyEvent(int);
@@ -138,10 +170,12 @@ private:
     QComboBox *m_camera_list;
     QComboBox *m_effects_list;
     QPushButton *m_capture_btn;
+    QPushButton *m_record_btn;
     ImageViewer *m_image_viewer;
 
     int m_camera;
     int m_image_count = 0;
+    int m_video_count = 0;
 
     Capture m_capture;
     Converter m_converter;
