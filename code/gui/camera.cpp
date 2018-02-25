@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "../utility/logger.h"
 
 #include <QCamera>
 #include <QPainter>
@@ -308,10 +309,14 @@ void CameraDisplay::captureAndSave() {
 
 void CameraDisplay::recordButtonClicked() {
     if (!m_converter.is_recording()) {
+        Logger::log("Started recording video");
+#ifndef NDEBUG
         qDebug() << "Recording";
+#endif
         Q_EMIT beginRecording();
         m_record_btn->setText("Stop Recording");
     } else {
+        Logger::log("Stopping recording and saving video");
         Q_EMIT stopRecording();
         m_record_btn->setText("Record Video");
     }
@@ -320,8 +325,10 @@ void CameraDisplay::recordButtonClicked() {
 void CameraDisplay::recordSaveFile() {
     QString file = QFileDialog::getSaveFileName(this, tr("Save Video"), QDir::currentPath(),
                                                 tr("Videos (*.avi)")); //Opens save-file window
+#ifndef NDEBUG
     qDebug() << "Saving video " << m_video_count;
     qDebug() << "Target: " << file;
+#endif
     Q_EMIT recordFileAcquired(file, m_capture.capture_width(), m_capture.capture_height());
 }
 
