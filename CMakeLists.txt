@@ -27,32 +27,7 @@ find_package(Threads REQUIRED)
 
 if (Qt5_POSITION_INDEPENDENT_CODE)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-endif()
-
-## Third Party files
-set(THIRD_PARTY_COMMON
-        third-party/qextserialport.h
-        third-party/qextserialport_p.h
-        third-party/qextserialport_global.h
-        third-party/qextserialenumerator.h
-        third-party/qextserialenumerator_p.h
-        third-party/qextserialport.cpp
-        third-party/qextserialenumerator.cpp)
-if (WIN32)
-    set(THIRD_PARTY
-            third-party/qextserialenumerator_win.cpp
-            third-party/qextserialport_win.cpp)
-endif()
-if (APPLE)
-    set(THIRD_PARTY
-            third-party/qextserialenumerator_unix.cpp
-            third-party/qextserialport_unix.cpp)
-endif()
-if (UNIX)
-    set(THIRD_PARTY
-            third-party/qextserialenumerator_unix.cpp
-            third-party/qextserialport_unix.cpp code/video/recorder.h code/video/recorder.cpp)
-endif()
+endif ()
 
 file(GLOB_RECURSE SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/code/*.cpp
