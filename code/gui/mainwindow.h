@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <QTextBrowser>
 #include <QKeyEvent>
+#include <QTimer>
 #include <unordered_map>
 
 #include "../controller/controller.h"
@@ -38,7 +39,6 @@ public:
     ~MainWindow() override;
 
 public Q_SLOTS:
-
     void openPythonInterpreter();
 
     void openActionAbout();
@@ -59,6 +59,8 @@ private Q_SLOTS:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
+    QTimer timer;
+
     Ui::MainWindow *ui;
 
     ScriptWindow *m_script_window;

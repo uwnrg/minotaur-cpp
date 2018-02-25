@@ -32,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent, const char *) :
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(openActionAbout()));
     connect(ui->actionWebcam_View, SIGNAL(triggered()), this, SLOT(openCameraDisplay()));
 
+    connect(&timer, SIGNAL(timeout()), m_solenoid.get(), SLOT(executeInstruction()));
+    timer.start(1);
+
     // setup focus and an event filter to capture key events
     this->installEventFilter(this);
     this->setFocus();
@@ -58,19 +61,19 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
     m_controller->keyPressed(e->key());
     switch (e->key()) {
         case Qt::Key_Up:
-            m_controller->move(Controller::Dir::UP);
+            m_solenoid->queueInstruction(Controller::Dir::UP);
             break;
 
         case Qt::Key_Down:
-            m_controller->move(Controller::Dir::DOWN);
+            m_solenoid->queueInstruction(Controller::Dir::DOWN);
             break;
 
         case Qt::Key_Right:
-            m_controller->move(Controller::Dir::RIGHT);
+            m_solenoid->queueInstruction(Controller::Dir::RIGHT);
             break;
 
         case Qt::Key_Left:
-            m_controller->move(Controller::Dir::LEFT);
+            m_solenoid->queueInstruction(Controller::Dir::LEFT);
             break;
 
         default:

@@ -7,7 +7,7 @@
 
 #define STEP_TIME    10
 
-class Controller {
+class Controller: public QObject {
 public:
     enum Mode {
         EMMA,
