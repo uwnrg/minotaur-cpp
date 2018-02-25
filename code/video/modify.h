@@ -7,6 +7,7 @@
 
 #include <QComboBox>
 
+#include "../camera/actionbox.h"
 
 class VideoModifier {
 public:
@@ -24,6 +25,8 @@ public:
     virtual void modify(cv::UMat &img) = 0;
 
     virtual void forwardKeyEvent(int);
+
+    virtual void register_actions(ActionBox *box);
 };
 
 #endif //MINOTAUR_CPP_MODIFY_H

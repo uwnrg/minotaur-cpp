@@ -22,7 +22,7 @@ public:
 
     Q_SLOT void processFrame(const cv::UMat &frame);
 
-    Q_SLOT void modifierChanged(int modifier_index);
+    Q_SLOT void modifierChanged(int modifier_index, ActionBox *box);
 
     Q_SLOT void imageKeyEvent(int key);
 

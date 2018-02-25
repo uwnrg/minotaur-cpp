@@ -5,6 +5,7 @@
 int main(int argc, char *argv[]) {
     qRegisterMetaType<cv::Mat>();
     qRegisterMetaType<cv::UMat>();
+    qRegisterMetaType<ActionBox *>();
 
     QApplication app(argc, argv);
 

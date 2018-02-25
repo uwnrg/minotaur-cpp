@@ -23,8 +23,12 @@ void Converter::processFrame(const cv::UMat &frame) {
     }
 }
 
-void Converter::modifierChanged(int modifier_index) {
+void Converter::modifierChanged(int modifier_index, ActionBox *box) {
     VideoModifier::attachModifier(m_modifier, modifier_index);
+    if (m_modifier) {
+        box->reset_actions();
+        m_modifier->register_actions(box);
+    }
 }
 
 void Converter::matDelete(void *mat) {

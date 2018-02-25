@@ -1,30 +1,35 @@
 #include "cameradisplay.h"
 
 #include <QCameraInfo>
-#include <QPushButton>
 #include <QDir>
 #include <QKeyEvent>
+#include <QVBoxLayout>
+
+#include "imageviewer.h"
+#include "../utility/util.h"
 
 CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     : QDialog(parent),
+      m_layout(std::make_unique<QVBoxLayout>(this)),
+      m_camera_list(std::make_unique<QComboBox>(this)),
+      m_effects_list(std::make_unique<QComboBox>(this)),
+      m_capture_btn(std::make_unique<QPushButton>(this)),
+      m_image_viewer(std::make_unique<ImageViewer>(this)),
+      m_actions(std::make_unique<ActionBox>(this)),
       m_camera(camera_index),
       m_converter(nullptr, this) {
-    m_layout = new QVBoxLayout(this);
-    m_image_viewer = new ImageViewer(this);
 
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
 #ifndef NDEBUG
     qDebug() << "Found " << QCameraInfo::availableCameras().count() << "cameras" << endl;
 #endif
-    m_camera_list = new QComboBox(this);
     m_camera_list->setMinimumSize(150, 30);
     for (int i = 0; i < cameras.size(); ++i) {
         m_camera_list->addItem(cameras[i].deviceName(), QVariant::fromValue(i));
     }
 
-    m_effects_list = new QComboBox(this);
     m_effects_list->setMinimumSize(150, 30);
-    VideoModifier::addModifierList(m_effects_list);
+    VideoModifier::addModifierList(m_effects_list.get());
 
     m_converter.setProcessAll(false);
     m_capture_thread.start();
@@ -32,32 +37,24 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_capture.moveToThread(&m_capture_thread);
     m_converter.moveToThread(&m_converter_thread);
 
-    m_capture_btn = new QPushButton(this);
-
-    setLayout(m_layout);
-    m_layout->addWidget(m_capture_btn);
-    m_layout->addWidget(m_camera_list);
-    m_layout->addWidget(m_effects_list);
-    m_layout->addWidget(m_image_viewer);
+    setLayout(m_layout.get());
+    m_layout->addWidget(m_capture_btn.get());
+    m_layout->addWidget(m_camera_list.get());
+    m_layout->addWidget(m_effects_list.get());
+    m_layout->addWidget(m_image_viewer.get());
 
     QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
-    QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
+    QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer.get(), &ImageViewer::setImage);
     QObject::connect(this, &CameraDisplay::forwardKeyEvent, &m_converter, &Converter::imageKeyEvent);
 
-    connect(m_camera_list, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
-    connect(m_capture_btn, SIGNAL(clicked()), this, SLOT(captureAndSave()));
-    connect(m_effects_list, SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
+    connect(m_camera_list.get(), SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
+    connect(m_effects_list.get(), SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
+    connect(m_capture_btn.get(), SIGNAL(clicked()), this, SLOT(captureAndSave()));
 
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 }
 
-CameraDisplay::~CameraDisplay() {
-    delete m_image_viewer;
-    delete m_camera_list;
-    delete m_effects_list;
-    delete m_layout;
-    delete m_capture_btn;
-}
+CameraDisplay::~CameraDisplay() = default;
 
 void CameraDisplay::setCamera(int camera) {
     m_camera = camera;
@@ -84,7 +81,7 @@ void CameraDisplay::setVisible(bool visible) {
     } else {
         pauseVideo();
     }
-    setMinimumSize(800, 600);
+    setMinimumSize(800, 800);
     QDialog::setVisible(visible);
 }
 
@@ -108,7 +105,12 @@ void CameraDisplay::selectedCameraChanged(int list_index) {
 }
 
 void CameraDisplay::effectsChanged(int effect_index) {
-    QMetaObject::invokeMethod(&m_converter, "modifierChanged", Q_ARG(int, effect_index));
+    QMetaObject::invokeMethod(
+        &m_converter,
+        "modifierChanged",
+        Q_ARG(int, effect_index),
+        Q_ARG(ActionBox*, m_actions.get())
+    );
 }
 
 void CameraDisplay::captureAndSave() {

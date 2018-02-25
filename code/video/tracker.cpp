@@ -1,6 +1,11 @@
 #include <opencv2/opencv.hpp>
+#include <QDialog>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 #include "tracker.h"
+#include "../utility/util.h"
+
 #ifndef NDEBUG
 #include <QDebug>
 #endif
@@ -16,6 +21,8 @@
 
 TrackerModifier::TrackerModifier()
     : m_bounding_box(),
+      m_select_roi_btn(std::make_unique<ButtonAction>("Select ROI")),
+      m_clear_roi_btn(std::make_unique<ButtonAction>("Clear ROI")),
       m_type(TRACKER_TYPE),
       m_state(State::UNINITIALIZED) {
     reset_tracker();
@@ -82,4 +89,10 @@ void TrackerModifier::modify(cv::UMat &img) {
         m_state = State::TRACKING;
     }
     cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
+}
+
+void TrackerModifier::register_actions(ActionBox *box) {
+    box->add_action(m_select_roi_btn.get());
+    box->add_action(m_clear_roi_btn.get());
+    box->set_actions();
 }

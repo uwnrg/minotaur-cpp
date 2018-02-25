@@ -1,18 +1,22 @@
 #ifndef MINOTAUR_CPP_CAMERADISPLAY_H
 #define MINOTAUR_CPP_CAMERADISPLAY_H
 
-#include <QObject>
 #include <QDialog>
-#include <QVBoxLayout>
-#include <QComboBox>
 
-#include "imageviewer.h"
 #include "camerathread.h"
 #include "capture.h"
 #include "converter.h"
 
+class QVBoxLayout;
+
+class QComboBox;
+
+class QPushButton;
+
+class ImageViewer;
+
 class CameraDisplay : public QDialog {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     explicit CameraDisplay(QWidget *parent = nullptr, int camera_index = 0);
@@ -38,17 +42,20 @@ protected Q_SLOTS:
 
     void captureAndSave();
 
-    Q_SIGNALS:
+Q_SIGNALS:
+
     void forwardKeyEvent(int);
 
 private:
     void pauseVideo();
 
-    QVBoxLayout *m_layout;
-    QComboBox *m_camera_list;
-    QComboBox *m_effects_list;
-    QPushButton *m_capture_btn;
-    ImageViewer *m_image_viewer;
+    std::unique_ptr<QVBoxLayout> m_layout;
+    std::unique_ptr<QComboBox> m_camera_list;
+    std::unique_ptr<QComboBox> m_effects_list;
+    std::unique_ptr<QPushButton> m_capture_btn;
+    std::unique_ptr<ImageViewer> m_image_viewer;
+
+    std::unique_ptr<ActionBox> m_actions;
 
     int m_camera;
     int m_image_count = 0;

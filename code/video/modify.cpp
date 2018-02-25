@@ -24,7 +24,9 @@ void VideoModifier::addModifierList(QComboBox *list) {
     list->addItem("None");
     list->addItem("Square");
     list->addItem("Shape Detector");
-    list->addItem("Obj Tracker");
+    list->addItem("Object Tracker");
 }
 
 void VideoModifier::forwardKeyEvent(int) {}
+
+void VideoModifier::register_actions(ActionBox *) {}
