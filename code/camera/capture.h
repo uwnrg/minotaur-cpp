@@ -15,6 +15,10 @@ class Capture : public QObject {
 public:
     explicit Capture(QObject *parent = nullptr);
 
+    int capture_width() const;
+
+    int capture_height() const;
+
     Q_SIGNAL void started();
 
     Q_SIGNAL void matReady(const cv::UMat &);

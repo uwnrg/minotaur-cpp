@@ -7,6 +7,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "../video/modify.h"
+#include "../video/recorder.h"
 
 class CameraDisplay;
 
@@ -18,13 +19,27 @@ public:
 
     void setProcessAll(bool process_all);
 
+    bool is_recording() const;
+
     Q_SIGNAL void imageReady(const QImage &);
+
+    /**
+     * Signal emitted after a cv::UMat frame has been read
+     * from the VideoCapture and modified.
+     *
+     * @param img reference to processed image;
+     */
+    Q_SIGNAL void frameProcessed(cv::UMat &img);
 
     Q_SLOT void processFrame(const cv::UMat &frame);
 
     Q_SLOT void modifierChanged(int modifier_index, ActionBox *box);
 
     Q_SLOT void imageKeyEvent(int key);
+
+    Q_SLOT void startRecording(QString file, int width, int height);
+
+    Q_SLOT void stopRecording();
 
 private:
     static void matDelete(void *mat);
@@ -39,7 +54,9 @@ private:
     QBasicTimer m_timer;
 
     cv::UMat m_frame;
+
     std::unique_ptr<VideoModifier> m_modifier;
+    std::unique_ptr<Recorder> m_recorder;
 
     bool m_process_all = true;
 };

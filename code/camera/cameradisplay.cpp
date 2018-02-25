@@ -4,9 +4,11 @@
 #include <QDir>
 #include <QKeyEvent>
 #include <QVBoxLayout>
+#include <QFileDialog>
 
 #include "imageviewer.h"
 #include "../utility/util.h"
+#include "../utility/logger.h"
 
 CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     : QDialog(parent),
@@ -14,6 +16,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
       m_camera_list(std::make_unique<QComboBox>(this)),
       m_effects_list(std::make_unique<QComboBox>(this)),
       m_capture_btn(std::make_unique<QPushButton>(this)),
+      m_record_btn(std::make_unique<QPushButton>(this)),
       m_image_viewer(std::make_unique<ImageViewer>(this)),
       m_actions(std::make_unique<ActionBox>(this)),
       m_camera(camera_index),
@@ -37,19 +40,31 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_capture.moveToThread(&m_capture_thread);
     m_converter.moveToThread(&m_converter_thread);
 
+    m_capture_btn->setText(tr("Take Picture"));
+    m_record_btn->setText(tr("Record Video"));
+
     setLayout(m_layout.get());
     m_layout->addWidget(m_capture_btn.get());
+    m_layout->addWidget(m_record_btn.get());
     m_layout->addWidget(m_camera_list.get());
     m_layout->addWidget(m_effects_list.get());
     m_layout->addWidget(m_image_viewer.get());
 
-    QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
-    QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer.get(), &ImageViewer::setImage);
-    QObject::connect(this, &CameraDisplay::forwardKeyEvent, &m_converter, &Converter::imageKeyEvent);
+    // Video capturing and displaying connections
+    connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
+    connect(&m_converter, &Converter::imageReady, m_image_viewer.get(), &ImageViewer::setImage);
+    connect(this, &CameraDisplay::forwardKeyEvent, &m_converter, &Converter::imageKeyEvent);
 
+    // Connections for changing the effects
     connect(m_camera_list.get(), SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
     connect(m_effects_list.get(), SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
     connect(m_capture_btn.get(), SIGNAL(clicked()), this, SLOT(captureAndSave()));
+
+    // Connections for recording video
+    connect(m_record_btn.get(), &QPushButton::clicked, this, &CameraDisplay::recordButtonClicked);
+    connect(this, &CameraDisplay::beginRecording, this, &CameraDisplay::recordSaveFile);
+    connect(this, &CameraDisplay::recordFileAcquired, &m_converter, &Converter::startRecording);
+    connect(this, &CameraDisplay::stopRecording, &m_converter, &Converter::stopRecording);
 
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 }
@@ -130,4 +145,28 @@ void CameraDisplay::captureAndSave() {
         qDebug() << "Failed to save image";
     }
 #endif
+}
+
+void CameraDisplay::recordButtonClicked() {
+    if (!m_converter.is_recording()) {
+        Logger::log("Started recording video");
+#ifndef NDEBUG
+        qDebug() << "Recording video start";
+#endif
+        Q_EMIT beginRecording();
+        m_record_btn->setText(tr("Stop Recording"));
+    } else {
+        Logger::log("Finished recording and saving video");
+        Q_EMIT stopRecording();
+        m_record_btn->setText(tr("Record Video"));
+    }
+}
+
+void CameraDisplay::recordSaveFile() {
+    // Open save-file window to select a file name and location
+    QString file = QFileDialog::getSaveFileName(this, tr("Save Video"), QDir::currentPath(), tr("Videos (*.avi)"));
+#ifndef NDEBUG
+    qDebug() << "Saving video to target: " << file;
+#endif
+    Q_EMIT recordFileAcquired(file, m_capture.capture_width(), m_capture.capture_height());
 }

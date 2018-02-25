@@ -28,9 +28,14 @@ void Capture::timerEvent(QTimerEvent *ev) {
         return;
     }
     cv::UMat frame;
-    if (!m_video_capture->read(frame)) {
-        m_timer.stop();
-        return;
-    }
+    *m_video_capture >> (frame);
     Q_EMIT matReady(frame);
+}
+
+int Capture::capture_width() const {
+    return static_cast<int>(m_video_capture->get(cv::CAP_PROP_FRAME_WIDTH));
+}
+
+int Capture::capture_height() const {
+    return static_cast<int>(m_video_capture->get(cv::CAP_PROP_FRAME_HEIGHT));
 }

@@ -42,9 +42,19 @@ protected Q_SLOTS:
 
     void captureAndSave();
 
+    void recordButtonClicked();
+
+    void recordSaveFile();
+
 Q_SIGNALS:
 
     void forwardKeyEvent(int);
+
+    void beginRecording();
+
+    void stopRecording();
+
+    void recordFileAcquired(QString file, int width, int height);
 
 private:
     void pauseVideo();
@@ -53,12 +63,14 @@ private:
     std::unique_ptr<QComboBox> m_camera_list;
     std::unique_ptr<QComboBox> m_effects_list;
     std::unique_ptr<QPushButton> m_capture_btn;
+    std::unique_ptr<QPushButton> m_record_btn;
     std::unique_ptr<ImageViewer> m_image_viewer;
 
     std::unique_ptr<ActionBox> m_actions;
 
     int m_camera;
     int m_image_count = 0;
+    int m_video_count = 0;
 
     Capture m_capture;
     Converter m_converter;

@@ -1,10 +1,13 @@
 #include "converter.h"
 #include "cameradisplay.h"
+#include "../utility/util.h"
 
 #include <QTimerEvent>
 
 #ifndef NDEBUG
+
 #include <QDebug>
+
 #endif
 
 Converter::Converter(QObject *parent, CameraDisplay *display)
@@ -50,6 +53,9 @@ void Converter::process(cv::UMat frame) {
     if (m_modifier) {
         m_modifier->modify(frame);
     }
+    if (is_recording()) {
+        Q_EMIT frameProcessed(frame);
+    }
     cv::resize(frame, frame, cv::Size(), scale, scale, cv::INTER_AREA);
     cv::cvtColor(frame, frame, CV_BGR2RGB);
     const QImage image(
@@ -78,4 +84,26 @@ void Converter::timerEvent(QTimerEvent *ev) {
     process(m_frame);
     m_frame.release();
     m_timer.stop();
+}
+
+void Converter::startRecording(QString file, int width, int height) {
+    constexpr int fps = 30;
+    m_recorder = std::make_unique<Recorder>(
+        file.toStdString(), CV_FOURCC('M', 'J', 'P', 'G'),
+        fps, cv::Size(width, height), true
+    );
+    connect(this, &Converter::frameProcessed, m_recorder.get(), &Recorder::image_received);
+}
+
+void Converter::stopRecording() {
+    if (m_recorder) {
+        if (m_recorder->is_recording()) {
+            m_recorder->stop_recording();
+        }
+        m_recorder.reset();
+    }
+}
+
+bool Converter::is_recording() const {
+    return m_recorder && m_recorder->is_recording();
 }
