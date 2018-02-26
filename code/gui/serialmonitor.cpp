@@ -8,7 +8,7 @@ SerialMonitor::SerialMonitor(QWidget *parent)
       m_layout(new QVBoxLayout(this)),
       m_display(new QPlainTextEdit(this)) {
     m_layout->addWidget(m_display.get());
-    setMinimumSize(800, 600);
+    setMinimumSize(400, 500);
     setLayout(m_layout.get());
     QFont font;
     font.setFamily("Courier");

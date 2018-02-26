@@ -3,17 +3,29 @@
 
 #include "../interpreter/embeddedcontroller.h"
 
-MainWindow::MainWindow(QWidget *parent, const char *) :
-        QMainWindow(parent),
-        m_monitor(new SerialMonitor(this)),
-        ui(new Ui::MainWindow) {
+MainWindow::MainWindow(
+    int argc,
+    char *argv[],
+    QWidget *parent,
+    const char *
+) :
+    QMainWindow(parent),
+    m_monitor(new SerialMonitor(this)),
+    ui(new Ui::MainWindow) {
 
     ui->setupUi(this);
 
-    //Set up logger
+    // Set up logger
     Logger::setStream(getLogView());
-    m_solenoid = std::make_shared<Solenoid>("/dev/ttyACM0");
+
+    // Setup the controllers and solenoid connection
     m_simulator = std::make_shared<Simulator>(1, -1);
+    // If a port is passed use it TODO: QCommandLineParser
+    if (argc >= 2) {
+        m_solenoid = std::make_shared<Solenoid>(argv[1]);
+    } else {
+        m_solenoid = std::make_shared<Solenoid>();
+    }
     m_controller = m_solenoid;
     m_controller_type = Controller::Type::SOLENOID;
 

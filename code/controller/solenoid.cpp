@@ -1,17 +1,32 @@
 #include "solenoid.h"
 
+#include <QSerialPortInfo>
+
 Solenoid::Solenoid(const QString &serial_port)
     : Controller(1, 1),
       m_serial(serial_port) {
+    if (serial_port.isEmpty()) {
+        // Autodetect Arduino port
+        QSerialPortInfo port_to_use;
+        auto ports = QSerialPortInfo::availablePorts();
+        for (auto port : ports) {
+            if (!port.isBusy() && (port.description().contains("Arduino") || port.manufacturer().contains("Arduino"))) {
+                port_to_use = port;
+                break;
+            }
+        }
+        Logger::log("Autodetected Arduino port: " + port_to_use.portName().toStdString());
+        m_serial.setPort(port_to_use);
+    }
     m_serial.setBaudRate(QSerialPort::Baud9600);
     m_serial.setDataBits(QSerialPort::Data8);
     m_serial.setParity(QSerialPort::NoParity);
     m_serial.setStopBits(QSerialPort::OneStop);
     m_serial.setFlowControl(QSerialPort::NoFlowControl);
     if (!m_serial.open(QIODevice::ReadWrite)) {
-        Logger::log("Failed to open serial port: " + serial_port.toStdString(), Logger::FATAL);
+        Logger::log("Failed to open serial port: " + m_serial.portName().toStdString(), Logger::FATAL);
     } else {
-        Logger::log("Opened serial port: " + serial_port.toStdString());
+        Logger::log("Opened serial port: " + m_serial.portName().toStdString());
         connect(&m_serial, &QSerialPort::readyRead, this, &Solenoid::readSerial);
     }
 }

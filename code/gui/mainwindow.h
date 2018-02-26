@@ -28,7 +28,12 @@ class MainWindow : public QMainWindow {
 Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr, const char *title = DEFAULT_TITLE);
+    explicit MainWindow(
+        int argc,
+        char *argv[],
+        QWidget *parent = nullptr,
+        const char *title = DEFAULT_TITLE
+    );
 
     QTextEdit *getLogView();
 
