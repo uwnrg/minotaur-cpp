@@ -147,6 +147,7 @@ void Converter::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() != m_timer.timerId()) {
         return;
     }
+    m_frames++;
     process(m_frame);
     m_frame.release();
     m_timer.stop();
