@@ -14,7 +14,7 @@ ActionBox::ActionBox(QWidget *parent)
     : QDialog(parent),
       m_layout(std::make_unique<QVBoxLayout>()) {
     reset_actions();
-    set_actions();
+    setLayout(m_layout.get());
 }
 
 ActionBox::~ActionBox() = default;
