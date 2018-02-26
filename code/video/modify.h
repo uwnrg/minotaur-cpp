@@ -5,11 +5,12 @@
 
 #include <opencv2/core/core.hpp>
 
+#include <QObject>
 #include <QComboBox>
 
 #include "../camera/actionbox.h"
 
-class VideoModifier {
+class VideoModifier : public QObject {
 public:
     enum {
         NONE = 0,
@@ -26,7 +27,9 @@ public:
 
     virtual void forwardKeyEvent(int);
 
-    virtual void register_actions(ActionBox *box);
+    virtual void register_actions(const std::vector<ActionButton *> &action_btns, ActionBox *box);
+
+    virtual int num_buttons() const;
 };
 
 #endif //MINOTAUR_CPP_MODIFY_H

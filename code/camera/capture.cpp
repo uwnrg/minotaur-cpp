@@ -28,7 +28,7 @@ void Capture::timerEvent(QTimerEvent *ev) {
         return;
     }
     cv::UMat frame;
-    *m_video_capture >> (frame);
+    *m_video_capture >> frame;
     Q_EMIT matReady(frame);
 }
 

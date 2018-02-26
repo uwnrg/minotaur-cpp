@@ -18,7 +18,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
       m_capture_btn(std::make_unique<QPushButton>(this)),
       m_record_btn(std::make_unique<QPushButton>(this)),
       m_image_viewer(std::make_unique<ImageViewer>(this)),
-      m_actions(std::make_unique<ActionBox>(this)),
+      m_action_box(std::make_unique<ActionBox>(this)),
       m_camera(camera_index),
       m_converter(nullptr, this) {
 
@@ -120,12 +120,9 @@ void CameraDisplay::selectedCameraChanged(int list_index) {
 }
 
 void CameraDisplay::effectsChanged(int effect_index) {
-    QMetaObject::invokeMethod(
-        &m_converter,
-        "modifierChanged",
-        Q_ARG(int, effect_index),
-        Q_ARG(ActionBox*, m_actions.get())
-    );
+    QMetaObject::invokeMethod(&m_converter, "modifierChanged",
+                              Q_ARG(int, effect_index),
+                              Q_ARG(ActionBox *, m_action_box.get()));
 }
 
 void CameraDisplay::captureAndSave() {
@@ -169,4 +166,18 @@ void CameraDisplay::recordSaveFile() {
     qDebug() << "Saving video to target: " << file;
 #endif
     Q_EMIT recordFileAcquired(file, m_capture.capture_width(), m_capture.capture_height());
+}
+
+void CameraDisplay::requestActionButtons(int num_buttons) {
+    // Clear buttons, unique_ptr destructor handles cleanup
+    m_action_btns.clear();
+    m_action_btn_ptrs.clear();
+    for (int i = 0; i < num_buttons; ++i) {
+        // The unique_ptr in the vector has ownership
+        auto *ptr = new ActionButton(m_action_box.get());
+        m_action_btns.emplace_back(ptr);
+        m_action_btn_ptrs.push_back(ptr);
+        m_action_box->add_action(ptr);
+    }
+    Q_EMIT returnActionButtons(m_action_btn_ptrs, m_action_box.get());
 }

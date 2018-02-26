@@ -7,6 +7,8 @@
 #include "capture.h"
 #include "converter.h"
 
+Q_DECLARE_METATYPE(std::vector<ActionButton *>);
+
 class QVBoxLayout;
 
 class QComboBox;
@@ -46,6 +48,19 @@ protected Q_SLOTS:
 
     void recordSaveFile();
 
+    /**
+     * Since the ActionButton widgets must be created and maintained in the
+     * same thread as the parent ActionBox, and the Capture is running in
+     * its own thread, we have to receive requests from that thread to create
+     * the objects.
+     *
+     * This slot is called when an effect changes.
+     *
+     * @see CameraDisplay::returnActionButtons
+     * @param num_buttons the number of action buttons needed
+     */
+    void requestActionButtons(int num_buttons);
+
 Q_SIGNALS:
 
     void forwardKeyEvent(int);
@@ -55,6 +70,13 @@ Q_SIGNALS:
     void stopRecording();
 
     void recordFileAcquired(QString file, int width, int height);
+
+    /**
+     * Return the requested action buttons as a list of pointers.
+     *
+     * @param action_btns the request action buttons.
+     */
+    void returnActionButtons(const std::vector<ActionButton *> &action_btns, ActionBox *box);
 
 private:
     void pauseVideo();
@@ -66,7 +88,10 @@ private:
     std::unique_ptr<QPushButton> m_record_btn;
     std::unique_ptr<ImageViewer> m_image_viewer;
 
-    std::unique_ptr<ActionBox> m_actions;
+    std::unique_ptr<ActionBox> m_action_box;
+
+    std::vector<std::unique_ptr<ActionButton>> m_action_btns;
+    std::vector<ActionButton *> m_action_btn_ptrs;
 
     int m_camera;
     int m_image_count = 0;

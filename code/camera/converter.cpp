@@ -28,11 +28,13 @@ void Converter::processFrame(const cv::UMat &frame) {
 
 void Converter::modifierChanged(int modifier_index, ActionBox *box) {
     VideoModifier::attachModifier(m_modifier, modifier_index);
+    QMetaObject::invokeMethod(box, "reset_actions");
     if (m_modifier) {
-        box->reset_actions();
-        m_modifier->register_actions(box);
+        connect(m_display, &CameraDisplay::returnActionButtons, m_modifier.get(), &VideoModifier::register_actions);
+        QMetaObject::invokeMethod(m_display, "requestActionButtons", Q_ARG(int, m_modifier->num_buttons()));
     }
 }
+
 
 void Converter::matDelete(void *mat) {
     delete static_cast<cv::UMat *>(mat);

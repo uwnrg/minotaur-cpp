@@ -1,5 +1,6 @@
 #ifndef MINOTAUR_CPP_TRACKER_H
 #define MINOTAUR_CPP_TRACKER_H
+#ifndef TRACKER_OFF
 
 #include "modify.h"
 
@@ -12,13 +13,18 @@ class TrackerModifier : public VideoModifier {
 public:
     TrackerModifier();
 
-    ~TrackerModifier();
-
     void modify(cv::UMat &img) override;
 
     void forwardKeyEvent(int key) override;
 
-    void register_actions(ActionBox *box) override;
+    void register_actions(const std::vector<ActionButton *> &action_btns, ActionBox *box) override;
+
+    int num_buttons() const;
+
+protected:
+    Q_SLOT void beginTracking();
+
+    Q_SLOT void stopTracking();
 
 private:
     void reset_tracker();
@@ -42,11 +48,9 @@ private:
     cv::Ptr<cv::Tracker> m_tracker;
     cv::Rect2d m_bounding_box;
 
-    std::unique_ptr<ButtonAction> m_select_roi_btn;
-    std::unique_ptr<ButtonAction> m_clear_roi_btn;
-
     int m_type;
     int m_state;
 };
 
+#endif
 #endif //MINOTAUR_CPP_TRACKER_H

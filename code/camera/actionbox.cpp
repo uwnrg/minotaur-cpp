@@ -4,8 +4,8 @@
 
 #include "../utility/util.h"
 
-ButtonAction::ButtonAction(QString &&label, QWidget *parent)
-    : QPushButton(label, parent) {
+ActionButton::ActionButton(QWidget *parent)
+    : QPushButton(parent) {
     setMinimumSize(150, 50);
     setMaximumSize(200, 75);
 }
@@ -29,6 +29,6 @@ void ActionBox::set_actions() {
     show();
 }
 
-void ActionBox::add_action(ButtonAction *action) {
+void ActionBox::add_action(ActionButton *action) {
     m_layout->addWidget(action);
 }
