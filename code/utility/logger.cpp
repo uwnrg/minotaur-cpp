@@ -8,6 +8,8 @@ void Logger::setStream(QTextEdit *log_stream) {
     Logger::log("Logger's stream has been set.");
 }
 
+
+
 //TODO: Overload ostream operator
 bool Logger::log(std::string message, LogType type) {
     std::string color = Logger::getTextColor(type);

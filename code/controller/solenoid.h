@@ -10,9 +10,8 @@
 #include <QSerialPort>
 #include <QMutex>
 
-class Solenoid : public Controller, public QObject {
+class Solenoid : public Controller {
 Q_OBJECT
-
 public:
     Solenoid(const QString &serial_port = "");
 
@@ -20,28 +19,11 @@ public:
 
     void move(Vector2i dir, int timer);
 
-private:
+    Q_SLOT void readSerial();
 
-    std::ofstream m_stream;
-};
+    Q_SIGNAL void serialRead(const std::string &msg);
 
-class MovementExecutor : public QObject {
-Q_OBJECT
-
-public:
-    static int vector_to_bin(Vector2i dir);
-
-    explicit MovementExecutor(Solenoid *solenoid);
-
-    MovementExecutor(Solenoid *solenoid, const std::string &port);
-
-    Q_SLOT void queue_movement(Vector2i vec);
-
-    Q_SLOT void wake();
-
-    Q_SLOT void sleep();
-
-    Q_SLOT void execute_movement();
+    static char vectorToBinary(Vector2i dir);
 
 private:
     enum Direction {
@@ -51,10 +33,7 @@ private:
         LEFT = 0b0001
     };
 
-    QMutex m_mutex;
     QSerialPort m_serial;
-    Solenoid *m_solenoid;
-    std::queue<Vector2i> m_buffer;
 };
 
 #endif // SOLENOID_H

@@ -16,6 +16,7 @@
 #include "actionabout.h"
 #include "scriptwindow.h"
 #include "camera.h"
+#include "serialmonitor.h"
 
 #define DEFAULT_TITLE "minotaur"
 
@@ -65,6 +66,8 @@ private:
     SimulatorWindow *m_simulator_window;
     ActionAbout *m_about_window;
     CameraDisplay *m_camera_display;
+
+    std::unique_ptr<SerialMonitor> m_monitor;
 
     Controller::Type m_controller_type;
 

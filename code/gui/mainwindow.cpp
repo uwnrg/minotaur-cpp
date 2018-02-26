@@ -5,13 +5,14 @@
 
 MainWindow::MainWindow(QWidget *parent, const char *) :
         QMainWindow(parent),
+        m_monitor(new SerialMonitor(this)),
         ui(new Ui::MainWindow) {
 
     ui->setupUi(this);
 
     //Set up logger
     Logger::setStream(getLogView());
-    m_solenoid = std::make_shared<Solenoid>();
+    m_solenoid = std::make_shared<Solenoid>("/dev/ttyACM0");
     m_simulator = std::make_shared<Simulator>(1, -1);
     m_controller = m_solenoid;
     m_controller_type = Controller::Type::SOLENOID;
@@ -20,11 +21,15 @@ MainWindow::MainWindow(QWidget *parent, const char *) :
     EmbeddedController::getInstance().bind_controller(&m_controller);
     PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
 
-    // Setup subwindows
+    // Setup sub-windows
     m_simulator_window = new SimulatorWindow(m_simulator, this);
     m_script_window = new ScriptWindow(this);
     m_about_window = new ActionAbout(this);
     m_camera_display = new CameraDisplay(this);
+
+    // Connect solenoid serial port to the monitor
+    connect(m_solenoid.get(), &Solenoid::serialRead, m_monitor.get(), &SerialMonitor::append_text);
+    m_monitor->show();
 
     // Setup slot connections
     connect(ui->switch_to_simulator_mode, SIGNAL(triggered()), this, SLOT(switchToSimulator()));

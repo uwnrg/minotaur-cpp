@@ -1,73 +1,48 @@
 #include "solenoid.h"
 
-MovementExecutor::MovementExecutor(Solenoid *solenoid)
-    : m_solenoid(solenoid) {}
-
-MovementExecutor::MovementExecutor(Solenoid *solenoid, const std::string &port)
-    : m_solenoid(solenoid) {
-    m_stream.open(port);
-    if (!m_stream.is_open()) {
-        Logger::log("Failed to connect to serial port: " + port, Logger::FATAL);
-        m_stream.close();
-    }
-}
-
-void MovementExecutor::queue_movement(Vector2i dir) {
-    m_buffer.push(dir);
-}
-
-void MovementExecutor::execute_movement() {
-    if (m_buffer.empty()) {
-        return;
-    }
-    m_mutex.lock();
-    Vector2i next_movement = m_buffer.front();
-    m_buffer.pop();
-    m_mutex.unlock();
-}
-
-Solenoid::Solenoid(const QString &serial_port) : Controller(1, 1) {
-    // TODO: change actuator setup to be used for general serial set up
-    if (serial_port.isEmpty()) {
-        // TODO: provide error if this does not succeed
-        m_stream.open("/dev/ttyACM0");        // manually changed to match port indicated in arduino IDE
+Solenoid::Solenoid(const QString &serial_port)
+    : Controller(1, 1),
+      m_serial(serial_port) {
+    m_serial.setBaudRate(QSerialPort::Baud9600);
+    m_serial.setDataBits(QSerialPort::Data8);
+    m_serial.setParity(QSerialPort::NoParity);
+    m_serial.setStopBits(QSerialPort::OneStop);
+    m_serial.setFlowControl(QSerialPort::NoFlowControl);
+    if (!m_serial.open(QIODevice::ReadWrite)) {
+        Logger::log("Failed to open serial port: " + serial_port.toStdString(), Logger::FATAL);
     } else {
-        m_stream.open(serial_port.toStdString());
+        Logger::log("Opened serial port: " + serial_port.toStdString());
+        connect(&m_serial, &QSerialPort::readyRead, this, &Solenoid::readSerial);
     }
 }
 
 Solenoid::~Solenoid() {
-    m_stream.close();
+    m_serial.close();
 }
 
-void Solenoid::move(Vector2i dir, int timer) {
-    // TODO: user timer for movement control
-    bool success = true;
+void Solenoid::readSerial() {
+    QByteArray data = m_serial.readAll();
+    std::string msg = data.toStdString();
+    Q_EMIT serialRead(msg);
+}
+
+void Solenoid::move(Vector2i dir, int) {
 #ifndef NDEBUG
     Logger::log("Moving Solenoid controller", Logger::DEBUG);
     Logger::log("Attempting move (" + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + ")",
                 Logger::DEBUG);
 #endif
-    try {
-        m_stream << vectorToBinary(dir);
-        m_stream.flush();
-    } catch (...) {
-        success = false;
-#ifndef NDEBUG
-        Logger::log("Unexpected exception", Logger::DEBUG);
-#endif
-    }
-
-    if (success) {
-        Logger::log("Moved " + dir.toString() + " in " + std::to_string(timer) + " milliseconds.", Logger::INFO);
+    char binary = vectorToBinary(dir);
+    m_serial.write(&binary, 1);
+    if (!m_serial.waitForBytesWritten(100)) {
+        Logger::log("Failed to execute movement", Logger::FATAL);
     } else {
-        Logger::log("The movement " + dir.toString() + " could not be completed.", Logger::FATAL);
+        Logger::log("Movement send");
     }
 }
 
-int MovementExecutor::vector_to_bin(Vector2i dir) {
+char Solenoid::vectorToBinary(Vector2i dir) {
     int direction = 0b0;
-
     switch (dir.x_comp) {
         case 1:
             direction = direction | Direction::UP;
@@ -78,7 +53,6 @@ int MovementExecutor::vector_to_bin(Vector2i dir) {
         default:
             break;
     }
-
     switch (dir.y_comp) {
         case 1:
             direction = direction | Direction::RIGHT;
@@ -89,6 +63,5 @@ int MovementExecutor::vector_to_bin(Vector2i dir) {
         default:
             break;
     }
-
-    return direction;
+    return static_cast<char>(direction);
 }
