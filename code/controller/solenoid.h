@@ -8,7 +8,6 @@
 
 #include <QObject>
 #include <QSerialPort>
-#include <QMutex>
 
 class Solenoid : public Controller {
 Q_OBJECT
