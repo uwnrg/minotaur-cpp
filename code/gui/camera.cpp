@@ -90,6 +90,12 @@ bool Converter::is_recording() {
     return m_recorder && m_recorder->is_recording();
 }
 
+int Converter::getFrames() {
+    int frames = m_frames;
+    m_frames = 0;
+    return frames;
+}
+
 void Converter::modifierChanged(int modifier_index) {
     VideoModifier::attachModifier(m_modifier, modifier_index);
 }
@@ -141,6 +147,7 @@ void Converter::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() != m_timer.timerId()) {
         return;
     }
+    m_frames++;
     process(m_frame);
     m_frame.release();
     m_timer.stop();
@@ -199,6 +206,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_converter_thread.start();
     m_capture.moveToThread(&m_capture_thread);
     m_converter.moveToThread(&m_converter_thread);
+    m_framerate_timer.start(1000, this);
 
     m_capture_btn = new QPushButton(this);
     m_capture_btn->setText("Take Picture");
@@ -206,12 +214,18 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_record_btn = new QPushButton(this);
     m_record_btn->setText("Record Video");
 
+    m_framerate_label = new QLabel(this);
+    m_framerate_label->setText("0");
+    m_framerate_label->setFixedSize(20,16);
+    m_framerate_label->setStyleSheet("QLabel {background: white;}");
+
     setLayout(m_layout);
     m_layout->addWidget(m_capture_btn);
     m_layout->addWidget(m_record_btn);
     m_layout->addWidget(m_camera_list);
     m_layout->addWidget(m_effects_list);
     m_layout->addWidget(m_image_viewer);
+    m_layout->addWidget(m_framerate_label);
 
     QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
     QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
@@ -332,3 +346,13 @@ void CameraDisplay::recordSaveFile() {
     Q_EMIT recordFileAcquired(file, m_capture.capture_width(), m_capture.capture_height());
 }
 
+void CameraDisplay::updateFramerate(int frames) {
+    m_framerate_label->setText(QString::number(frames));
+}
+
+void CameraDisplay::timerEvent(QTimerEvent *ev) {
+    if (ev->timerId() == m_framerate_timer.timerId()) {
+        CameraDisplay::updateFramerate(m_converter.getFrames());
+        return;
+    }
+}
