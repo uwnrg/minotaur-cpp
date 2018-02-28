@@ -21,6 +21,8 @@ public:
 
     bool is_recording() const;
 
+    int get_and_reset_frames();
+
     Q_SIGNAL void imageReady(const QImage &);
 
     /**
@@ -59,6 +61,7 @@ private:
     std::unique_ptr<Recorder> m_recorder;
 
     bool m_process_all = true;
+    int m_frame_count = 0;
 };
 
 

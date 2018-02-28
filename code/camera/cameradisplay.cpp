@@ -5,6 +5,7 @@
 #include <QKeyEvent>
 #include <QVBoxLayout>
 #include <QFileDialog>
+#include <QLabel>
 
 #include "imageviewer.h"
 #include "../utility/util.h"
@@ -19,6 +20,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
       m_record_btn(std::make_unique<QPushButton>(this)),
       m_image_viewer(std::make_unique<ImageViewer>(this)),
       m_action_box(std::make_unique<ActionBox>(this)),
+      m_framerate_label(std::make_unique<QLabel>(this)),
       m_camera(camera_index),
       m_converter(nullptr, this) {
 
@@ -40,8 +42,15 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_capture.moveToThread(&m_capture_thread);
     m_converter.moveToThread(&m_converter_thread);
 
+    // Start framerate timer to update framerate each second
+    m_framerate_timer.start(1000, this);
+
     m_capture_btn->setText(tr("Take Picture"));
     m_record_btn->setText(tr("Record Video"));
+
+    m_framerate_label->setText("0");
+    m_framerate_label->setFixedSize(20, 16);
+    m_framerate_label->setStyleSheet("QLabel {background: white;}");
 
     setLayout(m_layout.get());
     m_layout->addWidget(m_capture_btn.get());
@@ -49,6 +58,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_layout->addWidget(m_camera_list.get());
     m_layout->addWidget(m_effects_list.get());
     m_layout->addWidget(m_image_viewer.get());
+    m_layout->addWidget(m_framerate_label.get());
 
     // Video capturing and displaying connections
     connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
@@ -180,4 +190,14 @@ void CameraDisplay::requestActionButtons(int num_buttons) {
         m_action_box->add_action(ptr);
     }
     Q_EMIT returnActionButtons(m_action_btn_ptrs, m_action_box.get());
+}
+
+void CameraDisplay::update_framerate(int frames) {
+    m_framerate_label->setText(QString::number(frames));
+}
+
+void CameraDisplay::timerEvent(QTimerEvent *ev) {
+    if (ev->timerId() == m_framerate_timer.timerId()) {
+        update_framerate(m_converter.get_and_reset_frames());
+    }
 }

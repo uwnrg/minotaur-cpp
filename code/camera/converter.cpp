@@ -83,6 +83,7 @@ void Converter::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() != m_timer.timerId()) {
         return;
     }
+    ++m_frame_count;
     process(m_frame);
     m_frame.release();
     m_timer.stop();
@@ -108,4 +109,10 @@ void Converter::stopRecording() {
 
 bool Converter::is_recording() const {
     return m_recorder && m_recorder->is_recording();
+}
+
+int Converter::get_and_reset_frames() {
+    int frames = m_frame_count;
+    m_frame_count = 0;
+    return frames;
 }

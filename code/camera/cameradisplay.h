@@ -2,6 +2,7 @@
 #define MINOTAUR_CPP_CAMERADISPLAY_H
 
 #include <QDialog>
+#include <QBasicTimer>
 
 #include "camerathread.h"
 #include "capture.h"
@@ -17,6 +18,8 @@ class QPushButton;
 
 class ImageViewer;
 
+class QLabel;
+
 class CameraDisplay : public QDialog {
 Q_OBJECT
 
@@ -26,6 +29,8 @@ public:
     ~CameraDisplay() override;
 
     void setCamera(int camera);
+
+    void update_framerate(int frames);
 
     int getCamera();
 
@@ -81,12 +86,16 @@ Q_SIGNALS:
 private:
     void pauseVideo();
 
+    void timerEvent(QTimerEvent *ev) override;
+
     std::unique_ptr<QVBoxLayout> m_layout;
     std::unique_ptr<QComboBox> m_camera_list;
     std::unique_ptr<QComboBox> m_effects_list;
     std::unique_ptr<QPushButton> m_capture_btn;
     std::unique_ptr<QPushButton> m_record_btn;
     std::unique_ptr<ImageViewer> m_image_viewer;
+
+    std::unique_ptr<QLabel> m_framerate_label;
 
     std::unique_ptr<ActionBox> m_action_box;
 
@@ -101,6 +110,8 @@ private:
     Converter m_converter;
     IThread m_capture_thread;
     IThread m_converter_thread;
+
+    QBasicTimer m_framerate_timer;
 };
 
 #endif //MINOTAUR_CPP_CAMERADISPLAY_H
