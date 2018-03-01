@@ -16,6 +16,7 @@
 #include "actionabout.h"
 #include "scriptwindow.h"
 #include "camera.h"
+#include "serialmonitor.h"
 
 #define DEFAULT_TITLE "minotaur"
 
@@ -27,7 +28,12 @@ class MainWindow : public QMainWindow {
 Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr, const char *title = DEFAULT_TITLE);
+    explicit MainWindow(
+        int argc,
+        char *argv[],
+        QWidget *parent = nullptr,
+        const char *title = DEFAULT_TITLE
+    );
 
     QTextEdit *getLogView();
 
@@ -65,6 +71,8 @@ private:
     SimulatorWindow *m_simulator_window;
     ActionAbout *m_about_window;
     CameraDisplay *m_camera_display;
+
+    std::unique_ptr<SerialMonitor> m_monitor;
 
     Controller::Type m_controller_type;
 

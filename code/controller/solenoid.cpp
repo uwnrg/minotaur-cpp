@@ -1,75 +1,82 @@
 #include "solenoid.h"
-#include <ostream>
 
-Solenoid::Solenoid(const QString& serial_port): Controller(1, 1) {
-    // TODO: change actuator setup to be used for general serial set up
-    if ( serial_port.isEmpty() ) {
-        // TODO: provide error if this does not succeed
-        stream.open("/dev/ttyACM1");        // manually changed to match port indicated in arduino IDE
+#include <QSerialPortInfo>
+
+Solenoid::Solenoid(const QString &serial_port)
+    : Controller(1, 1),
+      m_serial(serial_port) {
+    if (serial_port.isEmpty()) {
+        // Autodetect Arduino port
+        QSerialPortInfo port_to_use;
+        auto ports = QSerialPortInfo::availablePorts();
+        for (auto port : ports) {
+            if (!port.isBusy() && (port.description().contains("Arduino") || port.manufacturer().contains("Arduino"))) {
+                port_to_use = port;
+                break;
+            }
+        }
+        Logger::log("Autodetected Arduino port: " + port_to_use.portName().toStdString());
+        m_serial.setPort(port_to_use);
+    }
+    m_serial.setBaudRate(QSerialPort::Baud9600);
+    m_serial.setDataBits(QSerialPort::Data8);
+    m_serial.setParity(QSerialPort::NoParity);
+    m_serial.setStopBits(QSerialPort::OneStop);
+    m_serial.setFlowControl(QSerialPort::NoFlowControl);
+    if (!m_serial.open(QIODevice::ReadWrite)) {
+        Logger::log("Failed to open serial port: " + m_serial.portName().toStdString(), Logger::FATAL);
     } else {
-        stream.open(serial_port.toStdString());
+        Logger::log("Opened serial port: " + m_serial.portName().toStdString());
+        connect(&m_serial, &QSerialPort::readyRead, this, &Solenoid::readSerial);
     }
 }
 
 Solenoid::~Solenoid() {
-    stream.close();
+    m_serial.close();
 }
 
-void Solenoid::move(Vector2i dir, int timer) {
-    // TODO: user timer for movement control
-    bool success = true;
+void Solenoid::readSerial() {
+    QByteArray data = m_serial.readAll();
+    std::string msg = data.toStdString();
+    Q_EMIT serialRead(msg);
+}
+
+void Solenoid::move(Vector2i dir, int) {
 #ifndef NDEBUG
-	Logger::log("Moving Solenoid controller", Logger::DEBUG);
+    Logger::log("Moving Solenoid controller", Logger::DEBUG);
     Logger::log("Attempting move (" + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + ")",
                 Logger::DEBUG);
 #endif
-    try {
-        stream << vectorToBinary(dir);
-        stream.flush();
-    } catch (...) {
-        success = false;
-#ifndef NDEBUG
-        Logger::log("Unexpected exception", Logger::DEBUG);
-#endif
-    }
-
-    if (success) {
-        Logger::log("Moved " + dir.toString() + " in " + std::to_string(timer) + " milliseconds.", Logger::INFO);
+    char binary = vectorToBinary(dir);
+    m_serial.write(&binary, 1);
+    if (!m_serial.waitForBytesWritten(100)) {
+        Logger::log("Failed to execute movement", Logger::FATAL);
     } else {
-        Logger::log("The movement " + dir.toString() + " could not be completed.", Logger::FATAL);
+        Logger::log("Movement send");
     }
 }
 
-int Solenoid::vectorToBinary(Vector2i dir) {
+char Solenoid::vectorToBinary(Vector2i dir) {
     int direction = 0b0;
-
-    switch(dir.x_comp) {
+    switch (dir.x_comp) {
         case 1:
             direction = direction | Direction::UP;
             break;
         case -1:
             direction = direction | Direction::DOWN;
             break;
-        case 0:
-            // DO NOTHING
-            break;
         default:
-            Logger::log("Invalid direction x component", Logger::FATAL);
+            break;
     }
-
-    switch(dir.y_comp) {
+    switch (dir.y_comp) {
         case 1:
             direction = direction | Direction::RIGHT;
             break;
         case -1:
             direction = direction | Direction::LEFT;
             break;
-        case 0:
-            // DO NOTHING
-            break;
         default:
-            Logger::log("Invalid direction y component", Logger::FATAL);
+            break;
     }
-
-    return direction;
+    return static_cast<char>(direction);
 }

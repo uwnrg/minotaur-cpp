@@ -10,7 +10,10 @@ before_install:
   - python3 --version
   - cmake --version
   - git clone https://github.com/Mogball/opencv3-debian.git
-  - sudo apt-get install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev libavcodec-dev libavformat-dev libswscale-dev libxvidcore-dev libx264-dev libv4l-dev liblapacke-dev libgtk-3-dev libopenblas-dev libhdf5-dev libtesseract-dev libleptonica-dev gfortran -y -qq
+  - sudo apt-get install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev libavcodec-dev libavformat-dev -y -qq
+  - sudo apt-get install libswscale-dev libxvidcore-dev libx264-dev libv4l-dev liblapacke-dev libgtk-3-dev -y -qq
+  - sudo apt-get install libopenblas-dev libhdf5-dev libtesseract-dev libleptonica-dev gfortran -y -qq
+  - sudo apt-get install qtmultimedia5-dev libqt5multimedia5-plugins libqt5serialport5-dev -y -qq
   - sudo apt-get install ffmpeg -y -qq
   - sudo dpkg -i opencv3-debian/opencv3_3.4.0-1_amd64.deb
 
