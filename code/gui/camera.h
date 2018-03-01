@@ -18,9 +18,11 @@
 #include <QVBoxLayout>
 #include <QComboBox>
 #include <QPushButton>
+#include <QGraphicsScene>
 
 #include "../video/modify.h"
 #include "../video/recorder.h"
+#include "griddisplay.h"
 
 Q_DECLARE_METATYPE(cv::Mat);
 
@@ -114,6 +116,10 @@ private:
     void paintEvent(QPaintEvent *) override;
 
     QImage m_img;
+//	QGraphicsScene *m_scene;
+//	QGraphicsView *m_view;
+//	QRect *rect;
+
 };
 
 class IThread final : public QThread {
@@ -132,7 +138,6 @@ public:
     void setCamera(int camera);
 
     int getCamera();
-
 
 protected:
     void setVisible(bool visible) override;
@@ -172,6 +177,7 @@ private:
 	QPushButton *m_capture_btn;
 	QPushButton *m_record_btn;
     ImageViewer *m_image_viewer;
+	GridDisplay *m_grid_display;
 
     int m_camera;
     int m_image_count = 0;

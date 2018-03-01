@@ -79,7 +79,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 get_target_property(QtCore_location Qt5::Core LOCATION)
-add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES})
+add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} code/gui/griddisplay.cpp code/gui/griddisplay.h)
 
 # Uncomment this line to compile in debug mode
 option(NO_DEBUG "Build minotaur without debugging output" OFF)

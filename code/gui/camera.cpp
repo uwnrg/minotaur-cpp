@@ -6,6 +6,8 @@
 #include <QAction>
 #include <QDir>
 #include <QFileDialog>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 Capture::Capture(QObject *parent)
     : QObject(parent) {}
@@ -162,22 +164,42 @@ void ImageViewer::setImage(const QImage &img) {
     update();
 }
 
+//Continuously displays an image at the bottom of the camera window
 void ImageViewer::paintEvent(QPaintEvent *) {
     QPainter painter(this);
     painter.drawImage(0, 0, m_img);
+
+//    //Draws a filled rectangle on the image viewer
+//    const int gridSize = 20;
+//    painter.setPen(Qt::white);
+//    painter.setBrush(Qt::green);
+//    painter.drawRect(10, 50, gridSize, gridSize);
+//
+//    QRect rect(50, 50, 20, 20);
+//
+//    m_scene = new QGraphicsScene(this);
+//    m_scene->setSceneRect(QRect(0, 0, m_img.width(), m_img.height()));
+//    m_scene->addRect(rect);
+//
+//    m_view = new QGraphicsView(m_scene);
+//    m_view->setScene(m_scene);
+//    m_view->show();
 }
+
 
 IThread::~IThread() {
     quit();
     wait();
 }
 
+//Create camera window UI
 CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     : QDialog(parent),
       m_camera(camera_index),
       m_converter(nullptr, this) {
     m_layout = new QVBoxLayout(this);
     m_image_viewer = new ImageViewer(this);
+    m_grid_display = new GridDisplay(this);
 
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
 #ifndef NDEBUG
@@ -210,10 +232,11 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_layout->addWidget(m_record_btn);
     m_layout->addWidget(m_camera_list);
     m_layout->addWidget(m_effects_list);
-    m_layout->addWidget(m_image_viewer);
+    //m_layout->addWidget(m_image_viewer);
+    m_layout->addWidget(m_grid_display);
 
     QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
-    QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
+    //QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
     QObject::connect(this, &CameraDisplay::forwardKeyEvent, &m_converter, &Converter::imageKeyEvent);
 
     connect(m_camera_list, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
