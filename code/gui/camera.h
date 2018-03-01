@@ -19,6 +19,7 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QGraphicsScene>
+#include <QGraphicsView>
 
 #include "../video/modify.h"
 #include "../video/recorder.h"

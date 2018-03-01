@@ -8,42 +8,49 @@
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QButtonGroup>
+#include <QPushButton>
+#include <QGraphicsGridLayout>
+#include <QSignalMapper>
 
 //#include "camera.h"
 
-//namespace Ui {
-//    class GridDisplay;
-//}
-
 class GridDisplay : public QWidget {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     explicit GridDisplay(QWidget *parent = nullptr);
 //    ~GridDisplay();
 
-private:
-//    Ui::GridDisplay *ui;
+protected Q_SLOTS:
+    void buttonClicked();
+    void displayText();
 
-    void drawGrid();
-    void createScene();
-
-    QVBoxLayout *m_layout;
-    QGraphicsScene *m_scene;
-    QGraphicsView *m_view;
-    QRect *rect;
-
-    QPushButton *m_button1;
-    QButtonGroup *m_buttongroup;
-
-    GridDisplay *m_grid_display;
-
-    const int gridSize = 20;
-
-    Q_SIGNALS:
+Q_SIGNALS:
 //    void itemSelected(QGraphicsItem *item);
 
-};
+private:
+    void showView();
+    void drawRectGrid();
+//  void drawGrid();
+    void updateScene();
+    void drawButtons();
 
+    QGraphicsGridLayout *m_layout;
+    QGraphicsScene *m_scene;
+    QGraphicsView *m_view;
+    QButtonGroup *m_btngroup;
+    QPushButton *buttons[5];
+    QPushButton *m_button1;
+    QPushButton *m_button2;
+    QRect *rect;
+
+    QSignalMapper *m_signalmapper;
+
+//    GridDisplay *m_grid_display;
+
+    const int gridSize = 20;
+    int sceneWidth = 800;
+    int sceneHeight = 400;
+};
 
 #endif //MINOTAUR_CPP_GRIDDISPLAY_H
