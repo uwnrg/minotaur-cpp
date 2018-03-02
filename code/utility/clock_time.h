@@ -2,7 +2,6 @@
 #define CLOCK_TIME_H
 
 #include <ctime>
-#include <stdio.h>
 #include <string>
 
 #define TIME_CHAR_BUFFER 10

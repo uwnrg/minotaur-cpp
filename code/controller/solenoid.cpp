@@ -21,7 +21,7 @@ Solenoid::Solenoid(const QString &serial_port)
             log(Logger::FATAL) << "No Arduino port specified, failed to autodetect port";
             return;
         }
-        log() << "Autodetected Arduino port: " << port_to_use.portName();
+        log() << "Auto-detected Arduino port: " << port_to_use.portName();
         m_serial.setPort(port_to_use);
     }
     m_serial.setBaudRate(QSerialPort::Baud9600);
@@ -30,9 +30,9 @@ Solenoid::Solenoid(const QString &serial_port)
     m_serial.setStopBits(QSerialPort::OneStop);
     m_serial.setFlowControl(QSerialPort::NoFlowControl);
     if (!m_serial.open(QIODevice::ReadWrite)) {
-        Logger::log("Failed to open serial port: " + m_serial.portName().toStdString(), Logger::FATAL);
+        log(Logger::FATAL) << "Failed to open serial port: " << m_serial.portName();
     } else {
-        Logger::log("Opened serial port: " + m_serial.portName().toStdString());
+        log() << "Opened serial port: " << m_serial.portName();
         connect(&m_serial, &QSerialPort::readyRead, this, &Solenoid::readSerial);
     }
 }
@@ -49,15 +49,15 @@ void Solenoid::readSerial() {
 
 void Solenoid::move(Vector2i dir, int) {
 #ifndef NDEBUG
-    Logger::log("Moving Solenoid controller", Logger::DEBUG);
+    log(Logger::DEBUG) << "Moving Solenoid controller";
     log(Logger::DEBUG) << "Attempting to move " << dir;
 #endif
     char binary = vectorToBinary(dir);
     m_serial.write(&binary, 1);
     if (!m_serial.waitForBytesWritten(100)) {
-        Logger::log("Failed to execute movement", Logger::FATAL);
+        log(Logger::DEBUG) << "Failed to execute movement";
     } else {
-        Logger::log("Movement sent");
+        log() << "Movement sent";
     }
 }
 
