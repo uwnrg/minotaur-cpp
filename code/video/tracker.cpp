@@ -1,12 +1,19 @@
+#ifndef TRACKER_OFF
+
 #include <opencv2/opencv.hpp>
+#include <QDialog>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 #include "tracker.h"
+#include "../utility/util.h"
+
 #ifndef NDEBUG
 #include <QDebug>
 #endif
 
 // CMake will try to find goturn.caffemodel and goturn.prototxt, which need
-// to be added separtaely. If these are found, the GOTURN tracker model
+// to be added separately. If these are found, the GOTURN tracker model
 // will be used instead of the MIL tracker.
 #ifdef GOTURN_FOUND
 #define TRACKER_TYPE Type::GOTURN
@@ -15,13 +22,11 @@
 #endif
 
 TrackerModifier::TrackerModifier()
-    : m_bounding_box(287, 23, 100, 100),
+    : m_bounding_box(),
       m_type(TRACKER_TYPE),
       m_state(State::UNINITIALIZED) {
     reset_tracker();
 }
-
-TrackerModifier::~TrackerModifier() = default;
 
 void TrackerModifier::reset_tracker() {
     switch (m_type) {
@@ -59,18 +64,30 @@ void TrackerModifier::forwardKeyEvent(int key) {
 #ifndef NDEBUG
         qDebug() << "Switching to First Scan";
 #endif
-        m_state = State::FIRST_SCAN;
+        beginTracking();
     } else if (key == Qt::Key_S) {
 #ifndef NDEBUG
         qDebug() << "Resetting tracker";
 #endif
+        stopTracking();
+    }
+}
+
+void TrackerModifier::beginTracking() {
+    if (m_state == State::UNINITIALIZED) {
+        m_state = State::FIRST_SCAN;
+    }
+}
+
+void TrackerModifier::stopTracking() {
+    if (m_state != State::UNINITIALIZED) {
         reset_tracker();
         m_state = State::UNINITIALIZED;
         m_bounding_box = {};
     }
 }
 
-void TrackerModifier::modify(cv::Mat &img) {
+void TrackerModifier::modify(cv::UMat &img) {
     if (m_state == State::UNINITIALIZED) {
         return;
     }
@@ -81,5 +98,24 @@ void TrackerModifier::modify(cv::Mat &img) {
         m_tracker->init(img, m_bounding_box);
         m_state = State::TRACKING;
     }
-    cv::rectangle(img, m_bounding_box, cv::Scalar(255, 0, 0));
+    cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
 }
+
+void TrackerModifier::register_actions(const std::vector<ActionButton *> &action_btns, ActionBox *box) {
+    /*
+     * [0]: Select ROI
+     * [1]: Clear ROI
+     */
+    assert(action_btns.size() == 2);
+    action_btns[0]->setText("Select ROI");
+    action_btns[1]->setText("Clear ROI");
+    connect(action_btns[0], &ActionButton::clicked, this, &TrackerModifier::beginTracking);
+    connect(action_btns[1], &ActionButton::clicked, this, &TrackerModifier::stopTracking);
+    QMetaObject::invokeMethod(box, "set_actions");
+}
+
+int TrackerModifier::num_buttons() const {
+    return 2;
+}
+
+#endif

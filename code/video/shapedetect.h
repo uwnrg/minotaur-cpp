@@ -12,7 +12,7 @@
 
 class ShapeDetect : public VideoModifier {
 public:
-    void modify(cv::Mat &img) override;
+    void modify(cv::UMat &img) override;
 };
 
 

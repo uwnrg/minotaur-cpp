@@ -11,6 +11,7 @@
 #include "../controller/controller.h"
 #include "../controller/solenoid.h"
 #include "../controller/simulator.h"
+#include "../camera/cameradisplay.h"
 
 #include "simulatorwindow.h"
 #include "actionabout.h"
