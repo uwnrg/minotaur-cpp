@@ -1,23 +1,33 @@
 #include "logger.h"
 
-std::string Logger::m_buffer;
-QTextEdit *Logger::m_outfield = NULL;
-
-void Logger::setStream(QTextEdit *log_stream) {
-    Logger::m_outfield = log_stream;
-    Logger::log("Logger's stream has been set.");
+void Logger::setStream(QTextEdit *output_field) {
+    s_logger.m_output_field = output_field;
 }
 
-//TODO: Overload ostream operator
-bool Logger::log(std::string message, LogType type) {
-    std::string color = Logger::getTextColor(type);
-    Logger::m_buffer = "<font color=\"" + color + "\">" + ClockTime::getCurrentTime() + message + "</font>";
+bool Logger::log(const std::string &message, LogType type) {
+    return s_logger.log_message<std::string>(message, type);
+}
 
-    if (Logger::m_outfield != nullptr) {
-        //log it
-        Logger::m_outfield->append(QString::fromStdString(m_buffer));
-    } else {
-        std::cout << m_buffer << std::endl;
-    }
-    return true;
+bool Logger::qlog(const QString &message, LogType type) {
+    return s_logger.log_message<QString>(message, type);
+}
+
+Logger::Logger() :
+    m_output_field(nullptr) {}
+
+__log_stream::__log_stream(Logger::LogType log_type) :
+    m_log_type(log_type) {}
+
+__log_stream::~__log_stream() {
+    m_buffer << std::endl;
+    Logger::log(m_buffer.str(), m_log_type);
+}
+
+__log_stream::__log_stream(__log_stream &&o) noexcept :
+    m_log_type(o) {
+    m_buffer = std::move(o.m_buffer);
+}
+
+__log_stream log(Logger::LogType log_type) {
+    return __log_stream(log_type);
 }

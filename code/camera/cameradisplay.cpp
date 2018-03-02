@@ -8,7 +8,7 @@
 #include <QLabel>
 
 #include "imageviewer.h"
-#include "../utility/util.h"
+#include "code/utility/utility.h"
 #include "../utility/logger.h"
 
 CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)

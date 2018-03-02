@@ -1,13 +1,21 @@
 #ifndef MINOTAUR_CPP_COMPSTATE_H
 #define MINOTAUR_CPP_COMPSTATE_H
 
+#include <memory>
+
 #include <opencv2/core/types.hpp>
 
-#include <QVector2D>
+#include <QObject>
 
-class CompetitionState {
+#include "../utility/array2d.h"
+
+Q_DECLARE_METATYPE(std::shared_ptr<cv::Rect2d>);
+
+class CompetitionState : public QObject {
+Q_OBJECT
 public:
     typedef bool wall_t;
+    typedef array2d<wall_t, int> wall_arr;
 
     enum ObjectType {
         CIRCLE,
@@ -21,50 +29,42 @@ public:
         wall_is_int = std::is_same<wall_t, int>::value
     };
 
-    /**
-     * @return true if the wall array has been initialized
-     */
-    static bool is_walls_initialized();
+    enum {
+        wall_x = 60,
+        wall_y = 30
+    };
 
-    /**
-     * Initialize the walls array.
-     *
-     * @param x the number of columns
-     * @param y the number of rows
-     * @return false if the array was not already initialized
-     */
-    static bool reinitialize_walls(int x, int y);
+    CompetitionState();
 
-    /**
-     * Return the terrain at the given position.
-     *
-     * @param x the column number
-     * @param y the row number
-     * @return the terrain value
-     */
-    static wall_t wall(int x, int y);
+    Q_SIGNAL void request_robot_box();
+    Q_SIGNAL void request_object_box();
 
-    static wall_t **wall_ptr();
+    Q_SLOT void acquire_robot_box(std::shared_ptr<cv::Rect2d> &robot_box);
+    Q_SLOT void acquire_object_box(std::shared_ptr<cv::Rect2d> &object_box);
+    Q_SLOT void acquire_walls(std::shared_ptr<wall_arr> &walls);
 
-    static int object_type();
+    bool is_tracking_robot() const;
+    void set_tracking_robot(bool tracking_robot);
 
-    static void delete_walls();
+    bool is_tracking_object() const;
+    void set_tracking_object(bool tracking_object);
 
-    static void assume_ownership
+    int object_type() const;
+    void set_object_type(int object_type);
 
 private:
-    static bool s_tracking_robot;
-    static bool s_tracking_object;
-    static bool s_acquire_walls;
+    bool m_tracking_robot;
+    bool m_tracking_object;
+    bool m_acquire_walls;
 
-    static cv::Rect2d s_robot_box;
-    static cv::Rect2d s_object_box;
+    std::shared_ptr<cv::Rect2d> m_robot_box;
+    std::shared_ptr<cv::Rect2d> m_object_box;
 
-    static wall_t **s_walls;
-    static int s_walls_x;
-    static int s_walls_y;
+    std::shared_ptr<wall_arr> m_walls;
 
-    static int s_object_type;
+    int m_object_type;
 };
+
+Q_DECLARE_METATYPE(std::shared_ptr<CompetitionState::wall_arr>);
 
 #endif //MINOTAUR_CPP_COMPSTATE_H

@@ -10,7 +10,7 @@ MainWindow::MainWindow(
     const char *
 ) :
     QMainWindow(parent),
-    m_monitor(new SerialMonitor(this)),
+    m_serial_monitor(new SerialMonitor(this)),
     ui(new Ui::MainWindow) {
 
     ui->setupUi(this);
@@ -19,7 +19,7 @@ MainWindow::MainWindow(
     Logger::setStream(getLogView());
 
     // Setup the controllers and solenoid connection
-    m_simulator = std::make_shared<Simulator>(1, -1);
+    m_simulator = std::make_shared<Simulator>();
     // If a port is passed use it TODO: QCommandLineParser
     if (argc >= 2) {
         m_solenoid = std::make_shared<Solenoid>(argv[1]);
@@ -40,8 +40,7 @@ MainWindow::MainWindow(
     m_camera_display = new CameraDisplay(this);
 
     // Connect solenoid serial port to the monitor
-    connect(m_solenoid.get(), &Solenoid::serialRead, m_monitor.get(), &SerialMonitor::append_text);
-    m_monitor->show();
+    connect(m_solenoid.get(), &Solenoid::serialRead, m_serial_monitor.get(), &SerialMonitor::append_text);
 
     // Setup slot connections
     connect(ui->switch_to_simulator_mode, SIGNAL(triggered()), this, SLOT(switchToSimulator()));
@@ -150,6 +149,10 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
         default:
             break;
     }
+}
+
+void MainWindow::openSerialMonitor() {
+    m_serial_monitor->show();
 }
 
 void MainWindow::openPythonInterpreter() {

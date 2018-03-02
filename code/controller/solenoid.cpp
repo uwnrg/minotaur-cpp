@@ -44,8 +44,7 @@ void Solenoid::readSerial() {
 void Solenoid::move(Vector2i dir, int) {
 #ifndef NDEBUG
     Logger::log("Moving Solenoid controller", Logger::DEBUG);
-    Logger::log("Attempting move (" + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + ")",
-                Logger::DEBUG);
+    log(Logger::DEBUG) << "Attempting to move " << dir;
 #endif
     char binary = vectorToBinary(dir);
     m_serial.write(&binary, 1);
@@ -58,7 +57,7 @@ void Solenoid::move(Vector2i dir, int) {
 
 char Solenoid::vectorToBinary(Vector2i dir) {
     int direction = 0b0;
-    switch (dir.x_comp) {
+    switch (dir.y()) {
         case 1:
             direction = direction | Direction::UP;
             break;
@@ -68,7 +67,7 @@ char Solenoid::vectorToBinary(Vector2i dir) {
         default:
             break;
     }
-    switch (dir.y_comp) {
+    switch (dir.x()) {
         case 1:
             direction = direction | Direction::RIGHT;
             break;

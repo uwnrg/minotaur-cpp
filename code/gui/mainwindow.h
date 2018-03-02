@@ -16,7 +16,6 @@
 #include "simulatorwindow.h"
 #include "actionabout.h"
 #include "scriptwindow.h"
-#include "camera.h"
 #include "serialmonitor.h"
 
 #define DEFAULT_TITLE "minotaur"
@@ -52,6 +51,8 @@ public Q_SLOTS:
 
     void openCameraDisplay();
 
+    void openSerialMonitor();
+
     inline void switchToSolenoid() { switchControllerTo(Controller::Type::SOLENOID); }
 
     inline void switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }
@@ -73,7 +74,7 @@ private:
     ActionAbout *m_about_window;
     CameraDisplay *m_camera_display;
 
-    std::unique_ptr<SerialMonitor> m_monitor;
+    std::unique_ptr<SerialMonitor> m_serial_monitor;
 
     Controller::Type m_controller_type;
 
