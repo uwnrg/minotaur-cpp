@@ -162,4 +162,8 @@ private:
  */
 __log_stream log(Logger::LogType log_type = Logger::INFO);
 
+__log_stream debug();
+
+__log_stream fatal();
+
 #endif // LOGGER_H

@@ -123,12 +123,12 @@ void MainWindow::onMoveButtonClicked() {
 
 void MainWindow::switchControllerTo(Controller::Type const type) {
 #ifndef NDEBUG
-    Logger::log("Switch controller button clicked", Logger::DEBUG);
+    debug()<< "Switch controller button clicked";
 #endif
     // Do nothing if the same controller type is selected
     if (m_controller_type == type) {
 #ifndef NDEBUG
-        Logger::log("No controller change", Logger::DEBUG);
+        debug() << "No controller change";
 #endif
         return;
     }
@@ -136,13 +136,13 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
     switch (type) {
         case Controller::Type::SOLENOID:
             // Switch to the solenoid controller and hide the simulation window
-            Logger::log("Switching to SOLENOID", Logger::INFO);
+            log() << "Switching to SOLENOID";
             m_controller = m_solenoid;
             if (m_simulator_window->isVisible()) { m_simulator_window->hide(); }
             break;
         case Controller::Type::SIMULATOR:
             // Switch to the simulator controller and show the simulator window
-            Logger::log("Switching to SIMULATOR", Logger::INFO);
+            log() << "Switching to SIMULATOR";
             m_controller = m_simulator;
             if (!m_simulator_window->isVisible()) { m_simulator_window->show(); }
             break;

@@ -28,7 +28,9 @@ void PythonEngine::append_module(std::string name, PyObject *(*init_func)()) {
 }
 
 bool PythonEngine::initialize() {
-    Logger::log("Initializing Python engine...", Logger::DEBUG);
+#ifndef NDEBUG
+    debug() << "Initializing Python engine...";
+#endif
     wchar_t program_name[] = L"Minotaur-CPP";
     Py_SetProgramName(program_name);
     for (auto &m_embedded_module : m_embedded_modules) {
@@ -37,36 +39,46 @@ bool PythonEngine::initialize() {
     Py_Initialize();
 
     // Add the import path for our scripts
-    Logger::log("Adding import path for scripts", Logger::DEBUG);
+#ifndef NDEBUG
+    debug() << "Adding import path for scripts";
+#endif
     m_main_module = PyImport_AddModule("__main__");
     PyRun_SimpleString("import sys, os\n"
-                               "root_path = os.getcwd()\n"
-                               "if root_path[-1] == os.sep:\n"
-                               "\troot_path = root_path[:len(root_path) - 1]\n"
-                               "sys.path.insert(0, root_path + os.sep + \""
-                               PYTHON_SCRIPT_DIR
-                               "\")\n");
-    Logger::log("Redirecting stdout and stderr", Logger::DEBUG);
+                           "root_path = os.getcwd()\n"
+                           "if root_path[-1] == os.sep:\n"
+                           "\troot_path = root_path[:len(root_path) - 1]\n"
+                           "sys.path.insert(0, root_path + os.sep + \""
+                           PYTHON_SCRIPT_DIR
+                           "\")\n");
+#ifndef NDEBUG
+    debug() << "Redirecting stdout and stderr";
+#endif
     PyRun_SimpleString("class CatchOut:\n"
-                               "\tdef __init__(self):\n"
-                               "\t\tself.value = ''\n"
-                               "\tdef write(self, txt):\n"
-                               "\t\tself.value += txt\n"
-                               "\tdef flush(self):\n"
-                               "\t\tself.value = ''\n"
-                               "catchStdout = CatchOut()\n"
-                               "catchStderr = CatchOut()\n"
-                               "sys.stdout = catchStdout\n"
-                               "sys.stderr = catchStderr\n");
+                           "\tdef __init__(self):\n"
+                           "\t\tself.value = ''\n"
+                           "\tdef write(self, txt):\n"
+                           "\t\tself.value += txt\n"
+                           "\tdef flush(self):\n"
+                           "\t\tself.value = ''\n"
+                           "catchStdout = CatchOut()\n"
+                           "catchStderr = CatchOut()\n"
+                           "sys.stdout = catchStdout\n"
+                           "sys.stderr = catchStderr\n");
     m_stdout = PyObject_GetAttrString(m_main_module, "catchStdout");
     m_stderr = PyObject_GetAttrString(m_main_module, "catchStderr");
-    Logger::log("Python engine initialized", Logger::DEBUG);
+#ifndef NDEBUG
+    debug() << "Python engine initialized";
+#endif
     return (bool) Py_IsInitialized();
 }
 
 bool PythonEngine::stopEngine() {
-    if (!Py_IsInitialized()) { return true; }
-    Logger::log("Stopping Python engine", Logger::DEBUG);
+    if (!Py_IsInitialized()) {
+        return true;
+    }
+#ifndef NDEBUG
+    debug() << "Stopping Python engine";
+#endif
     Py_Finalize();
     m_main_module = nullptr;
     m_stderr = nullptr;
@@ -77,11 +89,13 @@ bool PythonEngine::stopEngine() {
 }
 
 bool PythonEngine::isReady() {
-    return (bool) Py_IsInitialized();
+    return static_cast<bool>(Py_IsInitialized());
 }
 
 bool PythonEngine::run(std::string script, std::string *out, std::string *err) {
-    if (!Py_IsInitialized()) { return false; }
+    if (!Py_IsInitialized()) {
+        return false;
+    }
     PyRun_SimpleString(script.c_str());
     *out = getStdout();
     *err = getStderr();

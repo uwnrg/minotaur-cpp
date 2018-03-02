@@ -55,15 +55,15 @@ void ScriptEditor::openFile() {
             QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
             "Python script (*.py)");
 #ifndef NDEBUG
-    Logger::log("Opened file: " + file_path.toStdString(), Logger::DEBUG);
+    debug() << "Opened file: " << file_path;
 #endif
     if (file_path.split('.', QString::SkipEmptyParts).last() != "py") {
-        Logger::log("Cannot open non-python file", Logger::FATAL);
+        fatal() << "Cannot open non-python file";
         return;
     }
     QFile script_file(file_path);
     if (!script_file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        Logger::log("Error: could not open selected script file", Logger::FATAL);
+        fatal() << "Could not open specified file";
         return;
     }
     QTextStream script_in(&script_file);
@@ -79,17 +79,17 @@ void ScriptEditor::save() {
         return;
     }
 #ifndef NDEBUG
-    Logger::log("Saving active file: " + m_active_file.toStdString(), Logger::DEBUG);
+    debug() << "Saving active file: " << m_active_file;
 #endif
     QFile script_file(m_active_file);
     if (!script_file.open(QIODevice::WriteOnly)) {
-        Logger::log("Error: could not save file", Logger::FATAL);
+        fatal() << "Error: could not save file";
         return;
     }
     QTextStream script_out(&script_file);
     script_out << m_code_editor->toPlainText();
 #ifndef NDEBUG
-    Logger::log("Save successful", Logger::DEBUG);
+    debug() << "Save successful";
 #endif
 }
 
@@ -99,21 +99,21 @@ void ScriptEditor::saveAs() {
             QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
             "Python script (*.py)");
 #ifndef NDEBUG
-    Logger::log("Saving to file: " + file_path.toStdString(), Logger::DEBUG);
+    debug() << "Saving to file: " << file_path;
 #endif
     if (file_path.isEmpty() || file_path.split('.', QString::SkipEmptyParts).last() != "py") {
-        Logger::log("Error: invalid save file", Logger::FATAL);
+        fatal() << "Error: invalid save file";
         return;
     }
     QFile script_file(file_path);
     if (!script_file.open(QIODevice::WriteOnly)) {
-        Logger::log("Error: could not save file", Logger::FATAL);
+        fatal() << "Error: could no save file";
         return;
     }
     QTextStream script_out(&script_file);
     script_out << m_code_editor->toPlainText();
 #ifndef NDEBUG
-    Logger::log("Save successful", Logger::DEBUG);
+    debug() << "Save successful";
 #endif
 }
 

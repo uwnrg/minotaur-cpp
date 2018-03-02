@@ -22,8 +22,8 @@ void SimulatorScene::update() {
     // and set the position of the robot graphics on the scene
     Vector2i robot_pos = *m_simulator_controller->getRobotPos();
 #ifndef NDEBUG
-    Logger::log("Beginning graphic scene update", Logger::DEBUG);
-    log(Logger::DEBUG) << "Robot position " << robot_pos;
+    debug() << "Beginning graphics scene update";
+    debug() << "Robot position " << robot_pos;
 #endif
     robot_graphics->setX(robot_pos.y());
     robot_graphics->setY(robot_pos.x());

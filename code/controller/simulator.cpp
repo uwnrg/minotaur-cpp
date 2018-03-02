@@ -6,7 +6,7 @@ Simulator::Simulator() :
 void Simulator::move(Vector2i dir, int timer) {
     // Update the robot position
 #ifndef NDEBUG
-    log(Logger::DEBUG) << "Moved " << dir << " in " + std::to_string(timer) + " sec";
+    debug() << "Moved " << dir << " in " + std::to_string(timer) + " sec";
 #endif
     dir.y() *= m_invert_x ? -1 : 1;
     dir.x() *= m_invert_y ? -1 : 1;

@@ -82,7 +82,7 @@ void ScriptWindow::closeInterpreter() {
 
 void ScriptWindow::runScript() {
     if (!PythonEngine::getInstance().isReady()) {
-        Logger::log("Error: running script while PyEngine is off", Logger::FATAL);
+        fatal() << "Error: running script while PyEngine is off";
         return;
     }
     std::string script = m_interpreter_text_edit->toPlainText().toStdString();
@@ -108,17 +108,17 @@ void ScriptWindow::processRunFile(const QString &filePath) {
         return;
     }
 #ifndef NDEBUG
-    Logger::log("Processing python script file: " + filePath.toStdString(), Logger::DEBUG);
+    debug() << "Processing python script file: " << filePath;
 #endif
     QFile script_file(filePath);
     if (!script_file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        Logger::log("Error: could not open selected script file", Logger::FATAL);
+        fatal() << "Error: could not open selected script file";
         return;
     }
     QTextStream script_in(&script_file);
     std::string script_text = script_in.readAll().toStdString();
     if (!PythonEngine::getInstance().isReady()) {
-        Logger::log("Error: running script while PyEngine is off", Logger::FATAL);
+        fatal() << "Error: running script while PyEngine is off";
         return;
     }
     std::string py_out, py_err;

@@ -21,7 +21,7 @@ Vector2i Controller::toVec2(Dir dir) {
             break;
         default:
 #ifndef NDEBUG
-            Logger::log("Invalid direction specified for movement: " + std::to_string(dir), Logger::FATAL);
+            fatal() << "Invalid direction for movement: " << dir;
 #endif
             return vector_dir;
     }
@@ -38,7 +38,7 @@ void Controller::invertAxis(Axis axis) {
             break;
         default:
 #ifndef NDEBUG
-            Logger::log("Invalid axis specified for inversion: " + std::to_string(axis), Logger::FATAL);
+            fatal() << "Invalid axis for inversion: " << axis;
 #endif
             break;
     }
@@ -46,7 +46,7 @@ void Controller::invertAxis(Axis axis) {
 
 void Controller::keyPressed(int key) {
 #ifndef NDEBUG
-    log(Logger::DEBUG) << "Keypressed " << key;
+    debug() << "Keypressed " << key;
 #endif
     auto it = m_keyMap.find(key);
     if (it != m_keyMap.end()) {
@@ -57,7 +57,7 @@ void Controller::keyPressed(int key) {
 
 void Controller::keyReleased(int key) {
 #ifndef NDEBUG
-    log(Logger::DEBUG) << "Keyreleased " << key;
+    debug() << "Keyreleased " << key;
 #endif
     auto it = m_keyMap.find(key);
     if (it != m_keyMap.end()) {

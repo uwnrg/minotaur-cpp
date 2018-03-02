@@ -38,6 +38,14 @@ __log_stream log(Logger::LogType log_type) {
     return __log_stream(log_type);
 }
 
+__log_stream debug() {
+    return log(Logger::DEBUG);
+}
+
+__log_stream fatal() {
+    return log(Logger::FATAL);
+}
+
 bool __log_out::operator<<(const std::string &) {
     // Base class is no-op
     return false;
