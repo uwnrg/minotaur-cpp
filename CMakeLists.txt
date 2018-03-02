@@ -58,6 +58,9 @@ set(CMAKE_AUTOUIC ON)
 get_target_property(QtCore_location Qt5::Core LOCATION)
 add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES})
 
+# Qt5 modules
+qt5_use_modules(minotaur-cpp SerialPort)
+
 # Supply cmake argument -D NO_DEBUG=ON to disable console debug output
 option(NO_DEBUG "Build minotaur without debugging output" OFF)
 if (NO_DEBUG)
@@ -90,7 +93,12 @@ if (${GOTURN_FILES_FOUND})
 endif ()
 
 # Link Qt, Python, and Thread libraries
-target_link_libraries(minotaur-cpp Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Multimedia Qt5::MultimediaWidgets)
+target_link_libraries(minotaur-cpp
+        Qt5::Widgets
+        Qt5::Core
+        Qt5::Gui
+        Qt5::Multimedia
+        Qt5::MultimediaWidgets)
 target_link_libraries(minotaur-cpp ${PYTHON_LIBRARIES})
 target_link_libraries(minotaur-cpp "${CMAKE_THREAD_LIBS_INIT}")
 

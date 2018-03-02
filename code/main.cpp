@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
 
-    auto *w = new MainWindow();
+    auto *w = new MainWindow(argc, argv);
     w->show();
 
     return app.exec();

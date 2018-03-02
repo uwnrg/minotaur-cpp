@@ -96,6 +96,12 @@ From a fresh install, you will need these packages
 sudo apt install build-essential cmake python3 python3-dev qt5-default libudev-dev libopencv-dev
 ```
 
+Additional dependencies
+
+```bash
+sudo apt install qtmultimedia5-dev libqt5multimedia5-plugins libqt5serialport5-dev
+```
+
 You will need to build OpenCV 3 from source. Download the OpenCV 3 source
 and build. It is recommended to build with `USE_QT=ON` instead of GTK. 
 Additional instructions found [here](https://github.com/BVLC/caffe/wiki/OpenCV-3.3-Installation-Guide-on-Ubuntu-16.04).
@@ -116,12 +122,6 @@ make
 ```
 
 And then run with `./minotaur-cpp`
-
-If Qt is unable to detect cameras, make sure to run
-
-```bash
-sudo apt install libqt5multimedia5-plugins
-```
 
 ### Using the GOTURN pretrained model
 The default tracker uses the MIL model, and may be configured to use other
