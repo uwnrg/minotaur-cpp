@@ -46,7 +46,7 @@ void Controller::invertAxis(Axis axis) {
 
 void Controller::keyPressed(int key) {
 #ifndef NDEBUG
-    Logger::log("Keypressed " + std::to_string(key), Logger::DEBUG);
+    log(Logger::DEBUG) << "Keypressed " << key;
 #endif
     auto it = m_keyMap.find(key);
     if (it != m_keyMap.end()) {
@@ -57,7 +57,7 @@ void Controller::keyPressed(int key) {
 
 void Controller::keyReleased(int key) {
 #ifndef NDEBUG
-    Logger::log("Keyreleased " + std::to_string(key), Logger::DEBUG);
+    log(Logger::DEBUG) << "Keyreleased " << key;
 #endif
     auto it = m_keyMap.find(key);
     if (it != m_keyMap.end()) {
@@ -76,4 +76,16 @@ bool Controller::isKeyDown(int key) {
 
 void Controller::move(Dir dir, int timer) {
     move(Controller::toVec2(dir), timer);
+}
+
+void Controller::move(Vector2i dir) {
+    move(dir, STEP_TIME);
+}
+
+void Controller::invert_x_axis() {
+    m_invert_x = !m_invert_x;
+}
+
+void Controller::invert_y_axis() {
+    m_invert_y = !m_invert_y;
 }

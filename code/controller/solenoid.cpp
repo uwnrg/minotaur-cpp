@@ -3,19 +3,25 @@
 #include <QSerialPortInfo>
 
 Solenoid::Solenoid(const QString &serial_port)
-    : Controller(1, 1),
+    : Controller(true, true),
       m_serial(serial_port) {
     if (serial_port.isEmpty()) {
         // Autodetect Arduino port
         QSerialPortInfo port_to_use;
+        bool found_port = false;
         auto ports = QSerialPortInfo::availablePorts();
-        for (auto port : ports) {
+        for (auto &port : ports) {
             if (!port.isBusy() && (port.description().contains("Arduino") || port.manufacturer().contains("Arduino"))) {
                 port_to_use = port;
+                found_port = true;
                 break;
             }
         }
-        Logger::log("Autodetected Arduino port: " + port_to_use.portName().toStdString());
+        if (!found_port) {
+            log(Logger::FATAL) << "No Arduino port specified, failed to autodetect port";
+            return;
+        }
+        log() << "Autodetected Arduino port: " << port_to_use.portName();
         m_serial.setPort(port_to_use);
     }
     m_serial.setBaudRate(QSerialPort::Baud9600);
@@ -51,7 +57,7 @@ void Solenoid::move(Vector2i dir, int) {
     if (!m_serial.waitForBytesWritten(100)) {
         Logger::log("Failed to execute movement", Logger::FATAL);
     } else {
-        Logger::log("Movement send");
+        Logger::log("Movement sent");
     }
 }
 

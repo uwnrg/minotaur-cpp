@@ -3,9 +3,9 @@
 
 #include <unordered_map>
 #include "../utility/logger.h"
-#include "../utility/vector2i.h"
+#include "code/utility/vector2d.h"
 
-#define STEP_TIME    10
+#define STEP_TIME 10
 
 class Controller : public QObject {
 Q_OBJECT
@@ -45,11 +45,14 @@ public:
     // Common robot functions
     static Vector2i toVec2(Dir);
 
-
+    // Movement
     void move(Dir dir, int timer = STEP_TIME);
+
+    void move(Vector2i dir);
 
     virtual void move(Vector2i dir, int timer) = 0;
 
+    // Key press functions
     void keyPressed(int key);
 
     void keyReleased(int key);
