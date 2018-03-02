@@ -7,7 +7,9 @@
 
 #define STEP_TIME    10
 
-class Controller {
+class Controller : public QObject {
+Q_OBJECT
+
 public:
     enum Mode {
         EMMA,
@@ -42,12 +44,17 @@ public:
 
     // Common robot functions
     static Vector2i toVec2(Dir);
+
     void invertAxis(Axis);
+
     void move(Dir dir, int timer = STEP_TIME);
+
     virtual void move(Vector2i dir, int timer = STEP_TIME) = 0;
 
     void keyPressed(int key);
+
     void keyReleased(int key);
+
     bool isKeyDown(int key);
 
 protected:

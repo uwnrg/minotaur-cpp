@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "../utility/logger.h"
 
 #include <QCamera>
 #include <QCameraInfo>
@@ -66,13 +67,14 @@ void Converter::processFrame(const cv::Mat &frame) {
 void Converter::startRecording(QString file, int width, int height) {
     constexpr int fps = 30;
     m_recorder.reset(new Recorder(
-            file.toStdString(),
-            CV_FOURCC('M','J','P','G'),
-            fps,
-            cv::Size(width, height),
-            true)
+
+        file.toStdString(),
+        CV_FOURCC('M', 'J', 'P', 'G'),
+        fps,
+        cv::Size(width, height),
+        true)
     );
-    connect(this, SIGNAL(frameProcessed(cv::Mat &)), m_recorder.get(), SLOT(image_received(cv::Mat &)));
+    connect(this, SIGNAL(frameProcessed(cv::Mat & )), m_recorder.get(), SLOT(image_received(cv::Mat & )));
 }
 
 void Converter::stopRecording() {
@@ -86,6 +88,12 @@ void Converter::stopRecording() {
 
 bool Converter::is_recording() {
     return m_recorder && m_recorder->is_recording();
+}
+
+int Converter::getFrames() {
+    int frames = m_frames;
+    m_frames = 0;
+    return frames;
 }
 
 void Converter::modifierChanged(int modifier_index) {
@@ -139,6 +147,7 @@ void Converter::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() != m_timer.timerId()) {
         return;
     }
+    m_frames++;
     process(m_frame);
     m_frame.release();
     m_timer.stop();
@@ -199,6 +208,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_converter_thread.start();
     m_capture.moveToThread(&m_capture_thread);
     m_converter.moveToThread(&m_converter_thread);
+    m_framerate_timer.start(1000, this);
 
     m_capture_btn = new QPushButton(this);
     m_capture_btn->setText("Take Picture");
@@ -206,13 +216,25 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_record_btn = new QPushButton(this);
     m_record_btn->setText("Record Video");
 
+    m_deselect_btn = new QPushButton(this);
+    m_deselect_btn->setText("Clear Grid Selection");
+
+    m_framerate_label = new QLabel(this);
+    m_framerate_label->setText("0");
+    m_framerate_label->setFixedSize(20,16);
+    m_framerate_label->setStyleSheet("QLabel {background: white;}");
+
     setLayout(m_layout);
     m_layout->addWidget(m_capture_btn);
     m_layout->addWidget(m_record_btn);
     m_layout->addWidget(m_camera_list);
     m_layout->addWidget(m_effects_list);
-    //m_layout->addWidget(m_image_viewer);
+
     m_layout->addWidget(m_grid_display);
+    m_layout->addWidget(m_deselect_btn);
+
+   // m_layout->addWidget(m_image_viewer);
+    m_layout->addWidget(m_framerate_label);
 
     QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
     //QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
@@ -222,6 +244,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     connect(m_capture_btn, SIGNAL(clicked()), this, SLOT(captureAndSave()));
     connect(m_effects_list, SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
     connect(m_record_btn, SIGNAL(clicked()), this, SLOT(recordButtonClicked()));
+    connect(m_deselect_btn, SIGNAL(clicked()), this, SLOT(clearSelection()));
     connect(this, SIGNAL(beginRecording()), this, SLOT(recordSaveFile()));
     connect(this, SIGNAL(recordFileAcquired(QString, int, int)), &m_converter, SLOT(startRecording(QString, int, int)));
     connect(this, SIGNAL(stopRecording()), &m_converter, SLOT(stopRecording()));
@@ -311,19 +334,37 @@ void CameraDisplay::captureAndSave() {
 
 void CameraDisplay::recordButtonClicked() {
     if (!m_converter.is_recording()) {
+        Logger::log("Started recording video");
+#ifndef NDEBUG
         qDebug() << "Recording";
+#endif
         Q_EMIT beginRecording();
         m_record_btn->setText("Stop Recording");
     } else {
+        Logger::log("Stopping recording and saving video");
         Q_EMIT stopRecording();
         m_record_btn->setText("Record Video");
     }
 }
 
 void CameraDisplay::recordSaveFile() {
-    QString file = QFileDialog::getSaveFileName(this, tr("Save Video"), QDir::currentPath(), tr("Videos (*.avi)")); //Opens save-file window
+    QString file = QFileDialog::getSaveFileName(this, tr("Save Video"), QDir::currentPath(),
+                                                tr("Videos (*.avi)")); //Opens save-file window
+#ifndef NDEBUG
     qDebug() << "Saving video " << m_video_count;
     qDebug() << "Target: " << file;
+#endif
     Q_EMIT recordFileAcquired(file, m_capture.capture_width(), m_capture.capture_height());
+}
+
+void CameraDisplay::updateFramerate(int frames) {
+    m_framerate_label->setText(QString::number(frames));
+}
+
+void CameraDisplay::timerEvent(QTimerEvent *ev) {
+    if (ev->timerId() == m_framerate_timer.timerId()) {
+        CameraDisplay::updateFramerate(m_converter.getFrames());
+        return;
+    }
 }
 

@@ -81,6 +81,9 @@ set(CMAKE_AUTOUIC ON)
 get_target_property(QtCore_location Qt5::Core LOCATION)
 add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} code/gui/griddisplay.cpp code/gui/griddisplay.h)
 
+# Qt5 modules
+qt5_use_modules(minotaur-cpp SerialPort)
+
 # Uncomment this line to compile in debug mode
 option(NO_DEBUG "Build minotaur without debugging output" OFF)
 if (NO_DEBUG)
@@ -103,7 +106,12 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 target_link_libraries(minotaur-cpp ${OpenCV_LIBS})
 
 # Link Qt, Python, and Thread libraries
-target_link_libraries(minotaur-cpp Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Multimedia Qt5::MultimediaWidgets)
+target_link_libraries(minotaur-cpp
+        Qt5::Widgets
+        Qt5::Core
+        Qt5::Gui
+        Qt5::Multimedia
+        Qt5::MultimediaWidgets)
 target_link_libraries(minotaur-cpp ${PYTHON_LIBRARIES})
 target_link_libraries(minotaur-cpp "${CMAKE_THREAD_LIBS_INIT}")
 

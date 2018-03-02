@@ -5,39 +5,34 @@
  * Only one slot that receives multiple signals
  * Use a signal mapper
  * https://doc.qt.io/archives/qq/qq10-signalmapper.html#thesenderapproach
+ *
+ * Output to boolean array
+ *
+ * TODO:
+ * Drawing 800 buttons is very very slow
+ * Allow user to select or deselect an area
+ * Add a button to clear selections
+ * Dynamic implementation of columns/rows/button array
+ * Overlay m_scene over image viewer
 */
 
 //Constructor
 GridDisplay::GridDisplay(QWidget *parent) :
     QWidget(parent) {
+    m_scene = new QGraphicsScene(this);
 
-    //Set up buttons
-//   QString stylesheet = QString("color: rgba(46, 204, 113, 0.4)");
-    m_button1 = new QPushButton();
-    m_button1->setText("Button 1");
-    m_button1->setFixedSize(gridSize*5, gridSize);
- //   m_button1->setStyle();
- //   m_button1->setStyleSheet(QString("{color:green;}"));    //could not parse stylesheet
-
-    m_button2 = new QPushButton();
-    m_button2->setText("Button 2");
-    m_button2->setFixedSize(gridSize*5, gridSize);
-    m_button2->setGeometry(QRect(0, gridSize + 5, gridSize*5, gridSize));
+//    m_button1 = new QPushButton();
+//    m_button1->setText("Button 1");
+//    m_button1->setFixedSize(gridSize*5, gridSize);
+//    m_button1->setGeometry(QRect(0, gridSize + 5, gridSize*5, gridSize));
     drawButtons();
 
-    //Experimental button group setup
-//    m_btngroup = new QButtonGroup;
-//    m_btngroup->addButton(m_button1, 1); //(button, id)
-//    m_btngroup->setExclusive(false); //Multiple buttons can be selected at once
-
     //Set up graphics scene and view
-    m_scene = new QGraphicsScene(this);
     m_scene->setSceneRect(QRect(0, 0, sceneWidth, sceneHeight));   //TODO: set bounding rectangle to m_img.size()
-    m_scene->addWidget(m_button1);
-    m_scene->addWidget(m_button2);
+//    m_scene->addWidget(m_button1);
 
     m_view = new QGraphicsView(m_scene, this);
-//    drawRectGrid();
+    drawGrid();
 
     //TODO: Give QGraphicsScene a grid layout
 //    m_layout = new QGraphicsGridLayout;
@@ -45,63 +40,48 @@ GridDisplay::GridDisplay(QWidget *parent) :
 //    m_layout->addItem(m_scene, 0, 0, 1, 1);
 
     //Signals
-    connect(m_button1, SIGNAL(clicked()), this, SLOT(buttonClicked()));
-    connect(m_button2, SIGNAL(clicked()), this, SLOT(buttonClicked()));
-
-    showView(); //Displays everything in m_scene in the camera window
-}
-
-void GridDisplay::displayText(){
-    m_scene->addText("Hello World");
+//    connect(m_button1, SIGNAL(clicked()), this, SLOT(buttonClicked()));
+//    connect(m_button1, &QPushButton::clicked, [=](){this->buttonClicked(m_button1);} );
+    showView();
 }
 
 //Slot
-void GridDisplay::buttonClicked(){
+void GridDisplay::buttonClicked(QPushButton *button, int x, int y){
   //  QPushButton *button = (QPushButton *)sender();
- //   emit digitClicked(button->text()[0].digitValue());
- //   button->setText("Clicked");
-    qDebug() << "Button Clicked";
-    //Instead of setting text, change button style to filled
-
-}
-
-void GridDisplay::drawRectGrid(){
-//    int x = 0, y = 0;
-    int columnCount = sceneWidth / gridSize;
-    int rowCount = sceneHeight / gridSize;
-    int gridCount = columnCount*rowCount;
-
-//    QPainter painter(this);
-//    painter.setPen(Qt::green);
-    //QPen pen(Qt::green, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
-
-    //Draw QRects
-    QVarLengthArray<QRect, 800> rectangles;
-    for (int y = 0; y < rowCount; y++) {
-        for (int x = 0; x < columnCount; x++) {
-            rectangles.append(QRect(x*gridSize, y*gridSize, gridSize, gridSize));
-            m_scene->addRect(QRect(x*gridSize, y*gridSize, gridSize, gridSize));
-            //connect(rectangles[x*y], SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupClicked(int)));
-        }
+    if (squareSelected[x][y]){
+        squareSelected[x][y] = false;
+        m_button[x][y]->setStyleSheet(buttonStyle);
+    } else {
+        squareSelected[x][y] = true;
+        m_button[x][y]->setStyleSheet(buttonSelectedStyle);
     }
+    qDebug() << "Button (" << x << "," << y << ") = " << squareSelected[x][y];
+    //Instead of setting text, change button style to filled
 }
 
 void GridDisplay::drawButtons(){
-    m_signalmapper = new QSignalMapper(this);
-    connect(m_signalmapper, SIGNAL(mapped(int)), this, SIGNAL(digitClicked(int)));
-    for(int i = 0 ; i < 5 ; i++) {
-        QString text = QString::number(i);
-        buttons[i] = new QPushButton(text, this);
-        buttons[i]->setGeometry(QRect(i*gridSize, 0, gridSize, gridSize));
-        buttons[i]->setText("Button");
+    int y = 0;
+//    m_signalmapper = new QSignalMapper(this);
+//    connect(m_signalmapper, SIGNAL(mapped(int)), this, SIGNAL(buttonClicked(int)));
+    for (int y = 0; y < rowCount; y++) {
+        for (int x = 0; x < columnCount; x++) {
+            QString text = QString::number(x);
 
-        //multiple signals solution 1: signal mapper
-        m_signalmapper->setMapping(buttons[i], i);
-        connect(buttons[i], SIGNAL(clicked()), m_signalmapper, SLOT(map()));
+            m_button[x][y] = new QPushButton();
+            m_button[x][y]->setGeometry(QRect(x * gridSize, y * gridSize, gridSize, gridSize));
+            m_button[x][y]->setStyleSheet(buttonStyle);
+            squareSelected[x][y] = false;
+            //multiple signals solution 1: signal mapper
+//        m_signalmapper->setMapping(m_button[i], i);
+//        connect(m_button[i], SIGNAL(clicked()), m_signalmapper, SLOT(map()));
+            //multiple signals solution 2: sender() function
+            //connect(m_button[i], SIGNAL(clicked()), this, SLOT(buttonClicked()));
 
-        //multiple signals solution 2: sender() function
-        m_scene->addWidget(buttons[i]);   //TODO: Crashes program
-        //connect(buttons[i], SIGNAL(clicked()), this, SLOT(buttonClicked()));
+            //multiple signals solution 3: lambda functions
+            connect(m_button[x][y], &QPushButton::clicked, [=]() { this->buttonClicked(m_button[x][y], x, y); });
+            m_scene->addWidget(m_button[x][y]);
+            //  connect(m_button[i], SIGNAL(clicked()), this, SLOT(buttonClicked(m_button[i])));
+       }
     }
 }
 
@@ -109,21 +89,30 @@ void GridDisplay::showView(){
     m_view->show();
 }
 
+//Slot
+void GridDisplay::clearSelection(){
+    qDebug() << "Clear Selection";
+    for (int y = 0; y < rowCount; y++) {
+        for (int x = 0; x < columnCount; x++) {
+            m_button[x][y]->setStyleSheet(buttonStyle);
+            squareSelected[x][y] = false;
+        }
+    }
+}
+
 void GridDisplay::updateScene(){
     m_scene->update();
     showView();
 }
-//void GridDisplay::drawGrid(){
-//    QPainter painter;
-//    //Draws a filled rectangle on the image viewer
-//
-//    painter.setPen(Qt::white);
-//    painter.setBrush(Qt::green);
-//    painter.drawRect(10, 50, gridSize, gridSize);
 
-//    QRect rect(50, 50, gridSize, gridSize);
-//
-//    m_scene = new QGraphicsScene(this);
-//    m_scene->setSceneRect(QRect(0, 0, 1000, 1000));
-//    m_scene->addRect(rect);
-//}
+void GridDisplay::drawGrid(){
+    QPainter painter;
+    painter.setPen(Qt::gray);
+    painter.setBrush(Qt::green);
+    for (int y = 0; y < rowCount; y++) {
+        for (int x = 0; x < columnCount; x++) {
+            m_scene->addLine(QLine(x*gridSize, y*gridSize, x*gridSize, y*gridSize));
+            //painter.drawLine(QLine(x*gridSize, y*gridSize, x*gridSize, y*gridSize));
+        }
+    }
+}

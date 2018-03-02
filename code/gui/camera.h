@@ -24,6 +24,10 @@
 #include "../video/modify.h"
 #include "../video/recorder.h"
 #include "griddisplay.h"
+#include <QLabel>
+
+#include "../video/modify.h"
+#include "../video/recorder.h"
 
 Q_DECLARE_METATYPE(cv::Mat);
 
@@ -84,6 +88,8 @@ public:
 
     bool is_recording();
 
+    int getFrames();
+
 private:
     static void matDelete(void *mat);
 
@@ -95,6 +101,8 @@ private:
 
     CameraDisplay *m_display;
     QBasicTimer m_timer;
+
+    int m_frames = 0;
 
     cv::Mat m_frame;
     std::unique_ptr<VideoModifier> m_modifier;
@@ -117,9 +125,6 @@ private:
     void paintEvent(QPaintEvent *) override;
 
     QImage m_img;
-//	QGraphicsScene *m_scene;
-//	QGraphicsView *m_view;
-//	QRect *rect;
 
 };
 
@@ -138,7 +143,10 @@ public:
 
     void setCamera(int camera);
 
+    void updateFramerate(int frames);
+
     int getCamera();
+
 
 protected:
     void setVisible(bool visible) override;
@@ -172,13 +180,20 @@ Q_SIGNALS:
 private:
     void pauseVideo();
 
+    void timerEvent(QTimerEvent *ev) override;
+
     QVBoxLayout *m_layout;
     QComboBox *m_camera_list;
     QComboBox *m_effects_list;
-	QPushButton *m_capture_btn;
-	QPushButton *m_record_btn;
+    QPushButton *m_capture_btn;
+    QPushButton *m_record_btn;
     ImageViewer *m_image_viewer;
+
 	GridDisplay *m_grid_display;
+	QPushButton *m_deselect_btn;
+
+    QLabel *m_framerate_label;
+    QBasicTimer m_framerate_timer;
 
     int m_camera;
     int m_image_count = 0;
