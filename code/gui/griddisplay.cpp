@@ -6,7 +6,7 @@
  * Use a signal mapper
  * https://doc.qt.io/archives/qq/qq10-signalmapper.html#thesenderapproach
  *
- * Output to boolean array
+ * Output to boolean array (may have to change to int array later)
  *
  * TODO:
  * Drawing 800 buttons is very very slow
