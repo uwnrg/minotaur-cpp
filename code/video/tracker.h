@@ -19,7 +19,7 @@ public:
 
     void register_actions(const std::vector<ActionButton *> &action_btns, ActionBox *box) override;
 
-    int num_buttons() const;
+    int num_buttons() const override;
 
 protected:
     Q_SLOT void beginTracking();
