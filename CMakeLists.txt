@@ -56,7 +56,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 get_target_property(QtCore_location Qt5::Core LOCATION)
-add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES})
+add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} code/compstate/compstate.h code/compstate/compstate.cpp)
 
 # Qt5 modules
 qt5_use_modules(minotaur-cpp SerialPort)
