@@ -47,7 +47,7 @@ void Solenoid::readSerial() {
     Q_EMIT serialRead(msg);
 }
 
-void Solenoid::move(Vector2i dir, int) {
+void Solenoid::__move_delegate(Vector2i dir, int) {
 #ifndef NDEBUG
     debug() << "Moving Solenoid controller";
     debug() << "Attempting to move " << dir;

@@ -53,6 +53,22 @@ public Q_SLOTS:
 
     void openSerialMonitor();
 
+    /**
+     * Clear the logging output, if the logging
+     * has been set to the output field.
+     */
+    void clearLogOutput();
+
+    /**
+     * Invert the x-axis of the currently active controller.
+     */
+    void invertControllerX();
+
+    /**
+     * Invert the y-axis of the currently active controller;
+     */
+    void invertControllerY();
+
     inline void switchToSolenoid() { switchControllerTo(Controller::Type::SOLENOID); }
 
     inline void switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }

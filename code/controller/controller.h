@@ -48,9 +48,9 @@ public:
     // Movement
     void move(Dir dir, int timer = STEP_TIME);
 
-    void move(Vector2i dir);
+    void move(Vector2i dir, int timer = STEP_TIME);
 
-    virtual void move(Vector2i dir, int timer) = 0;
+    virtual void __move_delegate(Vector2i dir, int timer) = 0;
 
     // Key press functions
     void keyPressed(int key);
@@ -73,6 +73,7 @@ protected:
 
     Controller(bool invert_x, bool invert_y);
 
+private:
     key_map m_keyMap{50};
 
     // Variables are true if inputs to the axis are inverted

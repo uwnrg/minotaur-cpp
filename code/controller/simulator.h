@@ -11,7 +11,7 @@ class Simulator : public Controller {
 public:
     Simulator();
 
-    void move(Vector2i dir, int timer) override;
+    void __move_delegate(Vector2i dir, int timer) override;
 
     // Get (x,y) position of the robot
     Vector2i *getRobotPos();

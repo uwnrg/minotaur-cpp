@@ -43,10 +43,13 @@ MainWindow::MainWindow(
     connect(m_solenoid.get(), &Solenoid::serialRead, m_serial_monitor.get(), &SerialMonitor::append_text);
 
     // Setup slot connections
-    connect(ui->switch_to_simulator_mode, SIGNAL(triggered()), this, SLOT(switchToSimulator()));
-    connect(ui->start_python_interpreter, SIGNAL(triggered()), this, SLOT(openPythonInterpreter()));
-    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(openActionAbout()));
-    connect(ui->actionWebcam_View, SIGNAL(triggered()), this, SLOT(openCameraDisplay()));
+    connect(ui->switch_to_simulator_mode, &QAction::triggered, this, &MainWindow::switchToSimulator);
+    connect(ui->start_python_interpreter, &QAction::triggered, this, &MainWindow::openPythonInterpreter);
+    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::openActionAbout);
+    connect(ui->actionWebcam_View, &QAction::triggered, this, &MainWindow::openCameraDisplay);
+    connect(ui->actionClear_Log, &QAction::triggered, this, &MainWindow::clearLogOutput);
+    connect(ui->actionInvert_X_Axis, &QAction::triggered, this, &MainWindow::invertControllerX);
+    connect(ui->actionInvert_Y_Axis, &QAction::triggered, this, &MainWindow::invertControllerY);
 
     // setup focus and an event filter to capture key events
     this->installEventFilter(this);
@@ -165,4 +168,18 @@ void MainWindow::openActionAbout() {
 
 void MainWindow::openCameraDisplay() {
     m_camera_display->show();
+}
+
+void MainWindow::clearLogOutput() {
+    Logger::clear_log();
+}
+
+void MainWindow::invertControllerX() {
+    log() << "Inverting X-axis";
+    m_controller->invert_x_axis();
+}
+
+void MainWindow::invertControllerY() {
+    log() << "Inverting Y-axis";
+    m_controller->invert_y_axis();
 }

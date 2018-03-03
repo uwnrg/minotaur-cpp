@@ -8,16 +8,16 @@ Vector2i Controller::toVec2(Dir dir) {
     Vector2i vector_dir(0, 0);
     switch (dir) {
         case UP:
-            vector_dir.x() = 1;
-            break;
-        case DOWN:
-            vector_dir.x() = -1;
-            break;
-        case RIGHT:
             vector_dir.y() = 1;
             break;
-        case LEFT:
+        case DOWN:
             vector_dir.y() = -1;
+            break;
+        case RIGHT:
+            vector_dir.x() = 1;
+            break;
+        case LEFT:
+            vector_dir.x() = -1;
             break;
         default:
 #ifndef NDEBUG
@@ -78,8 +78,8 @@ void Controller::move(Dir dir, int timer) {
     move(Controller::toVec2(dir), timer);
 }
 
-void Controller::move(Vector2i dir) {
-    move(dir, STEP_TIME);
+void Controller::move(Vector2i dir, int step_time) {
+    __move_delegate({dir.x() * (m_invert_x ? -1 : 1), dir.y() * (m_invert_y ? -1 : 1)}, step_time);
 }
 
 void Controller::invert_x_axis() {
