@@ -7,9 +7,10 @@
 #include "../utility/logger.h"
 
 ScriptEditor::ScriptEditor(QWidget *parent) :
-        QDialog(parent),
-        m_active_file(),
-        ui(new Ui::ScriptEditor) {
+    QDialog(parent),
+    m_active_file(),
+    ui(std::make_unique<Ui::ScriptEditor>()),
+    m_code_editor(std::make_unique<CodeEditor>(this)) {
     ui->setupUi(this);
 
     // Make the font look like code
@@ -21,27 +22,23 @@ ScriptEditor::ScriptEditor(QWidget *parent) :
     QFontMetrics metrics(font);
     const int tab_size = 4;
     const int tab_stop_width = tab_size * metrics.width(' ');
-    m_code_editor = new CodeEditor(this);
     m_code_editor->setFont(font);
     m_code_editor->setTabStopWidth(tab_stop_width);
-    ui->editorLayout->addWidget(m_code_editor);
+    ui->editorLayout->addWidget(m_code_editor.get());
 
     QPalette palette = m_code_editor->palette();
     palette.setColor(QPalette::Base, QColor(39, 40, 34));
-    palette.setColor(QPalette::Text, QColor(248,248,242));
+    palette.setColor(QPalette::Text, QColor(248, 248, 242));
     m_code_editor->setPalette(palette);
 
     // Connect slots
-    connect(ui->openFileButton, SIGNAL(clicked()), this, SLOT(openFile()));
-    connect(ui->saveButton, SIGNAL(clicked()), this, SLOT(save()));
-    connect(ui->saveAsButton, SIGNAL(clicked()), this, SLOT(saveAs()));
-    connect(ui->newButton, SIGNAL(clicked()), this, SLOT(newFile()));
+    connect(ui->openFileButton, &QPushButton::clicked, this, &ScriptEditor::openFile);
+    connect(ui->saveButton, &QPushButton::clicked, this, &ScriptEditor::save);
+    connect(ui->saveAsButton, &QPushButton::clicked, this, &ScriptEditor::saveAs);
+    connect(ui->newButton, &QPushButton::clicked, this, &ScriptEditor::newFile);
 }
 
-ScriptEditor::~ScriptEditor() {
-    delete ui;
-    delete m_code_editor;
-}
+ScriptEditor::~ScriptEditor() = default;
 
 void ScriptEditor::reject() {
     m_active_file.clear();
@@ -51,9 +48,10 @@ void ScriptEditor::reject() {
 
 void ScriptEditor::openFile() {
     QString file_path = QFileDialog::getOpenFileName(
-            this, "Open Python Script",
-            QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
-            "Python script (*.py)");
+        this, "Open Python Script",
+        QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
+        "Python script (*.py)"
+    );
 #ifndef NDEBUG
     debug() << "Opened file: " << file_path;
 #endif
@@ -70,7 +68,7 @@ void ScriptEditor::openFile() {
     QString script_text = script_in.readAll();
     // Set the text editor contents to the file contents
     m_code_editor->document()->setPlainText(script_text);
-    this->m_active_file = std::move(file_path);
+    m_active_file = std::move(file_path);
 }
 
 void ScriptEditor::save() {
@@ -95,9 +93,9 @@ void ScriptEditor::save() {
 
 void ScriptEditor::saveAs() {
     QString file_path = QFileDialog::getSaveFileName(
-            this, "Save Script",
-            QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
-            "Python script (*.py)");
+        this, "Save Script",
+        QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
+        "Python script (*.py)");
 #ifndef NDEBUG
     debug() << "Saving to file: " << file_path;
 #endif

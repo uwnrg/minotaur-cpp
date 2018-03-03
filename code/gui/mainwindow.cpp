@@ -10,9 +10,11 @@ MainWindow::MainWindow(
     const char *
 ) :
     QMainWindow(parent),
-    m_serial_monitor(new SerialMonitor(this)),
-    ui(new Ui::MainWindow) {
-
+    ui(std::make_unique<Ui::MainWindow>()),
+    m_script_window(std::make_unique<ScriptWindow>(this)),
+    m_about_window(std::make_unique<ActionAbout>(this)),
+    m_camera_display(std::make_unique<CameraDisplay>(this)),
+    m_serial_monitor(std::make_unique<SerialMonitor>(this)) {
     ui->setupUi(this);
 
     // Set up logger
@@ -34,10 +36,7 @@ MainWindow::MainWindow(
     PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
 
     // Setup sub-windows
-    m_simulator_window = new SimulatorWindow(m_simulator, this);
-    m_script_window = new ScriptWindow(this);
-    m_about_window = new ActionAbout(this);
-    m_camera_display = new CameraDisplay(this);
+    m_simulator_window = std::make_unique<SimulatorWindow>(m_simulator, this);
 
     // Connect solenoid serial port to the monitor
     connect(m_solenoid.get(), &Solenoid::serialRead, m_serial_monitor.get(), &SerialMonitor::append_text);
@@ -110,14 +109,7 @@ void MainWindow::mousePressEvent(QMouseEvent *) {
     this->setFocus();
 }
 
-MainWindow::~MainWindow() {
-    // Destroy all subwindows
-    delete m_about_window;
-    delete m_simulator_window;
-    delete m_script_window;
-    delete m_camera_display;
-    delete ui;
-}
+MainWindow::~MainWindow() = default;
 
 void MainWindow::onMoveButtonClicked() {
     auto dir = (Controller::Dir) ui->selected_direction->currentIndex();
@@ -126,7 +118,7 @@ void MainWindow::onMoveButtonClicked() {
 
 void MainWindow::switchControllerTo(Controller::Type const type) {
 #ifndef NDEBUG
-    debug()<< "Switch controller button clicked";
+    debug() << "Switch controller button clicked";
 #endif
     // Do nothing if the same controller type is selected
     if (m_controller_type == type) {

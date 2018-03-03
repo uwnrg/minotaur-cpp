@@ -40,8 +40,8 @@ private Q_SLOTS:
     void newFile();
 
 private:
-    Ui::ScriptEditor *ui;
-    CodeEditor *m_code_editor;
+    std::unique_ptr<Ui::ScriptEditor> ui;
+    std::unique_ptr<CodeEditor> m_code_editor;
     QString m_active_file;
 };
 

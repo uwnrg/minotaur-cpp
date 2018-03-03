@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include <memory>
+
 namespace Ui {
 class ActionAbout;
 }
@@ -16,7 +18,7 @@ public:
     ~ActionAbout();
 
 private:
-    Ui::ActionAbout *ui;
+    std::unique_ptr<Ui::ActionAbout> ui;
 };
 
 #endif // ACTIONABOUT_H

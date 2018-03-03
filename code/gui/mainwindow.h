@@ -35,13 +35,14 @@ public:
         const char *title = DEFAULT_TITLE
     );
 
+    ~MainWindow() override;
+
     QTextEdit *getLogView();
 
     void keyPressEvent(QKeyEvent *) override;
 
     void keyReleaseEvent(QKeyEvent *) override;
 
-    ~MainWindow() override;
 
 public Q_SLOTS:
 
@@ -83,13 +84,12 @@ private Q_SLOTS:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
-    Ui::MainWindow *ui;
+    std::unique_ptr<Ui::MainWindow> ui;
 
-    ScriptWindow *m_script_window;
-    SimulatorWindow *m_simulator_window;
-    ActionAbout *m_about_window;
-    CameraDisplay *m_camera_display;
-
+    std::unique_ptr<ScriptWindow> m_script_window;
+    std::unique_ptr<SimulatorWindow> m_simulator_window;
+    std::unique_ptr<ActionAbout> m_about_window;
+    std::unique_ptr<CameraDisplay> m_camera_display;
     std::unique_ptr<SerialMonitor> m_serial_monitor;
 
     Controller::Type m_controller_type;
