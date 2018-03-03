@@ -39,9 +39,17 @@ public:
     Q_SIGNAL void request_robot_box();
     Q_SIGNAL void request_object_box();
 
-    Q_SLOT void acquire_robot_box(std::shared_ptr<cv::Rect2d> &robot_box);
-    Q_SLOT void acquire_object_box(std::shared_ptr<cv::Rect2d> &object_box);
+    Q_SLOT void acquire_robot_box(const cv::Rect2d &robot_box);
+    Q_SLOT void acquire_object_box(const cv::Rect2d &object_box);
+    Q_SLOT void acquire_target_box(const cv::Rect2d &target_box);
     Q_SLOT void acquire_walls(std::shared_ptr<wall_arr> &walls);
+
+    cv::Rect2d &get_robot_box();
+    cv::Rect2d &get_object_box();
+    cv::Rect2d &get_target_box();
+    const cv::Rect2d &get_robot_box() const;
+    const cv::Rect2d &get_object_box() const;
+    const cv::Rect2d &get_target_box() const;
 
     bool is_tracking_robot() const;
     void set_tracking_robot(bool tracking_robot);
@@ -57,8 +65,9 @@ private:
     bool m_tracking_object;
     bool m_acquire_walls;
 
-    std::shared_ptr<cv::Rect2d> m_robot_box;
-    std::shared_ptr<cv::Rect2d> m_object_box;
+    cv::Rect2d m_robot_box;
+    cv::Rect2d m_object_box;
+    cv::Rect2d m_target_box;
 
     std::shared_ptr<wall_arr> m_walls;
 
