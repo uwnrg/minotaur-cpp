@@ -6,12 +6,12 @@
 #include <QDialog>
 #include <QPushButton>
 #include <QMetaType>
+#include <QVBoxLayout>
 
 class ActionBox;
 
 Q_DECLARE_METATYPE(ActionBox *);
 
-class QVBoxLayout;
 
 class ActionButton : public QPushButton {
 public:

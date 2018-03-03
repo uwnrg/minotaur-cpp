@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 
 #include "tracker.h"
-#include "../utility/util.h"
+#include "../utility/utility.h"
 
 #ifndef NDEBUG
 #include <QDebug>

@@ -6,7 +6,9 @@
 #include "../simulator/renderscene.h"
 
 class Simulator;
+
 class SimulatorScene;
+
 class MainWindow;
 
 namespace Ui {
@@ -14,20 +16,25 @@ namespace Ui {
 }
 
 class SimulatorWindow : public QDialog {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     explicit SimulatorWindow(std::shared_ptr<Simulator> simulator, QWidget *parent = nullptr);
+
     void setVisible(bool visible) override;
-    void keyPressEvent(QKeyEvent*) override;
-    void keyReleaseEvent(QKeyEvent*) override;
+
+    void keyPressEvent(QKeyEvent *) override;
+
+    void keyReleaseEvent(QKeyEvent *) override;
+
     void reject() override;
+
     ~SimulatorWindow() override;
 
 private:
-    Ui::SimulatorWindow *ui;
+    std::unique_ptr<Ui::SimulatorWindow> ui;
     // Graphics scene for simulator
-    RenderScene *m_simulator_scene;
+    std::unique_ptr<RenderScene> m_simulator_scene;
 };
 
 #endif // SIMULATORWINDOW_H

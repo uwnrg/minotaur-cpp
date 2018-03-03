@@ -12,11 +12,11 @@
 class Solenoid : public Controller {
 Q_OBJECT
 public:
-    Solenoid(const QString &serial_port = "");
+    explicit Solenoid(const QString &serial_port = "");
 
-    ~Solenoid();
+    ~Solenoid() override;
 
-    void move(Vector2i dir, int timer);
+    void __move_delegate(Vector2i dir, int timer) override;
 
     Q_SLOT void readSerial();
 

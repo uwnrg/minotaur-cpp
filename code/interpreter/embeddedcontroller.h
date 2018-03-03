@@ -34,7 +34,7 @@ public:
 
 namespace Embedded {
     // Embedded move function exposed to Python API
-    static PyObject *emb_move(PyObject *self, PyObject *args) {
+    static PyObject *emb_move(PyObject *, PyObject *args) {
         int x = 0;
         int y = 0;
         if (!PyArg_ParseTuple(args, "ii", &x, &y))

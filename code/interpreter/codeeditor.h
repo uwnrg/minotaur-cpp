@@ -1,8 +1,12 @@
 #ifndef MINOTAUR_CPP_CODEEDITOR_H
 #define MINOTAUR_CPP_CODEEDITOR_H
 
+#include <memory>
+
 #include <QPlainTextEdit>
+
 #include "highlighter.h"
+#include "../utility/utility.h"
 
 class CodeEditor;
 
@@ -36,8 +40,8 @@ private Q_SLOTS:
     void updateLineNumberArea(const QRect &, int);
 
 private:
-    LineNumberArea *m_line_number_area;
-    HighLighter *m_highlighter;
+    std::unique_ptr<LineNumberArea> m_line_number_area;
+    std::unique_ptr<HighLighter> m_highlighter;
 };
 
 

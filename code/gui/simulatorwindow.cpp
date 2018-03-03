@@ -4,14 +4,18 @@
 #include "mainwindow.h"
 #include "../graphics/simulatorscene.h"
 
+#ifndef NDEBUG
+#include <QDebug>
+#endif
+
 SimulatorWindow::SimulatorWindow(std::shared_ptr<Simulator> simulator, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::SimulatorWindow) {
+    ui(std::make_unique<Ui::SimulatorWindow>()) {
     ui->setupUi(this);
     setWindowTitle("Simulator");
 
-    m_simulator_scene = new RenderScene(simulator, this);
-    ui->renderLayout->addWidget(m_simulator_scene);
+    m_simulator_scene = std::make_unique<RenderScene>(simulator, this);
+    ui->renderLayout->addWidget(m_simulator_scene.get());
 
     // Prevent resizing
     this->setFixedSize(this->size());
@@ -26,32 +30,30 @@ void SimulatorWindow::setVisible(bool visible) {
     }
 }
 
+MainWindow *get_main_window_parent(SimulatorWindow *sim) {
+    QWidget *parent = sim->parentWidget();
+    auto main_window = reinterpret_cast<MainWindow *>(parent);
+#ifndef NDEBUG
+    if (!main_window) {
+        qDebug() << "FATAL: SimulatorWindow parent is not MainWindow";
+    }
+#endif
+    return main_window;
+}
+
 void SimulatorWindow::keyPressEvent(QKeyEvent *event) {
-    // Forward key press events to the main window
-    QWidget *parent = parentWidget();
-    if (!parent) return;
-    MainWindow *main_window = (MainWindow*) parent;
-    main_window->keyPressEvent(event);
+    get_main_window_parent(this)->keyPressEvent(event);
 }
 
 void SimulatorWindow::keyReleaseEvent(QKeyEvent *event) {
-    QWidget *parent = parentWidget();
-    if (!parent) return;
-    MainWindow *mainWindow = (MainWindow*) parent;
-    mainWindow->keyReleaseEvent(event);
+    get_main_window_parent(this)->keyReleaseEvent(event);
 }
 
 void SimulatorWindow::reject() {
-    // When the user clicks exit, switch back to ACTUATOR
+    // When the user clicks exit, switch back to Solenoid
     m_simulator_scene->stopRender();
-    QWidget *parent = parentWidget();
-    if (!parent) return;
-    MainWindow *main_window = (MainWindow*) parent;
-    main_window->switchToSolenoid();
+    get_main_window_parent(this)->switchToSolenoid();
     QDialog::reject();
 }
 
-SimulatorWindow::~SimulatorWindow() {
-    delete m_simulator_scene;
-    delete ui;
-}
+SimulatorWindow::~SimulatorWindow() = default;

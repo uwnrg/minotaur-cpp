@@ -1,6 +1,6 @@
 #include "converter.h"
 #include "cameradisplay.h"
-#include "../utility/util.h"
+#include "../utility/utility.h"
 
 #include <QTimerEvent>
 

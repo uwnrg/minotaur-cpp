@@ -8,7 +8,7 @@
 #include <QLabel>
 
 #include "imageviewer.h"
-#include "../utility/util.h"
+#include "../utility/utility.h"
 #include "../utility/logger.h"
 
 CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
@@ -156,14 +156,11 @@ void CameraDisplay::captureAndSave() {
 
 void CameraDisplay::recordButtonClicked() {
     if (!m_converter.is_recording()) {
-        Logger::log("Started recording video");
-#ifndef NDEBUG
-        qDebug() << "Recording video start";
-#endif
+        log() << "Started recording video";
         Q_EMIT beginRecording();
         m_record_btn->setText(tr("Stop Recording"));
     } else {
-        Logger::log("Finished recording and saving video");
+        log() << "Finished recording video";
         Q_EMIT stopRecording();
         m_record_btn->setText(tr("Record Video"));
     }

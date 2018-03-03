@@ -41,7 +41,8 @@ void setLabel(cv::UMat &im, const std::string &label, std::vector<cv::Point> &co
 }
 
 static cv::UMat findShapes(
-    const cv::UMat &src, std::vector<std::vector<cv::Point> > &triangles,
+    const cv::UMat &src,
+    std::vector<std::vector<cv::Point> > &triangles,
     std::vector<std::vector<cv::Point> > &rectangles,
     std::vector<std::vector<cv::Point> > &circles
 ) {

@@ -3,9 +3,7 @@
 
 #include <unordered_map>
 #include "../utility/logger.h"
-#include "../utility/vector2i.h"
-
-#define STEP_TIME    10
+#include "../utility/vector2d.h"
 
 class Controller : public QObject {
 Q_OBJECT
@@ -42,29 +40,47 @@ public:
         NUM_AXES
     };
 
+    enum {
+        STEP_TIME = 10
+    };
+
     // Common robot functions
     static Vector2i toVec2(Dir);
 
-    void invertAxis(Axis);
-
+    // Movement
     void move(Dir dir, int timer = STEP_TIME);
 
-    virtual void move(Vector2i dir, int timer = STEP_TIME) = 0;
+    void move(Vector2i dir, int timer = STEP_TIME);
 
+    virtual void __move_delegate(Vector2i dir, int timer) = 0;
+
+    // Key press functions
     void keyPressed(int key);
 
     void keyReleased(int key);
 
     bool isKeyDown(int key);
 
+    // Functions and slots to control axis inversion
+    void invertAxis(Axis);
+
+    Q_SLOT void invert_x_axis();
+
+    Q_SLOT void invert_y_axis();
+
+
 protected:
     typedef typename std::unordered_map<int, bool> key_map;
     typedef typename std::pair<int, bool> key_press;
 
-    Controller(int t_invert_x, int t_invert_y);
+    Controller(bool invert_x, bool invert_y);
 
+private:
     key_map m_keyMap{50};
-    int m_invert_x, m_invert_y; // +1 for no inversion in the axis, -1 otherwise
+
+    // Variables are true if inputs to the axis are inverted
+    bool m_invert_x;
+    bool m_invert_y;
 };
 
 #endif // CONTROLLER_H
