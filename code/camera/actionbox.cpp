@@ -1,8 +1,6 @@
 #include "actionbox.h"
 
-#include <QVBoxLayout>
-
-#include "code/utility/utility.h"
+#include "../utility/utility.h"
 
 ActionButton::ActionButton(QWidget *parent)
     : QPushButton(parent) {

@@ -3,9 +3,7 @@
 
 #include <unordered_map>
 #include "../utility/logger.h"
-#include "code/utility/vector2d.h"
-
-#define STEP_TIME 10
+#include "../utility/vector2d.h"
 
 class Controller : public QObject {
 Q_OBJECT
@@ -40,6 +38,10 @@ public:
         Y,
 
         NUM_AXES
+    };
+
+    enum {
+        STEP_TIME = 10
     };
 
     // Common robot functions
