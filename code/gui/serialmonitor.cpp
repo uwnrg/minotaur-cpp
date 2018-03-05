@@ -7,6 +7,7 @@ SerialMonitor::SerialMonitor(QWidget *parent)
     : QDialog(parent),
       m_layout(new QVBoxLayout(this)),
       m_display(new QPlainTextEdit(this)) {
+    setWindowTitle("Serial Monitor");
     m_layout->addWidget(m_display.get());
     setMinimumSize(400, 500);
     setLayout(m_layout.get());

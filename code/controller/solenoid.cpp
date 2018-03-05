@@ -24,6 +24,7 @@ void Solenoid::attempt_connection(
     const QString &serial_port,
     QSerialPort::BaudRate baud_rate
 ) {
+    Q_EMIT serial_status(SerialStatus::CONNECTING);
     if (serial_port.isEmpty()) {
         // Auto-detect Arduino port
         QSerialPortInfo port_to_use;
@@ -41,6 +42,7 @@ void Solenoid::attempt_connection(
         }
         if (!found_port) {
             fatal() << "No Arduino port specified, failed to autodetect port";
+            Q_EMIT serial_status(SerialStatus::DISCONNECTED);
             return;
         }
         log() << "Auto-detected Arduino port: " << port_to_use.portName();
@@ -57,16 +59,19 @@ void Solenoid::attempt_connection(
     m_serial.setFlowControl(QSerialPort::NoFlowControl);
     if (!m_serial.open(QIODevice::ReadWrite)) {
         fatal() << "Failed to open serial port: " << m_serial.portName();
+        Q_EMIT serial_status(SerialStatus::DISCONNECTED);
     } else {
         log() << "Opened serial port: " << m_serial.portName();
         connect(&m_serial, &QSerialPort::readyRead, this, &Solenoid::readSerial);
+        Q_EMIT serial_status(SerialStatus::CONNECTED);
     }
 }
 
-void Solenoid::disconnect() {
+void Solenoid::attempt_disconnect() {
     if (m_serial.isOpen()) {
         log() << "Disconnecting serial port";
         m_serial.close();
+        Q_EMIT serial_status(SerialStatus::DISCONNECTED);
     }
 }
 

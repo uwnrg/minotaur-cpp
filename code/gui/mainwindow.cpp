@@ -37,18 +37,26 @@ MainWindow::MainWindow(
 
     // Setup sub-windows
     m_simulator_window = std::make_unique<SimulatorWindow>(m_simulator, this);
+    m_serial_box = std::make_unique<SerialBox>(m_solenoid, this);
 
     // Connect solenoid serial port to the monitor
     connect(m_solenoid.get(), &Solenoid::serialRead, m_serial_monitor.get(), &SerialMonitor::append_text);
 
-    // Setup slot connections
+    // Simulator and controls
     connect(ui->switch_to_simulator_mode, &QAction::triggered, this, &MainWindow::switchToSimulator);
-    connect(ui->start_python_interpreter, &QAction::triggered, this, &MainWindow::openPythonInterpreter);
-    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::openActionAbout);
-    connect(ui->actionWebcam_View, &QAction::triggered, this, &MainWindow::openCameraDisplay);
-    connect(ui->actionClear_Log, &QAction::triggered, this, &MainWindow::clearLogOutput);
-    connect(ui->actionInvert_X_Axis, &QAction::triggered, this, &MainWindow::invertControllerX);
-    connect(ui->actionInvert_Y_Axis, &QAction::triggered, this, &MainWindow::invertControllerY);
+    connect(ui->move_button, &QPushButton::clicked, this, &MainWindow::moveButtonClicked);
+
+    // Opening sub windows
+    connect(ui->start_python_interpreter, &QAction::triggered, m_script_window.get(), &QDialog::show);
+    connect(ui->open_about, &QAction::triggered, m_about_window.get(), &QDialog::show);
+    connect(ui->open_camera_display, &QAction::triggered, m_camera_display.get(), &QDialog::show);
+    connect(ui->open_serial_monitor, &QAction::triggered, m_serial_monitor.get(), &QDialog::show);
+    connect(ui->open_serial_box, &QAction::triggered, m_serial_box.get(), &QDialog::show);
+
+    // Drop-down actions
+    connect(ui->action_clear_log, &QAction::triggered, this, &MainWindow::clearLogOutput);
+    connect(ui->action_invert_x_axis, &QAction::triggered, this, &MainWindow::invertControllerX);
+    connect(ui->action_invert_y_axis, &QAction::triggered, this, &MainWindow::invertControllerY);
 
     // setup focus and an event filter to capture key events
     this->installEventFilter(this);
@@ -111,7 +119,7 @@ void MainWindow::mousePressEvent(QMouseEvent *) {
 
 MainWindow::~MainWindow() = default;
 
-void MainWindow::onMoveButtonClicked() {
+void MainWindow::moveButtonClicked() {
     auto dir = (Controller::Dir) ui->selected_direction->currentIndex();
     m_controller->move(dir);
 }
@@ -144,22 +152,6 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
         default:
             break;
     }
-}
-
-void MainWindow::openSerialMonitor() {
-    m_serial_monitor->show();
-}
-
-void MainWindow::openPythonInterpreter() {
-    m_script_window->show();
-}
-
-void MainWindow::openActionAbout() {
-    m_about_window->show();
-}
-
-void MainWindow::openCameraDisplay() {
-    m_camera_display->show();
 }
 
 void MainWindow::clearLogOutput() {

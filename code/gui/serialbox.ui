@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>SerialBox</class>
+ <widget class="QDialog" name="SerialBox">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>290</width>
-    <height>212</height>
+    <height>238</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Serial Port Config</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
+  <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>170</y>
+     <y>200</y>
      <width>261</width>
      <height>32</height>
     </rect>
@@ -26,13 +26,13 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Close</set>
    </property>
    <property name="centerButtons">
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="status_label">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -53,7 +53,7 @@
     <string>Status</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="serial_status">
    <property name="geometry">
     <rect>
      <x>80</x>
@@ -76,7 +76,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="port_name_label">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -94,7 +94,7 @@
     <string>Port Name</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="baud_rate_label">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -112,20 +112,7 @@
     <string>Baud Rate</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>70</y>
-     <width>151</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>9600</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboBox">
+  <widget class="QComboBox" name="serial_combo_box">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -141,40 +128,49 @@
     <enum>QComboBox::InsertAtTop</enum>
    </property>
   </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>150</y>
+     <width>251</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="button_layout">
+    <item>
+     <widget class="QPushButton" name="disconnect_button">
+      <property name="text">
+       <string>Disconnect</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="connect_button">
+      <property name="text">
+       <string>Connect</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QComboBox" name="baud_combo_box">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>70</y>
+     <width>151</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="editable">
+    <bool>true</bool>
+   </property>
+   <property name="insertPolicy">
+    <enum>QComboBox::InsertAtTop</enum>
+   </property>
+  </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

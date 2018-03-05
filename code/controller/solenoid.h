@@ -9,6 +9,12 @@
 #include <QObject>
 #include <QSerialPort>
 
+enum SerialStatus {
+    DISCONNECTED,
+    CONNECTING,
+    CONNECTED
+};
+
 class Solenoid : public Controller {
 Q_OBJECT
 public:
@@ -55,7 +61,7 @@ public:
      * Attempt to disconnect from the serial port, if the port
      * is currently connected.
      */
-    Q_SLOT void disconnect();
+    Q_SLOT void attempt_disconnect();
 
     /**
      * Signal emitted when the Arduino has sent a message to Minotaur.
@@ -63,6 +69,14 @@ public:
      * @param msg the message written by Arduino
      */
     Q_SIGNAL void serialRead(const std::string &msg);
+
+    /**
+     * Signal emitted when the status of the serial port has changed.
+     * Emits CONNECTING, DISCONNECTED, and CONNECTED.
+     *
+     * @param status the new port status
+     */
+    Q_SIGNAL void serial_status(SerialStatus status);
 
     /**
      * Convert a move vector into a binary representation understood by the
