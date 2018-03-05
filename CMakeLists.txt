@@ -15,6 +15,13 @@ cmake_minimum_required(VERSION 3.1.0)
 
 project(minotaur-cpp)
 
+# Unit testing with GoogleTest framework
+enable_testing()
+set(GTEST_INCLUDE_DIR ${gtest_SOURCE_DIR}/include)
+add_subdirectory(lib/googletest)
+add_subdirectory(test)
+add_test(NAME minotaur-cpp-test COMMAND tests)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -std=c++11")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -57,9 +64,11 @@ set(CMAKE_AUTOUIC ON)
 
 get_target_property(QtCore_location Qt5::Core LOCATION)
 add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES})
+add_library(minotaur-lib ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES})
 
 # Qt5 modules
 qt5_use_modules(minotaur-cpp SerialPort)
+qt5_use_modules(minotaur-lib SerialPort)
 
 # Supply cmake argument -D NO_DEBUG=ON to disable console debug output
 option(NO_DEBUG "Build minotaur without debugging output" OFF)
@@ -70,11 +79,14 @@ if (NO_DEBUG)
 else ()
     log("Building with debugging on")
 endif ()
+target_compile_definitions(minotaur-lib PRIVATE QT_NO_DEBUG)
+target_compile_definitions(minotaur-lib PRIVATE NDEBUG)
 
 # Find and link OpenCV 3 package
 find_package(OpenCV 3 REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 target_link_libraries(minotaur-cpp ${OpenCV_LIBS})
+target_link_libraries(minotaur-lib ${OpenCV_LIBS})
 
 # Supply cmake argument -D NO_CONTRIB=ON to disable tracking module
 option(NO_CONTRIB "Build minotaur without OpenCV contrib modules" OFF)
@@ -85,6 +97,7 @@ if (NO_CONTRIB OR NOT HAVE_OPENCV_TRACKER)
     target_compile_definitions(minotaur-cpp PRIVATE TRACKER_OFF)
     log("Building without OpenCV tracking module")
 endif ()
+target_compile_definitions(minotaur-lib PRIVATE TRACKER_OFF)
 
 # Attempt to find GOTURN files
 include(Goturn)
@@ -101,13 +114,24 @@ target_link_libraries(minotaur-cpp
         Qt5::MultimediaWidgets)
 target_link_libraries(minotaur-cpp ${PYTHON_LIBRARIES})
 target_link_libraries(minotaur-cpp "${CMAKE_THREAD_LIBS_INIT}")
+target_link_libraries(minotaur-lib
+        Qt5::Widgets
+        Qt5::Core
+        Qt5::Gui
+        Qt5::Multimedia
+        Qt5::MultimediaWidgets)
+target_link_libraries(minotaur-lib ${PYTHON_LIBRARIES})
+target_link_libraries(minotaur-lib "${CMAKE_THREAD_LIBS_INIT}")
 
 # Include current directory to find Qt MOC files
 target_include_directories(minotaur-cpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(minotaur-lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 # Add definition for location of python scripts
 target_compile_definitions(minotaur-cpp PRIVATE PYTHON_SCRIPT_DIR="${PYTHON_SCRIPT_DIR}")
+target_compile_definitions(minotaur-lib PRIVATE PYTHON_SCRIPT_DIR="${PYTHON_SCRIPT_DIR}")
 
 # Windows requires separate libraries
 if (WIN32)
     target_link_libraries(minotaur-cpp advapi32 user32 setupapi)
+    target_link_libraries(minotaur-lib advapi32 user32 setupapi)
 endif ()
