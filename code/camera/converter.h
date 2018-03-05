@@ -48,6 +48,8 @@ private:
 
     void queue(const cv::UMat &frame);
 
+    void zoom(cv::UMat &frame, cv::UMat &zoomed_frame, int zoom_factor);
+
     void process(cv::UMat frame);
 
     void timerEvent(QTimerEvent *ev) override;

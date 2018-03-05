@@ -47,6 +47,12 @@ void Converter::queue(const cv::UMat &frame) {
     }
 }
 
+void Converter::zoom(cv::UMat &frame, cv::UMat &zoomed_frame, int zoom_factor) {
+    cv::Rect crop(frame.size().width / 2 - frame.size().width / (2 * zoom_factor), frame.size().height / 2 - frame.size().height / (2 * zoom_factor), frame.size().width / zoom_factor, frame.size().height / zoom_factor);
+    frame = frame(crop);
+    cv::resize(frame, zoomed_frame, cv::Size(), zoom_factor, zoom_factor, cv::INTER_LINEAR);
+}
+
 void Converter::process(cv::UMat frame) {
     double scale = MIN(
         (m_display->width() - 20) / (double) frame.size().width,
@@ -58,7 +64,10 @@ void Converter::process(cv::UMat frame) {
     if (is_recording()) {
         Q_EMIT frameProcessed(frame);
     }
-    cv::resize(frame, frame, cv::Size(), scale, scale, cv::INTER_AREA);
+    int zoom_factor = 8;
+    cv::UMat zoomed_frame;
+    zoom(frame, zoomed_frame, zoom_factor);
+    cv::resize(zoomed_frame, frame, cv::Size(), scale, scale, cv::INTER_AREA);
     cv::cvtColor(frame, frame, CV_BGR2RGB);
     const QImage image(
         frame.getMat(1).data, frame.cols, frame.rows, static_cast<int>(frame.step),
