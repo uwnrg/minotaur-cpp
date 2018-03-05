@@ -1,7 +1,5 @@
 # Minotaur C++ Reimplementation
-|  master  |  develop  |
-|:--------:|:---------:|
-|[![Build Status](https://travis-ci.org/uwnrg/minotaur-cpp.svg?branch=master)](https://travis-ci.org/uwnrg/minotaur-cpp)|[![Build Status](https://travis-ci.org/uwnrg/minotaur-cpp.svg?branch=develop)](https://travis-ci.org/uwnrg/minotaur-cpp)|
+[![Build Status](https://travis-ci.org/uwnrg/minotaur-cpp.svg?branch=master)](https://travis-ci.org/uwnrg/minotaur-cpp)
 
 ### Introduction
 Minotaur is the controls software for our microrobots. It is being actively developed
