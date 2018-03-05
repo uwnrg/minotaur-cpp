@@ -1,5 +1,6 @@
 #include "camera.h"
 #include "../utility/logger.h"
+#include "griddisplay.h"
 
 #include <QCamera>
 #include <QCameraInfo>
@@ -154,8 +155,11 @@ void Converter::timerEvent(QTimerEvent *ev) {
 }
 
 ImageViewer::ImageViewer(QWidget *parent)
-    : QWidget(parent) {
+    : QWidget(parent)
+ //     m_grid_display((nullptr, this))
+    {
     setAttribute(Qt::WA_OpaquePaintEvent);
+ //   m_image_viewer->setWidget(m_grid_display);
 }
 
 const QImage &ImageViewer::getImage() {
@@ -175,7 +179,6 @@ void ImageViewer::paintEvent(QPaintEvent *) {
     painter.drawImage(0, 0, m_img);
 }
 
-
 IThread::~IThread() {
     quit();
     wait();
@@ -187,7 +190,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
       m_converter(nullptr, this) {
     m_layout = new QVBoxLayout(this);
     m_image_viewer = new ImageViewer(this);
-    m_grid_display = new GridDisplay(this);
+    m_grid_display = new GridDisplay(m_image_viewer);
 
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
 #ifndef NDEBUG
@@ -216,8 +219,15 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_record_btn = new QPushButton(this);
     m_record_btn->setText("Record Video");
 
+    m_display_grid_btn = new QPushButton(this);
+    m_display_grid_btn->setText("Display Grid Selection");
+
+   // m_hide_grid_btn = new QPushButton(this);
+  //  m_hide_grid_btn->setText("Hide Grid Selection");
+
     m_deselect_btn = new QPushButton(this);
     m_deselect_btn->setText("Clear Grid Selection");
+
 
     m_framerate_label = new QLabel(this);
     m_framerate_label->setText("0");
@@ -229,22 +239,26 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_layout->addWidget(m_record_btn);
     m_layout->addWidget(m_camera_list);
     m_layout->addWidget(m_effects_list);
-
-    m_layout->addWidget(m_grid_display);
+  //  m_layout->addWidget(m_display_grid_btn);
+ //   m_layout->addWidget(m_hide_grid_btn);
     m_layout->addWidget(m_deselect_btn);
+    m_layout->addWidget(m_image_viewer);
 
-   // m_layout->addWidget(m_image_viewer);
+ //   m_layout->addWidget(m_grid_display);
+
     m_layout->addWidget(m_framerate_label);
 
     QObject::connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
-    //QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
+    QObject::connect(&m_converter, &Converter::imageReady, m_image_viewer, &ImageViewer::setImage);
     QObject::connect(this, &CameraDisplay::forwardKeyEvent, &m_converter, &Converter::imageKeyEvent);
 
     connect(m_camera_list, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
     connect(m_capture_btn, SIGNAL(clicked()), this, SLOT(captureAndSave()));
     connect(m_effects_list, SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
     connect(m_record_btn, SIGNAL(clicked()), this, SLOT(recordButtonClicked()));
-    connect(m_deselect_btn, SIGNAL(clicked()), this, SLOT(clearSelection()));
+    connect(m_deselect_btn, SIGNAL(clicked()), m_grid_display, SLOT(clearSelection()));
+ //   connect(m_display_grid_btn, SIGNAL(clicked()), m_grid_display, SLOT(drawButtons));
+ //   connect(m_hide_grid_btn, SIGNAL(clicked()), m_grid_display, SLOT(hideGrid));
     connect(this, SIGNAL(beginRecording()), this, SLOT(recordSaveFile()));
     connect(this, SIGNAL(recordFileAcquired(QString, int, int)), &m_converter, SLOT(startRecording(QString, int, int)));
     connect(this, SIGNAL(stopRecording()), &m_converter, SLOT(stopRecording()));
@@ -259,6 +273,9 @@ CameraDisplay::~CameraDisplay() {
     delete m_capture_btn;
     delete m_record_btn;
     delete m_grid_display;
+    delete m_deselect_btn;
+//    delete m_display_grid_btn;
+//    delete m_hide_grid_btn;
 }
 
 void CameraDisplay::setCamera(int camera) {

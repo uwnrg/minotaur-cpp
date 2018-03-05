@@ -9,17 +9,20 @@
  * Output to boolean array (may have to change to int array later)
  *
  * TODO:
- * Drawing 800 buttons is very very slow
+ * Optimize button adding (drawing and adding 800 buttons is very very slow)
  * Allow user to select or deselect an area
- * Add a button to clear selections
  * Dynamic implementation of columns/rows/button array
- * Overlay m_scene over image viewer
+ * Change boolean to integer array, add drop down menu to select and set priorities
+ *
 */
 
 //Constructor
 GridDisplay::GridDisplay(QWidget *parent) :
-    QWidget(parent) {
+    QWidget(parent)
+{
     m_scene = new QGraphicsScene(this);
+//    m_scene->setParent(parent);
+//    m_scene->show();
 
 //    m_button1 = new QPushButton();
 //    m_button1->setText("Button 1");
@@ -31,7 +34,10 @@ GridDisplay::GridDisplay(QWidget *parent) :
     m_scene->setSceneRect(QRect(0, 0, sceneWidth, sceneHeight));   //TODO: set bounding rectangle to m_img.size()
 //    m_scene->addWidget(m_button1);
 
-    m_view = new QGraphicsView(m_scene, this);
+    m_view = new QGraphicsView(m_scene, parent);
+    m_view->setStyleSheet("background: transparent");
+    //   m_view->show();
+
     drawGrid();
 
     //TODO: Give QGraphicsScene a grid layout
@@ -42,6 +48,7 @@ GridDisplay::GridDisplay(QWidget *parent) :
     //Signals
 //    connect(m_button1, SIGNAL(clicked()), this, SLOT(buttonClicked()));
 //    connect(m_button1, &QPushButton::clicked, [=](){this->buttonClicked(m_button1);} );
+
     showView();
 }
 
@@ -115,4 +122,8 @@ void GridDisplay::drawGrid(){
             //painter.drawLine(QLine(x*gridSize, y*gridSize, x*gridSize, y*gridSize));
         }
     }
+}
+
+void GridDisplay::hideGrid(){
+
 }

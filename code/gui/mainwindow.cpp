@@ -41,7 +41,7 @@ MainWindow::MainWindow(
 
     // Connect solenoid serial port to the monitor
     connect(m_solenoid.get(), &Solenoid::serialRead, m_monitor.get(), &SerialMonitor::append_text);
-    m_monitor->show();
+    //m_monitor->show();
 
     // Setup slot connections
     connect(ui->switch_to_simulator_mode, SIGNAL(triggered()), this, SLOT(switchToSimulator()));

@@ -12,13 +12,11 @@
 #include <QGraphicsGridLayout>
 #include <QSignalMapper>
 
-//#include "camera.h"
-
 class GridDisplay : public QWidget {
 Q_OBJECT
 
 public:
-    explicit GridDisplay(QWidget *parent = nullptr);
+    explicit GridDisplay(QWidget *parent);
 //    ~GridDisplay();
 
 public Q_SLOTS:
@@ -26,15 +24,16 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void buttonClicked(QPushButton *, int x, int y);
+    void drawButtons();
+    void hideGrid();
 
 Q_SIGNALS:
 //    void itemSelected(QGraphicsItem *item);
 
 private:
     void showView();
-    void drawGrid();
     void updateScene();
-    void drawButtons();
+    void drawGrid();
 
     QGraphicsScene *m_scene;
     QGraphicsView *m_view;

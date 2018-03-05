@@ -23,7 +23,6 @@
 
 #include "../video/modify.h"
 #include "../video/recorder.h"
-#include "griddisplay.h"
 #include <QLabel>
 
 #include "../video/modify.h"
@@ -32,6 +31,8 @@
 Q_DECLARE_METATYPE(cv::Mat);
 
 class CameraDisplay;
+
+class GridDisplay;
 
 class Capture : public QObject {
 Q_OBJECT
@@ -189,7 +190,9 @@ private:
     QPushButton *m_record_btn;
     ImageViewer *m_image_viewer;
 
-	GridDisplay *m_grid_display;
+    QPushButton *m_display_grid_btn;
+    QPushButton *m_hide_grid_btn;
+    GridDisplay *m_grid_display;
 	QPushButton *m_deselect_btn;
 
     QLabel *m_framerate_label;
