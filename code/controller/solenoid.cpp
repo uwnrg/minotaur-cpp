@@ -17,7 +17,8 @@ Solenoid::Solenoid(
 }
 
 Solenoid::~Solenoid() {
-    m_serial.close();
+    // Release connection if it is still open
+    if (m_serial.isOpen()) { m_serial.close(); }
 }
 
 void Solenoid::attempt_connection(
