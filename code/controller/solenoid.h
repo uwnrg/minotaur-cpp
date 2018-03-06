@@ -15,8 +15,13 @@ enum SerialStatus {
     CONNECTED
 };
 
+/**
+ * This controller manages a connection to the Arduino and handles
+ * sending and receiving messages.
+ */
 class Solenoid : public Controller {
 Q_OBJECT
+
 public:
     /**
      * Default constructor will attempt to auto-dectect and connect
@@ -82,10 +87,13 @@ public:
      * Convert a move vector into a binary representation understood by the
      * Arduino code.
      *
+     * Two 16-bit words represent the signed (x, y) values of the vector
+     * followed by the movement time in milliseconds [0-65535].
+     *
      * @param dir the vector representing movement direction
      * @return vector encoded as a single byte
      */
-    static char vectorToBinary(Vector2i dir);
+    static QByteArray encode_message(Vector2i dir, int time);
 
 private:
     enum Direction {

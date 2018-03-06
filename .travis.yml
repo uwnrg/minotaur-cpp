@@ -26,6 +26,7 @@ script:
   - cd build
   - cmake ..
   - make
+  - ./test/tests
 
 notifications:
   slack: uwnrg:zSxSzV4CSAa1o8tA6jjMCJSP

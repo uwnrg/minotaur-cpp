@@ -1,0 +1,3 @@
+[submodule "include/googletest"]
+	path = include/googletest
+	url = https://github.com/google/googletest

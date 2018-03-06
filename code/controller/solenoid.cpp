@@ -2,6 +2,8 @@
 
 #include <QSerialPortInfo>
 
+#include <cstdint>
+
 Solenoid::Solenoid()
     : Controller(true, true) {
     // For convenience, attempt auto-detect connection at launch
@@ -82,7 +84,7 @@ void Solenoid::readSerial() {
     Q_EMIT serialRead(msg);
 }
 
-void Solenoid::__move_delegate(Vector2i dir, int) {
+void Solenoid::__move_delegate(Vector2i dir, int time) {
 #ifndef NDEBUG
     debug() << "Moving Solenoid controller";
     debug() << "Attempting to move " << dir;
@@ -91,8 +93,7 @@ void Solenoid::__move_delegate(Vector2i dir, int) {
         fatal() << "Failed to execute movement: serial port not open";
         return;
     }
-    char binary = vectorToBinary(dir);
-    m_serial.write(&binary, 1);
+    m_serial.write(encode_message(dir, time));
     if (!m_serial.waitForBytesWritten(200)) {
         fatal() << "Failed to execute movement: write timed out";
     } else {
@@ -108,27 +109,13 @@ const QSerialPort &Solenoid::serial_port() const {
     return m_serial;
 }
 
-char Solenoid::vectorToBinary(Vector2i dir) {
-    int direction = 0b0;
-    switch (dir.y()) {
-        case 1:
-            direction = direction | Direction::UP;
-            break;
-        case -1:
-            direction = direction | Direction::DOWN;
-            break;
-        default:
-            break;
-    }
-    switch (dir.x()) {
-        case 1:
-            direction = direction | Direction::RIGHT;
-            break;
-        case -1:
-            direction = direction | Direction::LEFT;
-            break;
-        default:
-            break;
-    }
-    return static_cast<char>(direction);
+QByteArray Solenoid::encode_message(Vector2i dir, int time) {
+    shrink_into<int16_t> s;
+    vector2d<int16_t> short_vec(s(dir.x()), s(dir.y()));
+    char raw[5];
+    *reinterpret_cast<int16_t *>(raw) = short_vec.x();
+    *reinterpret_cast<int16_t *>(raw + 2) = short_vec.y();
+    raw[4] = shrink_into<char>()(time);
+    QByteArray data(raw, 5);
+    return data;
 }
