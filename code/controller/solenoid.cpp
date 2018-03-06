@@ -37,7 +37,7 @@ void Solenoid::attempt_connection(
             if (
                 !port.isBusy() && (port.description().contains("Arduino") ||
                                    port.manufacturer().contains("Arduino"))
-            ) {
+                ) {
                 port_to_use = port;
                 found_port = true;
                 break;
@@ -81,7 +81,25 @@ void Solenoid::attempt_disconnect() {
 void Solenoid::readSerial() {
     QByteArray data = m_serial.readAll();
     std::string msg = data.toStdString();
-    Q_EMIT serialRead(msg);
+    if (!msg.empty()) {
+        Q_EMIT serialRead(msg);
+    }
+}
+
+Vector2i Solenoid::to_vector2i(Dir dir) {
+    constexpr power = 255;
+    switch (dir) {
+        case Dir::UP:
+            return {0, power};
+        case Dir::DOWN:
+            return {0, -power};
+        case Dir::RIGHT:
+            return {power, 0};
+        case Dir::LEFT:
+            return {-power, 0};
+        default:
+            return {0, 0};
+    }
 }
 
 void Solenoid::__move_delegate(Vector2i dir, int time) {
@@ -93,6 +111,10 @@ void Solenoid::__move_delegate(Vector2i dir, int time) {
         fatal() << "Failed to execute movement: serial port not open";
         return;
     }
+#ifndef NDEBUG
+    debug() << "Sending message:";
+    debug() << dir << " : " << time;
+#endif
     m_serial.write(encode_message(dir, time));
     if (!m_serial.waitForBytesWritten(200)) {
         fatal() << "Failed to execute movement: write timed out";
