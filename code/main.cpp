@@ -1,7 +1,7 @@
 #include <QApplication>
 
 #include "gui/mainwindow.h"
-#include "controller/astar.h"
+// #include "controller/astar.h"
 
 int main(int argc, char *argv[]) {
     qRegisterMetaType<cv::Mat>();
