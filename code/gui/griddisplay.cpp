@@ -1,36 +1,25 @@
 #include <QDebug>
 #include "griddisplay.h"
-/*Have multiple signals (one for each rectangle),
- * when a signal is emitted, it contains the coordinates of the rectangles
- * Only one slot that receives multiple signals
- * Use a signal mapper
- * https://doc.qt.io/archives/qq/qq10-signalmapper.html#thesenderapproach
- *
- * Output to boolean array (may have to change to int array later)
- *
- * TODO:
- * Optimize button adding (drawing and adding 800 buttons is very very slow)
- * Allow user to select or deselect an area
- * Dynamic implementation of columns/rows/button array
+
+/* TODO (improvements):
+ * Qt event handling is slow when handling 800 button slots
  * Change boolean to integer array, add drop down menu to select and set priorities
- *
+ * Allow user to select or deselect an area (using mouse events)
+ * Dynamic implementation of columns/rows/button array
+ * Set bounding rectangle of m_scene to m_img.size()
 */
 
-//Constructor
 GridDisplay::GridDisplay(QWidget *parent) :
     QWidget(parent) {
     //Set up graphics scene and view
     m_scene = new QGraphicsScene(this);
-//    m_scene->setParent(parent);
-//    m_scene->show();
     m_scene->setSceneRect(QRect(0, 0, sceneWidth, sceneHeight));   //TODO: set bounding rectangle to m_img.size()
-
     m_view = new QGraphicsView(m_scene, parent);
     m_view->setStyleSheet("background: transparent");
 
-    drawButtons();
-    drawGrid();
-    showView();
+//    drawButtons();
+//    drawGrid();
+//    showView();
 }
 
 void GridDisplay::buttonClicked(QPushButton *button, int x, int y) {
@@ -87,6 +76,12 @@ void GridDisplay::clearSelection() {
 
 void GridDisplay::updateScene() {
     m_scene->update();
+    showView();
+}
+
+void GridDisplay::showGrid() {
+    drawGrid();
+    drawButtons();
     showView();
 }
 

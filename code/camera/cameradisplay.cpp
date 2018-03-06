@@ -52,8 +52,8 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_capture_btn->setText(tr("Take Picture"));
     m_record_btn->setText(tr("Record Video"));
 
-    // m_display_grid_btn->setText("Display Grid Selection");
-    //  m_hide_grid_btn->setText("Hide Grid Selection");
+     m_display_grid_btn->setText("Display Grid Selection");
+    // m_hide_grid_btn->setText("Hide Grid Selection");
     m_deselect_btn->setText("Clear Grid Selection");
 
     m_framerate_label->setText("0");
@@ -65,12 +65,11 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_layout->addWidget(m_record_btn.get());
     m_layout->addWidget(m_camera_list.get());
     m_layout->addWidget(m_effects_list.get());
+    m_layout->addWidget(m_display_grid_btn.get());
+    //  m_layout->addWidget(m_hide_grid_btn.get());
+    m_layout->addWidget(m_deselect_btn.get());
     m_layout->addWidget(m_image_viewer.get());
     m_layout->addWidget(m_framerate_label.get());
-    //  m_layout->addWidget(m_display_grid_btn.get());
-    //   m_layout->addWidget(m_hide_grid_btn.get());
-    //   m_layout->addWidget(m_grid_display.get());
-    m_layout->addWidget(m_deselect_btn.get());
 
     // Video capturing and displaying connections
     connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
@@ -90,8 +89,8 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
 
     // Connections for grid GUI
     connect(m_deselect_btn.get(), &QPushButton::clicked, m_grid_display.get(), &GridDisplay::clearSelection);
-    //   connect(m_display_grid_btn, SIGNAL(clicked()), m_grid_display, SLOT(drawButtons));
-    //   connect(m_hide_grid_btn, SIGNAL(clicked()), m_grid_display, SLOT(hideGrid));
+    connect(m_display_grid_btn.get(), &QPushButton::clicked, m_grid_display.get(), &GridDisplay::showGrid);
+    // connect(m_hide_grid_btn, SIGNAL(clicked()), m_grid_display, SLOT(hideGrid));
 
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 }

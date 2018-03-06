@@ -102,10 +102,10 @@ private:
     std::unique_ptr<QPushButton> m_record_btn;
     std::unique_ptr<ImageViewer> m_image_viewer;
 
+    std::unique_ptr<GridDisplay> m_grid_display;
     std::unique_ptr<QPushButton> m_display_grid_btn;
     std::unique_ptr<QPushButton> m_hide_grid_btn;
     std::unique_ptr<QPushButton> m_deselect_btn;
-    std::unique_ptr<GridDisplay> m_grid_display;
 
     std::unique_ptr<QLabel> m_framerate_label;
 
