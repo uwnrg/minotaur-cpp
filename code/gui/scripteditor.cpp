@@ -7,9 +7,10 @@
 #include "../utility/logger.h"
 
 ScriptEditor::ScriptEditor(QWidget *parent) :
-        QDialog(parent),
-        m_active_file(),
-        ui(new Ui::ScriptEditor) {
+    QDialog(parent),
+    m_active_file(),
+    ui(std::make_unique<Ui::ScriptEditor>()),
+    m_code_editor(std::make_unique<CodeEditor>(this)) {
     ui->setupUi(this);
 
     // Make the font look like code
@@ -21,27 +22,23 @@ ScriptEditor::ScriptEditor(QWidget *parent) :
     QFontMetrics metrics(font);
     const int tab_size = 4;
     const int tab_stop_width = tab_size * metrics.width(' ');
-    m_code_editor = new CodeEditor(this);
     m_code_editor->setFont(font);
     m_code_editor->setTabStopWidth(tab_stop_width);
-    ui->editorLayout->addWidget(m_code_editor);
+    ui->editorLayout->addWidget(m_code_editor.get());
 
     QPalette palette = m_code_editor->palette();
     palette.setColor(QPalette::Base, QColor(39, 40, 34));
-    palette.setColor(QPalette::Text, QColor(248,248,242));
+    palette.setColor(QPalette::Text, QColor(248, 248, 242));
     m_code_editor->setPalette(palette);
 
     // Connect slots
-    connect(ui->openFileButton, SIGNAL(clicked()), this, SLOT(openFile()));
-    connect(ui->saveButton, SIGNAL(clicked()), this, SLOT(save()));
-    connect(ui->saveAsButton, SIGNAL(clicked()), this, SLOT(saveAs()));
-    connect(ui->newButton, SIGNAL(clicked()), this, SLOT(newFile()));
+    connect(ui->openFileButton, &QPushButton::clicked, this, &ScriptEditor::openFile);
+    connect(ui->saveButton, &QPushButton::clicked, this, &ScriptEditor::save);
+    connect(ui->saveAsButton, &QPushButton::clicked, this, &ScriptEditor::saveAs);
+    connect(ui->newButton, &QPushButton::clicked, this, &ScriptEditor::newFile);
 }
 
-ScriptEditor::~ScriptEditor() {
-    delete ui;
-    delete m_code_editor;
-}
+ScriptEditor::~ScriptEditor() = default;
 
 void ScriptEditor::reject() {
     m_active_file.clear();
@@ -51,26 +48,27 @@ void ScriptEditor::reject() {
 
 void ScriptEditor::openFile() {
     QString file_path = QFileDialog::getOpenFileName(
-            this, "Open Python Script",
-            QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
-            "Python script (*.py)");
+        this, "Open Python Script",
+        QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
+        "Python script (*.py)"
+    );
 #ifndef NDEBUG
-    Logger::log("Opened file: " + file_path.toStdString(), Logger::DEBUG);
+    debug() << "Opened file: " << file_path;
 #endif
     if (file_path.split('.', QString::SkipEmptyParts).last() != "py") {
-        Logger::log("Cannot open non-python file", Logger::FATAL);
+        fatal() << "Cannot open non-python file";
         return;
     }
     QFile script_file(file_path);
     if (!script_file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        Logger::log("Error: could not open selected script file", Logger::FATAL);
+        fatal() << "Could not open specified file";
         return;
     }
     QTextStream script_in(&script_file);
     QString script_text = script_in.readAll();
     // Set the text editor contents to the file contents
     m_code_editor->document()->setPlainText(script_text);
-    this->m_active_file = std::move(file_path);
+    m_active_file = std::move(file_path);
 }
 
 void ScriptEditor::save() {
@@ -79,41 +77,41 @@ void ScriptEditor::save() {
         return;
     }
 #ifndef NDEBUG
-    Logger::log("Saving active file: " + m_active_file.toStdString(), Logger::DEBUG);
+    debug() << "Saving active file: " << m_active_file;
 #endif
     QFile script_file(m_active_file);
     if (!script_file.open(QIODevice::WriteOnly)) {
-        Logger::log("Error: could not save file", Logger::FATAL);
+        fatal() << "Error: could not save file";
         return;
     }
     QTextStream script_out(&script_file);
     script_out << m_code_editor->toPlainText();
 #ifndef NDEBUG
-    Logger::log("Save successful", Logger::DEBUG);
+    debug() << "Save successful";
 #endif
 }
 
 void ScriptEditor::saveAs() {
     QString file_path = QFileDialog::getSaveFileName(
-            this, "Save Script",
-            QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
-            "Python script (*.py)");
+        this, "Save Script",
+        QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
+        "Python script (*.py)");
 #ifndef NDEBUG
-    Logger::log("Saving to file: " + file_path.toStdString(), Logger::DEBUG);
+    debug() << "Saving to file: " << file_path;
 #endif
     if (file_path.isEmpty() || file_path.split('.', QString::SkipEmptyParts).last() != "py") {
-        Logger::log("Error: invalid save file", Logger::FATAL);
+        fatal() << "Error: invalid save file";
         return;
     }
     QFile script_file(file_path);
     if (!script_file.open(QIODevice::WriteOnly)) {
-        Logger::log("Error: could not save file", Logger::FATAL);
+        fatal() << "Error: could no save file";
         return;
     }
     QTextStream script_out(&script_file);
     script_out << m_code_editor->toPlainText();
 #ifndef NDEBUG
-    Logger::log("Save successful", Logger::DEBUG);
+    debug() << "Save successful";
 #endif
 }
 

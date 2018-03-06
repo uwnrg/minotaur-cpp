@@ -12,11 +12,7 @@ Q_OBJECT
 public:
     Recorder(const std::string &file_name, int four_cc, double frame_rate, cv::Size size, bool is_color = true);
 
-    void modify(cv::Mat *img);
-
-    void finish();
-
-    Q_SLOT void image_received(cv::Mat &img);
+    Q_SLOT void image_received(cv::UMat &img);
 
     Q_SLOT void stop_recording();
 

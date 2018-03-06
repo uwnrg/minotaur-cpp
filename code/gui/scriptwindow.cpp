@@ -5,19 +5,23 @@
 #include "ui_scriptwindow.h"
 
 ScriptWindow::ScriptWindow(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::ScriptWindow) {
+    QDialog(parent),
+    ui(std::make_unique<Ui::ScriptWindow>()),
+    m_interpreter_text_edit(std::make_unique<InterpreterTextEdit>(this)),
+    m_results_text_display(std::make_unique<ResultsTextDisplay>(this)),
+    m_script_editor(std::make_unique<ScriptEditor>(this)) {
     ui->setupUi(this);
 
     // Create text edit and text display
-    m_interpreter_text_edit = new InterpreterTextEdit(this);
-    m_results_text_display = new ResultsTextDisplay(this);
-    m_script_editor = new ScriptEditor(this);
-    m_file_dialog = new QFileDialog(this, "Run Python File",
-                                    QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
-                                    "Python script (*.py)");
-    ui->interpreterLayout->addWidget(m_interpreter_text_edit);
-    ui->displayLayout->addWidget(m_results_text_display);
+    m_file_dialog = std::make_unique<QFileDialog>(
+        this,
+        "Run Python File",
+        QDir::currentPath() + QDir::separator() + PYTHON_SCRIPT_DIR,
+        "Python script (*.py)"
+    );
+
+    ui->interpreterLayout->addWidget(m_interpreter_text_edit.get());
+    ui->displayLayout->addWidget(m_results_text_display.get());
 
     // Make the font look like code
     QFont font;
@@ -34,26 +38,19 @@ ScriptWindow::ScriptWindow(QWidget *parent) :
     m_results_text_display->setTabStopWidth(tab_stop_width);
 
     // Connect signals to slots
-    connect(ui->openEditorButton, SIGNAL(clicked()), this, SLOT(openScriptEditor()));
-    connect(ui->resetButton, SIGNAL(clicked()), this, SLOT(resetInterpreter()));
-    connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(closeInterpreter()));
-    connect(ui->runButton, SIGNAL(clicked()), this, SLOT(runScript()));
-    connect(ui->runFileButton, SIGNAL(clicked()), this, SLOT(openRunFile()));
+    connect(ui->openEditorButton, &QPushButton::clicked, this, &ScriptWindow::openScriptEditor);
+    connect(ui->resetButton, &QPushButton::clicked, this, &ScriptWindow::resetInterpreter);
+    connect(ui->cancelButton, &QPushButton::clicked, this, &ScriptWindow::closeInterpreter);
+    connect(ui->runButton, &QPushButton::clicked, this, &ScriptWindow::runScript);
+    connect(ui->runFileButton, &QPushButton::clicked, this, &ScriptWindow::openRunFile);
 
     // Text editor signals
-    connect(m_file_dialog, SIGNAL(fileSelected(const QString &)), this, SLOT(processRunFile(const QString &)));
-    connect(m_interpreter_text_edit, SIGNAL(scriptSubmitted()), this, SLOT(runScript()));
-    connect(this, SIGNAL(scriptSubmitted(const QString&, const QString&, const QString&)),
-            m_results_text_display, SLOT(appendResults(const QString&, const QString&, const QString&)));
+    connect(m_file_dialog.get(), &QFileDialog::fileSelected, this, &ScriptWindow::processRunFile);
+    connect(m_interpreter_text_edit.get(), &InterpreterTextEdit::scriptSubmitted, this, &ScriptWindow::runScript);
+    connect(this, &ScriptWindow::scriptSubmitted, m_results_text_display.get(), &ResultsTextDisplay::appendResults);
 }
 
-ScriptWindow::~ScriptWindow() {
-    delete ui;
-    delete m_interpreter_text_edit;
-    delete m_results_text_display;
-    delete m_file_dialog;
-    delete m_script_editor;
-}
+ScriptWindow::~ScriptWindow() = default;
 
 void ScriptWindow::setVisible(bool visible) {
     if (visible) { PythonEngine::getInstance().initialize(); }
@@ -82,7 +79,7 @@ void ScriptWindow::closeInterpreter() {
 
 void ScriptWindow::runScript() {
     if (!PythonEngine::getInstance().isReady()) {
-        Logger::log("Error: running script while PyEngine is off", Logger::FATAL);
+        fatal() << "Error: running script while PyEngine is off";
         return;
     }
     std::string script = m_interpreter_text_edit->toPlainText().toStdString();
@@ -90,9 +87,9 @@ void ScriptWindow::runScript() {
     PythonEngine::getInstance().run(script, &py_out, &py_err);
     // Emit signal to output display to append results
     Q_EMIT scriptSubmitted(
-            QString::fromStdString(script),
-            QString::fromStdString(py_out),
-            QString::fromStdString(py_err));
+        QString::fromStdString(script),
+        QString::fromStdString(py_out),
+        QString::fromStdString(py_err));
     m_interpreter_text_edit->clear();
 }
 
@@ -108,17 +105,17 @@ void ScriptWindow::processRunFile(const QString &filePath) {
         return;
     }
 #ifndef NDEBUG
-    Logger::log("Processing python script file: " + filePath.toStdString(), Logger::DEBUG);
+    debug() << "Processing python script file: " << filePath;
 #endif
     QFile script_file(filePath);
     if (!script_file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        Logger::log("Error: could not open selected script file", Logger::FATAL);
+        fatal() << "Error: could not open selected script file";
         return;
     }
     QTextStream script_in(&script_file);
     std::string script_text = script_in.readAll().toStdString();
     if (!PythonEngine::getInstance().isReady()) {
-        Logger::log("Error: running script while PyEngine is off", Logger::FATAL);
+        fatal() << "Error: running script while PyEngine is off";
         return;
     }
     std::string py_out, py_err;
@@ -128,14 +125,14 @@ void ScriptWindow::processRunFile(const QString &filePath) {
     if (sep_index >= 0) {
         QStringRef file_name(&filePath, sep_index + 1, filePath.length() - sep_index - 1);
         Q_EMIT scriptSubmitted(
-                "Running " + file_name.toString() + '\n',
-                QString::fromStdString(py_out),
-                QString::fromStdString(py_err));
+            "Running " + file_name.toString() + '\n',
+            QString::fromStdString(py_out),
+            QString::fromStdString(py_err));
     } else {
         Q_EMIT scriptSubmitted(
-                "Running " + filePath + '\n',
-                QString::fromStdString(py_out),
-                QString::fromStdString(py_err));
+            "Running " + filePath + '\n',
+            QString::fromStdString(py_out),
+            QString::fromStdString(py_err));
     }
 }
 

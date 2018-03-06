@@ -10,16 +10,18 @@ MainWindow::MainWindow(
     const char *
 ) :
     QMainWindow(parent),
-    m_monitor(new SerialMonitor(this)),
-    ui(new Ui::MainWindow) {
-
+    ui(std::make_unique<Ui::MainWindow>()),
+    m_script_window(std::make_unique<ScriptWindow>(this)),
+    m_about_window(std::make_unique<ActionAbout>(this)),
+    m_camera_display(std::make_unique<CameraDisplay>(this)),
+    m_serial_monitor(std::make_unique<SerialMonitor>(this)) {
     ui->setupUi(this);
 
     // Set up logger
     Logger::setStream(getLogView());
 
     // Setup the controllers and solenoid connection
-    m_simulator = std::make_shared<Simulator>(1, -1);
+    m_simulator = std::make_shared<Simulator>();
     // If a port is passed use it TODO: QCommandLineParser
     if (argc >= 2) {
         m_solenoid = std::make_shared<Solenoid>(argv[1]);
@@ -34,20 +36,27 @@ MainWindow::MainWindow(
     PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
 
     // Setup sub-windows
-    m_simulator_window = new SimulatorWindow(m_simulator, this);
-    m_script_window = new ScriptWindow(this);
-    m_about_window = new ActionAbout(this);
-    m_camera_display = new CameraDisplay(this);
+    m_simulator_window = std::make_unique<SimulatorWindow>(m_simulator, this);
+    m_serial_box = std::make_unique<SerialBox>(m_solenoid, this);
 
     // Connect solenoid serial port to the monitor
-    connect(m_solenoid.get(), &Solenoid::serialRead, m_monitor.get(), &SerialMonitor::append_text);
-    //m_monitor->show();
+    connect(m_solenoid.get(), &Solenoid::serialRead, m_serial_monitor.get(), &SerialMonitor::append_text);
 
-    // Setup slot connections
-    connect(ui->switch_to_simulator_mode, SIGNAL(triggered()), this, SLOT(switchToSimulator()));
-    connect(ui->start_python_interpreter, SIGNAL(triggered()), this, SLOT(openPythonInterpreter()));
-    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(openActionAbout()));
-    connect(ui->actionWebcam_View, SIGNAL(triggered()), this, SLOT(openCameraDisplay()));
+    // Simulator and controls
+    connect(ui->switch_to_simulator_mode, &QAction::triggered, this, &MainWindow::switchToSimulator);
+    connect(ui->move_button, &QPushButton::clicked, this, &MainWindow::moveButtonClicked);
+
+    // Opening sub windows
+    connect(ui->start_python_interpreter, &QAction::triggered, m_script_window.get(), &QDialog::show);
+    connect(ui->open_about, &QAction::triggered, m_about_window.get(), &QDialog::show);
+    connect(ui->open_camera_display, &QAction::triggered, m_camera_display.get(), &QDialog::show);
+    connect(ui->open_serial_monitor, &QAction::triggered, m_serial_monitor.get(), &QDialog::show);
+    connect(ui->open_serial_box, &QAction::triggered, m_serial_box.get(), &QDialog::show);
+
+    // Drop-down actions
+    connect(ui->action_clear_log, &QAction::triggered, this, &MainWindow::clearLogOutput);
+    connect(ui->action_invert_x_axis, &QAction::triggered, this, &MainWindow::invertControllerX);
+    connect(ui->action_invert_y_axis, &QAction::triggered, this, &MainWindow::invertControllerY);
 
     // setup focus and an event filter to capture key events
     this->installEventFilter(this);
@@ -108,28 +117,21 @@ void MainWindow::mousePressEvent(QMouseEvent *) {
     this->setFocus();
 }
 
-MainWindow::~MainWindow() {
-    // Destroy all subwindows
-    delete m_about_window;
-    delete m_simulator_window;
-    delete m_script_window;
-    delete m_camera_display;
-    delete ui;
-}
+MainWindow::~MainWindow() = default;
 
-void MainWindow::onMoveButtonClicked() {
+void MainWindow::moveButtonClicked() {
     auto dir = (Controller::Dir) ui->selected_direction->currentIndex();
     m_controller->move(dir);
 }
 
 void MainWindow::switchControllerTo(Controller::Type const type) {
 #ifndef NDEBUG
-    Logger::log("Switch controller button clicked", Logger::DEBUG);
+    debug() << "Switch controller button clicked";
 #endif
     // Do nothing if the same controller type is selected
     if (m_controller_type == type) {
 #ifndef NDEBUG
-        Logger::log("No controller change", Logger::DEBUG);
+        debug() << "No controller change";
 #endif
         return;
     }
@@ -137,13 +139,13 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
     switch (type) {
         case Controller::Type::SOLENOID:
             // Switch to the solenoid controller and hide the simulation window
-            Logger::log("Switching to SOLENOID", Logger::INFO);
+            log() << "Switching to SOLENOID";
             m_controller = m_solenoid;
             if (m_simulator_window->isVisible()) { m_simulator_window->hide(); }
             break;
         case Controller::Type::SIMULATOR:
             // Switch to the simulator controller and show the simulator window
-            Logger::log("Switching to SIMULATOR", Logger::INFO);
+            log() << "Switching to SIMULATOR";
             m_controller = m_simulator;
             if (!m_simulator_window->isVisible()) { m_simulator_window->show(); }
             break;
@@ -152,14 +154,16 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
     }
 }
 
-void MainWindow::openPythonInterpreter() {
-    m_script_window->show();
+void MainWindow::clearLogOutput() {
+    Logger::clear_log();
 }
 
-void MainWindow::openActionAbout() {
-    m_about_window->show();
+void MainWindow::invertControllerX() {
+    log() << "Inverting X-axis";
+    m_controller->invert_x_axis();
 }
 
-void MainWindow::openCameraDisplay() {
-    m_camera_display->show();
+void MainWindow::invertControllerY() {
+    log() << "Inverting Y-axis";
+    m_controller->invert_y_axis();
 }

@@ -2,9 +2,9 @@
 #include <QTextBlock>
 #include "codeeditor.h"
 
-LineNumberArea::LineNumberArea(CodeEditor *editor)
-        : QWidget(editor),
-          m_code_editor(editor) {
+LineNumberArea::LineNumberArea(CodeEditor *editor) :
+    QWidget(editor),
+    m_code_editor(editor) {
 }
 
 QSize LineNumberArea::sizeHint() const {
@@ -15,24 +15,21 @@ void LineNumberArea::paintEvent(QPaintEvent *event) {
     m_code_editor->lineNumberAreaPaintEvent(event);
 }
 
-CodeEditor::CodeEditor(QWidget *parent)
-        : QPlainTextEdit(parent) {
-    m_line_number_area = new LineNumberArea(this);
+CodeEditor::CodeEditor(QWidget *parent) :
+    QPlainTextEdit(parent),
+    m_line_number_area(std::make_unique<LineNumberArea>(this)){
 
-    connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
-    connect(this, SIGNAL(updateRequest(const QRect &, int)), this, SLOT(updateLineNumberArea(const QRect &, int)));
-    connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
+    connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
+    connect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
+    connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
 
     updateLineNumberAreaWidth(0);
     highlightCurrentLine();
 
-    m_highlighter = new HighLighter(this->document());
+    m_highlighter = std::make_unique<HighLighter>(this->document());
 }
 
-CodeEditor::~CodeEditor() {
-    delete m_highlighter;
-    delete m_line_number_area;
-}
+CodeEditor::~CodeEditor() = default;
 
 int CodeEditor::lineNumberAreaWidth() const {
     int digits = 1;
@@ -81,12 +78,12 @@ void CodeEditor::highlightCurrentLine() {
 }
 
 void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) {
-    QPainter painter(m_line_number_area);
+    QPainter painter(m_line_number_area.get());
     painter.fillRect(event->rect(), QColor(39, 40, 34));
     QTextBlock block = firstVisibleBlock();
     int blockNumber = block.blockNumber();
-    int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
-    int bottom = top + (int) blockBoundingRect(block).height();
+    int top = static_cast<int>(blockBoundingGeometry(block).translated(contentOffset()).top());
+    int bottom = top + static_cast<int>(blockBoundingRect(block).height());
     while (block.isValid() && top <= event->rect().bottom()) {
         if (block.isVisible() && bottom >= event->rect().top()) {
             QString number = QString::number(blockNumber + 1);
@@ -95,7 +92,7 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) {
         }
         block = block.next();
         top = bottom;
-        bottom = top + (int) blockBoundingRect(block).height();
+        bottom = top + static_cast<int>(blockBoundingRect(block).height());
         ++blockNumber;
     }
 }

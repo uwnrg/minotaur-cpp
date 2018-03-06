@@ -2,17 +2,19 @@
 #define CLOCK_TIME_H
 
 #include <ctime>
-#include <stdio.h>
 #include <string>
 
-#define TIME_CHAR_BUFFER 10
 class ClockTime {
 public:
-    static std::string getCurrentTime ();
+    static std::string getCurrentTime();
 
 private:
-    static time_t m_rawtime;
-    static struct tm* m_timeinfo;
+    enum {
+        TIME_CHAR_BUFFER = 10
+    };
+
+    static time_t m_raw_time;
+    static struct tm *m_time_info;
 };
 
 #endif // CLOCK_TIME_H

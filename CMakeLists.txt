@@ -1,9 +1,11 @@
+# Path to project cmake files
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
+# Include utility and Python build functions
 include(Util)
 include(Python)
 
+# Fix for finding the correct Python version on Apple
 if (APPLE)
-    # Apple hard sets these variables for system Python
     unset(PYTHON_LIBRARY CACHE)
     unset(PYTHON_INCLUDE_DIR CACHE)
     unset(PYTHON_LIBRARIES CACHE)
@@ -84,7 +86,7 @@ add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} code/g
 # Qt5 modules
 qt5_use_modules(minotaur-cpp SerialPort)
 
-# Uncomment this line to compile in debug mode
+# Supply cmake argument -D NO_DEBUG=ON to disable console debug output
 option(NO_DEBUG "Build minotaur without debugging output" OFF)
 if (NO_DEBUG)
     log("Building without debugging")
@@ -94,16 +96,26 @@ else ()
     log("Building with debugging on")
 endif ()
 
+# Find and link OpenCV 3 package
+find_package(OpenCV 3 REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+target_link_libraries(minotaur-cpp ${OpenCV_LIBS})
+
+# Supply cmake argument -D NO_CONTRIB=ON to disable tracking module
+option(NO_CONTRIB "Build minotaur without OpenCV contrib modules" OFF)
+include(CheckIncludeFileCXX)
+# Check for the OpenCV tracking contrib module
+check_include_file_cxx(opencv2/tracking.hpp HAVE_OPENCV_TRACKER)
+if (NO_CONTRIB OR NOT HAVE_OPENCV_TRACKER)
+    target_compile_definitions(minotaur-cpp PRIVATE TRACKER_OFF)
+    log("Building without OpenCV tracking module")
+endif ()
+
 # Attempt to find GOTURN files
 include(Goturn)
 if (${GOTURN_FILES_FOUND})
     target_compile_definitions(minotaur-cpp PRIVATE GOTURN_FOUND)
 endif ()
-
-# Find and link OpenCV 3 package
-find_package(OpenCV 3 REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
-target_link_libraries(minotaur-cpp ${OpenCV_LIBS})
 
 # Link Qt, Python, and Thread libraries
 target_link_libraries(minotaur-cpp

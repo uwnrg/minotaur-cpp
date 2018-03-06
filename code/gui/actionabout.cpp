@@ -2,12 +2,13 @@
 #include "actionabout.h"
 #include "ui_actionabout.h"
 
+#include "../utility/utility.h"
+
 ActionAbout::ActionAbout(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ActionAbout)
-{
+    ui(std::make_unique<Ui::ActionAbout>()) {
     ui->setupUi(this);
-    QPixmap pix(":/graphics/img/UWNRG.png");
+    QPixmap pix("../img/UWNRG.png");
     ui->graphicsView->setFrameStyle(QFrame::NoFrame);
     ui->textBrowser->setFrameStyle(QFrame::NoFrame);
     ui->textBrowser2->setFrameStyle(QFrame::NoFrame);
@@ -20,7 +21,4 @@ ActionAbout::ActionAbout(QWidget *parent) :
     setWindowTitle(tr("About"));
 }
 
-ActionAbout::~ActionAbout()
-{
-    delete ui;
-}
+ActionAbout::~ActionAbout() = default;

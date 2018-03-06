@@ -108,23 +108,23 @@ private:
 
 
 private:
-    Ui::ScriptWindow *ui;
+    std::unique_ptr<Ui::ScriptWindow> ui;
     /**
      * Text edit where the user writes python code.
      */
-    InterpreterTextEdit *m_interpreter_text_edit;
+    std::unique_ptr<InterpreterTextEdit> m_interpreter_text_edit;
     /**
      * Text display where python output is appended.
      */
-    ResultsTextDisplay *m_results_text_display;
+    std::unique_ptr<ResultsTextDisplay> m_results_text_display;
     /**
      * File explorer for python scripts.
      */
-    QFileDialog *m_file_dialog;
+    std::unique_ptr<QFileDialog> m_file_dialog;
     /**
      * Python script editing window.
      */
-    ScriptEditor *m_script_editor;
+    std::unique_ptr<ScriptEditor> m_script_editor;
 
 };
 

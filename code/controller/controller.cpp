@@ -1,26 +1,28 @@
 #include "controller.h"
 
-Controller::Controller(int t_invert_x, int t_invert_y) :
-        m_invert_x(t_invert_x), m_invert_y(t_invert_y) {}
+Controller::Controller(bool invert_x, bool invert_y) :
+    m_invert_x(invert_x),
+    m_invert_y(invert_y) {}
 
 Vector2i Controller::toVec2(Dir dir) {
     Vector2i vector_dir(0, 0);
-
     switch (dir) {
         case UP:
-            vector_dir.y_comp = 1;
+            vector_dir.y() = 1;
             break;
         case DOWN:
-            vector_dir.y_comp = -1;
+            vector_dir.y() = -1;
             break;
         case RIGHT:
-            vector_dir.x_comp = 1;
+            vector_dir.x() = 1;
             break;
         case LEFT:
-            vector_dir.x_comp = -1;
+            vector_dir.x() = -1;
             break;
         default:
-            Logger::log("Invalid direction specified for movement: " + std::to_string(dir), Logger::FATAL);
+#ifndef NDEBUG
+            fatal() << "Invalid direction for movement: " << dir;
+#endif
             return vector_dir;
     }
     return vector_dir;
@@ -29,20 +31,22 @@ Vector2i Controller::toVec2(Dir dir) {
 void Controller::invertAxis(Axis axis) {
     switch (axis) {
         case X:
-            m_invert_x *= -1;
+            m_invert_x = !m_invert_x;
             break;
         case Y:
-            m_invert_y *= -1;
+            m_invert_y = !m_invert_y;
             break;
         default:
-            Logger::log("Invalid axis specified for inversion: " + std::to_string(axis), Logger::FATAL);
+#ifndef NDEBUG
+            fatal() << "Invalid axis for inversion: " << axis;
+#endif
             break;
     }
 }
 
 void Controller::keyPressed(int key) {
 #ifndef NDEBUG
-    Logger::log("Keypressed " + std::to_string(key), Logger::DEBUG);
+    debug() << "Keypressed " << key;
 #endif
     auto it = m_keyMap.find(key);
     if (it != m_keyMap.end()) {
@@ -53,7 +57,7 @@ void Controller::keyPressed(int key) {
 
 void Controller::keyReleased(int key) {
 #ifndef NDEBUG
-    Logger::log("Keyreleased " + std::to_string(key), Logger::DEBUG);
+    debug() << "Keyreleased " << key;
 #endif
     auto it = m_keyMap.find(key);
     if (it != m_keyMap.end()) {
@@ -72,4 +76,16 @@ bool Controller::isKeyDown(int key) {
 
 void Controller::move(Dir dir, int timer) {
     move(Controller::toVec2(dir), timer);
+}
+
+void Controller::move(Vector2i dir, int step_time) {
+    __move_delegate({dir.x() * (m_invert_x ? -1 : 1), dir.y() * (m_invert_y ? -1 : 1)}, step_time);
+}
+
+void Controller::invert_x_axis() {
+    m_invert_x = !m_invert_x;
+}
+
+void Controller::invert_y_axis() {
+    m_invert_y = !m_invert_y;
 }
