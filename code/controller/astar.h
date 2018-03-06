@@ -5,23 +5,9 @@
 #include <map>
 #include <stack>
 
-struct Coord {
-    int x;
-    int y;
-    Coord(int x, int y): x(x), y(y) {}
-};
-
-bool operator == (Coord a, Coord b) {
-    return a.x == b.x && a.y == b.y;
-}
-
-bool operator != (Coord a, Coord b) {
-    return !(a == b);
-}
-
 class Astar {
 private:
-    typedef typename std::vector< std::vector<int> > Grid;
+    typedef typename std::vector< std::vector<int> > grid;
     typedef typename std::pair<double, Coord> associatedCost;
 
     std::vector<Coord> path;
@@ -30,14 +16,31 @@ private:
     bool isValid(int, int, int, int);
 
     std::vector<Coord> getNeighbours(Coord, int, int);
-    Grid makeTerrain();
+    grid makeTerrain();
 
     void backtrack(Coord, Coord, std::map<Coord, Coord>);
 
 public:
-    Astar();
-    void searchPath(Grid terrain, Coord cur, Coord dest);
+    struct Coord {
+        int x;
+        int y;
+    };
 
+    Astar();
+    void searchPath(grid terrain, Coord cur, Coord dest);
 };
+
+
+bool operator == (Astar::Coord a, Astar::Coord b) {
+    return a.x == b.x && a.y == b.y;
+}
+
+bool operator != (Astar::Coord a, Astar::Coord b) {
+    return !(a == b);
+}
+
+bool operator < (Astar::Coord a, Astar::Coord b) {
+    return std::tie(a.x, a.y) < std::tie(b.x, b.y);
+}
 
 #endif

@@ -1,14 +1,21 @@
 #include "astar.h"
 #include <cmath>
-#include <unordered_map>
-#include <map>
 #include <set>
 #include <queue>
+#include <iostream>
 
 using namespace std;
 
 Astar::Astar() {
+    grid a = makeTerrain();
+    Coord start = {4, 0};
+    Coord end = {0, 4};
 
+    searchPath(a, start, end);
+
+    for (Coord c: path) {
+        cout << c.x << " " << c.y << endl;
+    }
 }
 
 double Astar::manhattanDist(Coord cur, Coord dest) {
@@ -19,35 +26,35 @@ bool Astar::isValid(int x, int y, int maxRow, int maxCol) {
     return (x >= 0) && (x <maxRow) && (y >= 0) && (y < maxCol);
 }
 
-vector<Coord> Astar::getNeighbours(Coord c, int maxRow, int maxCol) {
+vector<Astar::Coord> Astar::getNeighbours(Coord c, int maxRow, int maxCol) {
     vector<Coord> neighbours;
     int cur_x = c.x;
     int cur_y = c.y;
     if (isValid(cur_x-1, cur_y, maxRow, maxCol)) {
-        neighbours.push_back(Coord(cur_x-1, cur_y));
+        neighbours.push_back(Coord{cur_x-1, cur_y});
     }
     if (isValid(cur_x+1, cur_y, maxRow, maxCol)) {
-        neighbours.push_back(Coord(cur_x+1, cur_y));
+        neighbours.push_back(Coord{cur_x+1, cur_y});
     }
     if (isValid(cur_x, cur_y-1, maxRow, maxCol)) {
-        neighbours.push_back(Coord(cur_x, cur_y-1));
+        neighbours.push_back(Coord{cur_x, cur_y-1});
     }
     if (isValid(cur_x, cur_y+1, maxRow, maxCol)) {
-        neighbours.push_back(Coord(cur_x, cur_y+1));
+        neighbours.push_back(Coord{cur_x, cur_y+1});
     }
 
     return neighbours;
 }
 
-Grid Astar::makeTerrain() {
-    Grid a = {{1,   1, 100, 1},
+Astar::grid Astar::makeTerrain() {
+    grid a = {{1,   1, 100, 1},
               {1,   1, 100, 1},
               {100, 1, 1,   1},
               {1,   1, 100, 1}};
     return a;
 }
 
-void Astar::backtrack(Coord start, Coord dest, map<Coord, Coord> parent) {
+void Astar::backtrack(Astar::Coord start, Astar::Coord dest, map<Astar::Coord, Astar::Coord> parent) {
     Coord cur = dest;
     while (cur != start) {
         path.push_back(cur);
@@ -56,12 +63,12 @@ void Astar::backtrack(Coord start, Coord dest, map<Coord, Coord> parent) {
     path.push_back(start);
 }
 
-void Astar::searchPath(Grid terrain, Coord start, Coord dest) {
+void Astar::searchPath(Astar::grid terrain, Astar::Coord start, Astar::Coord dest) {
     map<Coord, Coord> parent;
     map<Coord, double> cost;
-    set<associatedCost> frontier;
+    set< pair<double, Coord> > frontier;
 
-    frontier.put(start, 0);
+    frontier.insert(make_pair(0, start));
     parent[start] = start;
     cost[start] = 0;
     int maxRow = terrain.size();
@@ -69,9 +76,11 @@ void Astar::searchPath(Grid terrain, Coord start, Coord dest) {
 
     while(!frontier.empty()) {
         associatedCost a = *frontier.begin();
-        Coord cur = a.second();
+        Coord cur = a.second;
 
         if (cur == dest) break;
+
+        vector<Coord> neighbours = getNeighbours(cur, maxRow, maxCol);
 
         for (Coord next: getNeighbours(cur, maxRow, maxCol)) {
             double new_cost = cost[cur] + terrain[next.x][next.y];
