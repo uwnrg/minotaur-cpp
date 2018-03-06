@@ -27,9 +27,6 @@ protected Q_SLOTS:
     void drawButtons();
     void hideGrid();
 
-Q_SIGNALS:
-//    void itemSelected(QGraphicsItem *item);
-
 private:
     void showView();
     void updateScene();
@@ -37,8 +34,7 @@ private:
 
     QGraphicsScene *m_scene;
     QGraphicsView *m_view;
-    QPushButton *m_button[40][20];
-    QPushButton *m_button1;
+    QPushButton *m_button[40][20];  //TODO: Replace hardcoded values
     bool squareSelected[40][20];
 
     QString buttonStyle = QString(
@@ -52,7 +48,7 @@ private:
         "height: 8px;"
     );
 
-    QSignalMapper *m_signalmapper;
+    //QSignalMapper *m_signalmapper;
 
     const int gridSize = 20;
     int sceneWidth = 800;

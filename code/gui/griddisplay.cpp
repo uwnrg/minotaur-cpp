@@ -18,43 +18,22 @@
 
 //Constructor
 GridDisplay::GridDisplay(QWidget *parent) :
-    QWidget(parent)
-{
+    QWidget(parent) {
+    //Set up graphics scene and view
     m_scene = new QGraphicsScene(this);
 //    m_scene->setParent(parent);
 //    m_scene->show();
-
-//    m_button1 = new QPushButton();
-//    m_button1->setText("Button 1");
-//    m_button1->setFixedSize(gridSize*5, gridSize);
-//    m_button1->setGeometry(QRect(0, gridSize + 5, gridSize*5, gridSize));
-    drawButtons();
-
-    //Set up graphics scene and view
     m_scene->setSceneRect(QRect(0, 0, sceneWidth, sceneHeight));   //TODO: set bounding rectangle to m_img.size()
-//    m_scene->addWidget(m_button1);
 
     m_view = new QGraphicsView(m_scene, parent);
     m_view->setStyleSheet("background: transparent");
-    //   m_view->show();
 
+    drawButtons();
     drawGrid();
-
-    //TODO: Give QGraphicsScene a grid layout
-//    m_layout = new QGraphicsGridLayout;
-//    m_scene = new QGraphicsLayoutItem;
-//    m_layout->addItem(m_scene, 0, 0, 1, 1);
-
-    //Signals
-//    connect(m_button1, SIGNAL(clicked()), this, SLOT(buttonClicked()));
-//    connect(m_button1, &QPushButton::clicked, [=](){this->buttonClicked(m_button1);} );
-
     showView();
 }
 
-//Slot
-void GridDisplay::buttonClicked(QPushButton *button, int x, int y){
-  //  QPushButton *button = (QPushButton *)sender();
+void GridDisplay::buttonClicked(QPushButton *button, int x, int y) {
     if (squareSelected[x][y]){
         squareSelected[x][y] = false;
         m_button[x][y]->setStyleSheet(buttonStyle);
@@ -62,18 +41,17 @@ void GridDisplay::buttonClicked(QPushButton *button, int x, int y){
         squareSelected[x][y] = true;
         m_button[x][y]->setStyleSheet(buttonSelectedStyle);
     }
+#ifndef NDEBUG
     qDebug() << "Button (" << x << "," << y << ") = " << squareSelected[x][y];
-    //Instead of setting text, change button style to filled
+#endif
 }
 
-void GridDisplay::drawButtons(){
-    int y = 0;
+void GridDisplay::drawButtons() {
 //    m_signalmapper = new QSignalMapper(this);
 //    connect(m_signalmapper, SIGNAL(mapped(int)), this, SIGNAL(buttonClicked(int)));
     for (int y = 0; y < rowCount; y++) {
         for (int x = 0; x < columnCount; x++) {
             QString text = QString::number(x);
-
             m_button[x][y] = new QPushButton();
             m_button[x][y]->setGeometry(QRect(x * gridSize, y * gridSize, gridSize, gridSize));
             m_button[x][y]->setStyleSheet(buttonStyle);
@@ -87,18 +65,18 @@ void GridDisplay::drawButtons(){
             //multiple signals solution 3: lambda functions
             connect(m_button[x][y], &QPushButton::clicked, [=]() { this->buttonClicked(m_button[x][y], x, y); });
             m_scene->addWidget(m_button[x][y]);
-            //  connect(m_button[i], SIGNAL(clicked()), this, SLOT(buttonClicked(m_button[i])));
        }
     }
 }
 
-void GridDisplay::showView(){
+void GridDisplay::showView() {
     m_view->show();
 }
 
-//Slot
-void GridDisplay::clearSelection(){
+void GridDisplay::clearSelection() {
+#ifndef NDEBUG
     qDebug() << "Clear Selection";
+#endif
     for (int y = 0; y < rowCount; y++) {
         for (int x = 0; x < columnCount; x++) {
             m_button[x][y]->setStyleSheet(buttonStyle);
@@ -107,23 +85,22 @@ void GridDisplay::clearSelection(){
     }
 }
 
-void GridDisplay::updateScene(){
+void GridDisplay::updateScene() {
     m_scene->update();
     showView();
 }
 
-void GridDisplay::drawGrid(){
+void GridDisplay::drawGrid() {
     QPainter painter;
     painter.setPen(Qt::gray);
     painter.setBrush(Qt::green);
     for (int y = 0; y < rowCount; y++) {
         for (int x = 0; x < columnCount; x++) {
             m_scene->addLine(QLine(x*gridSize, y*gridSize, x*gridSize, y*gridSize));
-            //painter.drawLine(QLine(x*gridSize, y*gridSize, x*gridSize, y*gridSize));
         }
     }
 }
 
-void GridDisplay::hideGrid(){
-
+void GridDisplay::hideGrid() {
+    //TODO
 }
