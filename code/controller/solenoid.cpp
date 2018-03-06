@@ -115,7 +115,7 @@ QByteArray Solenoid::encode_message(Vector2i dir, int time) {
     char raw[5];
     *reinterpret_cast<int16_t *>(raw) = short_vec.x();
     *reinterpret_cast<int16_t *>(raw + 2) = short_vec.y();
-    raw[4] = shrink_into<char>()(time);
+    raw[4] = shrink_into<uint8_t>()(time);
     QByteArray data(raw, 5);
     return data;
 }
