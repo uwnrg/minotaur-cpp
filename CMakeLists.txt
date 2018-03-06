@@ -39,15 +39,15 @@ if (Qt5_POSITION_INDEPENDENT_CODE)
 endif ()
 
 file(GLOB_RECURSE SOURCE_FILES
-        ${PROJECT_SOURCE_DIR}/code/*.cpp
         ${PROJECT_SOURCE_DIR}/code/**/*.cpp)
 
 file(GLOB_RECURSE HEADER_FILES
-        ${PROJECT_SOURCE_DIR}/code/*.h
         ${PROJECT_SOURCE_DIR}/code/**/*.h)
 
 file(GLOB_RECURSE FORM_FILES
-        ${PROJECT_SOURCE_DIR}/code/gui/*.ui)
+        ${PROJECT_SOURCE_DIR}/code/**/*.ui)
+
+set(MINOTAUR_EXECUTABLE_MAIN ${PROJECT_SOURCE_DIR}/code/main.cpp)
 
 add_python_target(code/scripts/__init__.py)
 add_python_target(code/scripts/robot.py)
@@ -63,29 +63,24 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 get_target_property(QtCore_location Qt5::Core LOCATION)
-add_executable(minotaur-cpp ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES})
 add_library(minotaur-lib ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES})
 
 # Qt5 modules
-qt5_use_modules(minotaur-cpp SerialPort)
 qt5_use_modules(minotaur-lib SerialPort)
 
 # Supply cmake argument -D NO_DEBUG=ON to disable console debug output
 option(NO_DEBUG "Build minotaur without debugging output" OFF)
 if (NO_DEBUG)
     log("Building without debugging")
-    target_compile_definitions(minotaur-cpp PRIVATE QT_NO_DEBUG)
-    target_compile_definitions(minotaur-cpp PRIVATE NDEBUG)
+    target_compile_definitions(minotaur-lib PRIVATE QT_NO_DEBUG)
+    target_compile_definitions(minotaur-lib PRIVATE NDEBUG)
 else ()
     log("Building with debugging on")
 endif ()
-target_compile_definitions(minotaur-lib PRIVATE QT_NO_DEBUG)
-target_compile_definitions(minotaur-lib PRIVATE NDEBUG)
 
 # Find and link OpenCV 3 package
 find_package(OpenCV 3 REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
-target_link_libraries(minotaur-cpp ${OpenCV_LIBS})
 target_link_libraries(minotaur-lib ${OpenCV_LIBS})
 
 # Supply cmake argument -D NO_CONTRIB=ON to disable tracking module
@@ -94,26 +89,17 @@ include(CheckIncludeFileCXX)
 # Check for the OpenCV tracking contrib module
 check_include_file_cxx(opencv2/tracking.hpp HAVE_OPENCV_TRACKER)
 if (NO_CONTRIB OR NOT HAVE_OPENCV_TRACKER)
-    target_compile_definitions(minotaur-cpp PRIVATE TRACKER_OFF)
+    target_compile_definitions(minotaur-lib PRIVATE TRACKER_OFF)
     log("Building without OpenCV tracking module")
 endif ()
-target_compile_definitions(minotaur-lib PRIVATE TRACKER_OFF)
 
 # Attempt to find GOTURN files
 include(Goturn)
 if (${GOTURN_FILES_FOUND})
-    target_compile_definitions(minotaur-cpp PRIVATE GOTURN_FOUND)
+    target_compile_definitions(minotaur-lib PRIVATE GOTURN_FOUND)
 endif ()
 
 # Link Qt, Python, and Thread libraries
-target_link_libraries(minotaur-cpp
-        Qt5::Widgets
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Multimedia
-        Qt5::MultimediaWidgets)
-target_link_libraries(minotaur-cpp ${PYTHON_LIBRARIES})
-target_link_libraries(minotaur-cpp "${CMAKE_THREAD_LIBS_INIT}")
 target_link_libraries(minotaur-lib
         Qt5::Widgets
         Qt5::Core
@@ -124,14 +110,15 @@ target_link_libraries(minotaur-lib ${PYTHON_LIBRARIES})
 target_link_libraries(minotaur-lib "${CMAKE_THREAD_LIBS_INIT}")
 
 # Include current directory to find Qt MOC files
-target_include_directories(minotaur-cpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(minotaur-lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 # Add definition for location of python scripts
-target_compile_definitions(minotaur-cpp PRIVATE PYTHON_SCRIPT_DIR="${PYTHON_SCRIPT_DIR}")
 target_compile_definitions(minotaur-lib PRIVATE PYTHON_SCRIPT_DIR="${PYTHON_SCRIPT_DIR}")
 
 # Windows requires separate libraries
 if (WIN32)
-    target_link_libraries(minotaur-cpp advapi32 user32 setupapi)
     target_link_libraries(minotaur-lib advapi32 user32 setupapi)
 endif ()
+
+# Create the Minotaur executable
+add_executable(minotaur-cpp ${MINOTAUR_EXECUTABLE_MAIN})
+target_link_libraries(minotaur-cpp minotaur-lib)
