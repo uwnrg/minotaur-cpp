@@ -35,10 +35,12 @@ int get_camera_index(const QCameraInfo &info) {
 
 CameraDisplay::CameraDisplay(QWidget *parent) :
     QDialog(parent),
-    m_ui(new Ui::CameraDisplay),
+    m_ui(new Ui::CameraDisplay) {
 
-    m_action_box(std::make_unique<ActionBox>(this)),
-    m_image_viewer(std::make_unique<ImageViewer>(this)) {
+    // Video capturing and displaying connections
+    connect(&m_capture, &Capture::frame_ready, &m_converter, &Converter::process_mat);
+    connect(&m_converter, &Converter::image_ready, m_image_viewer.get(), &ImageViewer::setImage);
+    connect(this, &CameraDisplay::forwardKeyEvent, &m_converter, &Converter::imageKeyEvent);
 
     m_ui->setupUi(this);
 

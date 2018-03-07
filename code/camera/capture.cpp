@@ -21,11 +21,6 @@ void Capture::stop_capture() {
     Q_EMIT capture_stopped();
 }
 
-void Capture::change_camera(int camera) {
-    stop_capture();
-    start_capture(camera);
-}
-
 void Capture::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() != m_timer.timerId()) {
         return;

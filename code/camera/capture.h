@@ -28,8 +28,6 @@ public:
 
     Q_SLOT void stop_capture();
 
-    Q_SLOT void change_camera(int camera);
-
 private:
     void timerEvent(QTimerEvent *ev) override;
 
