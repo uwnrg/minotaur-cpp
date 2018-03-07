@@ -53,18 +53,15 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
 
     m_zoom_slider->setTickInterval(2);
     m_zoom_slider->setTickPosition(QSlider::TicksBelow);
-    m_zoom_slider->setMaximum(8);
-    m_zoom_slider->setMinimum(2);
+    m_zoom_slider->setMaximum(40);
+    m_zoom_slider->setMinimum(10);
 
     m_zoom_label->setText("Zoom: 1x");
-    m_zoom_label->setFixedSize(80, 16);
-    m_zoom_label->setStyleSheet("QLabel {background: white;}");
 
-    m_framerate_label->setText("0");
-    m_framerate_label->setFixedSize(20, 16);
-    m_framerate_label->setStyleSheet("QLabel {background: white;}");
+    m_framerate_label->setText("Framerate: 0fps");
 
     setLayout(m_layout.get());
+    m_layout->setAlignment(m_image_viewer.get(), Qt::AlignHCenter);
     m_layout->addWidget(m_capture_btn.get());
     m_layout->addWidget(m_record_btn.get());
     m_layout->addWidget(m_camera_list.get());
@@ -206,7 +203,7 @@ void CameraDisplay::requestActionButtons(int num_buttons) {
 }
 
 void CameraDisplay::update_framerate(int frames) {
-    m_framerate_label->setText(QString::number(frames));
+    m_framerate_label->setText("Framerate: " + QString::number(frames) + "fps");
 }
 
 void CameraDisplay::timerEvent(QTimerEvent *ev) {
@@ -216,7 +213,7 @@ void CameraDisplay::timerEvent(QTimerEvent *ev) {
 }
 
 void CameraDisplay::update_zoom() {
-    double zoom_factor = m_zoom_slider->value()/2.0;
+    double zoom_factor = m_zoom_slider->value()/10.0;
     m_zoom_label->setText("Zoom: " + QString::number(zoom_factor) + "x");
     m_converter.set_zoom(zoom_factor);
 }

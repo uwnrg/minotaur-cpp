@@ -56,7 +56,7 @@ void Converter::zoom(cv::UMat &frame, cv::UMat &zoomed_frame, double zoom_factor
 void Converter::process(cv::UMat frame) {
     double scale = MIN(
         (m_display->width() - 20) / (double) frame.size().width,
-        (m_display->height() - 20) / (double) frame.size().height
+        (m_display->height() - 242) / (double) frame.size().height
     );
     if (m_modifier) {
         m_modifier->modify(frame);
