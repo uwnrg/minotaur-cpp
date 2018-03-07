@@ -178,7 +178,6 @@ p, li { white-space: pre-wrap; }
     <addaction name="start_python_interpreter"/>
     <addaction name="separator"/>
     <addaction name="open_serial_box"/>
-    <addaction name="open_serial_monitor"/>
     <addaction name="separator"/>
     <addaction name="exit"/>
    </widget>
@@ -255,18 +254,7 @@ p, li { white-space: pre-wrap; }
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Serial Config</string>
-   </property>
-  </action>
-  <action name="open_serial_monitor">
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Serial Monitor</string>
+    <string>Serial</string>
    </property>
   </action>
   <action name="exit">

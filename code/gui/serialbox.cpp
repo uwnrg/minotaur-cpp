@@ -18,6 +18,15 @@ SerialBox::SerialBox(
     ui->setupUi(this);
     ui->baud_combo_box->setEditable(false);
 
+    // Set console font of serial display
+    QFont font;
+    font.setFamily("Courier");
+    font.setStyleHint(QFont::Monospace);
+    font.setFixedPitch(true);
+    font.setPointSize(12);
+    ui->serial_display->setFont(font);
+    ui->serial_display->setReadOnly(true);
+
     // Populate combo boxes
     auto baud_rates = {
         QSerialPort::Baud1200,
@@ -87,4 +96,11 @@ void SerialBox::update_status(SerialStatus new_status) {
     }
     palette.setColor(ui->serial_status->foregroundRole(), color);
     ui->serial_status->setPalette(palette);
+}
+
+void SerialBox::append_text(const std::string &text) {
+    auto display = ui->serial_display;
+    display->moveCursor(QTextCursor::End);
+    display->insertPlainText(QString::fromStdString(text));
+    display->moveCursor(QTextCursor::End);
 }
