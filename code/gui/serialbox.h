@@ -20,12 +20,14 @@ public:
         QWidget *parent = nullptr
     );
 
+    ~SerialBox();
+
     Q_SLOT void update_status(SerialStatus new_status);
 
     Q_SLOT void attempt_connection();
 
 private:
-    std::unique_ptr<Ui::SerialBox> ui;
+    Ui::SerialBox *ui;
     std::shared_ptr<Solenoid> m_solenoid;
 
     SerialStatus m_status;
