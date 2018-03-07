@@ -73,8 +73,8 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
 
 
     // Video capturing and displaying connections
-    connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
-    connect(&m_converter, &Converter::imageReady, m_image_viewer.get(), &ImageViewer::setImage);
+    connect(&m_capture, &Capture::frame_ready, &m_converter, &Converter::process_mat);
+    connect(&m_converter, &Converter::image_ready, m_image_viewer.get(), &ImageViewer::setImage);
     connect(this, &CameraDisplay::forwardKeyEvent, &m_converter, &Converter::imageKeyEvent);
 
     // Connections for changing the effects
