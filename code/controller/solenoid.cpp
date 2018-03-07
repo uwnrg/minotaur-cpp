@@ -134,10 +134,12 @@ const QSerialPort &Solenoid::serial_port() const {
 QByteArray Solenoid::encode_message(Vector2i dir, int time) {
     shrink_into<int16_t> s;
     vector2d<int16_t> short_vec(s(dir.x()), s(dir.y()));
-    char raw[5];
+    char raw[6];
     *reinterpret_cast<int16_t *>(raw) = short_vec.x();
     *reinterpret_cast<int16_t *>(raw + 2) = short_vec.y();
     raw[4] = shrink_into<uint8_t>()(time);
-    QByteArray data(raw, 5);
+    // Use null character as a stop byte
+    raw[5] = 0;
+    QByteArray data(raw, 6);
     return data;
 }
