@@ -87,7 +87,7 @@ void Solenoid::readSerial() {
 }
 
 Vector2i Solenoid::to_vector2i(Dir dir) {
-    constexpr power = 255;
+    constexpr int power = 255;
     switch (dir) {
         case Dir::UP:
             return {0, power};
