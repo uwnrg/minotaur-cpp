@@ -6,17 +6,7 @@
 
 using namespace std;
 
-Astar::Astar() {
-    grid a = makeTerrain();
-    Astar::Coord start = {3, 0};
-    Astar::Coord end = {0, 3};
-
-    searchPath(a, start, end);
-
-    for (Astar::Coord c: path) {
-        cout << c.x << " " << c.y << endl;
-    }
-}
+Astar::Astar() {}
 
 double Astar::manhattanDist(Astar::Coord cur, Astar::Coord dest) {
     return abs(dest.x - cur.x) + abs(dest.y - cur.y);
@@ -46,6 +36,7 @@ vector<Astar::Coord> Astar::getNeighbours(Astar::Coord c, int maxRow, int maxCol
     return neighbours;
 }
 
+// For testing purposes
 Astar::grid Astar::makeTerrain() {
     grid a = {{1,   1, -1, 1},
               {1,   1, -1, 1},

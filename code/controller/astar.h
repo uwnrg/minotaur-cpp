@@ -12,11 +12,10 @@ public:
         int y;
     };;
 
-private:
     typedef typename std::vector< std::vector<int> > grid;
-
     typedef typename std::pair<double, Coord> associatedCost;
 
+private:
     std::vector<Coord> path;
 
     double manhattanDist(Coord, Coord);
