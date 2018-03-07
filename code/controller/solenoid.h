@@ -36,6 +36,8 @@ public:
 
     ~Solenoid() override;
 
+    Vector2i to_vector2i(Dir dir) override;
+
     void __move_delegate(Vector2i dir, int timer) override;
 
     /**
