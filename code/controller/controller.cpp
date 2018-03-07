@@ -4,7 +4,7 @@ Controller::Controller(bool invert_x, bool invert_y) :
     m_invert_x(invert_x),
     m_invert_y(invert_y) {}
 
-Vector2i Controller::toVec2(Dir dir) {
+Vector2i Controller::to_vector2i(Dir dir) {
     Vector2i vector_dir(0, 0);
     switch (dir) {
         case UP:
@@ -75,7 +75,7 @@ bool Controller::isKeyDown(int key) {
 }
 
 void Controller::move(Dir dir, int timer) {
-    move(Controller::toVec2(dir), timer);
+    move(Controller::to_vector2i(dir), timer);
 }
 
 void Controller::move(Vector2i dir, int step_time) {

@@ -17,6 +17,7 @@
 #include "actionabout.h"
 #include "scriptwindow.h"
 #include "serialmonitor.h"
+#include "serialbox.h"
 
 #define DEFAULT_TITLE "minotaur"
 
@@ -46,14 +47,6 @@ public:
 
 public Q_SLOTS:
 
-    void openPythonInterpreter();
-
-    void openActionAbout();
-
-    void openCameraDisplay();
-
-    void openSerialMonitor();
-
     /**
      * Clear the logging output, if the logging
      * has been set to the output field.
@@ -78,7 +71,7 @@ public Q_SLOTS:
 private Q_SLOTS:
 
     // Button click events
-    void onMoveButtonClicked();
+    void moveButtonClicked();
 
     // Mouse events
     void mousePressEvent(QMouseEvent *event) override;
@@ -91,6 +84,7 @@ private:
     std::unique_ptr<ActionAbout> m_about_window;
     std::unique_ptr<CameraDisplay> m_camera_display;
     std::unique_ptr<SerialMonitor> m_serial_monitor;
+    std::unique_ptr<SerialBox> m_serial_box;
 
     Controller::Type m_controller_type;
 

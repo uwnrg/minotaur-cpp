@@ -4,6 +4,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "utility.h"
+
 template<typename val_t>
 class vector2d;
 
@@ -59,9 +61,7 @@ public:
 
     template<
         typename scalar_t,
-        typename = typename std::enable_if<
-            std::is_arithmetic<scalar_t>::value
-        >::type
+        typename = enable_if_arithmetic_t<scalar_t>
     >
     vector2d<val_t> operator*(scalar_t b) {
         return {
@@ -72,9 +72,7 @@ public:
 
     template<
         typename scalar_t,
-        typename = typename std::enable_if<
-            std::is_arithmetic<scalar_t>::value
-        >::type
+        typename = enable_if_arithmetic_t<scalar_t>
     >
     vector2d<val_t> operator/(scalar_t b) {
         return {

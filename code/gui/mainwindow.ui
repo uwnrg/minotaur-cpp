@@ -177,6 +177,9 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator"/>
     <addaction name="start_python_interpreter"/>
     <addaction name="separator"/>
+    <addaction name="open_serial_box"/>
+    <addaction name="open_serial_monitor"/>
+    <addaction name="separator"/>
     <addaction name="exit"/>
    </widget>
    <widget class="QMenu" name="menuVideo">
@@ -187,7 +190,7 @@ p, li { white-space: pre-wrap; }
      <string>Video</string>
     </property>
     <addaction name="actionMicroscopic_Camera_View"/>
-    <addaction name="actionWebcam_View"/>
+    <addaction name="open_camera_display"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="enabled">
@@ -196,10 +199,10 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionInvert_X_Axis"/>
-    <addaction name="actionInvert_Y_Axis"/>
+    <addaction name="action_invert_x_axis"/>
+    <addaction name="action_invert_y_axis"/>
     <addaction name="separator"/>
-    <addaction name="actionClear_Log"/>
+    <addaction name="action_clear_log"/>
    </widget>
    <widget class="QMenu" name="tools_menu">
     <property name="title">
@@ -225,7 +228,7 @@ p, li { white-space: pre-wrap; }
      <string>Help</string>
     </property>
     <addaction name="actionHelp"/>
-    <addaction name="actionAbout"/>
+    <addaction name="open_about"/>
    </widget>
    <addaction name="setup_menu"/>
    <addaction name="menuVideo"/>
@@ -244,6 +247,28 @@ p, li { white-space: pre-wrap; }
     <string>Simulator mode</string>
    </property>
   </action>
+  <action name="open_serial_box">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Serial Config</string>
+   </property>
+  </action>
+  <action name="open_serial_monitor">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Serial Monitor</string>
+   </property>
+  </action>
   <action name="exit">
    <property name="text">
     <string>Exit</string>
@@ -257,7 +282,7 @@ p, li { white-space: pre-wrap; }
     <string>Microscopic Camera View</string>
    </property>
   </action>
-  <action name="actionWebcam_View">
+  <action name="open_camera_display">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -265,7 +290,7 @@ p, li { white-space: pre-wrap; }
     <string>Webcam View</string>
    </property>
   </action>
-  <action name="actionInvert_X_Axis">
+  <action name="action_invert_x_axis">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -273,7 +298,7 @@ p, li { white-space: pre-wrap; }
     <string>Invert X-Axis</string>
    </property>
   </action>
-  <action name="actionInvert_Y_Axis">
+  <action name="action_invert_y_axis">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -281,7 +306,7 @@ p, li { white-space: pre-wrap; }
     <string>Invert Y-Axis</string>
    </property>
   </action>
-  <action name="actionClear_Log">
+  <action name="action_clear_log">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -385,7 +410,7 @@ p, li { white-space: pre-wrap; }
     <string>Help</string>
    </property>
   </action>
-  <action name="actionAbout">
+  <action name="open_about">
    <property name="enabled">
     <bool>true</bool>
    </property>
