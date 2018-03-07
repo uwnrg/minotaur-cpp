@@ -5,7 +5,6 @@
 
 #include <QDialog>
 
-#include "ui_serialbox.h"
 #include "../controller/solenoid.h"
 
 namespace Ui {

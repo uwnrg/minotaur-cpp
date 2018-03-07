@@ -1,6 +1,7 @@
 #include "serialbox.h"
 
 #include "../utility/utility.h"
+#include "ui_serialbox.h"
 
 #include <QMessageBox>
 #include <QSerialPort>
