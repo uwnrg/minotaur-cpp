@@ -1,7 +1,5 @@
 #include "imageviewer.h"
 #include "ui_imageviewer.h"
-#include "cameradisplay.h"
-#include "../utility/logger.h"
 
 #include <QFileDialog>
 
@@ -27,6 +25,20 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     ui->zoom_label->lower();
     ui->fps_label->lower();
 
+ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
+    QWidget(parent),
+
+    ui(new Ui::ImageViewer),
+
+    m_capture(this),
+    m_preprocessor(this),
+    m_converter(this),
+    m_recorder(this),
+
+    m_fps_update_interval(fps_update_interval) {
+
+    ui->setupUi(this);
+
     setAttribute(Qt::WA_OpaquePaintEvent);
 
     // Start threads and move image pipeline objects to threads
@@ -41,26 +53,6 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
 
     // Start the framerate update timer
     m_frame_timer.start(fps_update_interval, this);
-
-    // Connect image pipeline
-    connect(&m_capture, &Capture::frame_ready, &m_preprocessor, &Preprocessor::preprocess_frame);
-    connect(&m_preprocessor, &Preprocessor::frame_processed, &m_converter, &Converter::process_frame);
-    connect(&m_preprocessor, &Preprocessor::frame_processed, &m_recorder, &Recorder::frame_received);
-    connect(&m_converter, &Converter::image_ready, this, &ImageViewer::set_image);
-
-    // Connect UI signals
-    connect(parent, &CameraDisplay::display_opened, &m_capture, &Capture::start_capture);
-    connect(parent, &CameraDisplay::display_closed, &m_capture, &Capture::stop_capture);
-    connect(parent, &CameraDisplay::camera_changed, &m_capture, &Capture::change_camera);
-    connect(parent, &CameraDisplay::effect_changed, &m_preprocessor, &Preprocessor::use_modifier);
-    connect(parent, &CameraDisplay::zoom_changed, &m_preprocessor, &Preprocessor::zoom_changed);
-    connect(parent, &CameraDisplay::save_screenshot, this, &ImageViewer::save_screenshot);
-    connect(parent, &CameraDisplay::zoom_changed, this, &ImageViewer::set_zoom);
-    connect(parent, &CameraDisplay::toggle_record, this, &ImageViewer::handle_recording);
-    connect(parent, &CameraDisplay::show_grid, m_grid_display.get(), &GridDisplay::showGrid);
-    connect(parent, &CameraDisplay::clear_grid, m_grid_display.get(), &GridDisplay::clearSelection);
-    connect(this, &ImageViewer::start_recording, &m_recorder, &Recorder::start_recording);
-    connect(this, &ImageViewer::stop_recording, &m_recorder, &Recorder::stop_recording);
 }
 
 ImageViewer::~ImageViewer() {
@@ -72,9 +64,10 @@ const QImage &ImageViewer::get_image() {
 }
 
 void ImageViewer::set_image(const QImage &img) {
-    // Upon first frame capture, resize the widget
-    if (m_image.isNull()) { setFixedSize(img.size()); }
     m_image = img;
+    if (m_image.size() != size()) {
+        setFixedSize(m_image.size());
+    }
     update();
 }
 
@@ -92,26 +85,10 @@ void ImageViewer::paintEvent(QPaintEvent *) {
 }
 
 void ImageViewer::set_frame_rate(double frame_rate) {
-    ui->fps_label->setText(color_format(frame_rate));
+    ui->fps_label->setText(QString::number(frame_rate));
 }
 
 void ImageViewer::set_zoom(double zoom) {
-    ui->zoom_label->setText(color_format(zoom, "x"));
+    ui->zoom_label->setText(QString::number(zoom) + "x");
     m_preprocessor.zoom_changed(zoom);
-}
-
-void ImageViewer::save_screenshot(const QString &file) {
-    m_image.save(file);
-}
-
-void ImageViewer::handle_recording() {
-    if (m_recorder.is_recording()) {
-        // Stop recording
-        Q_EMIT stop_recording();
-    } else {
-        // Start recording
-        QString file = QFileDialog::getSaveFileName(this, "Save Video", QDir::currentPath(), "Videos (*.avi)");
-        log() << "Saving video to: " << file;
-        Q_EMIT start_recording(file, m_capture.capture_width(), m_capture.capture_height());
-    }
 }

@@ -11,8 +11,6 @@ namespace Ui {
     class CameraDisplay;
 }
 
-class GridDisplay;
-
 class CameraDisplay : public QDialog {
 Q_OBJECT
 
@@ -29,15 +27,11 @@ public:
 
     Q_SLOT void effect_box_changed(int effect);
 
-    Q_SLOT void take_screen_shot();
+    Q_SLOT void take_screenshot();
 
     Q_SLOT void record_clicked();
 
     Q_SLOT void update_zoom(int value);
-
-    Q_SLOT void show_grid_clicked();
-
-    Q_SLOT void clear_grid_clicked();
 
     Q_SIGNAL void display_opened(int camera);
 
@@ -47,21 +41,10 @@ public:
 
     Q_SIGNAL void effect_changed(const std::shared_ptr<VideoModifier> &effect);
 
-    Q_SIGNAL void save_screenshot(const QString &file);
-
-    Q_SIGNAL void zoom_changed(double zoom);
-
-    Q_SIGNAL void toggle_record();
-
-    Q_SIGNAL void show_grid();
-
-    Q_SIGNAL void clear_grid();
-
 private:
-    Ui::CameraDisplay *m_ui;
+    Ui::CameraDisplay *ui;
 
     std::unique_ptr<ActionBox> m_action_box;
-    std::unique_ptr<ImageViewer> m_image_viewer;
 };
 
 #endif //MINOTAUR_CPP_CAMERADISPLAY_H

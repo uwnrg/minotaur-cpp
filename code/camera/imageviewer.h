@@ -12,7 +12,7 @@
 #include "converter.h"
 #include "recorder.h"
 #include "camerathread.h"
-#include "code/gui/griddisplay.h"
+#include "cameradisplay.h"
 
 namespace Ui {
     class ImageViewer;
@@ -27,7 +27,7 @@ class ImageViewer : public QWidget {
 
 public:
     enum {
-        DEFAULT_FPS_UPDATE = 1000
+        DEFAULT_FPS_UPDATE = 250
     };
 
     explicit ImageViewer(
@@ -39,19 +39,9 @@ public:
 
     const QImage &get_image();
 
-    Q_SLOT void set_image(const QImage &img);
-
     Q_SLOT void set_frame_rate(double frame_rate);
 
     Q_SLOT void set_zoom(double zoom);
-
-    Q_SLOT void save_screenshot(const QString &file);
-
-    Q_SLOT void handle_recording();
-
-    Q_SIGNAL void stop_recording();
-
-    Q_SIGNAL void start_recording(const QString &file, int width, int height);
 
 private:
     void timerEvent(QTimerEvent *ev) override;
@@ -59,8 +49,6 @@ private:
     void paintEvent(QPaintEvent *ev) override;
 
     Ui::ImageViewer *ui;
-
-    std::unique_ptr<GridDisplay> m_grid_display;
 
     QImage m_image;
 

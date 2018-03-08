@@ -6,20 +6,24 @@
 
 #include <opencv2/opencv.hpp>
 
-class ImageViewer;
+class CameraDisplay;
 
 class Converter : public QObject {
 Q_OBJECT
 
 public:
-    explicit Converter(QObject *parent = nullptr);
+    explicit Converter(QWidget *parent = nullptr);
 
     Q_SIGNAL void image_ready(const QImage &img);
 
     Q_SLOT void process_frame(const cv::UMat &frame);
 
+    int get_and_reset_frames();
+
 private:
-    static void matDelete(void *mat);
+    static void umat_delete(void *mat);
+
+    int m_frames;
 };
 
 
