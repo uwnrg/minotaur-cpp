@@ -19,9 +19,9 @@ public:
         OBJTRACK = 3
     };
 
-    static void attachModifier(std::unique_ptr<VideoModifier> &ptr, int modifier);
+    static std::shared_ptr<VideoModifier> get_modifier(int modifier);
 
-    static void addModifierList(QComboBox *list);
+    static void add_modifier_list(QComboBox *list);
 
     virtual void modify(cv::UMat &img) = 0;
 

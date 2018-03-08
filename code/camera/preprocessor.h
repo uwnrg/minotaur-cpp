@@ -21,6 +21,8 @@ public:
 
     Q_SLOT void convert_rgb(bool convert_rgb);
 
+    Q_SLOT void use_modifier(const std::shared_ptr<VideoModifier> &modifier);
+
     Q_SIGNAL void frame_processed(const cv::UMat &frame);
 
 private:

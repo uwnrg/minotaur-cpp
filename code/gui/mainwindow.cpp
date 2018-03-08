@@ -17,7 +17,6 @@ MainWindow::MainWindow(
     m_simulator(std::make_unique<Simulator>()),
     m_controller(m_solenoid),
 
-
     m_about_window(std::make_unique<ActionAbout>(this)),
     m_camera_display(std::make_unique<CameraDisplay>(this)),
     m_script_window(std::make_unique<ScriptWindow>(this)),

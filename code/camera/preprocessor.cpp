@@ -26,6 +26,10 @@ void Preprocessor::convert_rgb(bool convert_rgb) {
     m_convert_rgb = convert_rgb;
 }
 
+void Preprocessor::use_modifier(const std::shared_ptr<VideoModifier> &modifier) {
+    m_modifier = modifier;
+}
+
 void Preprocessor::preprocess_frame(const cv::UMat &frame) {
     __preprocess_frame(frame);
 }
