@@ -36,15 +36,6 @@ vector<Astar::Coord> Astar::getNeighbours(Astar::Coord c, int maxRow, int maxCol
     return neighbours;
 }
 
-// For testing purposes
-Astar::grid Astar::makeTerrain() {
-    grid a = {{1,   1, -1, 1},
-              {1,   1, -1, 1},
-              {-1,  1, 1,  1},
-              {1,   1, -1, 1}};
-    return a;
-}
-
 void Astar::backtrack(Astar::Coord start, Astar::Coord dest, map<Astar::Coord, Astar::Coord> parent) {
     Astar::Coord cur = dest;
     while (cur != start) {
@@ -94,6 +85,10 @@ void Astar::searchPath(Astar::grid terrain, Astar::Coord start, Astar::Coord des
     }
 
     backtrack(start, dest, parent);
+}
+
+vector<Astar::Coord> Astar::getPath() {
+    return path;
 }
 
 bool operator == (Astar::Coord a, Astar::Coord b) {

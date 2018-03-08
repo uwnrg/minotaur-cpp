@@ -15,6 +15,9 @@ public:
     typedef typename std::vector< std::vector<int> > grid;
     typedef typename std::pair<double, Coord> associatedCost;
 
+    Astar();
+    void searchPath(grid terrain, Coord cur, Coord dest);
+    std::vector<Coord> getPath();
 private:
     std::vector<Coord> path;
 
@@ -22,13 +25,8 @@ private:
     bool isValid(int, int, int, int);
 
     std::vector<Coord> getNeighbours(Coord, int, int);
-    grid makeTerrain();
 
     void backtrack(Coord, Coord, std::map<Coord, Coord>);
-
-public:
-    Astar();
-    void searchPath(grid terrain, Coord cur, Coord dest);
 };
 
 bool operator == (Astar::Coord, Astar::Coord);
