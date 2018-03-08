@@ -13,11 +13,11 @@
 #include "../controller/simulator.h"
 #include "../camera/cameradisplay.h"
 
-#include "simulatorwindow.h"
 #include "actionabout.h"
 #include "scriptwindow.h"
-#include "serialmonitor.h"
 #include "serialbox.h"
+#include "serialmonitor.h"
+#include "simulatorwindow.h"
 
 #define DEFAULT_TITLE "minotaur"
 
@@ -79,18 +79,19 @@ private Q_SLOTS:
 private:
     std::unique_ptr<Ui::MainWindow> ui;
 
-    std::unique_ptr<ScriptWindow> m_script_window;
-    std::unique_ptr<SimulatorWindow> m_simulator_window;
-    std::unique_ptr<ActionAbout> m_about_window;
-    std::unique_ptr<CameraDisplay> m_camera_display;
-    std::unique_ptr<SerialMonitor> m_serial_monitor;
-    std::unique_ptr<SerialBox> m_serial_box;
-
-    Controller::Type m_controller_type;
-
-    std::shared_ptr<Controller> m_controller;
     std::shared_ptr<Solenoid> m_solenoid;
     std::shared_ptr<Simulator> m_simulator;
+    std::shared_ptr<Controller> m_controller;
+
+    std::unique_ptr<ActionAbout> m_about_window;
+    std::unique_ptr<CameraDisplay> m_camera_display;
+    std::unique_ptr<ScriptWindow> m_script_window;
+    std::unique_ptr<SerialMonitor> m_serial_monitor;
+
+    std::unique_ptr<SerialBox> m_serial_box;
+    std::unique_ptr<SimulatorWindow> m_simulator_window;
+
+    Controller::Type m_controller_type;
 
     bool eventFilter(QObject *, QEvent *) override;
 

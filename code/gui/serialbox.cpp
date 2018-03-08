@@ -1,6 +1,7 @@
 #include "serialbox.h"
 
 #include "../utility/utility.h"
+#include "ui_serialbox.h"
 
 #include <QMessageBox>
 #include <QSerialPort>
@@ -11,7 +12,7 @@ SerialBox::SerialBox(
     QWidget *parent
 ) :
     QDialog(parent),
-    ui(std::make_unique<Ui::SerialBox>()),
+    ui(new Ui::SerialBox),
     m_solenoid(solenoid),
     m_status(SerialStatus::DISCONNECTED) {
     ui->setupUi(this);
@@ -51,6 +52,10 @@ SerialBox::SerialBox(
 
     // Close SerialBox when Cancel is clicked
     connect(ui->button_box->button(QDialogButtonBox::Close), &QPushButton::clicked, this, &QDialog::close);
+}
+
+SerialBox::~SerialBox() {
+    delete ui;
 }
 
 void SerialBox::attempt_connection() {
