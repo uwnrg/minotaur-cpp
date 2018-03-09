@@ -23,6 +23,8 @@ class QPushButton;
 
 class ImageViewer;
 
+class QSlider;
+
 class QLabel;
 
 class GridDisplay;
@@ -59,6 +61,8 @@ protected Q_SLOTS:
     void recordButtonClicked();
 
     void recordSaveFile();
+
+    void update_zoom();
 
     /**
      * Since the ActionButton widgets must be created and maintained in the
@@ -101,6 +105,7 @@ private:
     std::unique_ptr<QPushButton> m_capture_btn;
     std::unique_ptr<QPushButton> m_record_btn;
     std::unique_ptr<ImageViewer> m_image_viewer;
+    std::unique_ptr<QSlider> m_zoom_slider;
 
     std::unique_ptr<GridDisplay> m_grid_display;
     std::unique_ptr<QPushButton> m_display_grid_btn;
@@ -108,6 +113,7 @@ private:
     std::unique_ptr<QPushButton> m_deselect_btn;
 
     std::unique_ptr<QLabel> m_framerate_label;
+    std::unique_ptr<QLabel> m_zoom_label;
 
     std::unique_ptr<ActionBox> m_action_box;
 

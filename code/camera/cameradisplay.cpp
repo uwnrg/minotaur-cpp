@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QFileDialog>
 #include <QLabel>
+#include <QSlider>
 
 #include "imageviewer.h"
 #include "../utility/utility.h"
@@ -25,6 +26,8 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
       m_display_grid_btn(std::make_unique<QPushButton>(this)),
       m_deselect_btn(std::make_unique<QPushButton>(this)),
       // m_hide_grid_btn(std::<QPushButton>(this)),
+      m_zoom_slider(std::make_unique<QSlider>(Qt::Horizontal, this)),
+      m_zoom_label(std::make_unique<QLabel>(this)),
       m_camera(camera_index),
       m_converter(nullptr, this) {
 
@@ -52,15 +55,23 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_capture_btn->setText(tr("Take Picture"));
     m_record_btn->setText(tr("Record Video"));
 
-     m_display_grid_btn->setText("Display Grid Selection");
+    m_display_grid_btn->setText("Display Grid Selection");
     // m_hide_grid_btn->setText("Hide Grid Selection");
     m_deselect_btn->setText("Clear Grid Selection");
 
-    m_framerate_label->setText("0");
+    m_framerate_label->setText("Framerate: 0fps");
     m_framerate_label->setFixedSize(20, 16);
     m_framerate_label->setStyleSheet("QLabel {background: white;}");
 
+    m_zoom_slider->setTickInterval(2);
+    m_zoom_slider->setTickPosition(QSlider::TicksBelow);
+    m_zoom_slider->setMaximum(40);
+    m_zoom_slider->setMinimum(10);
+
+    m_zoom_label->setText("Zoom: 1x");
+
     setLayout(m_layout.get());
+    m_layout->setAlignment(m_image_viewer.get(), Qt::AlignHCenter);
     m_layout->addWidget(m_capture_btn.get());
     m_layout->addWidget(m_record_btn.get());
     m_layout->addWidget(m_camera_list.get());
@@ -70,6 +81,9 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_layout->addWidget(m_deselect_btn.get());
     m_layout->addWidget(m_image_viewer.get());
     m_layout->addWidget(m_framerate_label.get());
+    m_layout->addWidget(m_zoom_slider.get());
+    m_layout->addWidget(m_zoom_label.get());
+
 
     // Video capturing and displaying connections
     connect(&m_capture, &Capture::matReady, &m_converter, &Converter::processFrame);
@@ -80,6 +94,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     connect(m_camera_list.get(), SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
     connect(m_effects_list.get(), SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
     connect(m_capture_btn.get(), SIGNAL(clicked()), this, SLOT(captureAndSave()));
+    connect(m_zoom_slider.get(), SIGNAL(valueChanged(int)), this, SLOT(update_zoom()));
 
     // Connections for recording video
     connect(m_record_btn.get(), &QPushButton::clicked, this, &CameraDisplay::recordButtonClicked);
@@ -206,11 +221,17 @@ void CameraDisplay::requestActionButtons(int num_buttons) {
 }
 
 void CameraDisplay::update_framerate(int frames) {
-    m_framerate_label->setText(QString::number(frames));
+    m_framerate_label->setText("Framerate: " + QString::number(frames) + "fps");
 }
 
 void CameraDisplay::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() == m_framerate_timer.timerId()) {
         update_framerate(m_converter.get_and_reset_frames());
     }
+}
+
+void CameraDisplay::update_zoom() {
+    double zoom_factor = m_zoom_slider->value()/10.0;
+    m_zoom_label->setText("Zoom: " + QString::number(zoom_factor) + "x");
+    m_converter.set_zoom(zoom_factor);
 }

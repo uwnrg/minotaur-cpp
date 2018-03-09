@@ -9,43 +9,29 @@ class Controller : public QObject {
 Q_OBJECT
 
 public:
-    enum Mode {
-        EMMA,
-        SAM,
-
-        NUM_MODES
-    };
-
     enum Type {
-        ACTUATOR,
         SIMULATOR,
-        SOLENOID,
-
-        NUM_DELGATES
+        SOLENOID
     };
 
     enum Dir {
-        UP,        // y > 0
-        DOWN,    // y < 0
-        RIGHT,    // x > 0
-        LEFT,    // x < 0
-
-        NUM_DIRS
+        UP,    // y > 0
+        DOWN,  // y < 0
+        RIGHT, // x > 0
+        LEFT   // x < 0
     };
 
     enum Axis {
         X,
-        Y,
-
-        NUM_AXES
+        Y
     };
 
     enum {
-        STEP_TIME = 10
+        STEP_TIME = 50
     };
 
     // Common robot functions
-    static Vector2i toVec2(Dir);
+    virtual Vector2i to_vector2i(Dir dir);
 
     // Movement
     void move(Dir dir, int timer = STEP_TIME);

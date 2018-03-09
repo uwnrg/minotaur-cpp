@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ui_serialbox.h"
 
 #include "../interpreter/embeddedcontroller.h"
 
@@ -11,33 +12,30 @@ MainWindow::MainWindow(
 ) :
     QMainWindow(parent),
     ui(std::make_unique<Ui::MainWindow>()),
-    m_script_window(std::make_unique<ScriptWindow>(this)),
+
+    m_solenoid(std::make_unique<Solenoid>()),
+    m_simulator(std::make_unique<Simulator>()),
+    m_controller(m_solenoid),
+
+
     m_about_window(std::make_unique<ActionAbout>(this)),
     m_camera_display(std::make_unique<CameraDisplay>(this)),
-    m_serial_monitor(std::make_unique<SerialMonitor>(this)) {
+    m_script_window(std::make_unique<ScriptWindow>(this)),
+    m_serial_monitor(std::make_unique<SerialMonitor>(this)),
+
+    m_serial_box(std::make_unique<SerialBox>(m_solenoid, this)),
+    m_simulator_window(std::make_unique<SimulatorWindow>(m_simulator, this)),
+
+    m_controller_type(Controller::SOLENOID) {
+
     ui->setupUi(this);
 
     // Set up logger
     Logger::setStream(getLogView());
 
-    // Setup the controllers and solenoid connection
-    m_simulator = std::make_shared<Simulator>();
-    // If a port is passed use it TODO: QCommandLineParser
-    if (argc >= 2) {
-        m_solenoid = std::make_shared<Solenoid>(argv[1]);
-    } else {
-        m_solenoid = std::make_shared<Solenoid>();
-    }
-    m_controller = m_solenoid;
-    m_controller_type = Controller::Type::SOLENOID;
-
     // Bind controller to Python Engine
     EmbeddedController::getInstance().bind_controller(&m_controller);
     PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
-
-    // Setup sub-windows
-    m_simulator_window = std::make_unique<SimulatorWindow>(m_simulator, this);
-    m_serial_box = std::make_unique<SerialBox>(m_solenoid, this);
 
     // Connect solenoid serial port to the monitor
     connect(m_solenoid.get(), &Solenoid::serialRead, m_serial_monitor.get(), &SerialMonitor::append_text);
