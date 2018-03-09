@@ -3,6 +3,8 @@
 #include <set>
 #include <queue>
 #include <iostream>
+#include <algorithm>
+#include <iterator>
 
 using namespace std;
 
@@ -43,6 +45,7 @@ void Astar::backtrack(Astar::Coord start, Astar::Coord dest, map<Astar::Coord, A
         cur = parent[cur];
     }
     path.push_back(start);
+    reverse(begin(path), end(path));
 }
 
 void Astar::searchPath(Astar::grid terrain, Astar::Coord start, Astar::Coord dest) {

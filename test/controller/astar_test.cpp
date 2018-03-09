@@ -2,6 +2,7 @@
 
 #include <code/controller/astar.h>
 
+using namespace std;
 
 TEST(direct_movement, find_path) {
     Astar::grid a = {{1,   1, -1, 1},
@@ -29,3 +30,4 @@ TEST(direct_movement, find_path) {
     ASSERT_EQ(generated.at(5), p6);
     ASSERT_EQ(generated.at(6), p7);
 }
+
