@@ -67,6 +67,8 @@ const QImage &ImageViewer::get_image() {
 }
 
 void ImageViewer::set_image(const QImage &img) {
+    // Upon first frame capture, resize the widget
+    if (m_image.isNull()) { setFixedSize(img.size()); }
     m_image = img;
     update();
 }
