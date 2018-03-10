@@ -9,7 +9,9 @@
 #include "../utility/utility.h"
 
 #ifndef NDEBUG
+
 #include <QDebug>
+
 #endif
 
 // CMake will try to find goturn.caffemodel and goturn.prototxt, which need
@@ -29,6 +31,7 @@ TrackerModifier::TrackerModifier()
 }
 
 void TrackerModifier::reset_tracker() {
+    m_mutex.lock();
     switch (m_type) {
         case Type::BOOSTING:
             m_tracker = cv::TrackerBoosting::create();
@@ -54,6 +57,7 @@ void TrackerModifier::reset_tracker() {
         default:
             break;
     }
+    m_mutex.unlock();
 }
 
 void TrackerModifier::beginTracking() {
@@ -71,17 +75,18 @@ void TrackerModifier::stopTracking() {
 }
 
 void TrackerModifier::modify(cv::UMat &img) {
-    if (m_state == State::UNINITIALIZED) {
-        return;
+    if (m_state != State::UNINITIALIZED) {
+        m_mutex.lock();
+        if (m_state == State::TRACKING) {
+            m_tracker->update(img, m_bounding_box);
+        } else if (m_state == State::FIRST_SCAN) {
+            m_bounding_box = cv::selectROI(img);
+            m_tracker->init(img, m_bounding_box);
+            m_state = State::TRACKING;
+        }
+        m_mutex.unlock();
+        cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
     }
-    if (m_state == State::TRACKING) {
-        m_tracker->update(img, m_bounding_box);
-    } else if (m_state == State::FIRST_SCAN) {
-        m_bounding_box = cv::selectROI(img);
-        m_tracker->init(img, m_bounding_box);
-        m_state = State::TRACKING;
-    }
-    cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
 }
 
 void TrackerModifier::register_actions(ActionBox *box) {

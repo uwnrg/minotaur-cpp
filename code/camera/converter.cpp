@@ -13,7 +13,7 @@ void Converter::process_frame(const cv::UMat &frame) {
         static_cast<double>(ptr->width()) / frame.size().width,
         static_cast<double>(ptr->height()) / frame.size().height
     );
-    cv::resize(frame, frame, cv::Size(), scale, scale, cv::INTER_LINEAR);
+    //cv::resize(frame, frame, cv::Size(), scale, scale, cv::INTER_LINEAR);
 #ifndef NDEBUG
     }
 #endif

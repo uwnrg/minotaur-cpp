@@ -26,7 +26,7 @@ class ImageViewer : public QWidget {
 
 public:
     enum {
-        DEFAULT_FPS_UPDATE = 250
+        DEFAULT_FPS_UPDATE = 1000
     };
 
     explicit ImageViewer(
