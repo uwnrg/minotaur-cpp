@@ -5,21 +5,15 @@ Converter::Converter(ImageViewer *image_viewer) :
     m_image_viewer(image_viewer) {}
 
 void Converter::process_frame(const cv::UMat &frame) {
-    auto *ptr = dynamic_cast<QWidget *>(parent());
-#ifndef NDEBUG
-    if (ptr) {
-#endif
     double scale = std::min(
-        static_cast<double>(ptr->width()) / frame.size().width,
-        static_cast<double>(ptr->height()) / frame.size().height
+        static_cast<double>(m_image_viewer->width()) / frame.size().width,
+        static_cast<double>(m_image_viewer->height()) / frame.size().height
     );
-    //cv::resize(frame, frame, cv::Size(), scale, scale, cv::INTER_LINEAR);
-#ifndef NDEBUG
-    }
-#endif
+    cv::UMat dst;
+    cv::resize(frame, dst, cv::Size(), scale, scale, cv::INTER_LINEAR);
     const QImage image(
-        frame.getMat(1).data, frame.cols, frame.rows, static_cast<int>(frame.step),
-        QImage::Format_RGB888, &umat_delete, new cv::UMat(frame)
+        dst.getMat(1).data, dst.cols, dst.rows, static_cast<int>(dst.step),
+        QImage::Format_RGB888, &umat_delete, new cv::UMat(dst)
     );
     ++m_frames;
     Q_EMIT image_ready(image);
