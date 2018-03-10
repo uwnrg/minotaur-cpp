@@ -12,7 +12,6 @@
 #include "converter.h"
 #include "recorder.h"
 #include "camerathread.h"
-#include "cameradisplay.h"
 
 namespace Ui {
     class ImageViewer;
@@ -42,6 +41,14 @@ public:
     Q_SLOT void set_frame_rate(double frame_rate);
 
     Q_SLOT void set_zoom(double zoom);
+
+    Q_SLOT void save_screenshot(const QString &file);
+
+    Q_SLOT void handle_recording();
+
+    Q_SIGNAL void stop_recording();
+
+    Q_SIGNAL void start_recording(const QString &file, int width, int height);
 
 private:
     void timerEvent(QTimerEvent *ev) override;

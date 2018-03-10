@@ -11,7 +11,6 @@ Q_OBJECT
 
 public:
     explicit Recorder(
-        QObject *parent = nullptr,
         double frame_rate = 30,
         bool color = true
     );

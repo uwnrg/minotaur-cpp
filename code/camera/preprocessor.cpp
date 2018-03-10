@@ -3,6 +3,7 @@
 #include "../video/modify.h"
 
 #include <opencv2/imgproc.hpp>
+#include <QTimerEvent>
 
 void zoom(cv::UMat &src, cv::UMat &dest, double zoom_factor) {
     cv::Rect crop(
@@ -15,8 +16,7 @@ void zoom(cv::UMat &src, cv::UMat &dest, double zoom_factor) {
     cv::resize(src, dest, cv::Size(), zoom_factor, zoom_factor, cv::INTER_LINEAR);
 }
 
-Preprocessor::Preprocessor(QObject *parent) :
-    QObject(parent) {}
+Preprocessor::Preprocessor() = default;
 
 void Preprocessor::zoom_changed(double zoom_factor) {
     m_zoom_factor = zoom_factor;
@@ -31,7 +31,8 @@ void Preprocessor::use_modifier(const std::shared_ptr<VideoModifier> &modifier) 
 }
 
 void Preprocessor::preprocess_frame(const cv::UMat &frame) {
-    __preprocess_frame(frame);
+    if (m_process_all) { __preprocess_frame(frame); }
+    else { __queue(frame); }
 }
 
 void Preprocessor::__preprocess_frame(cv::UMat frame) {
@@ -43,4 +44,16 @@ void Preprocessor::__preprocess_frame(cv::UMat frame) {
     if (m_convert_rgb) { cv::cvtColor(frame, frame, CV_BGR2RGB); }
     // Emit preprocessed frame
     Q_EMIT frame_processed(frame);
+}
+
+void Preprocessor::__queue(const cv::UMat &frame) {
+    m_frame = frame;
+    if (!m_queue_timer.isActive()) { m_queue_timer.start(0, this); }
+}
+
+void Preprocessor::timerEvent(QTimerEvent *ev) {
+    if (ev->timerId() != m_queue_timer.timerId()) { return; }
+    __preprocess_frame(m_frame);
+    m_frame.release();
+    m_queue_timer.stop();
 }
