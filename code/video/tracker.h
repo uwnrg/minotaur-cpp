@@ -48,14 +48,6 @@ private:
     int m_type;
     int m_state;
 
-    /**
-     * Class mutex instance used to prevent a scenario wherein
-     * the class's cv::Tracker pointer is set to null while another
-     * thread tries to use it, resulting in a segmentation fault.
-     *
-     * Might happen when clicking "Clear ROI", because reset_tracker() and
-     * modify() are called in different threads.
-     */
     QMutex m_mutex;
 };
 

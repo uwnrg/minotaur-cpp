@@ -57,6 +57,7 @@ void TrackerModifier::reset_tracker() {
         default:
             break;
     }
+    m_mutex.unlock();
 }
 
 void TrackerModifier::beginTracking() {
@@ -86,7 +87,6 @@ void TrackerModifier::modify(cv::UMat &img) {
         m_mutex.unlock();
         cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
     }
-    cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
 }
 
 void TrackerModifier::register_actions(ActionBox *box) {

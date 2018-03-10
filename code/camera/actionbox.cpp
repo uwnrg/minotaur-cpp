@@ -31,5 +31,6 @@ void ActionBox::set_actions() {
 ActionButton *ActionBox::add_action(QString &&label) {
     std::size_t size = m_actions.size();
     m_actions.emplace_back(new ActionButton(std::forward<QString>(label), this));
+    m_layout->addWidget(m_actions[size].get());
     return m_actions[size].get();
 }
