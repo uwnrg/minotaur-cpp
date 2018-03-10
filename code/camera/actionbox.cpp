@@ -2,8 +2,8 @@
 
 #include "../utility/utility.h"
 
-ActionButton::ActionButton(QWidget *parent)
-    : QPushButton(parent) {
+ActionButton::ActionButton(QString &&label, QWidget *parent)
+    : QPushButton(label, parent) {
     setMinimumSize(150, 50);
     setMaximumSize(200, 75);
 }
@@ -19,6 +19,7 @@ ActionBox::~ActionBox() = default;
 
 void ActionBox::reset_actions() {
     m_layout = std::make_unique<QVBoxLayout>();
+    m_actions.clear();
     hide();
 }
 
@@ -27,6 +28,8 @@ void ActionBox::set_actions() {
     show();
 }
 
-void ActionBox::add_action(ActionButton *action) {
-    m_layout->addWidget(action);
+ActionButton *ActionBox::add_action(QString &&label) {
+    std::size_t size = m_actions.size();
+    m_actions.emplace_back(new ActionButton(std::forward<QString>(label), this));
+    return m_actions[size].get();
 }

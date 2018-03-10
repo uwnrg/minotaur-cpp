@@ -10,12 +10,9 @@
 
 class ActionBox;
 
-Q_DECLARE_METATYPE(ActionBox *);
-
-
 class ActionButton : public QPushButton {
 public:
-    explicit ActionButton(QWidget *parent = nullptr);
+    explicit ActionButton(QString &&label, QWidget *parent = nullptr);
 
 };
 
@@ -27,7 +24,7 @@ public:
 
     ~ActionBox() override;
 
-    void add_action(ActionButton *action);
+    ActionButton *add_action(QString &&label);
 
     Q_SLOT void reset_actions();
 
@@ -35,6 +32,7 @@ public:
 
 private:
     std::unique_ptr<QVBoxLayout> m_layout;
+    std::vector<std::unique_ptr<ActionButton>> m_actions;
 
 };
 

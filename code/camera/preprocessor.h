@@ -2,6 +2,7 @@
 #define MINOTAUR_CPP_PREPROCESSOR_H
 
 #include <QObject>
+#include <QBasicTimer>
 
 #include <memory>
 
@@ -13,7 +14,7 @@ class Preprocessor : public QObject {
 Q_OBJECT
 
 public:
-    explicit Preprocessor(QObject *parent = nullptr);
+    Preprocessor();
 
     Q_SLOT void preprocess_frame(const cv::UMat &frame);
 
@@ -26,12 +27,20 @@ public:
     Q_SIGNAL void frame_processed(const cv::UMat &frame);
 
 private:
+    void __queue(const cv::UMat &frame);
+
     void __preprocess_frame(cv::UMat frame);
 
+    void timerEvent(QTimerEvent *ev) override;
+
     std::shared_ptr<VideoModifier> m_modifier;
+    cv::UMat m_frame;
+
+    QBasicTimer m_queue_timer;
 
     double m_zoom_factor = 1.0;
     bool m_convert_rgb = true;
+    bool m_process_all = false;
 };
 
 #endif //MINOTAUR_CPP_PREPROCESSOR_H

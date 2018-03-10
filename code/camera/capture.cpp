@@ -4,8 +4,7 @@
 
 #include <QTimerEvent>
 
-Capture::Capture(QObject *parent)
-    : QObject(parent) {}
+Capture::Capture() = default;
 
 void Capture::start_capture(int cam) {
     if (cam < 0) { return; }
@@ -20,6 +19,11 @@ void Capture::stop_capture() {
     m_timer.stop();
     m_video_capture->release();
     Q_EMIT capture_stopped();
+}
+
+void Capture::change_camera(int camera) {
+    stop_capture();
+    start_capture(camera);
 }
 
 void Capture::timerEvent(QTimerEvent *ev) {

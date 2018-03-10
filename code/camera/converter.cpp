@@ -1,10 +1,11 @@
 #include "converter.h"
+#include "imageviewer.h"
 
-Converter::Converter(QWidget *parent) :
-    QObject(parent) {}
+Converter::Converter(ImageViewer *image_viewer) :
+    m_image_viewer(image_viewer) {}
 
 void Converter::process_frame(const cv::UMat &frame) {
-    QWidget *ptr = dynamic_cast<QWidget *>(parent());
+    auto *ptr = dynamic_cast<QWidget *>(parent());
 #ifndef NDEBUG
     if (ptr) {
 #endif
@@ -20,6 +21,7 @@ void Converter::process_frame(const cv::UMat &frame) {
         frame.getMat(1).data, frame.cols, frame.rows, static_cast<int>(frame.step),
         QImage::Format_RGB888, &umat_delete, new cv::UMat(frame)
     );
+    ++m_frames;
     Q_EMIT image_ready(image);
 }
 

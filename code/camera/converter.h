@@ -6,13 +6,13 @@
 
 #include <opencv2/opencv.hpp>
 
-class CameraDisplay;
+class ImageViewer;
 
 class Converter : public QObject {
-    Q_OBJECT
+Q_OBJECT
 
 public:
-    explicit Converter(QWidget *parent = nullptr);
+    explicit Converter(ImageViewer *image_viewer);
 
     Q_SIGNAL void image_ready(const QImage &img);
 
@@ -24,6 +24,7 @@ private:
     static void umat_delete(void *mat);
 
     int m_frames;
+    ImageViewer *m_image_viewer;
 };
 
 

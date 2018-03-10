@@ -15,11 +15,7 @@ public:
 
     void modify(cv::UMat &img) override;
 
-    void forwardKeyEvent(int key) override;
-
-    void register_actions(const std::vector<ActionButton *> &action_btns, ActionBox *box) override;
-
-    int num_buttons() const override;
+    void register_actions(ActionBox *box) override;
 
 protected:
     Q_SLOT void beginTracking();

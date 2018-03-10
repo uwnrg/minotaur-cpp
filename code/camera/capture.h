@@ -6,14 +6,13 @@
 
 #include <opencv2/opencv.hpp>
 
-Q_DECLARE_METATYPE(cv::Mat);
 Q_DECLARE_METATYPE(cv::UMat);
 
 class Capture : public QObject {
     Q_OBJECT
 
 public:
-    explicit Capture(QObject *parent = nullptr);
+    Capture();
 
     int capture_width() const;
 
@@ -28,6 +27,8 @@ public:
     Q_SLOT void start_capture(int cam);
 
     Q_SLOT void stop_capture();
+
+    Q_SLOT void change_camera(int camera);
 
 private:
     void timerEvent(QTimerEvent *ev) override;

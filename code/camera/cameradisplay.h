@@ -27,7 +27,7 @@ public:
 
     Q_SLOT void effect_box_changed(int effect);
 
-    Q_SLOT void take_screenshot();
+    Q_SLOT void take_screen_shot();
 
     Q_SLOT void record_clicked();
 
@@ -41,10 +41,17 @@ public:
 
     Q_SIGNAL void effect_changed(const std::shared_ptr<VideoModifier> &effect);
 
+    Q_SIGNAL void save_screenshot(const QString &file);
+
+    Q_SIGNAL void zoom_changed(double zoom);
+
+    Q_SIGNAL void toggle_recording();
+
 private:
     Ui::CameraDisplay *ui;
 
     std::unique_ptr<ActionBox> m_action_box;
+    std::unique_ptr<ImageViewer> m_image_viewer;
 };
 
 #endif //MINOTAUR_CPP_CAMERADISPLAY_H

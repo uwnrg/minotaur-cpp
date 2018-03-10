@@ -25,11 +25,9 @@ public:
 
     virtual void modify(cv::UMat &img) = 0;
 
-    virtual void forwardKeyEvent(int);
-
-    virtual void register_actions(const std::vector<ActionButton *> &action_btns, ActionBox *box);
-
-    virtual int num_buttons() const;
+    virtual void register_actions(ActionBox *box);
 };
+
+Q_DECLARE_METATYPE(std::shared_ptr<VideoModifier>);
 
 #endif //MINOTAUR_CPP_MODIFY_H

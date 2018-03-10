@@ -31,10 +31,4 @@ void VideoModifier::add_modifier_list(QComboBox *list) {
 #endif
 }
 
-void VideoModifier::forwardKeyEvent(int) {}
-
-void VideoModifier::register_actions(const std::vector<ActionButton *> &, ActionBox *) {}
-
-int VideoModifier::num_buttons() const {
-    return 0;
-}
+void VideoModifier::register_actions(ActionBox *) {}

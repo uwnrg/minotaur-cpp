@@ -56,23 +56,6 @@ void TrackerModifier::reset_tracker() {
     }
 }
 
-void TrackerModifier::forwardKeyEvent(int key) {
-#ifndef NDEBUG
-    qDebug() << "Key event received";
-#endif
-    if (key == Qt::Key_A) {
-#ifndef NDEBUG
-        qDebug() << "Switching to First Scan";
-#endif
-        beginTracking();
-    } else if (key == Qt::Key_S) {
-#ifndef NDEBUG
-        qDebug() << "Resetting tracker";
-#endif
-        stopTracking();
-    }
-}
-
 void TrackerModifier::beginTracking() {
     if (m_state == State::UNINITIALIZED) {
         m_state = State::FIRST_SCAN;
@@ -101,21 +84,12 @@ void TrackerModifier::modify(cv::UMat &img) {
     cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
 }
 
-void TrackerModifier::register_actions(const std::vector<ActionButton *> &action_btns, ActionBox *box) {
-    /*
-     * [0]: Select ROI
-     * [1]: Clear ROI
-     */
-    assert(action_btns.size() == 2);
-    action_btns[0]->setText("Select ROI");
-    action_btns[1]->setText("Clear ROI");
-    connect(action_btns[0], &ActionButton::clicked, this, &TrackerModifier::beginTracking);
-    connect(action_btns[1], &ActionButton::clicked, this, &TrackerModifier::stopTracking);
-    QMetaObject::invokeMethod(box, "set_actions");
-}
-
-int TrackerModifier::num_buttons() const {
-    return 2;
+void TrackerModifier::register_actions(ActionBox *box) {
+    ActionButton *start_button = box->add_action("Select ROI");
+    ActionButton *clear_button = box->add_action("Clear ROI");
+    connect(start_button, &ActionButton::clicked, this, &TrackerModifier::beginTracking);
+    connect(clear_button, &ActionButton::clicked, this, &TrackerModifier::stopTracking);
+    box->set_actions();
 }
 
 #endif
