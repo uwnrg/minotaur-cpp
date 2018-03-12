@@ -45,6 +45,18 @@ public:
         }
     }
 
+    size_t x() const {
+        return m_x;
+    }
+
+    size_t y() const {
+        return m_y;
+    }
+
+    size_t xy() const {
+        return m_x*m_y;
+    }
+
     array2d<val_t, size_t> &operator=(array2d<val_t, size_t> &&arr) noexcept {
         m_x = arr.m_x;
         m_y = arr.m_y;

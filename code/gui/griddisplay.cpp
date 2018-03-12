@@ -25,11 +25,11 @@ GridDisplay::GridDisplay(QWidget *parent) :
 }
 
 void GridDisplay::buttonClicked(int x, int y) {
-    if (squareSelected[x][y]){
-        squareSelected[x][y] = false;
+    if (squareSelected[x][y] > notSelectedWeight){
+        squareSelected[x][y] = notSelectedWeight;
         m_button[x][y]->setStyleSheet(buttonStyle);
     } else {
-        squareSelected[x][y] = true;
+        squareSelected[x][y] = defaultWeight;
         m_button[x][y]->setStyleSheet(buttonSelectedStyle);
     }
 #ifndef NDEBUG
@@ -46,7 +46,7 @@ void GridDisplay::drawButtons() {
             m_button[x][y] = new QPushButton();
             m_button[x][y]->setGeometry(QRect(x * gridSize, y * gridSize, gridSize, gridSize));
             m_button[x][y]->setStyleSheet(buttonStyle);
-            squareSelected[x][y] = false;
+            squareSelected[x][y] = notSelectedWeight;
             //multiple signals solution 1: signal mapper
 //        m_signalmapper->setMapping(m_button[i], i);
 //        connect(m_button[i], SIGNAL(clicked()), m_signalmapper, SLOT(map()));
@@ -71,7 +71,7 @@ void GridDisplay::clearSelection() {
     for (int y = 0; y < rowCount; y++) {
         for (int x = 0; x < columnCount; x++) {
             m_button[x][y]->setStyleSheet(buttonStyle);
-            squareSelected[x][y] = false;
+            squareSelected[x][y] = notSelectedWeight;
         }
     }
 }

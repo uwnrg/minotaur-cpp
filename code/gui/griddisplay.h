@@ -43,9 +43,8 @@ private:
     //std::unique_ptr<QPushButton> m_button[40][20];  //TODO: Replace hardcoded values
     //array2d(QPushButton, 800);
     //bool squareSelected[40][20];
-    array2d<bool> squareSelected {40, 20};
+    array2d<int> squareSelected {40, 20};
     //QSignalMapper *m_signalmapper;
-
     QString buttonStyle = (
         "background-color: rgba(0, 0, 0, 0%);"
         "width: 8px;"
@@ -59,11 +58,17 @@ private:
     );
 
     const int gridSize = 20;
-    const int sceneWidth = 800;
-    const int sceneHeight = 400;
+    const int sceneWidth = 100;     //Default: 800
+    const int sceneHeight = 100;    //Default: 400
     int columnCount = sceneWidth / gridSize; //40
     int rowCount = sceneHeight / gridSize;  //20
     bool gridDisplayed = false;
+
+    int notSelectedWeight = -1;
+    int defaultWeight = 0;
+
+    //make start and end inputs using Coordinate struct
+
 };
 
 #endif //MINOTAUR_CPP_GRIDDISPLAY_H
