@@ -30,6 +30,22 @@ public:
         make_array(x, y);
     }
 
+    array2d(std::initializer_list< std::initializer_list<val_t> > l) {
+        m_x = l.size();
+        m_y = l.begin()->size();
+        make_array(m_x, m_y);
+
+        int i = 0;
+        for (auto &array : l) {
+            int j = 0;
+            for (auto &e : array) {
+                m_arr[i][j] = std::move(e);
+                j++;
+            }
+            i++;
+        }
+    }
+
     array2d(array2d<val_t, size_t> &&arr) noexcept
         : m_x(arr.m_x),
           m_y(arr.m_y),

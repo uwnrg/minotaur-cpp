@@ -48,7 +48,7 @@ void Astar::backtrack(Astar::Coord start, Astar::Coord dest, map<Astar::Coord, A
     reverse(begin(path), end(path));
 }
 
-void Astar::searchPath(Astar::grid terrain, Astar::Coord start, Astar::Coord dest) {
+void Astar::searchPath(array2d<int>& terrain, Astar::Coord start, Astar::Coord dest) {
     // idea for using maps to keep track of path information came from redblobgames.com
     map<Astar::Coord, Astar::Coord> parent;
     map<Astar::Coord, double> cost;
@@ -59,8 +59,8 @@ void Astar::searchPath(Astar::grid terrain, Astar::Coord start, Astar::Coord des
     parent[start] = start;
     cost[start] = 0;
 
-    int maxRow = terrain.size();
-    int maxCol = terrain[0].size();
+    int maxRow = terrain.x();
+    int maxCol = terrain.y();
 
     while(!openset.empty()) {
         // element returned by begin() C++ set should be lowest
