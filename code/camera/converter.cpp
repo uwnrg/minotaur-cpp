@@ -1,8 +1,5 @@
 #include "converter.h"
 #include "cameradisplay.h"
-#include "../utility/utility.h"
-
-#include <QTimerEvent>
 
 #ifndef NDEBUG
 

@@ -12,9 +12,6 @@ public:
           m_len(len) {}
 
     val_t &operator[](size_t t) {
-        if (t >= m_len) {
-            return val_t();
-        }
         return m_sub_arr[t];
     }
 
@@ -73,7 +70,7 @@ private:
         }
         m_arr = new val_t *[x];
         for (int tx = 0; tx < x; ++tx) {
-            m_arr = new val_t[y];
+            m_arr[tx] = new val_t[y];
         }
     }
 
