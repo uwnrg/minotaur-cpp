@@ -1,3 +1,5 @@
+#ifndef MINOTAUR_UTILITY_H
+#define MINOTAUR_UTILITY_H
 #include <memory>
 
 namespace std {
@@ -8,3 +10,4 @@ namespace std {
     };
 
 }
+#endif

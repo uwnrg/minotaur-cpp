@@ -10,11 +10,13 @@
 */
 
 GridDisplay::GridDisplay(QWidget *parent) :
-    QWidget(parent) {
+    QWidget(parent), squareSelected{40, 20} {
     //Set up graphics scene and view
-    m_scene = new QGraphicsScene(this);
+    m_scene = std::make_unique<QGraphicsScene>(this);
+    //m_scene = new std::unique_ptr<QGraphicsScene>(this);
     m_scene->setSceneRect(QRect(0, 0, sceneWidth, sceneHeight));   //TODO: set bounding rectangle to m_img.size()
-    m_view = new QGraphicsView(m_scene, parent);
+    m_view = std::make_unique<QGraphicsView>(m_scene.get(), parent);
+    //m_view = new std::unique_ptr<QGraphicsView>(m_scene, parent);
     m_view->setStyleSheet("background: transparent");
 
 //    drawButtons();
@@ -22,7 +24,7 @@ GridDisplay::GridDisplay(QWidget *parent) :
 //    showView();
 }
 
-void GridDisplay::buttonClicked(QPushButton *button, int x, int y) {
+void GridDisplay::buttonClicked(int x, int y) {
     if (squareSelected[x][y]){
         squareSelected[x][y] = false;
         m_button[x][y]->setStyleSheet(buttonStyle);
@@ -52,7 +54,7 @@ void GridDisplay::drawButtons() {
             //connect(m_button[i], SIGNAL(clicked()), this, SLOT(buttonClicked()));
 
             //multiple signals solution 3: lambda functions
-            connect(m_button[x][y], &QPushButton::clicked, [=]() { this->buttonClicked(m_button[x][y], x, y); });
+            connect(m_button[x][y], &QPushButton::clicked, [=]() { this->buttonClicked(x, y); });
             m_scene->addWidget(m_button[x][y]);
        }
     }
@@ -80,9 +82,12 @@ void GridDisplay::updateScene() {
 }
 
 void GridDisplay::showGrid() {
-    drawGrid();
-    drawButtons();
-    showView();
+    if (gridDisplayed == false) {
+        drawGrid();
+        drawButtons();
+        showView();
+    }
+    gridDisplayed = true;
 }
 
 void GridDisplay::drawGrid() {
@@ -98,4 +103,5 @@ void GridDisplay::drawGrid() {
 
 void GridDisplay::hideGrid() {
     //TODO
+    //gridDisplayed = false;
 }
