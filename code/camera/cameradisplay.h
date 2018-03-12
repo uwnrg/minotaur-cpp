@@ -3,10 +3,15 @@
 
 #include <QDialog>
 #include <QBasicTimer>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 #include "camerathread.h"
 #include "capture.h"
 #include "converter.h"
+#include "../gui/griddisplay.h"
+#include "../video/modify.h"
+#include "../video/recorder.h"
 
 Q_DECLARE_METATYPE(std::vector<ActionButton *>);
 
@@ -21,6 +26,8 @@ class ImageViewer;
 class QSlider;
 
 class QLabel;
+
+class GridDisplay;
 
 class CameraDisplay : public QDialog {
 Q_OBJECT
@@ -99,6 +106,11 @@ private:
     std::unique_ptr<QPushButton> m_record_btn;
     std::unique_ptr<ImageViewer> m_image_viewer;
     std::unique_ptr<QSlider> m_zoom_slider;
+
+    std::unique_ptr<GridDisplay> m_grid_display;
+    std::unique_ptr<QPushButton> m_display_grid_btn;
+    std::unique_ptr<QPushButton> m_hide_grid_btn;
+    std::unique_ptr<QPushButton> m_deselect_btn;
 
     std::unique_ptr<QLabel> m_framerate_label;
     std::unique_ptr<QLabel> m_zoom_label;

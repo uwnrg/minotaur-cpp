@@ -4,19 +4,19 @@
 #include <vector>
 #include <map>
 #include <stack>
+#include "../utility/array2d.h"
 
 class Astar {
 public:
     struct Coord {
         int x;
         int y;
-    };;
+    };
 
-    typedef typename std::vector< std::vector<int> > grid;
     typedef typename std::pair<double, Coord> associatedCost;
 
     Astar();
-    void searchPath(grid terrain, Coord cur, Coord dest);
+    void searchPath(array2d<int>& terrain, Coord cur, Coord dest);
     std::vector<Coord> getPath();
 private:
     std::vector<Coord> path;
