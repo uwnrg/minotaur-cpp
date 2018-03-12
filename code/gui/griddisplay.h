@@ -60,6 +60,7 @@ private:
     const int gridSize = 20;
     const int sceneWidth = 100;     //Default: 800
     const int sceneHeight = 100;    //Default: 400
+
     int columnCount = sceneWidth / gridSize; //40
     int rowCount = sceneHeight / gridSize;  //20
     bool gridDisplayed = false;
