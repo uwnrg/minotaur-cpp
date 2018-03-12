@@ -64,6 +64,8 @@ protected Q_SLOTS:
 
     void update_zoom();
 
+    //void weightChanged(int weight_index);
+
     /**
      * Since the ActionButton widgets must be created and maintained in the
      * same thread as the parent ActionBox, and the Capture is running in
