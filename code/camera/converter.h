@@ -23,6 +23,8 @@ public:
 
     int get_and_reset_frames();
 
+    void set_zoom(double zoom_factor);
+
     Q_SIGNAL void imageReady(const QImage &);
 
     /**
@@ -48,6 +50,8 @@ private:
 
     void queue(const cv::UMat &frame);
 
+    void zoom(cv::UMat &frame, cv::UMat &zoomed_frame, double zoom_factor);
+
     void process(cv::UMat frame);
 
     void timerEvent(QTimerEvent *ev) override;
@@ -62,6 +66,7 @@ private:
 
     bool m_process_all = true;
     int m_frame_count = 0;
+    double m_zoom = 1.0;
 };
 
 
