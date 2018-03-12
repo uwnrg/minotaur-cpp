@@ -36,7 +36,7 @@ find_package(Threads REQUIRED)
 
 if (Qt5_POSITION_INDEPENDENT_CODE)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-endif ()
+endif()
 
 file(GLOB_RECURSE SOURCE_FILES
         ${PROJECT_SOURCE_DIR}/code/**/*.cpp)

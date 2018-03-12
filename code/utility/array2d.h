@@ -12,9 +12,6 @@ public:
           m_len(len) {}
 
     val_t &operator[](size_t t) {
-        if (t >= m_len) {
-            return val_t();
-        }
         return m_sub_arr[t];
     }
 
@@ -48,6 +45,18 @@ public:
         }
     }
 
+    size_t x() const {
+        return m_x;
+    }
+
+    size_t y() const {
+        return m_y;
+    }
+
+    size_t xy() const {
+        return m_x*m_y;
+    }
+
     array2d<val_t, size_t> &operator=(array2d<val_t, size_t> &&arr) noexcept {
         m_x = arr.m_x;
         m_y = arr.m_y;
@@ -73,7 +82,7 @@ private:
         }
         m_arr = new val_t *[x];
         for (int tx = 0; tx < x; ++tx) {
-            m_arr = new val_t[y];
+            m_arr[tx] = new val_t[y];
         }
     }
 
