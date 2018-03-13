@@ -5,7 +5,7 @@
 using namespace std;
 
 TEST(direct_movement, find_path) {
-    Astar::grid a = {{1,   1, -1, 1},
+    array2d<int> a = {{1,   1, -1, 1},
                      {1,   1, -1, 1},
                      {-1,  1, 1,  1},
                      {1,   1, -1, 1}};
