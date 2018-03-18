@@ -53,6 +53,12 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     ui->zoom_slider->setMaximum(40);
     ui->zoom_slider->setMinimum(10);
 
+    // Setup rotation slider
+    ui->rotate_slider->setTickInterval(45);
+    ui->rotate_slider->setTickPosition(QSlider::TicksBelow);
+    ui->rotate_slider->setMaximum(180);
+    ui->rotate_slider->setMinimum(-180);
+
     // Setup image viewer
     ui->layout->addWidget(m_image_viewer.get());
 
@@ -62,6 +68,9 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(ui->picture_button, &QPushButton::clicked, this, &CameraDisplay::take_screen_shot);
     connect(ui->record_button, &QPushButton::clicked, this, &CameraDisplay::record_clicked);
     connect(ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
+    connect(ui->rotate_slider, &QSlider::valueChanged, this, &CameraDisplay::rotation_slider_changed);
+    connect(ui->rotation_box, &QLineEdit::editingFinished, this, &CameraDisplay::rotation_box_changed);
+    connect(ui->play_button, &QPushButton::clicked, this, &CameraDisplay::pressed_play);
 }
 
 CameraDisplay::~CameraDisplay() {
@@ -114,4 +123,32 @@ void CameraDisplay::record_clicked() {
 void CameraDisplay::update_zoom(int value) {
     double zoom_factor = value / 10.0;
     Q_EMIT zoom_changed(zoom_factor);
+}
+
+void CameraDisplay::rotation_slider_changed(int value) {
+    ui->rotation_box->setText(QString::number(value));
+    Q_EMIT rotation_changed(value);
+}
+
+void CameraDisplay::rotation_box_changed() {
+    QString value = ui->rotation_box->text();
+    int degrees = value.toInt(nullptr, 10);
+    ui->rotate_slider->setValue(degrees);
+}
+
+void CameraDisplay::set_rotation(int value) {
+    if (value >= -180 && value <= 180) {
+        ui->rotation_box->setText(QString::number(value));
+        ui->rotate_slider->setValue(value);
+    }
+}
+
+void CameraDisplay::pressed_play() {
+    Q_EMIT toggle_rotation();
+    if (ui->play_button->text() == "▶") {
+        ui->play_button->setText("⏸");
+    }
+    else {
+        ui->play_button->setText("▶");
+    }
 }

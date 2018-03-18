@@ -51,6 +51,9 @@
    <property name="text">
     <string>Record</string>
    </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
   </widget>
   <widget class="QPushButton" name="picture_button">
    <property name="geometry">
@@ -63,6 +66,22 @@
    </property>
    <property name="text">
     <string>Screenshot</string>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QSlider" name="rotate_slider">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>20</y>
+     <width>281</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
   <widget class="QSlider" name="zoom_slider">
@@ -77,6 +96,35 @@
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
+  </widget>
+  <widget class="QLineEdit" name="rotation_box">
+   <property name="geometry">
+    <rect>
+     <x>467</x>
+     <y>20</y>
+     <width>40</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0</string>
+  </property>
+  </widget>
+  <widget class="QPushButton" name="play_button">
+    <property name="geometry">
+      <rect>
+        <x>510</x>
+        <y>20</y>
+        <width>40</width>
+        <height>31</height>
+      </rect>
+    </property>
+    <property name="text">
+      <string>▶</string>
+    </property>
+    <property name="autoDefault">
+      <bool>false</bool>
+    </property>
   </widget>
   <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">

@@ -51,9 +51,12 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     connect(parent, &CameraDisplay::camera_changed, &m_capture, &Capture::change_camera);
     connect(parent, &CameraDisplay::effect_changed, &m_preprocessor, &Preprocessor::use_modifier);
     connect(parent, &CameraDisplay::zoom_changed, &m_preprocessor, &Preprocessor::zoom_changed);
+    connect(parent, &CameraDisplay::rotation_changed, &m_preprocessor, &Preprocessor::rotation_changed);
+    connect(parent, &CameraDisplay::toggle_rotation, &m_preprocessor, &Preprocessor::toggle_rotation);
     connect(parent, &CameraDisplay::save_screenshot, this, &ImageViewer::save_screenshot);
     connect(parent, &CameraDisplay::toggle_recording, this, &ImageViewer::handle_recording);
     connect(parent, &CameraDisplay::zoom_changed, this, &ImageViewer::set_zoom);
+    connect(&m_preprocessor, &Preprocessor::update_rotation_ui, parent, &CameraDisplay::set_rotation);
     connect(this, &ImageViewer::start_recording, &m_recorder, &Recorder::start_recording);
     connect(this, &ImageViewer::stop_recording, &m_recorder, &Recorder::stop_recording);
 }
