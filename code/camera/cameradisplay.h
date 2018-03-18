@@ -33,6 +33,14 @@ public:
 
     Q_SLOT void update_zoom(int value);
 
+    Q_SLOT void rotation_slider_changed(int value);
+
+    Q_SLOT void rotation_box_changed();
+
+    Q_SLOT void set_rotation(int value);
+
+    Q_SLOT void pressed_play();
+
     Q_SIGNAL void display_opened(int camera);
 
     Q_SIGNAL void display_closed();
@@ -44,6 +52,10 @@ public:
     Q_SIGNAL void save_screenshot(const QString &file);
 
     Q_SIGNAL void zoom_changed(double zoom);
+
+    Q_SIGNAL void rotation_changed(int angle);
+
+    Q_SIGNAL void toggle_rotation();
 
     Q_SIGNAL void toggle_recording();
 
