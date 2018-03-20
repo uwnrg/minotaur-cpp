@@ -9,8 +9,6 @@
 
 #include "../utility/array2d.h"
 
-Q_DECLARE_METATYPE(std::shared_ptr<cv::Rect2d>);
-
 class CompetitionState : public QObject {
 Q_OBJECT
 public:

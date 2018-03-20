@@ -14,10 +14,13 @@ GridDisplay::GridDisplay(QWidget *parent) :
     //Set up graphics scene and view
     m_scene = std::make_unique<QGraphicsScene>(this);
     //m_scene = new std::unique_ptr<QGraphicsScene>(this);
-    m_scene->setSceneRect(QRect(0, 0, sceneWidth, sceneHeight));   //TODO: set bounding rectangle to m_img.size()
+    //m_scene->setSceneRect(QRect(0, 0, sceneWidth, sceneHeight));   //TODO: set bounding rectangle to m_img.size()
     m_view = std::make_unique<QGraphicsView>(m_scene.get(), parent);
     //m_view = new std::unique_ptr<QGraphicsView>(m_scene, parent);
     m_view->setStyleSheet("background: transparent");
+    m_view->setMinimumSize(sceneWidth, sceneHeight);
+    m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 //    drawButtons();
 //    drawGrid();
@@ -56,8 +59,9 @@ void GridDisplay::drawButtons() {
             //multiple signals solution 3: lambda functions
             connect(m_button[x][y], &QPushButton::clicked, [=]() { this->buttonClicked(x, y); });
             m_scene->addWidget(m_button[x][y]);
-       }
+        }
     }
+    m_view->adjustSize();
 }
 
 void GridDisplay::showView() {

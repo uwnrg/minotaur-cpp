@@ -26,6 +26,8 @@ public:
 
     Q_SLOT void attempt_connection();
 
+    Q_SLOT void append_text(const std::string &text);
+
 private:
     Ui::SerialBox *ui;
     std::shared_ptr<Solenoid> m_solenoid;

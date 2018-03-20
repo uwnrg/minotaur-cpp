@@ -19,17 +19,15 @@ public:
         OBJTRACK = 3
     };
 
-    static void attachModifier(std::unique_ptr<VideoModifier> &ptr, int modifier);
+    static std::shared_ptr<VideoModifier> get_modifier(int modifier);
 
-    static void addModifierList(QComboBox *list);
+    static void add_modifier_list(QComboBox *list);
 
     virtual void modify(cv::UMat &img) = 0;
 
-    virtual void forwardKeyEvent(int);
-
-    virtual void register_actions(const std::vector<ActionButton *> &action_btns, ActionBox *box);
-
-    virtual int num_buttons() const;
+    virtual void register_actions(ActionBox *box);
 };
+
+Q_DECLARE_METATYPE(std::shared_ptr<VideoModifier>);
 
 #endif //MINOTAUR_CPP_MODIFY_H

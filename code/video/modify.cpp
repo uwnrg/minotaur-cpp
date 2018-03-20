@@ -1,30 +1,28 @@
 #include "modify.h"
+
 #include "squares.h"
 #include "shapedetect.h"
+
 #ifndef TRACKER_OFF
 #include "tracker.h"
 #endif
 
-void VideoModifier::attachModifier(std::unique_ptr<VideoModifier> &ptr, int modifier) {
+std::shared_ptr<VideoModifier> VideoModifier::get_modifier(int modifier) {
     switch (modifier) {
         case SQUARES:
-            ptr.reset(new Squares);
-            break;
+            return std::make_shared<Squares>();
         case SHAPEDETECT:
-            ptr.reset(new ShapeDetect);
-            break;
+            return std::make_shared<ShapeDetect>();
 #ifndef TRACKER_OFF
         case OBJTRACK:
-            ptr.reset(new TrackerModifier);
-            break;
+            return std::make_shared<TrackerModifier>();
 #endif
         default:
-            ptr.release();
-            break;
+            return nullptr;
     }
 }
 
-void VideoModifier::addModifierList(QComboBox *list) {
+void VideoModifier::add_modifier_list(QComboBox *list) {
     list->addItem("None");
     list->addItem("Square");
     list->addItem("Shape Detector");
@@ -33,10 +31,4 @@ void VideoModifier::addModifierList(QComboBox *list) {
 #endif
 }
 
-void VideoModifier::forwardKeyEvent(int) {}
-
-void VideoModifier::register_actions(const std::vector<ActionButton *> &, ActionBox *) {}
-
-int VideoModifier::num_buttons() const {
-    return 0;
-}
+void VideoModifier::register_actions(ActionBox *) {}

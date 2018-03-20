@@ -5,6 +5,7 @@
 #include "modify.h"
 
 #include <opencv2/tracking.hpp>
+#include <QMutex>
 
 class QVBoxLayout;
 class QPushButton;
@@ -15,11 +16,7 @@ public:
 
     void modify(cv::UMat &img) override;
 
-    void forwardKeyEvent(int key) override;
-
-    void register_actions(const std::vector<ActionButton *> &action_btns, ActionBox *box) override;
-
-    int num_buttons() const override;
+    void register_actions(ActionBox *box) override;
 
 protected:
     Q_SLOT void beginTracking();
@@ -50,6 +47,16 @@ private:
 
     int m_type;
     int m_state;
+
+    /**
+     * Class mutex instance used to prevent a scenario wherein
+     * the class's cv::Tracker pointer is set to null while another
+     * thread tries to use it, resulting in a segmentation fault.
+     *
+     * Might happen when clicking "Clear ROI", because reset_tracker() and
+     * modify() are called in different threads.
+     */
+    QMutex m_mutex;
 };
 
 #endif

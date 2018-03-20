@@ -1,31 +1,15 @@
 #ifndef MINOTAUR_CPP_CAMERADISPLAY_H
 #define MINOTAUR_CPP_CAMERADISPLAY_H
 
+#include <memory>
 #include <QDialog>
-#include <QBasicTimer>
-#include <QGraphicsScene>
-#include <QGraphicsView>
 
-#include "camerathread.h"
-#include "capture.h"
-#include "converter.h"
-#include "../gui/griddisplay.h"
-#include "../video/modify.h"
-#include "../video/recorder.h"
+#include "actionbox.h"
+#include "imageviewer.h"
 
-Q_DECLARE_METATYPE(std::vector<ActionButton *>);
-
-class QVBoxLayout;
-
-class QComboBox;
-
-class QPushButton;
-
-class ImageViewer;
-
-class QSlider;
-
-class QLabel;
+namespace Ui {
+    class CameraDisplay;
+}
 
 class GridDisplay;
 
@@ -33,105 +17,51 @@ class CameraDisplay : public QDialog {
 Q_OBJECT
 
 public:
-    explicit CameraDisplay(QWidget *parent = nullptr, int camera_index = 0);
+    explicit CameraDisplay(QWidget *parent = nullptr);
 
     ~CameraDisplay() override;
 
-    void setCamera(int camera);
-
-    void update_framerate(int frames);
-
-    int getCamera();
-
-protected:
     void setVisible(bool visible) override;
 
     void reject() override;
 
-    void keyPressEvent(QKeyEvent *event) override;
+    Q_SLOT void camera_box_changed(int camera);
 
-protected Q_SLOTS:
+    Q_SLOT void effect_box_changed(int effect);
 
-    void selectedCameraChanged(int list_index);
+    Q_SLOT void take_screen_shot();
 
-    void effectsChanged(int effect_index);
+    Q_SLOT void record_clicked();
 
-    void captureAndSave();
+    Q_SLOT void update_zoom(int value);
 
-    void recordButtonClicked();
+    Q_SLOT void show_grid_clicked();
 
-    void recordSaveFile();
+    Q_SLOT void clear_grid_clicked();
 
-    void update_zoom();
+    Q_SIGNAL void display_opened(int camera);
 
-    //void weightChanged(int weight_index);
+    Q_SIGNAL void display_closed();
 
-    /**
-     * Since the ActionButton widgets must be created and maintained in the
-     * same thread as the parent ActionBox, and the Capture is running in
-     * its own thread, we have to receive requests from that thread to create
-     * the objects.
-     *
-     * This slot is called when an effect changes.
-     *
-     * @see CameraDisplay::returnActionButtons
-     * @param num_buttons the number of action buttons needed
-     */
-    void requestActionButtons(int num_buttons);
+    Q_SIGNAL void camera_changed(int camera);
 
-Q_SIGNALS:
+    Q_SIGNAL void effect_changed(const std::shared_ptr<VideoModifier> &effect);
 
-    void forwardKeyEvent(int);
+    Q_SIGNAL void save_screenshot(const QString &file);
 
-    void beginRecording();
+    Q_SIGNAL void zoom_changed(double zoom);
 
-    void stopRecording();
+    Q_SIGNAL void toggle_record();
 
-    void recordFileAcquired(QString file, int width, int height);
+    Q_SIGNAL void show_grid();
 
-    /**
-     * Return the requested action buttons as a list of pointers.
-     *
-     * @param action_btns the request action buttons.
-     */
-    void returnActionButtons(const std::vector<ActionButton *> &action_btns, ActionBox *box);
+    Q_SIGNAL void clear_grid();
 
 private:
-    void pauseVideo();
-
-    void timerEvent(QTimerEvent *ev) override;
-
-    std::unique_ptr<QVBoxLayout> m_layout;
-    std::unique_ptr<QComboBox> m_camera_list;
-    std::unique_ptr<QComboBox> m_effects_list;
-    std::unique_ptr<QPushButton> m_capture_btn;
-    std::unique_ptr<QPushButton> m_record_btn;
-    std::unique_ptr<ImageViewer> m_image_viewer;
-    std::unique_ptr<QSlider> m_zoom_slider;
-
-    std::unique_ptr<GridDisplay> m_grid_display;
-    std::unique_ptr<QPushButton> m_display_grid_btn;
-    std::unique_ptr<QPushButton> m_hide_grid_btn;
-    std::unique_ptr<QPushButton> m_deselect_btn;
-
-    std::unique_ptr<QLabel> m_framerate_label;
-    std::unique_ptr<QLabel> m_zoom_label;
+    Ui::CameraDisplay *m_ui;
 
     std::unique_ptr<ActionBox> m_action_box;
-
-    std::vector<std::unique_ptr<ActionButton>> m_action_btns;
-    std::vector<ActionButton *> m_action_btn_ptrs;
-
-    int m_camera;
-    int m_image_count = 0;
-    int m_video_count = 0;
-
-    Capture m_capture;
-    Converter m_converter;
-    IThread m_capture_thread;
-    IThread m_converter_thread;
-
-    QBasicTimer m_framerate_timer;
+    std::unique_ptr<ImageViewer> m_image_viewer;
 };
 
 #endif //MINOTAUR_CPP_CAMERADISPLAY_H

@@ -17,11 +17,9 @@ MainWindow::MainWindow(
     m_simulator(std::make_unique<Simulator>()),
     m_controller(m_solenoid),
 
-
     m_about_window(std::make_unique<ActionAbout>(this)),
     m_camera_display(std::make_unique<CameraDisplay>(this)),
     m_script_window(std::make_unique<ScriptWindow>(this)),
-    m_serial_monitor(std::make_unique<SerialMonitor>(this)),
 
     m_serial_box(std::make_unique<SerialBox>(m_solenoid, this)),
     m_simulator_window(std::make_unique<SimulatorWindow>(m_simulator, this)),
@@ -38,7 +36,7 @@ MainWindow::MainWindow(
     PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
 
     // Connect solenoid serial port to the monitor
-    connect(m_solenoid.get(), &Solenoid::serialRead, m_serial_monitor.get(), &SerialMonitor::append_text);
+    connect(m_solenoid.get(), &Solenoid::serialRead, m_serial_box.get(), &SerialBox::append_text);
 
     // Simulator and controls
     connect(ui->switch_to_simulator_mode, &QAction::triggered, this, &MainWindow::switchToSimulator);
@@ -48,7 +46,6 @@ MainWindow::MainWindow(
     connect(ui->start_python_interpreter, &QAction::triggered, m_script_window.get(), &QDialog::show);
     connect(ui->open_about, &QAction::triggered, m_about_window.get(), &QDialog::show);
     connect(ui->open_camera_display, &QAction::triggered, m_camera_display.get(), &QDialog::show);
-    connect(ui->open_serial_monitor, &QAction::triggered, m_serial_monitor.get(), &QDialog::show);
     connect(ui->open_serial_box, &QAction::triggered, m_serial_box.get(), &QDialog::show);
 
     // Drop-down actions
