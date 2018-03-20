@@ -12,8 +12,8 @@
 #include <QGraphicsGridLayout>
 #include <QSignalMapper>
 
-#include "code/utility/array2d.h"
-#include "code/utility/utility.h"
+#include "../utility/array2d.h"
+#include "../utility/utility.h"
 
 class GridDisplay : public QWidget {
 Q_OBJECT
