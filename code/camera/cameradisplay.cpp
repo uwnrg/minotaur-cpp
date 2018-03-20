@@ -7,7 +7,6 @@
 
 #include "../video/modify.h"
 #include "../utility/logger.h"
-#include "../utility/utility.h"
 
 void populate_camera_box(QComboBox *box) {
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
@@ -36,36 +35,38 @@ int get_camera_index(const QCameraInfo &info) {
 
 CameraDisplay::CameraDisplay(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::CameraDisplay),
+    m_ui(new Ui::CameraDisplay),
 
     m_action_box(std::make_unique<ActionBox>(this)),
     m_image_viewer(std::make_unique<ImageViewer>(this)) {
 
-    ui->setupUi(this);
+    m_ui->setupUi(this);
 
     // Populate camera and effect lists
-    populate_camera_box(ui->camera_box);
-    populate_effect_box(ui->effect_box);
+    populate_camera_box(m_ui->camera_box);
+    populate_effect_box(m_ui->effect_box);
 
     // Setup zoom slider
-    ui->zoom_slider->setTickInterval(2);
-    ui->zoom_slider->setTickPosition(QSlider::TicksBelow);
-    ui->zoom_slider->setMaximum(40);
-    ui->zoom_slider->setMinimum(10);
+    m_ui->zoom_slider->setTickInterval(2);
+    m_ui->zoom_slider->setTickPosition(QSlider::TicksBelow);
+    m_ui->zoom_slider->setMaximum(40);
+    m_ui->zoom_slider->setMinimum(10);
 
     // Setup image viewer
-    ui->layout->addWidget(m_image_viewer.get());
+    m_ui->layout->addWidget(m_image_viewer.get());
 
     // Connections from UI
-    connect(ui->camera_box, SIGNAL(currentIndexChanged(int)), this, SLOT(camera_box_changed(int)));
-    connect(ui->effect_box, SIGNAL(currentIndexChanged(int)), this, SLOT(effect_box_changed(int)));
-    connect(ui->picture_button, &QPushButton::clicked, this, &CameraDisplay::take_screen_shot);
-    connect(ui->record_button, &QPushButton::clicked, this, &CameraDisplay::record_clicked);
-    connect(ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
+    connect(m_ui->camera_box, SIGNAL(currentIndexChanged(int)), this, SLOT(camera_box_changed(int)));
+    connect(m_ui->effect_box, SIGNAL(currentIndexChanged(int)), this, SLOT(effect_box_changed(int)));
+    connect(m_ui->picture_button, &QPushButton::clicked, this, &CameraDisplay::take_screen_shot);
+    connect(m_ui->record_button, &QPushButton::clicked, this, &CameraDisplay::record_clicked);
+    connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid_clicked);
+    connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid_clicked);
+    connect(m_ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
 }
 
 CameraDisplay::~CameraDisplay() {
-    delete ui;
+    delete m_ui;
 }
 
 void CameraDisplay::setVisible(bool visible) {
@@ -100,6 +101,10 @@ void CameraDisplay::effect_box_changed(int effect) {
     Q_EMIT effect_changed(modifier);
 }
 
+void CameraDisplay::record_clicked() {
+    Q_EMIT toggle_record();
+}
+
 void CameraDisplay::take_screen_shot() {
     QString image_png = QFileDialog::getSaveFileName(this, "Save Screenshot", QDir::currentPath(), "Photos (*.png)");
     ensure_png(image_png);
@@ -107,11 +112,15 @@ void CameraDisplay::take_screen_shot() {
     Q_EMIT save_screenshot(image_png);
 }
 
-void CameraDisplay::record_clicked() {
-    Q_EMIT toggle_recording();
-}
-
 void CameraDisplay::update_zoom(int value) {
     double zoom_factor = value / 10.0;
     Q_EMIT zoom_changed(zoom_factor);
+}
+
+void CameraDisplay::show_grid_clicked() {
+    Q_EMIT show_grid();
+}
+
+void CameraDisplay::clear_grid_clicked() {
+    Q_EMIT clear_grid();
 }

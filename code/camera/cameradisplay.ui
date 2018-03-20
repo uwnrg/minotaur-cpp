@@ -89,6 +89,32 @@
    </property>
    <layout class="QGridLayout" name="layout"/>
   </widget>
+  <widget class="QPushButton" name="clear_grid_button">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>60</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Clear Grid</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="show_grid_button">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>20</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Show Grid</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

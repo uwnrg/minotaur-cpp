@@ -3,7 +3,6 @@
 #include "cameradisplay.h"
 #include "../utility/logger.h"
 
-#include <QPainter>
 #include <QFileDialog>
 
 QString color_format(double value, const QString &suffix = "") {
@@ -15,6 +14,8 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
 
     ui(new Ui::ImageViewer),
 
+    m_grid_display(std::make_unique<GridDisplay>(this)),
+
     m_capture(),
     m_preprocessor(),
     m_converter(this),
@@ -23,6 +24,8 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     m_fps_update_interval(fps_update_interval) {
 
     ui->setupUi(this);
+    ui->zoom_label->lower();
+    ui->fps_label->lower();
 
     setAttribute(Qt::WA_OpaquePaintEvent);
 
@@ -52,8 +55,10 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     connect(parent, &CameraDisplay::effect_changed, &m_preprocessor, &Preprocessor::use_modifier);
     connect(parent, &CameraDisplay::zoom_changed, &m_preprocessor, &Preprocessor::zoom_changed);
     connect(parent, &CameraDisplay::save_screenshot, this, &ImageViewer::save_screenshot);
-    connect(parent, &CameraDisplay::toggle_recording, this, &ImageViewer::handle_recording);
     connect(parent, &CameraDisplay::zoom_changed, this, &ImageViewer::set_zoom);
+    connect(parent, &CameraDisplay::toggle_record, this, &ImageViewer::handle_recording);
+    connect(parent, &CameraDisplay::show_grid, m_grid_display.get(), &GridDisplay::showGrid);
+    connect(parent, &CameraDisplay::clear_grid, m_grid_display.get(), &GridDisplay::clearSelection);
     connect(this, &ImageViewer::start_recording, &m_recorder, &Recorder::start_recording);
     connect(this, &ImageViewer::stop_recording, &m_recorder, &Recorder::stop_recording);
 }
