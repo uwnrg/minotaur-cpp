@@ -18,7 +18,9 @@ GridDisplay::GridDisplay(QWidget *parent) :
     m_view = std::make_unique<QGraphicsView>(m_scene.get(), parent);
     //m_view = new std::unique_ptr<QGraphicsView>(m_scene, parent);
     m_view->setStyleSheet("background: transparent");
-    m_view->setFixedSize(sceneWidth, sceneHeight);
+    m_view->setMinimumSize(sceneWidth, sceneHeight);
+    m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 //    drawButtons();
 //    drawGrid();
@@ -59,6 +61,7 @@ void GridDisplay::drawButtons() {
             m_scene->addWidget(m_button[x][y]);
         }
     }
+    m_view->adjustSize();
 }
 
 void GridDisplay::showView() {
