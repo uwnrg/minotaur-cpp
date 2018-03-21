@@ -2,7 +2,7 @@
 #define SIMULATOR_H
 
 #include "controller.h"
-#include "../utility/vector2d.h"
+#include "code/utility/vector2d.h"
 
 class SimulatorScene;
 

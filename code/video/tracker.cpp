@@ -3,15 +3,12 @@
 #include <opencv2/opencv.hpp>
 #include <QDialog>
 #include <QPushButton>
-#include <QVBoxLayout>
 
 #include "tracker.h"
-#include "../utility/utility.h"
+#include "../compstate/manager.h"
 
 #ifndef NDEBUG
-
 #include <QDebug>
-
 #endif
 
 // CMake will try to find goturn.caffemodel and goturn.prototxt, which need
@@ -23,11 +20,13 @@
 #define TRACKER_TYPE Type::MIL
 #endif
 
-TrackerModifier::TrackerModifier()
+TrackerModifier::TrackerModifier(Target target)
     : m_bounding_box(),
       m_type(TRACKER_TYPE),
-      m_state(State::UNINITIALIZED) {
+      m_state(State::UNINITIALIZED),
+      m_target(target) {
     reset_tracker();
+    connect(this, &TrackerModifier::object_box, &Manager::state(), &CompetitionState::acquire_robot_box);
 }
 
 void TrackerModifier::reset_tracker() {
@@ -86,6 +85,7 @@ void TrackerModifier::modify(cv::UMat &img) {
         }
         m_mutex.unlock();
         cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
+        Q_EMIT object_box(m_bounding_box);
     }
 }
 

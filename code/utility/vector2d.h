@@ -23,6 +23,10 @@ public:
         m_x(x),
         m_y(y) {}
 
+    vector2d(std::initializer_list<val_t> l) :
+        m_x(l.begin()[0]),
+        m_y(l.begin()[1]) {}
+
     val_t &x() {
         return m_x;
     }
@@ -93,6 +97,9 @@ template<typename u_val_t>
 std::ostream &operator<<(std::ostream &os, const vector2d<u_val_t> &v) {
     return os << '(' << v.m_x << ',' << ' ' << v.m_y << ')';
 }
+
+template<typename val_t>
+using path2d = std::vector<vector2d<val_t>>;
 
 namespace std {
 
