@@ -115,7 +115,13 @@ void Solenoid::__move_delegate(Vector2i dir, int time) {
     debug() << "Sending message:";
     debug() << dir << " : " << time;
 #endif
-    m_serial.write(encode_message(dir, time));
+    //m_serial.write(encode_message(dir, time));
+    char dir_msg;
+    if (dir.x() > 0) { dir_msg = RIGHT; }
+    else { dir_msg = LEFT; }
+    if (dir.y() > 0) { dir_msg = UP; }
+    else { dir_msg = DOWN; }
+    m_serial.write(&dir_msg, 1);
     if (!m_serial.waitForBytesWritten(200)) {
         fatal() << "Failed to execute movement: write timed out";
     } else {
