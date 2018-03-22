@@ -60,7 +60,7 @@ public:
     Q_SIGNAL void toggle_recording();
 
 private:
-    Ui::CameraDisplay *ui;
+    Ui::CameraDisplay *m_ui;
 
     std::unique_ptr<ActionBox> m_action_box;
     std::unique_ptr<ImageViewer> m_image_viewer;
