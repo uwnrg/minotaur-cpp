@@ -38,6 +38,8 @@ public:
 
     const QImage &get_image();
 
+    Q_SLOT void set_image(const QImage &img);
+
     Q_SLOT void set_frame_rate(double frame_rate);
 
     Q_SLOT void set_zoom(double zoom);
