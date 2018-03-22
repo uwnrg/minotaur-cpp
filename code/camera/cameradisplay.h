@@ -11,8 +11,6 @@ namespace Ui {
     class CameraDisplay;
 }
 
-class GridDisplay;
-
 class CameraDisplay : public QDialog {
 Q_OBJECT
 

@@ -21,6 +21,8 @@ class QPaintEvent;
 
 class CameraDisplay;
 
+class GridDisplay;
+
 class ImageViewer : public QWidget {
     Q_OBJECT
 
@@ -58,6 +60,8 @@ private:
     void paintEvent(QPaintEvent *ev) override;
 
     Ui::ImageViewer *ui;
+
+    std::unique_ptr<GridDisplay> m_grid_display;
 
     QImage m_image;
 
