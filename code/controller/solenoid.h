@@ -99,10 +99,10 @@ public:
 
 private:
     enum Direction {
-        UP = 0b1000,
-        RIGHT = 0b0100,
-        DOWN = 0b0010,
-        LEFT = 0b0001
+        LEFT = 97,
+        RIGHT = 100,
+        DOWN = 115,
+        UP = 119
     };
 
     QSerialPort m_serial;
