@@ -12,7 +12,6 @@
 #include "converter.h"
 #include "recorder.h"
 #include "camerathread.h"
-#include "code/gui/griddisplay.h"
 
 namespace Ui {
     class ImageViewer;
@@ -59,8 +58,6 @@ private:
     void paintEvent(QPaintEvent *ev) override;
 
     Ui::ImageViewer *ui;
-
-    std::unique_ptr<GridDisplay> m_grid_display;
 
     QImage m_image;
 

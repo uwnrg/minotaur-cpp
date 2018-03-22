@@ -7,6 +7,7 @@
 
 #include "../video/modify.h"
 #include "../utility/logger.h"
+#include "../utility/utility.h"
 
 void populate_camera_box(QComboBox *box) {
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
@@ -35,38 +36,45 @@ int get_camera_index(const QCameraInfo &info) {
 
 CameraDisplay::CameraDisplay(QWidget *parent) :
     QDialog(parent),
-    m_ui(new Ui::CameraDisplay),
+    ui(new Ui::CameraDisplay),
 
     m_action_box(std::make_unique<ActionBox>(this)),
     m_image_viewer(std::make_unique<ImageViewer>(this)) {
 
-    m_ui->setupUi(this);
+    ui->setupUi(this);
 
     // Populate camera and effect lists
-    populate_camera_box(m_ui->camera_box);
-    populate_effect_box(m_ui->effect_box);
+    populate_camera_box(ui->camera_box);
+    populate_effect_box(ui->effect_box);
 
     // Setup zoom slider
-    m_ui->zoom_slider->setTickInterval(2);
-    m_ui->zoom_slider->setTickPosition(QSlider::TicksBelow);
-    m_ui->zoom_slider->setMaximum(40);
-    m_ui->zoom_slider->setMinimum(10);
+    ui->zoom_slider->setTickInterval(2);
+    ui->zoom_slider->setTickPosition(QSlider::TicksBelow);
+    ui->zoom_slider->setMaximum(40);
+    ui->zoom_slider->setMinimum(10);
+
+    // Setup rotation slider
+    ui->rotate_slider->setTickInterval(45);
+    ui->rotate_slider->setTickPosition(QSlider::TicksBelow);
+    ui->rotate_slider->setMaximum(180);
+    ui->rotate_slider->setMinimum(-180);
 
     // Setup image viewer
-    m_ui->layout->addWidget(m_image_viewer.get());
+    ui->layout->addWidget(m_image_viewer.get());
 
     // Connections from UI
-    connect(m_ui->camera_box, SIGNAL(currentIndexChanged(int)), this, SLOT(camera_box_changed(int)));
-    connect(m_ui->effect_box, SIGNAL(currentIndexChanged(int)), this, SLOT(effect_box_changed(int)));
-    connect(m_ui->picture_button, &QPushButton::clicked, this, &CameraDisplay::take_screen_shot);
-    connect(m_ui->record_button, &QPushButton::clicked, this, &CameraDisplay::record_clicked);
-    connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid_clicked);
-    connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid_clicked);
-    connect(m_ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
+    connect(ui->camera_box, SIGNAL(currentIndexChanged(int)), this, SLOT(camera_box_changed(int)));
+    connect(ui->effect_box, SIGNAL(currentIndexChanged(int)), this, SLOT(effect_box_changed(int)));
+    connect(ui->picture_button, &QPushButton::clicked, this, &CameraDisplay::take_screen_shot);
+    connect(ui->record_button, &QPushButton::clicked, this, &CameraDisplay::record_clicked);
+    connect(ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
+    connect(ui->rotate_slider, &QSlider::valueChanged, this, &CameraDisplay::rotation_slider_changed);
+    connect(ui->rotation_box, &QLineEdit::editingFinished, this, &CameraDisplay::rotation_box_changed);
+    connect(ui->play_button, &QPushButton::clicked, this, &CameraDisplay::pressed_play);
 }
 
 CameraDisplay::~CameraDisplay() {
-    delete m_ui;
+    delete ui;
 }
 
 void CameraDisplay::setVisible(bool visible) {
@@ -101,10 +109,6 @@ void CameraDisplay::effect_box_changed(int effect) {
     Q_EMIT effect_changed(modifier);
 }
 
-void CameraDisplay::record_clicked() {
-    Q_EMIT toggle_record();
-}
-
 void CameraDisplay::take_screen_shot() {
     QString image_png = QFileDialog::getSaveFileName(this, "Save Screenshot", QDir::currentPath(), "Photos (*.png)");
     ensure_png(image_png);
@@ -112,15 +116,39 @@ void CameraDisplay::take_screen_shot() {
     Q_EMIT save_screenshot(image_png);
 }
 
+void CameraDisplay::record_clicked() {
+    Q_EMIT toggle_recording();
+}
+
 void CameraDisplay::update_zoom(int value) {
     double zoom_factor = value / 10.0;
     Q_EMIT zoom_changed(zoom_factor);
 }
 
-void CameraDisplay::show_grid_clicked() {
-    Q_EMIT show_grid();
+void CameraDisplay::rotation_slider_changed(int value) {
+    ui->rotation_box->setText(QString::number(value));
+    Q_EMIT rotation_changed(value);
 }
 
-void CameraDisplay::clear_grid_clicked() {
-    Q_EMIT clear_grid();
+void CameraDisplay::rotation_box_changed() {
+    QString value = ui->rotation_box->text();
+    int degrees = value.toInt(nullptr, 10);
+    ui->rotate_slider->setValue(degrees);
+}
+
+void CameraDisplay::set_rotation(int value) {
+    if (value >= -180 && value <= 180) {
+        ui->rotation_box->setText(QString::number(value));
+        ui->rotate_slider->setValue(value);
+    }
+}
+
+void CameraDisplay::pressed_play() {
+    Q_EMIT toggle_rotation();
+    if (ui->play_button->text() == "▶") {
+        ui->play_button->setText("⏸");
+    }
+    else {
+        ui->play_button->setText("▶");
+    }
 }
