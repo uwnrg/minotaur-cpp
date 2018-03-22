@@ -69,7 +69,6 @@ public:
 
     Q_SIGNAL void clear_grid();
 
-
 private:
     Ui::CameraDisplay *m_ui;
 
