@@ -16,6 +16,8 @@ Q_OBJECT
 public:
     explicit Procedure(std::weak_ptr<Solenoid> sol, path2d<double> &&path);
 
+    void start();
+
 private:
     void timerEvent(QTimerEvent *ev) override;
 

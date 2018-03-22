@@ -85,15 +85,37 @@ void TrackerModifier::modify(cv::UMat &img) {
         }
         m_mutex.unlock();
         cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
+        double cx = m_bounding_box.x + m_bounding_box.width / 2.0;
+        double cy = m_bounding_box.y + m_bounding_box.height / 2.0;
+        if (m_label_btn) m_label_btn->setText(QString::fromStdString("(" + std::to_string(cx) + ", " + std::to_string(cy) + ")"));
         Q_EMIT object_box(m_bounding_box);
     }
+}
+
+#include "../gui/mainwindow.h"
+
+void TrackerModifier::start_square_proc() {
+    qDebug() << MainWindow::s_sol;
+    if (!MainWindow::s_sol) return;
+    std::weak_ptr<Solenoid> sol = *MainWindow::s_sol;
+    m_procedure = std::unique_ptr<Procedure>(new Procedure(sol, {
+        {380, 480},
+        {380, 380},
+        {480, 380},
+        {480, 480},
+        {380, 480}
+    }));
+    m_procedure->start();
 }
 
 void TrackerModifier::register_actions(ActionBox *box) {
     ActionButton *start_button = box->add_action("Select ROI");
     ActionButton *clear_button = box->add_action("Clear ROI");
+    ActionButton *move_square = box->add_action("Move Square");
+    m_label_btn = box->add_action("(0.0, 0.0)");
     connect(start_button, &ActionButton::clicked, this, &TrackerModifier::beginTracking);
     connect(clear_button, &ActionButton::clicked, this, &TrackerModifier::stopTracking);
+    connect(move_square, &ActionButton::clicked, this, &TrackerModifier::start_square_proc);
     box->set_actions();
 }
 

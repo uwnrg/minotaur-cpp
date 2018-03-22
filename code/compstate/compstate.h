@@ -13,6 +13,7 @@ double acquisition_r(const cv::Rect2d &rect, double calibrated_area);
 
 class CompetitionState : public QObject {
 Q_OBJECT
+
 public:
     typedef bool wall_t;
     typedef array2d<wall_t, int> wall_arr;

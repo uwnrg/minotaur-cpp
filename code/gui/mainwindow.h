@@ -28,6 +28,8 @@ class MainWindow : public QMainWindow {
 Q_OBJECT
 
 public:
+    static std::shared_ptr<Solenoid> *s_sol;
+
     explicit MainWindow(
         int argc,
         char *argv[],
