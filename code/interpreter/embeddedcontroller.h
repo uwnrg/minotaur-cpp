@@ -30,6 +30,11 @@ public:
     void bind_controller(std::shared_ptr<Controller> *controller_ptr);
     // Send a movement to the active controller
     bool send_movement(Vector2i &move_vector);
+
+    bool move_right();
+    bool move_left();
+    bool move_up();
+    bool move_down();
 };
 
 namespace Embedded {
@@ -44,11 +49,35 @@ namespace Embedded {
         return PyLong_FromLong(res);
     }
 
+    static PyObject *emb_right(PyObject *, PyObject *) {
+        bool res = EmbeddedController::getInstance().move_right();
+        return PyLong_FromLong(res);
+    }
+
+    static PyObject *emb_left(PyObject *, PyObject *) {
+        bool res = EmbeddedController::getInstance().move_left();
+        return PyLong_FromLong(res);
+    }
+
+    static PyObject *emb_up(PyObject *, PyObject *) {
+        bool res = EmbeddedController::getInstance().move_up();
+        return PyLong_FromLong(res);
+    }
+
+    static PyObject *emb_down(PyObject *, PyObject *) {
+        bool res = EmbeddedController::getInstance().move_down();
+        return PyLong_FromLong(res);
+    }
+
     // Embedded python configuration which describes which methods
     // should be exposed in which module
     static PyMethodDef emb_methods[]{
-            {"move",  emb_move, METH_VARARGS, "Send move command to active controller."},
-            {nullptr, nullptr, 0, nullptr}
+        {"move",  emb_move, METH_VARARGS, "Send move command vector"},
+        {"right", emb_right, METH_VARARGS, "Send move right"},
+        {"left", emb_left, METH_VARARGS, "Send move left"},
+        {"down", emb_down, METH_VARARGS, "Send move down"},
+        {"up", emb_up, METH_VARARGS, "Send move up"},
+        {nullptr, nullptr, 0, nullptr}
     };
     // Method 'move' is exposed in module 'emb' as 'emb.move'
     static PyModuleDef emb_module{
