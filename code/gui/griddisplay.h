@@ -14,62 +14,75 @@
 
 #include "../utility/array2d.h"
 #include "../utility/utility.h"
+#include "../code/camera/imageviewer.h"
+#include "../code/utility/array2d.h"
+#include "../code/utility/utility.h"
+
+class CameraDisplay;
 
 class GridDisplay : public QWidget {
 Q_OBJECT
 
 public:
     explicit GridDisplay(QWidget *parent);
-//    ~GridDisplay();
+
+    GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display);
+
+    ~GridDisplay() override;
 
 public Q_SLOTS:
     void clearSelection();
+
     void showGrid();
+
+    void hideGrid();
+
+    void selectRobotPosition(QString);
 
 protected Q_SLOTS:
     void buttonClicked(int x, int y);
-    void hideGrid();
 
 private:
     void showView();
+
     void updateScene();
+
     void drawGrid();
+
     void drawButtons();
+
+    void initStartEndPos();
 
     std::unique_ptr<QGraphicsScene> m_scene;
     std::unique_ptr<QGraphicsView> m_view;
 
-    QPushButton *m_button[40][20];
-    //std::unique_ptr<QPushButton> m_button[40][20];  //TODO: Replace hardcoded values
-    //array2d(QPushButton, 800);
-    //bool squareSelected[40][20];
-    array2d<int> squareSelected {40, 20};
-    //QSignalMapper *m_signalmapper;
-    QString buttonStyle = (
-        "background-color: rgba(0, 0, 0, 0%);"
-        "width: 8px;"
-        "height: 8px;"
-    );
+    CameraDisplay *m_camera_display;
 
-    QString buttonSelectedStyle = (
-        "background-color: rgba(0, 255, 0, 20%);"
-        "width: 8px;"
-        "height: 8px;"
-    );
+    QPushButton *m_button[40][20];
+    array2d<int> squareSelected {40, 20};
 
     const int gridSize = 20;
-    const int sceneWidth = 800;     //Default: 800
-    const int sceneHeight = 400;    //Default: 400
-
+    const int sceneWidth = 100;     //Default: 800
+    const int sceneHeight = 200;    //Default: 400
     int columnCount = sceneWidth / gridSize; //40
     int rowCount = sceneHeight / gridSize;  //20
     bool gridDisplayed = false;
 
-    int notSelectedWeight = -1;
-    int defaultWeight = 0;
+    const int notSelectedWeight = -1;
+    const int defaultWeight = 0;
+    const int startWeight = -2;
+    const int endWeight = -3;
 
-    //make start and end inputs using Coordinate struct
+    bool startPosSelected;
+    bool endPosSelected;
 
+    struct Coord {
+        int x;
+        int y;
+    };
+
+    std::unique_ptr<Coord> m_start_position;
+    std::unique_ptr<Coord> m_end_position;
 };
 
 #endif //MINOTAUR_CPP_GRIDDISPLAY_H

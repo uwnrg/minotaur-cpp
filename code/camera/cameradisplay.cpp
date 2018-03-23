@@ -1,12 +1,17 @@
 #include <QCameraInfo>
 #include <QFileDialog>
 #include <QComboBox>
+#include <QStandardItemModel>
+#include <QSpinBox>
 
 #include "cameradisplay.h"
 #include "ui_cameradisplay.h"
 
 #include "../video/modify.h"
 #include "../utility/logger.h"
+#include "../gui/griddisplay.h"
+
+#define MAX_GRID_WEIGHT 10
 
 void populate_camera_box(QComboBox *box) {
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
@@ -52,6 +57,9 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     m_ui->zoom_slider->setMaximum(40);
     m_ui->zoom_slider->setMinimum(10);
 
+    // Setup weight selectors
+    m_ui->weight_selector->setRange(-1, MAX_GRID_WEIGHT);
+
     // Setup image viewer
     m_ui->layout->addWidget(m_image_viewer.get());
 
@@ -63,6 +71,8 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid_clicked);
     connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid_clicked);
     connect(m_ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
+    connect(m_ui->weight_list, SIGNAL(currentIndexChanged(int)), this, SLOT(gridSelectChanged(int)));
+    connect(m_ui->weight_selector, SIGNAL(valueChanged(int)), this, SLOT(weightingChanged(int)));
 }
 
 CameraDisplay::~CameraDisplay() {
@@ -115,6 +125,28 @@ void CameraDisplay::take_screen_shot() {
 void CameraDisplay::update_zoom(int value) {
     double zoom_factor = value / 10.0;
     Q_EMIT zoom_changed(zoom_factor);
+}
+
+void CameraDisplay::gridSelectChanged(int weight_index) {
+        weightSelected = m_ui->weight_list->currentText();
+     //   m_ui->grid_display->selectRobotPosition(weightSelected);
+    Q_EMIT select_position(weightSelected);
+    #ifndef NDEBUG
+        qDebug() << "Grid selector option changed to " << QString(weightSelected);
+    #endif
+}
+
+void CameraDisplay::weightingChanged(int weighting) {
+    //get number from weight-entering box
+        //    weighting = getWeighting();
+#ifndef NDEBUG
+        qDebug() << "Weight Changed";
+#endif
+}
+
+int CameraDisplay::getWeighting() {
+        weighting = m_ui->weight_selector->value();
+        return weighting;
 }
 
 void CameraDisplay::show_grid_clicked() {
