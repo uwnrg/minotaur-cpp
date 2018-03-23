@@ -29,7 +29,9 @@ CodeEditor::CodeEditor(QWidget *parent) :
     m_highlighter = std::make_unique<HighLighter>(this->document());
 }
 
-CodeEditor::~CodeEditor() = default;
+CodeEditor::~CodeEditor() {
+    disconnect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
+}
 
 int CodeEditor::lineNumberAreaWidth() const {
     int digits = 1;

@@ -5,7 +5,7 @@
 #include <QPushButton>
 
 #include "tracker.h"
-#include "../compstate/manager.h"
+#include "../gui/mainwindow.h"
 
 #ifndef NDEBUG
 #include <QDebug>
@@ -26,7 +26,7 @@ TrackerModifier::TrackerModifier(Target target)
       m_state(State::UNINITIALIZED),
       m_target(target) {
     reset_tracker();
-    connect(this, &TrackerModifier::object_box, &Manager::state(), &CompetitionState::acquire_robot_box);
+    connect(this, &TrackerModifier::object_box, &Main::get()->state(), &CompetitionState::acquire_robot_box);
 }
 
 void TrackerModifier::reset_tracker() {

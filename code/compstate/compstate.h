@@ -8,6 +8,9 @@
 #include <QObject>
 
 #include "../utility/array2d.h"
+#include "../camera/statusbox.h"
+
+class MainWindow;
 
 double acquisition_r(const cv::Rect2d &rect, double calibrated_area);
 
@@ -35,7 +38,7 @@ public:
         wall_y = 30
     };
 
-    CompetitionState();
+    CompetitionState(MainWindow *parent);
 
     Q_SIGNAL void request_robot_box();
     Q_SIGNAL void request_object_box();
@@ -68,6 +71,10 @@ public:
     bool is_object_box_valid() const;
 
 private:
+    MainWindow *m_parent;
+
+    StatusLabel *m_robot_loc_label;
+
     bool m_tracking_robot;
     bool m_tracking_object;
     bool m_acquire_walls;

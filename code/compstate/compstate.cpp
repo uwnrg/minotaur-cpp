@@ -1,8 +1,5 @@
 #include "compstate.h"
-
-#ifndef NDEBUG
-#include <cassert>
-#endif
+#include "../gui/mainwindow.h"
 
 #define DEFAULT_CALIBRATED_AREA     400.0
 #define DEFAULT_ACQUISITION_R_SIGMA 1.34
@@ -17,25 +14,39 @@
  */
 double acquisition_r(const cv::Rect2d &rect, double calibrated_area) {
     double area = rect.width * rect.height;
+    if (!area) { return 1000; }
     double t = rect.width > rect.height
                ? rect.width / rect.height
                : rect.height / rect.width;
-#ifndef NDEBUG
-    assert(t > 0.99);
-#endif
+    if (t <= 0.99) { return 1000; }
     return fabs(area - calibrated_area) / (area > calibrated_area ? area : calibrated_area) * t;
 }
 
-CompetitionState::CompetitionState() :
+QString center_text(const cv::Rect2d &rect) {
+    QString text;
+    text.sprintf("Robot: (%6.1f , %6.1f )", rect.x + rect.width / 2, rect.y + rect.height / 2);
+    return text;
+}
+
+CompetitionState::CompetitionState(MainWindow *parent) :
+    m_parent(parent),
     m_tracking_robot(false),
     m_tracking_object(false),
     m_acquire_walls(false),
     m_object_type(UNACQUIRED),
     m_robot_calibrated_area(DEFAULT_CALIBRATED_AREA),
     m_object_calibrated_area(DEFAULT_CALIBRATED_AREA),
-    m_acquisition_r_sigma(DEFAULT_ACQUISITION_R_SIGMA) {}
+    m_acquisition_r_sigma(DEFAULT_ACQUISITION_R_SIGMA) {
+    if (auto lp = parent->status_box().lock()) {
+        m_robot_loc_label = lp->add_label(center_text(cv::Rect2d()));
+    }
+}
 
 void CompetitionState::acquire_robot_box(const cv::Rect2d &robot_box) {
+#ifndef NDEBUG
+    assert(m_robot_loc_label != nullptr);
+#endif
+    m_robot_loc_label->setText(center_text(robot_box));
     m_robot_box = robot_box;
     m_robot_box_fresh = true;
 }

@@ -9,12 +9,15 @@
 #include "code/utility/vector2d.h"
 
 class Solenoid;
+class StatusLabel;
 
 class Procedure : public QObject {
 Q_OBJECT
 
 public:
     explicit Procedure(std::weak_ptr<Solenoid> sol, path2d<double> &&path);
+
+    ~Procedure() override;
 
     void start();
 
@@ -31,10 +34,17 @@ private:
     void move_down(double estimated_power);
 
     double m_loc_accept;
+    double m_norm_dev;
     path2d<double> m_path;
+    vector2d<double> m_initial;
     std::size_t m_index;
     std::weak_ptr<Solenoid> m_sol;
     QBasicTimer m_timer;
+
+    StatusLabel *m_dir_label;
+    StatusLabel *m_err_label;
+    StatusLabel *m_index_label;
+    StatusLabel *m_perp_label;
 };
 
 #endif //MINOTAUR_CPP_PROCEDURE_H

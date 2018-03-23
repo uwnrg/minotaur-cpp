@@ -14,8 +14,8 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
 
-    auto *w = new MainWindow();
-    w->show();
+    Main::get() = new MainWindow;
+    Main::get()->show();
 
     return app.exec();
 }
