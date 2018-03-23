@@ -10,7 +10,7 @@
 #include "camerathread.h"
 #include "capture.h"
 #include "converter.h"
-#include "../gui/griddisplay.h"
+#include "griddisplay.h"
 #include "../video/modify.h"
 #include "../video/recorder.h"
 
