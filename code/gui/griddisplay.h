@@ -73,8 +73,8 @@ private:
     const int startWeight = -2;
     const int endWeight = -3;
 
-    bool startPosSelected;
-    bool endPosSelected;
+    bool startPosSelected = false;
+    bool endPosSelected = false;
 
     struct Coord {
         int x;
