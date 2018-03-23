@@ -5,6 +5,7 @@
 #include <QBasicTimer>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QSpinBox>
 
 #include "camerathread.h"
 #include "capture.h"
@@ -43,6 +44,8 @@ public:
 
     int getCamera();
 
+    int getWeighting();
+
 protected:
     void setVisible(bool visible) override;
 
@@ -64,7 +67,9 @@ protected Q_SLOTS:
 
     void update_zoom();
 
-    //void weightChanged(int weight_index);
+    void gridSelectChanged(int weight_index);
+
+    void weightingChanged(int weighting);
 
     /**
      * Since the ActionButton widgets must be created and maintained in the
@@ -122,6 +127,9 @@ private:
     std::vector<std::unique_ptr<ActionButton>> m_action_btns;
     std::vector<ActionButton *> m_action_btn_ptrs;
 
+    std::unique_ptr<QComboBox> m_weight_list;
+    std::unique_ptr<QSpinBox> m_weight_selector;
+
     int m_camera;
     int m_image_count = 0;
     int m_video_count = 0;
@@ -132,6 +140,10 @@ private:
     IThread m_converter_thread;
 
     QBasicTimer m_framerate_timer;
+
+    int maxWeight = 10;
+    QString weightSelected;
+    int weighting = 0;
 };
 
 #endif //MINOTAUR_CPP_CAMERADISPLAY_H

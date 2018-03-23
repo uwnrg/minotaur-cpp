@@ -7,6 +7,8 @@
 #include <QFileDialog>
 #include <QLabel>
 #include <QSlider>
+#include <QComboBox>
+#include <QStandardItemModel>
 
 #include "imageviewer.h"
 #include "../utility/utility.h"
@@ -17,12 +19,14 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
       m_layout(std::make_unique<QVBoxLayout>(this)),
       m_camera_list(std::make_unique<QComboBox>(this)),
       m_effects_list(std::make_unique<QComboBox>(this)),
+      m_weight_list(std::make_unique<QComboBox>(this)),
+      m_weight_selector(std::make_unique<QSpinBox>(this)),
       m_capture_btn(std::make_unique<QPushButton>(this)),
       m_record_btn(std::make_unique<QPushButton>(this)),
       m_image_viewer(std::make_unique<ImageViewer>(this)),
       m_action_box(std::make_unique<ActionBox>(this)),
       m_framerate_label(std::make_unique<QLabel>(this)),
-      m_grid_display(std::make_unique<GridDisplay>(m_image_viewer.get())),
+      m_grid_display(std::make_unique<GridDisplay>(m_image_viewer.get(), this)),
       m_display_grid_btn(std::make_unique<QPushButton>(this)),
       m_deselect_btn(std::make_unique<QPushButton>(this)),
       // m_hide_grid_btn(std::<QPushButton>(this)),
@@ -42,6 +46,23 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
 
     m_effects_list->setMinimumSize(150, 30);
     VideoModifier::addModifierList(m_effects_list.get());
+
+    m_weight_list->setMinimumSize(150, 30);
+    m_weight_list->addItem("Select Robot Position");
+   // QStandardItemModel* model = qobject_cast<QStandardItemModel*>(m_weight_list->model());
+
+//    QModelIndex firstIndex = m_weight_list->model()->index(0, 1);
+//    QVariant v(0);
+//    m_weight_list->model()->setData(firstIndex, v, Qt::UserRole - 1);
+
+//    QStandardItem* firstItem = firstIndex->itemFromIndex(firstIndex);
+//    firstIndex->setSelectable(false);
+    QString startConfiguration = "Start Configuration";
+    QString endConfiguration = "End Configuration";
+    m_weight_list->addItem(startConfiguration);
+    m_weight_list->addItem(endConfiguration);
+
+    m_weight_selector->setRange(-1, maxWeight);
 
     m_converter.setProcessAll(false);
     m_capture_thread.start();
@@ -76,6 +97,8 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     m_layout->addWidget(m_record_btn.get());
     m_layout->addWidget(m_camera_list.get());
     m_layout->addWidget(m_effects_list.get());
+    m_layout->addWidget(m_weight_list.get());
+    m_layout->addWidget(m_weight_selector.get());
     m_layout->addWidget(m_display_grid_btn.get());
     //  m_layout->addWidget(m_hide_grid_btn.get());
     m_layout->addWidget(m_deselect_btn.get());
@@ -93,6 +116,8 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     // Connections for changing the effects
     connect(m_camera_list.get(), SIGNAL(currentIndexChanged(int)), this, SLOT(selectedCameraChanged(int)));
     connect(m_effects_list.get(), SIGNAL(currentIndexChanged(int)), this, SLOT(effectsChanged(int)));
+    connect(m_weight_list.get(), SIGNAL(currentIndexChanged(int)), this, SLOT(gridSelectChanged(int)));
+    connect(m_weight_selector.get(), SIGNAL(valueChanged(int)), this, SLOT(weightingChanged(int)));
     connect(m_capture_btn.get(), SIGNAL(clicked()), this, SLOT(captureAndSave()));
     connect(m_zoom_slider.get(), SIGNAL(valueChanged(int)), this, SLOT(update_zoom()));
 
@@ -105,7 +130,7 @@ CameraDisplay::CameraDisplay(QWidget *parent, int camera_index)
     // Connections for grid GUI
     connect(m_deselect_btn.get(), &QPushButton::clicked, m_grid_display.get(), &GridDisplay::clearSelection);
     connect(m_display_grid_btn.get(), &QPushButton::clicked, m_grid_display.get(), &GridDisplay::showGrid);
-    // connect(m_hide_grid_btn, SIGNAL(clicked()), m_grid_display, SLOT(hideGrid));
+    // connect(m_hide_grid_btn.get(), &QPushButton::clicked, m_grid_display.get(), &GridDisplay::hideGrid);
 
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 }
@@ -164,6 +189,27 @@ void CameraDisplay::effectsChanged(int effect_index) {
     QMetaObject::invokeMethod(&m_converter, "modifierChanged",
                               Q_ARG(int, effect_index),
                               Q_ARG(ActionBox *, m_action_box.get()));
+}
+
+void CameraDisplay::gridSelectChanged(int weight_index) {
+    weightSelected = m_weight_list->currentText();
+    m_grid_display->selectRobotPosition(weightSelected);
+#ifndef NDEBUG
+    qDebug() << "Grid selector option changed to " << QString(weightSelected);
+#endif
+}
+
+void CameraDisplay::weightingChanged(int weighting) {
+//get number from weight-entering box
+//    weighting = getWeighting();
+#ifndef NDEBUG
+    qDebug() << "Weight Changed";
+#endif
+}
+
+int CameraDisplay::getWeighting() {
+    weighting = m_weight_selector->value();
+    return weighting;
 }
 
 void CameraDisplay::captureAndSave() {
