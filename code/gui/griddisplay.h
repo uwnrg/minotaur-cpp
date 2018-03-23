@@ -12,8 +12,8 @@
 #include <QGraphicsGridLayout>
 #include <QSignalMapper>
 
-#include "cameradisplay.h"
-#include "imageviewer.h"
+#include "code/camera/cameradisplay.h"
+#include "code/camera/imageviewer.h"
 #include "code/utility/array2d.h"
 #include "code/utility/utility.h"
 
