@@ -1,6 +1,6 @@
 #include <QDebug>
 #include "griddisplay.h"
-#include "../camera/cameradisplay.h"
+#include "cameradisplay.h"
 
 /* TODO (improvements):
  * Allow user to select or deselect an area (using mouse events)

@@ -12,10 +12,10 @@
 #include <QGraphicsGridLayout>
 #include <QSignalMapper>
 
-#include "../camera/cameradisplay.h"
-#include "../camera/imageviewer.h"
-#include "../utility/array2d.h"
-#include "../utility/utility.h"
+#include "cameradisplay.h"
+#include "imageviewer.h"
+#include "code/utility/array2d.h"
+#include "code/utility/utility.h"
 
 class GridDisplay : public QWidget {
 Q_OBJECT
