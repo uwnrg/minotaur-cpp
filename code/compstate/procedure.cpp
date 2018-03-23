@@ -3,7 +3,6 @@
 #include "../controller/solenoid.h"
 
 #include <QTimerEvent>
-#include <QDebug>
 
 #define DEFAULT_TARGET_LOC_ACCEPTANCE 3.0
 
@@ -31,7 +30,6 @@ void Procedure::movement_loop() {
     // If the path has been traversed, stop timer
     if (m_index == m_path.size()) {
         m_timer.stop();
-        qDebug() << "At size";
         return;
     }
 
@@ -42,9 +40,6 @@ void Procedure::movement_loop() {
         !Manager::state().is_robot_box_valid() ||
         m_sol.expired()
     ) {
-        qDebug() << Manager::state().is_robot_box_fresh();
-        qDebug() << Manager::state().is_robot_box_valid();
-        qDebug() << m_sol.expired();
         m_timer.stop();
         return;
     }
@@ -53,19 +48,13 @@ void Procedure::movement_loop() {
     cv::Point2d l_center = center(Manager::state().get_robot_box(true));
     vector2d<double> target = m_path[m_index];
 
-
-    qDebug() << "(" << target.x() << ", " << target.y() << ")";
-
     // Find differences in each axis
     double err_x = target.x() - l_center.x;
     double err_y = target.y() - l_center.y;
 
-    qDebug() << "err_x: " << err_x;
-    qDebug() << "err_y: " << err_y;
     // If within acceptance range, move to next point
     if (hypot(err_x, err_y) < m_loc_accept) {
         ++m_index;
-        qDebug() << "At location";
         return;
     }
 
@@ -84,29 +73,29 @@ void Procedure::movement_loop() {
 }
 
 void Procedure::move_right(double estimated_power) {
+    // Right => +X
     if (auto sol = m_sol.lock()) {
         sol->move({static_cast<int>(estimated_power), 0});
-        qDebug() << "RIGHT";
     }
 }
 
 void Procedure::move_left(double estimated_power) {
+    // Left => -X
     if (auto sol = m_sol.lock()) {
         sol->move({-static_cast<int>(estimated_power), 0});
-        qDebug() << "LEFT";
     }
 }
 
 void Procedure::move_up(double estimated_power) {
+    // Up => -Y
     if (auto sol = m_sol.lock()) {
         sol->move({0, -static_cast<int>(estimated_power)});
-        qDebug() << "UP";
     }
 }
 
 void Procedure::move_down(double estimated_power) {
+    // Down => +Y
     if (auto sol = m_sol.lock()) {
         sol->move({0, static_cast<int>(estimated_power)});
-        qDebug() << "DOWN";
     }
 }

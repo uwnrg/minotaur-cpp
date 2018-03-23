@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 #include "../utility/logger.h"
-#include "code/utility/vector2d.h"
+#include "../utility/vector2d.h"
 
 class Controller : public QObject {
 Q_OBJECT

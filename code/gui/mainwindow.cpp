@@ -4,15 +4,7 @@
 
 #include "../interpreter/embeddedcontroller.h"
 
-std::shared_ptr<Solenoid> *MainWindow::s_sol = nullptr;
-
-MainWindow::MainWindow(
-    int argc,
-    char *argv[],
-    QWidget *parent,
-    const char *
-) :
-    QMainWindow(parent),
+MainWindow::MainWindow() :
     ui(std::make_unique<Ui::MainWindow>()),
 
     m_solenoid(std::make_unique<Solenoid>()),
@@ -36,8 +28,6 @@ MainWindow::MainWindow(
     // Bind controller to Python Engine
     EmbeddedController::getInstance().bind_controller(&m_controller);
     PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
-
-    s_sol = &m_solenoid;
 
     // Connect solenoid serial port to the monitor
     connect(m_solenoid.get(), &Solenoid::serialRead, m_serial_box.get(), &SerialBox::append_text);

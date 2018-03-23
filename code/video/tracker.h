@@ -10,8 +10,6 @@
 class QVBoxLayout;
 class QPushButton;
 
-Q_DECLARE_METATYPE(cv::Rect2d);
-
 class TrackerModifier : public VideoModifier {
 Q_OBJECT
 
@@ -33,8 +31,6 @@ protected:
     Q_SLOT void beginTracking();
 
     Q_SLOT void stopTracking();
-
-    Q_SLOT void start_square_proc();
 
 private:
     void reset_tracker();
@@ -71,9 +67,6 @@ private:
      * modify() are called in different threads.
      */
     QMutex m_mutex;
-
-    std::unique_ptr<Procedure> m_procedure = nullptr;
-    ActionButton *m_label_btn = nullptr;
 };
 
 #endif
