@@ -100,6 +100,8 @@ Additional dependencies
 sudo apt install qtmultimedia5-dev libqt5multimedia5-plugins libqt5serialport5-dev
 ```
 
+If some packages cannot be found, you may need to run `sudo add-apt-repository universe && sudo apt update`.
+
 You will need to build OpenCV 3 from source. Download the OpenCV 3 source
 and build. It is recommended to build with `USE_QT=ON` instead of GTK. 
 Additional instructions found [here](https://github.com/BVLC/caffe/wiki/OpenCV-3.3-Installation-Guide-on-Ubuntu-16.04).
