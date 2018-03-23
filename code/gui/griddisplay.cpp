@@ -1,36 +1,81 @@
 #include <QDebug>
 #include "griddisplay.h"
+#include "../camera/cameradisplay.h"
 
 /* TODO (improvements):
- * Qt event handling is slow when handling 800 button slots
- * Change boolean to integer array, add drop down menu to select and set priorities
  * Allow user to select or deselect an area (using mouse events)
  * Dynamic implementation of columns/rows/button array
  * Set bounding rectangle of m_scene to m_img.size()
 */
 
-GridDisplay::GridDisplay(QWidget *parent) :
-    QWidget(parent), squareSelected{40, 20} {
+const QString GridDisplay::buttonStyle =
+    "background-color: rgba(0, 0, 0, 0%);"  //clear
+    "width: 8px;"
+    "height: 8px;";
+
+const QString GridDisplay::buttonSelectedStyle =
+  //  "background-color: rgba(0, 255, 0, 20%);"   //green
+    "background-color: rgba(0, %1, 0, 20%);"    //%1 is a placeholder for an argument when stylesheet is called
+    "width: 8px;"
+    "height: 8px;";
+
+const QString GridDisplay::startSelectedStyle =
+    "background-color: rgba(255, 0, 0, 20%);"   //red
+    "width: 8px;"
+    "height: 8px;";
+
+const QString GridDisplay::endSelectedStyle =
+    "background-color: rgba(0, 0, 255, 20%);"   //blue
+    "width: 8px;"
+    "height: 8px;";
+
+GridDisplay::GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display) :
+    QWidget(image_viewer),
+    squareSelected(40, 20),
+    m_camera_display(camera_display),
+    m_start_position(std::make_unique<Coord>()),
+    m_end_position(std::make_unique<Coord>()) {
+
     //Set up graphics scene and view
     m_scene = std::make_unique<QGraphicsScene>(this);
-    //m_scene = new std::unique_ptr<QGraphicsScene>(this);
     m_scene->setSceneRect(QRect(0, 0, sceneWidth, sceneHeight));   //TODO: set bounding rectangle to m_img.size()
-    m_view = std::make_unique<QGraphicsView>(m_scene.get(), parent);
-    //m_view = new std::unique_ptr<QGraphicsView>(m_scene, parent);
+    m_view = std::make_unique<QGraphicsView>(m_scene.get(), image_viewer);
     m_view->setStyleSheet("background: transparent");
-
-//    drawButtons();
-//    drawGrid();
-//    showView();
 }
 
 void GridDisplay::buttonClicked(int x, int y) {
-    if (squareSelected[x][y] > notSelectedWeight){
+    if (startPosSelected) {
+        squareSelected[x][y] = startWeight;
+        m_button[x][y]->setStyleSheet(startSelectedStyle);
+        m_start_position->x = x;
+        m_start_position->y = y;
+        startPosSelected = false;
+#ifndef NDEBUG
+        qDebug() << "Robot Start Position (" << x << "," << y << ") = " << squareSelected[x][y];
+#endif
+    } else if (endPosSelected) {
+        if (m_end_position->x != notSelectedWeight && m_end_position->y != notSelectedWeight) { //If another end position was previously selected
+            squareSelected[m_end_position->x][m_end_position->y] = -1;
+            m_button[m_end_position->x][m_end_position->y]->setStyleSheet(buttonStyle);
+        }
+        squareSelected[x][y] = endWeight;
+        m_button[x][y]->setStyleSheet(endSelectedStyle);
+        m_end_position->x = x;
+        m_end_position->y = y;
+        endPosSelected = false;
+#ifndef NDEBUG
+        qDebug() << "Robot End Position (" << x << "," << y << ") = " << squareSelected[x][y];
+#endif
+    } else if (squareSelected[x][y] > notSelectedWeight
+           || squareSelected[x][y] == startWeight
+           || squareSelected[x][y] == endWeight) {
         squareSelected[x][y] = notSelectedWeight;
         m_button[x][y]->setStyleSheet(buttonStyle);
     } else {
-        squareSelected[x][y] = defaultWeight;
-        m_button[x][y]->setStyleSheet(buttonSelectedStyle);
+        squareSelected[x][y] = m_camera_display->getWeighting();
+       // m_button[x][y]->setStyleSheet(buttonSelectedStyle);
+        //sets button to different shades of green based on weighting assigned
+        m_button[x][y]->setStyleSheet(buttonSelectedStyle.arg(255 - 10*m_camera_display->getWeighting()));
     }
 #ifndef NDEBUG
     qDebug() << "Button (" << x << "," << y << ") = " << squareSelected[x][y];
@@ -38,8 +83,6 @@ void GridDisplay::buttonClicked(int x, int y) {
 }
 
 void GridDisplay::drawButtons() {
-//    m_signalmapper = new QSignalMapper(this);
-//    connect(m_signalmapper, SIGNAL(mapped(int)), this, SIGNAL(buttonClicked(int)));
     for (int y = 0; y < rowCount; y++) {
         for (int x = 0; x < columnCount; x++) {
             QString text = QString::number(x);
@@ -47,13 +90,7 @@ void GridDisplay::drawButtons() {
             m_button[x][y]->setGeometry(QRect(x * gridSize, y * gridSize, gridSize, gridSize));
             m_button[x][y]->setStyleSheet(buttonStyle);
             squareSelected[x][y] = notSelectedWeight;
-            //multiple signals solution 1: signal mapper
-//        m_signalmapper->setMapping(m_button[i], i);
-//        connect(m_button[i], SIGNAL(clicked()), m_signalmapper, SLOT(map()));
-            //multiple signals solution 2: sender() function
-            //connect(m_button[i], SIGNAL(clicked()), this, SLOT(buttonClicked()));
-
-            //multiple signals solution 3: lambda functions
+            //lambda function to receive signals from multiple buttons
             connect(m_button[x][y], &QPushButton::clicked, [=]() { this->buttonClicked(x, y); });
             m_scene->addWidget(m_button[x][y]);
        }
@@ -82,18 +119,19 @@ void GridDisplay::updateScene() {
 }
 
 void GridDisplay::showGrid() {
-    if (gridDisplayed == false) {
+    if (!gridDisplayed) {
         drawGrid();
         drawButtons();
         showView();
+        initStartEndPos();
+        gridDisplayed = true;
     }
-    gridDisplayed = true;
 }
 
 void GridDisplay::drawGrid() {
-    QPainter painter;
-    painter.setPen(Qt::gray);
-    painter.setBrush(Qt::green);
+//    QPainter painter;
+//    painter.setPen(Qt::gray);
+//    painter.setBrush(Qt::green);
     for (int y = 0; y < rowCount; y++) {
         for (int x = 0; x < columnCount; x++) {
             m_scene->addLine(QLine(x*gridSize, y*gridSize, x*gridSize, y*gridSize));
@@ -103,5 +141,30 @@ void GridDisplay::drawGrid() {
 
 void GridDisplay::hideGrid() {
     //TODO
-    //gridDisplayed = false;
+    //hide or disable qgraphicsview
+    //gridDisplayed = true;
+}
+
+void GridDisplay::selectRobotPosition(QString weightSelected) {
+    if (weightSelected == "Start Configuration") {
+        startPosSelected = true;
+        endPosSelected = false;
+    } else if (weightSelected == "End Configuration") {
+        startPosSelected = false;
+        endPosSelected = true;
+    } else {
+        startPosSelected = false;
+        endPosSelected = false;
+    }
+}
+
+void GridDisplay::initStartEndPos() {
+    m_start_position->x = notSelectedWeight;
+    m_start_position->y = notSelectedWeight;
+    m_end_position->x = notSelectedWeight;
+    m_end_position->y = notSelectedWeight;
+}
+
+GridDisplay::~GridDisplay() {
+
 }
