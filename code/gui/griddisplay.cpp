@@ -29,15 +29,17 @@ const QString endSelectedStyle =
         "width: 8px;"
         "height: 8px;";
 
-GridDisplay::GridDisplay(QWidget *parent) :
-    QWidget(parent),
+GridDisplay::GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display) :
+    QWidget(image_viewer),
     squareSelected(40, 20),
+    m_camera_display(camera_display),
     m_start_position(std::make_unique<Coord>()),
     m_end_position(std::make_unique<Coord>()) {
+
     //Set up graphics scene and view
     m_scene = std::make_unique<QGraphicsScene>(this);
-    //m_scene->setSceneRect(QRect(0, 0, sceneWidth, sceneHeight));   //TODO: set bounding rectangle to m_img.size()
-    m_view = std::make_unique<QGraphicsView>(m_scene.get(), parent);
+    m_scene->setSceneRect(QRect(0, 0, sceneWidth, sceneHeight));   //TODO: set bounding rectangle to m_img.size()
+    m_view = std::make_unique<QGraphicsView>(m_scene.get(), image_viewer);
     m_view->setStyleSheet("background: transparent");
     m_view->setMinimumSize(sceneWidth, sceneHeight);
     m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

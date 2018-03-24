@@ -14,7 +14,7 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
 
     ui(new Ui::ImageViewer),
 
-    m_grid_display(std::make_unique<GridDisplay>(this)),
+    m_grid_display(std::make_unique<GridDisplay>(this, parent)),
 
     m_capture(),
     m_preprocessor(),

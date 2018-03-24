@@ -145,8 +145,10 @@ void CameraDisplay::weightingChanged(int weighting) {
 }
 
 int CameraDisplay::getWeighting() {
-        weighting = m_ui->weight_selector->value();
-        return weighting;
+    auto *ui = m_ui;
+    auto *ws = ui->weight_selector;
+    weighting = m_ui->weight_selector->value();
+    return weighting;
 }
 
 void CameraDisplay::show_grid_clicked() {

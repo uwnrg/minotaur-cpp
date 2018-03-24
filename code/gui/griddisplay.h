@@ -14,6 +14,7 @@
 
 #include "../utility/array2d.h"
 #include "../utility/utility.h"
+#include "../code/camera/cameradisplay.h"
 #include "../code/camera/imageviewer.h"
 #include "../code/utility/array2d.h"
 #include "../code/utility/utility.h"
@@ -24,8 +25,6 @@ class GridDisplay : public QWidget {
 Q_OBJECT
 
 public:
-    explicit GridDisplay(QWidget *parent);
-
     GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display);
 
     ~GridDisplay() override;
@@ -62,8 +61,8 @@ private:
     array2d<int> squareSelected {40, 20};
 
     const int gridSize = 20;
-    const int sceneWidth = 100;     //Default: 800
-    const int sceneHeight = 200;    //Default: 400
+    const int sceneWidth = 800;     //Default: 800
+    const int sceneHeight = 400;    //Default: 400
     int columnCount = sceneWidth / gridSize; //40
     int rowCount = sceneHeight / gridSize;  //20
     bool gridDisplayed = false;
