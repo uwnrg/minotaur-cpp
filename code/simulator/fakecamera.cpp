@@ -9,7 +9,7 @@ FakeCamera::FakeCamera() {
 FakeCamera::~FakeCamera() = default;
 
 cv::Rect2d FakeCamera::get_robot_rect() {
-    double width = 18; // temp
+    double width = 15; // temp
     cv::Point2d loc(400, 400); // temp
     return {loc.x - width / 2, loc.y - width / 2, width, width};
 }
