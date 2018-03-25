@@ -84,7 +84,7 @@ void TrackerModifier::modify(cv::UMat &img) {
             m_state = State::TRACKING;
         }
         m_mutex.unlock();
-        cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
+        cv::rectangle(img, m_bounding_box.tl(), m_bounding_box.br(), cv::Scalar(255, 0, 0));
         Q_EMIT object_box(m_bounding_box);
     }
 }
