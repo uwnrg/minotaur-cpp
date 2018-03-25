@@ -10,7 +10,7 @@
 #include "../controller/simulator.h"
 #include "renderscenebase.h"
 #include "drawable.h"
-#include "simulatorSolenoid.h"
+#include "simsolenoid.h"
 #include "sam.h"
 
 /**

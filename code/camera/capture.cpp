@@ -1,4 +1,4 @@
-#include "capture.h"
+    #include "capture.h"
 
 #include "../utility/utility.h"
 #include "../simulator/fakecamera.h"
@@ -14,7 +14,7 @@ void Capture::start_capture(int cam) {
         m_video_capture = std::make_unique<cv::VideoCapture>(cam);
     }
     if (m_video_capture->isOpened()) {
-        m_timer.start(0, this);
+        m_timer.start(33, this);
         Q_EMIT capture_started();
     }
 }

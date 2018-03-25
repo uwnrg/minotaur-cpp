@@ -7,13 +7,16 @@
 
 #include "../video/modify.h"
 #include "../utility/logger.h"
+#include "../simulator/fakecamera.h"
 
 void populate_camera_box(QComboBox *box) {
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
     log() << "Found " << cameras.size() << " cameras";
-    for (int i = 0; i < cameras.size(); ++i) {
+    int i;
+    for (i = 0; i < cameras.size(); ++i) {
         box->addItem(cameras[i].deviceName(), QVariant::fromValue(i));
     }
+    box->addItem("Simulated", QVariant::fromValue(i));
 }
 
 void populate_effect_box(QComboBox *box) {
@@ -75,7 +78,7 @@ void CameraDisplay::setVisible(bool visible) {
         QDialog::setVisible(false);
         return;
     }
-    int camera_index = -1;
+    int camera_index = FakeCamera::FAKE_CAMERA;
     if (!QCameraInfo::availableCameras().empty()) {
         camera_index = get_camera_index(QCameraInfo::availableCameras()[0]);
     }
@@ -89,9 +92,17 @@ void CameraDisplay::reject() {
 }
 
 void CameraDisplay::camera_box_changed(int camera) {
-    QCameraInfo info = QCameraInfo::availableCameras()[camera];
-    int camera_index = get_camera_index(info);
-    Q_EMIT camera_changed(camera_index);
+#ifndef NDEBUG
+    qDebug() << "Switching to camera index: " << camera;
+#endif
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+    if (camera < cameras.size()) {
+        QCameraInfo info = cameras[camera];
+        int camera_index = get_camera_index(info);
+        Q_EMIT camera_changed(camera_index);
+    } else {
+        Q_EMIT camera_changed(FakeCamera::FAKE_CAMERA);
+    }
 }
 
 void CameraDisplay::effect_box_changed(int effect) {

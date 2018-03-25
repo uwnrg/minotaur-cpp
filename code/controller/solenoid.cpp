@@ -121,9 +121,9 @@ void Solenoid::__move_delegate(Vector2i dir, int time) {
         dir_msg = LEFT;
     }
     if (dir.y() > 0) {
-        dir_msg = UP;
-    } else if (dir.y() < 0) {
         dir_msg = DOWN;
+    } else if (dir.y() < 0) {
+        dir_msg = UP;
     }
     m_serial.write(&dir_msg, 1);
     if (!m_serial.waitForBytesWritten(200)) {

@@ -1,4 +1,4 @@
-#include "simulatorSolenoid.h"
+#include "simsolenoid.h"
 
 SimulatorSolenoid::SimulatorSolenoid(const RenderSceneBase *scene,
                    const vector2f &P, float theta, float n, float R, float l, float mu_rel)

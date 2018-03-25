@@ -1,6 +1,6 @@
 #include "fakecamera.h"
-
-#include <opencv2/opencv.hpp>
+#include "globalsim.h"
+#include "../gui/mainwindow.h"
 
 FakeCamera::FakeCamera() {
     open(FAKE_CAMERA);
@@ -9,9 +9,11 @@ FakeCamera::FakeCamera() {
 FakeCamera::~FakeCamera() = default;
 
 cv::Rect2d FakeCamera::get_robot_rect() {
-    double width = 15; // temp
-    cv::Point2d loc(400, 400); // temp
-    return {loc.x - width / 2, loc.y - width / 2, width, width};
+    double width = GlobalSim::Robot::WIDTH;
+    vector2d<double> loc;
+    if (auto lp = Main::get()->global_sim().lock()) { loc = lp->robot(); }
+    loc += {WIDTH / 2, HEIGHT / 2};
+    return {loc.x() - width / 2, loc.y() - width / 2, width, width};
 }
 
 bool FakeCamera::open(const cv::String &) {

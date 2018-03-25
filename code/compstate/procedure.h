@@ -8,14 +8,14 @@
 
 #include "code/utility/vector2d.h"
 
-class Solenoid;
+class Controller;
 class StatusLabel;
 
 class Procedure : public QObject {
 Q_OBJECT
 
 public:
-    explicit Procedure(std::weak_ptr<Solenoid> sol, path2d<double> &&path);
+    explicit Procedure(std::weak_ptr<Controller> sol, path2d<double> &&path);
 
     ~Procedure() override;
 
@@ -38,7 +38,7 @@ private:
     path2d<double> m_path;
     vector2d<double> m_initial;
     std::size_t m_index;
-    std::weak_ptr<Solenoid> m_sol;
+    std::weak_ptr<Controller> m_sol;
     QBasicTimer m_timer;
 
     StatusLabel *m_dir_label;

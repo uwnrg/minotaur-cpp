@@ -7,11 +7,12 @@
 MainWindow::MainWindow() :
     ui(std::make_unique<Ui::MainWindow>()),
 
-    m_solenoid(std::make_shared<Solenoid>()),
-    m_simulator(std::make_shared<Simulator>()),
-    m_controller(m_solenoid),
-
     m_status_box(std::make_shared<StatusBox>(this)),
+    m_global_sim(std::make_shared<GlobalSim>()),
+
+    m_solenoid(std::make_shared<Solenoid>()),
+    m_simulator(std::make_shared<Simulator>(m_global_sim.get())),
+    m_controller(m_solenoid),
 
     m_about_window(std::make_unique<ActionAbout>(this)),
     m_camera_display(std::make_unique<CameraDisplay>(this)),
@@ -32,6 +33,7 @@ MainWindow::MainWindow() :
     // Bind controller to Python Engine
     EmbeddedController::getInstance().bind_controller(&m_controller);
     PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
+    PythonEngine::getInstance().append_module("sim", &Embedded::PyInit_sim);
 
     // Connect solenoid serial port to the monitor
     connect(m_solenoid.get(), &Solenoid::serialRead, m_serial_box.get(), &SerialBox::append_text);
@@ -161,12 +163,20 @@ void MainWindow::invertControllerY() {
     m_controller->invert_y_axis();
 }
 
+std::weak_ptr<Controller> MainWindow::controller() const {
+    return m_controller;
+}
+
 std::weak_ptr<Solenoid> MainWindow::solenoid() const {
     return m_solenoid;
 }
 
 std::weak_ptr<StatusBox> MainWindow::status_box() const {
     return m_status_box;
+}
+
+std::weak_ptr<GlobalSim> MainWindow::global_sim() const {
+    return m_global_sim;
 }
 
 CompetitionState &MainWindow::state() {
