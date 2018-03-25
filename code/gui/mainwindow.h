@@ -4,36 +4,30 @@
 #include <memory>
 
 #include <QMainWindow>
-#include <QTextBrowser>
-#include <QKeyEvent>
-#include <unordered_map>
 
 #include "../controller/controller.h"
 #include "../controller/solenoid.h"
 #include "../controller/simulator.h"
 #include "../camera/cameradisplay.h"
+#include "../camera/statusbox.h"
+#include "../compstate/compstate.h"
 
 #include "actionabout.h"
 #include "scriptwindow.h"
 #include "serialbox.h"
 #include "simulatorwindow.h"
 
-#define DEFAULT_TITLE "minotaur"
-
 namespace Ui {
     class MainWindow;
 }
+
+class QKeyEvent;
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
 
 public:
-    explicit MainWindow(
-        int argc,
-        char *argv[],
-        QWidget *parent = nullptr,
-        const char *title = DEFAULT_TITLE
-    );
+    MainWindow();
 
     ~MainWindow() override;
 
@@ -43,6 +37,12 @@ public:
 
     void keyReleaseEvent(QKeyEvent *) override;
 
+public:
+    std::weak_ptr<Solenoid> solenoid() const;
+
+    std::weak_ptr<StatusBox> status_box() const;
+
+    CompetitionState &state();
 
 public Q_SLOTS:
 
@@ -76,11 +76,18 @@ private Q_SLOTS:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
+    bool eventFilter(QObject *, QEvent *) override;
+
+    void switchControllerTo(Controller::Type type);
+
+private:
     std::unique_ptr<Ui::MainWindow> ui;
 
     std::shared_ptr<Solenoid> m_solenoid;
     std::shared_ptr<Simulator> m_simulator;
     std::shared_ptr<Controller> m_controller;
+
+    std::shared_ptr<StatusBox> m_status_box;
 
     std::unique_ptr<ActionAbout> m_about_window;
     std::unique_ptr<CameraDisplay> m_camera_display;
@@ -91,9 +98,14 @@ private:
 
     Controller::Type m_controller_type;
 
-    bool eventFilter(QObject *, QEvent *) override;
+    CompetitionState m_compstate;
+};
 
-    void switchControllerTo(Controller::Type type);
+struct Main {
+    static MainWindow *&get();
+
+private:
+    static MainWindow *instance;
 };
 
 #endif // MAINWINDOW_H

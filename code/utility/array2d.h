@@ -30,7 +30,7 @@ public:
         make_array(x, y);
     }
 
-    array2d(std::initializer_list< std::initializer_list<val_t> > l) {
+    array2d(std::initializer_list<std::initializer_list<val_t>> l) {
         m_x = l.size();
         m_y = l.begin()->size();
         make_array(m_x, m_y);
@@ -70,7 +70,7 @@ public:
     }
 
     size_t xy() const {
-        return m_x*m_y;
+        return m_x * m_y;
     }
 
     array2d<val_t, size_t> &operator=(array2d<val_t, size_t> &&arr) noexcept {
