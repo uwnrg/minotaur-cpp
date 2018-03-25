@@ -40,3 +40,6 @@ void GlobalSim::robot_up() {
     m_robot.x() += get_dk();
 }
 
+vector2d<double> &GlobalSim::robot() {
+    return m_robot;
+}

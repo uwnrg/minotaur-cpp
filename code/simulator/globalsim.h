@@ -24,6 +24,8 @@ public:
     Q_SLOT void robot_down();
     Q_SLOT void robot_up();
 
+    vector2d<double> &robot();
+
 private:
     double get_di() const;
     double get_dk() const;

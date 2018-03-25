@@ -1,5 +1,5 @@
 #include "procedure.h"
-#include "../controller/solenoid.h"
+#include "../controller/controller.h"
 #include "../gui/mainwindow.h"
 
 #define DEFAULT_TARGET_LOC_ACCEPTANCE 3.0
@@ -50,7 +50,7 @@ QString perp_text(double err_x, double err_y, double norm_sq) {
     return text;
 }
 
-Procedure::Procedure(std::weak_ptr<Solenoid> sol, path2d<double> &&path) :
+Procedure::Procedure(std::weak_ptr<Controller> sol, path2d<double> &&path) :
     m_loc_accept(DEFAULT_TARGET_LOC_ACCEPTANCE),
     m_norm_dev(DEFAULT_MAX_NORMAL_DEVIATION),
     m_path(std::move(path)),

@@ -1,5 +1,5 @@
 #include "sam.h"
-#include "simulatorSolenoid.h"
+#include "simsolenoid.h"
 
 SAMRobot::SAMRobot(RenderSceneBase *scene, float mu_s, float mass, float length)
         : m_renderScene(scene),

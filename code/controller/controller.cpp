@@ -8,10 +8,10 @@ Vector2i Controller::to_vector2i(Dir dir) {
     Vector2i vector_dir(0, 0);
     switch (dir) {
         case UP:
-            vector_dir.y() = 1;
+            vector_dir.y() = -1;
             break;
         case DOWN:
-            vector_dir.y() = -1;
+            vector_dir.y() = 1;
             break;
         case RIGHT:
             vector_dir.x() = 1;
