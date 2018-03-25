@@ -9,6 +9,13 @@ class GlobalSim : public QObject {
 Q_OBJECT
 
 public:
+    enum Robot {
+        WIDTH = 15,
+        DELTA_PREF_MAX = 10,
+        DELTA_PREF_MIN = 5,
+        DELTA_ERR = 4
+    };
+
     GlobalSim();
 
     Q_SLOT void robot_reset();
@@ -18,6 +25,9 @@ public:
     Q_SLOT void robot_up();
 
 private:
+    double get_di() const;
+    double get_dk() const;
+
     vector2d<double> m_robot;
 };
 
