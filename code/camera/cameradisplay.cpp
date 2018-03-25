@@ -75,7 +75,7 @@ void CameraDisplay::setVisible(bool visible) {
         QDialog::setVisible(false);
         return;
     }
-    int camera_index = 0;
+    int camera_index = -1;
     if (!QCameraInfo::availableCameras().empty()) {
         camera_index = get_camera_index(QCameraInfo::availableCameras()[0]);
     }
