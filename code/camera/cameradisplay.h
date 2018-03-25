@@ -11,8 +11,6 @@ namespace Ui {
     class CameraDisplay;
 }
 
-class GridDisplay;
-
 class CameraDisplay : public QDialog {
 Q_OBJECT
 
@@ -35,9 +33,13 @@ public:
 
     Q_SLOT void update_zoom(int value);
 
-    Q_SLOT void show_grid_clicked();
+    Q_SLOT void rotation_slider_changed(int value);
 
-    Q_SLOT void clear_grid_clicked();
+    Q_SLOT void rotation_box_changed();
+
+    Q_SLOT void set_rotation(int value);
+
+    Q_SLOT void pressed_play();
 
     Q_SIGNAL void display_opened(int camera);
 
@@ -51,14 +53,14 @@ public:
 
     Q_SIGNAL void zoom_changed(double zoom);
 
-    Q_SIGNAL void toggle_record();
+    Q_SIGNAL void rotation_changed(int angle);
 
-    Q_SIGNAL void show_grid();
+    Q_SIGNAL void toggle_rotation();
 
-    Q_SIGNAL void clear_grid();
+    Q_SIGNAL void toggle_recording();
 
 private:
-    Ui::CameraDisplay *m_ui;
+    Ui::CameraDisplay *ui;
 
     std::unique_ptr<ActionBox> m_action_box;
     std::unique_ptr<ImageViewer> m_image_viewer;
