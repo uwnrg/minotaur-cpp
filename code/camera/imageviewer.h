@@ -85,7 +85,6 @@ private:
 
     int m_fps_update_interval;
 
-    path2d<double> m_path;
     bool m_selecting_path;
 };
 

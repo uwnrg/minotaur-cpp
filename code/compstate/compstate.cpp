@@ -125,3 +125,15 @@ bool CompetitionState::is_robot_box_valid() const {
 bool CompetitionState::is_object_box_valid() const {
     return acquisition_r(m_object_box, m_object_calibrated_area) < m_acquisition_r_sigma;
 }
+
+void CompetitionState::clear_path() {
+    m_path.clear();
+}
+
+void CompetitionState::append_path(double x, double y) {
+    m_path.emplace_back(x, y);
+}
+
+const path2d<double> &CompetitionState::get_path() const {
+    return m_path;
+}

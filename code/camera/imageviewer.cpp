@@ -1,6 +1,7 @@
 #include "imageviewer.h"
 #include "ui_imageviewer.h"
 #include "cameradisplay.h"
+#include "../gui/mainwindow.h"
 #include "../utility/logger.h"
 
 #include <QFileDialog>
@@ -83,7 +84,9 @@ void ImageViewer::set_image(const QImage &img) {
 }
 
 void ImageViewer::mousePressEvent(QMouseEvent *ev) {
-    if (m_selecting_path) { m_path.emplace_back(ev->x(), ev->y()); }
+    if (m_selecting_path) {
+        Main::get()->state().append_path(ev->x(), ev->y());
+    }
     QWidget::mousePressEvent(ev);
 }
 
@@ -100,17 +103,18 @@ void ImageViewer::paintEvent(QPaintEvent *) {
     painter.drawImage(0, 0, m_image);
     painter.setRenderHint(QPainter::Antialiasing);
     // Draw dots on each vertex and connecting lines
-    for (std::size_t i = 0; i < m_path.size(); ++i) {
+    const path2d<double> &path = Main::get()->state().get_path();
+    for (std::size_t i = 0; i < path.size(); ++i) {
         QColor color;
         if (i == 0) { color = Qt::red; }
-        else if (i + 1 == m_path.size()) { color = Qt::blue; }
+        else if (i + 1 == path.size()) { color = Qt::blue; }
         else { color = Qt::green; }
-        Vector2i v1 = m_path[i];
+        Vector2i v1 = path[i];
         painter.setBrush(color);
         painter.setPen(color);
         painter.drawEllipse(v1.x() - 4, v1.y() - 4, 8, 8);
         if (i > 0) {
-            Vector2i v0 = m_path[i - 1];
+            Vector2i v0 = path[i - 1];
             painter.setPen(QPen(Qt::green, 2, Qt::DashDotLine, Qt::RoundCap));
             painter.drawLine(v0.x(), v0.y(), v1.x(), v1.y());
         }
@@ -148,5 +152,5 @@ void ImageViewer::toggle_path(bool toggle_path) {
 }
 
 void ImageViewer::clear_path() {
-    m_path.clear();
+    Main::get()->state().clear_path();
 }
