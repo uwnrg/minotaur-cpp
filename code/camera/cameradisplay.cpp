@@ -157,9 +157,9 @@ void CameraDisplay::increment_rotation() {
     double angle = m_ui->rotate_slider->value();
     angle += 180;
     angle += 1;
-    angle = (int)angle % 360;    
+    angle = static_cast<int>(angle) % 360;    
     angle -= 180;
-    set_rotation((int)angle);
+    set_rotation(static_cast<int>(angle));
 }
 
 void CameraDisplay::pressed_play() {

@@ -83,7 +83,7 @@ private:
     QBasicTimer m_frame_timer;
 
     bool m_rotate = false;
-    int m_rotate_interval = 25;
+    int m_rotate_interval;
     int m_fps_update_interval;
 };
 

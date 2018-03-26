@@ -17,7 +17,7 @@ void zoom(cv::UMat &src, cv::UMat &dest, double zoom_factor) {
 }
 
 void rotate(cv::UMat& src, double angle, cv::UMat& dst) {
-    cv::Point2f ptCp(src.cols*0.5, src.rows*0.5);
+    cv::Point2f ptCp(src.cols * 0.5, src.rows * 0.5);
     cv::Mat M = cv::getRotationMatrix2D(ptCp, angle, 1.0);
     cv::warpAffine(src, dst, M, src.size(), cv::INTER_CUBIC);
 }
@@ -49,7 +49,7 @@ void Preprocessor::__preprocess_frame(cv::UMat frame) {
     // Modifier frame
     if (m_modifier) { m_modifier->modify(frame); }
     // Rotate frame
-    double angle = (double)m_rotation_angle;
+    double angle = static_cast<double>(m_rotation_angle);
     rotate(frame, angle, frame);
     // Frame zoom
     zoom(frame, frame, m_zoom_factor);
