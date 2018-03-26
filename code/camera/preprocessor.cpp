@@ -17,9 +17,9 @@ void zoom(cv::UMat &src, cv::UMat &dest, double zoom_factor) {
 }
 
 void rotate(cv::UMat& src, double angle, cv::UMat& dst) {
-    cv::Point2f ptCp(src.cols * 0.5, src.rows * 0.5);
-    cv::Mat M = cv::getRotationMatrix2D(ptCp, angle, 1.0);
-    cv::warpAffine(src, dst, M, src.size(), cv::INTER_CUBIC);
+    cv::Point2f pt_cp(src.cols * 0.5, src.rows * 0.5);
+    cv::Mat mat = cv::getRotationMatrix2D(pt_cp, angle, 1.0);
+    cv::warpAffine(src, dst, mat, src.size(), cv::INTER_CUBIC);
 }
 
 Preprocessor::Preprocessor() = default;
