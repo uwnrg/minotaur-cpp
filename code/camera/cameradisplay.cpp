@@ -71,8 +71,9 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid_clicked);
     connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid_clicked);
     connect(m_ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
-    connect(m_ui->weight_list, SIGNAL(currentIndexChanged(int)), this, SLOT(gridSelectChanged(int)));
-    connect(m_ui->weight_selector, SIGNAL(valueChanged(int)), this, SLOT(weightingChanged(int)));
+    connect(m_ui->weight_list, SIGNAL(currentIndexChanged(int)), this, SLOT(grid_select_changed(int)));
+ //   connect(m_ui->weight_selector, &QSpinBox::valueChanged, this, &CameraDisplay::weighting_changed);
+    connect(m_ui->weight_selector, SIGNAL(valueChanged), this, SLOT(weighting_changed(int)));
 }
 
 CameraDisplay::~CameraDisplay() {
@@ -127,28 +128,20 @@ void CameraDisplay::update_zoom(int value) {
     Q_EMIT zoom_changed(zoom_factor);
 }
 
-void CameraDisplay::gridSelectChanged(int weight_index) {
-        weightSelected = m_ui->weight_list->currentText();
-     //   m_ui->grid_display->selectRobotPosition(weightSelected);
-    Q_EMIT select_position(weightSelected);
-    #ifndef NDEBUG
-        qDebug() << "Grid selector option changed to " << QString(weightSelected);
-    #endif
-}
-
-void CameraDisplay::weightingChanged(int weighting) {
-    //get number from weight-entering box
-        //    weighting = getWeighting();
+void CameraDisplay::grid_select_changed(int weight_index) {
+    m_selected_weight = m_ui->weight_list->currentText();
+       Q_EMIT select_position(m_selected_weight);
 #ifndef NDEBUG
-        qDebug() << "Weight Changed";
+    qDebug() << "Grid selector option changed to " << m_selected_weight;
 #endif
 }
 
-int CameraDisplay::getWeighting() {
-    auto *ui = m_ui;
-    auto *ws = ui->weight_selector;
-    weighting = m_ui->weight_selector->value();
-    return weighting;
+void CameraDisplay::weighting_changed(int weight) {
+    m_weighting = weight;
+}
+
+int CameraDisplay::get_weighting() {
+    return m_weighting;
 }
 
 void CameraDisplay::show_grid_clicked() {

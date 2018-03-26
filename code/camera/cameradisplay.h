@@ -25,7 +25,9 @@ public:
 
     void reject() override;
 
-    int getWeighting();
+    void weighting_changed(int weight);
+
+    int get_weighting();
 
     Q_SLOT void camera_box_changed(int camera);
 
@@ -41,9 +43,7 @@ public:
 
     Q_SLOT void clear_grid_clicked();
 
-    Q_SLOT void gridSelectChanged(int weight_index);
-
-    Q_SLOT void weightingChanged(int weighting);
+    Q_SLOT void grid_select_changed(int weight_index);
 
     Q_SIGNAL void display_opened(int camera);
 
@@ -71,8 +71,8 @@ private:
     std::unique_ptr<ActionBox> m_action_box;
     std::unique_ptr<ImageViewer> m_image_viewer;
 
-    QString weightSelected;
-    int weighting = 0;
+    QString m_selected_weight;
+    int m_weighting = 0;
 };
 
 #endif //MINOTAUR_CPP_CAMERADISPLAY_H

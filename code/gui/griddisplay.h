@@ -30,27 +30,28 @@ public:
     ~GridDisplay() override;
 
 public Q_SLOTS:
-    void clearSelection();
+    void clear_selection();
 
-    void showGrid();
+    void show_grid();
 
-    void hideGrid();
+    void hide_grid();
 
+    //TODO: figure out refactoring conflict
     void selectRobotPosition(QString);
 
 protected Q_SLOTS:
-    void buttonClicked(int x, int y);
+    void button_clicked(int x, int y);
 
 private:
-    void showView();
+    void show_view();
 
-    void updateScene();
+    void update_scene();
 
-    void drawGrid();
+    void draw_grid();
 
-    void drawButtons();
+    void draw_buttons();
 
-    void initStartEndPos();
+    void init_start_end_pos();
 
     std::unique_ptr<QGraphicsScene> m_scene;
     std::unique_ptr<QGraphicsView> m_view;
@@ -58,30 +59,32 @@ private:
     CameraDisplay *m_camera_display;
 
     QPushButton *m_button[40][20];
-    array2d<int> squareSelected {40, 20};
+    array2d<int> m_square_selected {40, 20};
 
-    const int gridSize = 20;
-    const int sceneWidth = 800;     //Default: 800
-    const int sceneHeight = 400;    //Default: 400
-    int columnCount = sceneWidth / gridSize; //40
-    int rowCount = sceneHeight / gridSize;  //20
-    bool gridDisplayed = false;
+    const int m_grid_size = 20;
+    const int m_scene_width = 100;                      // Default: 800
+    const int m_scene_height = 100;                     // Default: 400
+    int m_column_count = m_scene_width / m_grid_size;   // Default: 40
+    int m_row_count = m_scene_height / m_grid_size;     // Default: 20
+    bool m_grid_displayed = false;
 
-    const int notSelectedWeight = -1;
-    const int defaultWeight = 0;
-    const int startWeight = -2;
-    const int endWeight = -3;
+    const int m_not_selected_weight = -1;
+    const int m_default_weight = 0;
+    const int m_start_weight = -2;
+    const int m_end_weight = -3;
 
-    bool startPosSelected = false;
-    bool endPosSelected = false;
+    bool m_start_pos_selected = false;
+    bool m_end_pos_selected = false;
 
     struct Coord {
         int x;
         int y;
     };
 
-    std::unique_ptr<Coord> m_start_position;
-    std::unique_ptr<Coord> m_end_position;
+//    std::unique_ptr<Coord> m_start_position;
+//    std::unique_ptr<Coord> m_end_position;
+    Coord m_start_position;
+    Coord m_end_position;
 };
 
 #endif //MINOTAUR_CPP_GRIDDISPLAY_H
