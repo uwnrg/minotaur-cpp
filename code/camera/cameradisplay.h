@@ -23,9 +23,9 @@ public:
 
     void reject() override;
 
-    void weighting_changed(int weight);
-
     int get_weighting();
+
+    Q_SLOT void weighting_changed(int weight);
 
     Q_SLOT void camera_box_changed(int camera);
 

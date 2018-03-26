@@ -86,7 +86,7 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->rotate_slider, &QSlider::valueChanged, this, &CameraDisplay::rotation_slider_changed);
     connect(m_ui->rotation_box, &QLineEdit::editingFinished, this, &CameraDisplay::rotation_box_changed);
     connect(m_ui->weight_list, SIGNAL(currentIndexChanged(int)), this, SLOT(grid_select_changed(int)));
-    connect(m_ui->weight_selector, SIGNAL(valueChanged), this, SLOT(weighting_changed(int)));
+    connect(m_ui->weight_selector, SIGNAL(valueChanged(int)), this, SLOT(weighting_changed(int)));
 }
 
 CameraDisplay::~CameraDisplay() {
