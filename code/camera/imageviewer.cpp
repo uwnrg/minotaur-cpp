@@ -27,9 +27,7 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     m_converter(this),
     m_recorder(),
 
-    m_fps_update_interval(fps_update_interval),
-
-    m_selecting_path(false)
+    m_selecting_path(false),
     m_rotate(false),
     m_rotate_interval(25),
     m_fps_update_interval(fps_update_interval) {
