@@ -135,5 +135,4 @@ void ImageViewer::toggle_rotation() {
     } else {
         m_rotation_timer.stop();
     }
-
 }
