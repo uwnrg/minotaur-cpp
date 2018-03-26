@@ -19,8 +19,8 @@ namespace Ui {
 }
 
 class QPaintEvent;
-
 class CameraDisplay;
+class GridDisplay;
 
 class ImageViewer : public QWidget {
     Q_OBJECT
