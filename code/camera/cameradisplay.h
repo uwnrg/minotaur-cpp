@@ -33,8 +33,6 @@ public:
 
     Q_SLOT void take_screen_shot();
 
-    Q_SLOT void record_clicked();
-
     Q_SLOT void update_zoom(int value);
 
     Q_SLOT void show_grid_clicked();
@@ -75,7 +73,11 @@ public:
 
     Q_SIGNAL void clear_grid();
 
-    Q_SIGNAL void select_position(QString weightSelected);
+    Q_SIGNAL void clear_path();
+
+    Q_SIGNAL void toggle_path(bool checked);
+
+  Q_SIGNAL void select_position(QString weightSelected);
 
 private:
     Ui::CameraDisplay *m_ui;

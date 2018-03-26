@@ -10,6 +10,7 @@
 #include "../video/modify.h"
 #include "../utility/logger.h"
 #include "../utility/utility.h"
+#include "../simulator/fakecamera.h"
 #include "../gui/griddisplay.h"
 
 #define MAX_GRID_WEIGHT 10
@@ -17,9 +18,11 @@
 void populate_camera_box(QComboBox *box) {
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
     log() << "Found " << cameras.size() << " cameras";
-    for (int i = 0; i < cameras.size(); ++i) {
+    int i;
+    for (i = 0; i < cameras.size(); ++i) {
         box->addItem(cameras[i].deviceName(), QVariant::fromValue(i));
     }
+    box->addItem("Simulated", QVariant::fromValue(i));
 }
 
 void populate_effect_box(QComboBox *box) {
@@ -73,9 +76,11 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->camera_box, SIGNAL(currentIndexChanged(int)), this, SLOT(camera_box_changed(int)));
     connect(m_ui->effect_box, SIGNAL(currentIndexChanged(int)), this, SLOT(effect_box_changed(int)));
     connect(m_ui->picture_button, &QPushButton::clicked, this, &CameraDisplay::take_screen_shot);
-    connect(m_ui->record_button, &QPushButton::clicked, this, &CameraDisplay::record_clicked);
-    connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid_clicked);
-    connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid_clicked);
+    connect(m_ui->record_button, &QPushButton::clicked, this, &CameraDisplay::toggle_record);
+    connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid);
+    connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid);
+    connect(m_ui->toggle_path_button, &QPushButton::clicked, this, &CameraDisplay::toggle_path);
+    connect(m_ui->clear_path_button, &QPushButton::clicked, this, &CameraDisplay::clear_path);
     connect(m_ui->play_button, &QPushButton::clicked, this, &CameraDisplay::pressed_play);
     connect(m_ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
     connect(m_ui->rotate_slider, &QSlider::valueChanged, this, &CameraDisplay::rotation_slider_changed);
@@ -94,7 +99,7 @@ void CameraDisplay::setVisible(bool visible) {
         QDialog::setVisible(false);
         return;
     }
-    int camera_index = 0;
+    int camera_index = FakeCamera::FAKE_CAMERA;
     if (!QCameraInfo::availableCameras().empty()) {
         camera_index = get_camera_index(QCameraInfo::availableCameras()[0]);
     }
@@ -108,9 +113,17 @@ void CameraDisplay::reject() {
 }
 
 void CameraDisplay::camera_box_changed(int camera) {
-    QCameraInfo info = QCameraInfo::availableCameras()[camera];
-    int camera_index = get_camera_index(info);
-    Q_EMIT camera_changed(camera_index);
+#ifndef NDEBUG
+    qDebug() << "Switching to camera index: " << camera;
+#endif
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+    if (camera < cameras.size()) {
+        QCameraInfo info = cameras[camera];
+        int camera_index = get_camera_index(info);
+        Q_EMIT camera_changed(camera_index);
+    } else {
+        Q_EMIT camera_changed(FakeCamera::FAKE_CAMERA);
+    }
 }
 
 void CameraDisplay::effect_box_changed(int effect) {
@@ -118,10 +131,6 @@ void CameraDisplay::effect_box_changed(int effect) {
     m_action_box->reset_actions();
     if (modifier) { modifier->register_actions(m_action_box.get()); }
     Q_EMIT effect_changed(modifier);
-}
-
-void CameraDisplay::record_clicked() {
-    Q_EMIT toggle_record();
 }
 
 void CameraDisplay::take_screen_shot() {

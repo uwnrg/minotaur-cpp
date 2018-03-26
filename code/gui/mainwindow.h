@@ -11,6 +11,7 @@
 #include "../camera/cameradisplay.h"
 #include "../camera/statusbox.h"
 #include "../compstate/compstate.h"
+#include "../simulator/globalsim.h"
 
 #include "actionabout.h"
 #include "scriptwindow.h"
@@ -38,9 +39,13 @@ public:
     void keyReleaseEvent(QKeyEvent *) override;
 
 public:
+    std::weak_ptr<Controller> controller() const;
+
     std::weak_ptr<Solenoid> solenoid() const;
 
     std::weak_ptr<StatusBox> status_box() const;
+
+    std::weak_ptr<GlobalSim> global_sim() const;
 
     CompetitionState &state();
 
@@ -83,11 +88,12 @@ private:
 private:
     std::unique_ptr<Ui::MainWindow> ui;
 
+    std::shared_ptr<StatusBox> m_status_box;
+    std::shared_ptr<GlobalSim> m_global_sim;
+
     std::shared_ptr<Solenoid> m_solenoid;
     std::shared_ptr<Simulator> m_simulator;
     std::shared_ptr<Controller> m_controller;
-
-    std::shared_ptr<StatusBox> m_status_box;
 
     std::unique_ptr<ActionAbout> m_about_window;
     std::unique_ptr<CameraDisplay> m_camera_display;

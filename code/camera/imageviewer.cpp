@@ -4,6 +4,7 @@
 
 #include "../utility/logger.h"
 #include "../gui/griddisplay.h"
+#include "../gui/mainwindow.h"
 
 #include <QPainter>
 #include <QFileDialog>
@@ -26,6 +27,9 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     m_converter(this),
     m_recorder(),
 
+    m_fps_update_interval(fps_update_interval),
+
+    m_selecting_path(false)
     m_rotate(false),
     m_rotate_interval(25),
     m_fps_update_interval(fps_update_interval) {
@@ -65,6 +69,8 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     connect(parent, &CameraDisplay::toggle_rotation, this, &ImageViewer::toggle_rotation);
     connect(parent, &CameraDisplay::save_screenshot, this, &ImageViewer::save_screenshot);
     connect(parent, &CameraDisplay::toggle_record, this, &ImageViewer::handle_recording);
+    connect(parent, &CameraDisplay::toggle_path, this, &ImageViewer::toggle_path);
+    connect(parent, &CameraDisplay::clear_path, this, &ImageViewer::clear_path);
     connect(parent, &CameraDisplay::zoom_changed, this, &ImageViewer::set_zoom);
     connect(parent, &CameraDisplay::show_grid, m_grid_display.get(), &GridDisplay::show_grid);
     connect(parent, &CameraDisplay::clear_grid, m_grid_display.get(), &GridDisplay::clear_selection);
@@ -89,6 +95,16 @@ void ImageViewer::set_image(const QImage &img) {
     update();
 }
 
+void ImageViewer::mousePressEvent(QMouseEvent *ev) {
+    if (m_selecting_path) {
+        double combined_scale =
+            m_preprocessor.get_zoom_factor() *
+            m_converter.get_previous_scale();
+        Main::get()->state().append_path(ev->x() / combined_scale, ev->y() / combined_scale);
+    }
+    QWidget::mousePressEvent(ev);
+}
+
 void ImageViewer::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() == m_frame_timer.timerId()) {
         int frames = m_converter.get_and_reset_frames();
@@ -102,6 +118,28 @@ void ImageViewer::timerEvent(QTimerEvent *ev) {
 void ImageViewer::paintEvent(QPaintEvent *) {
     QPainter painter(this);
     painter.drawImage(0, 0, m_image);
+    painter.setRenderHint(QPainter::Antialiasing);
+    // Draw dots on each vertex and connecting lines
+    double combined_scale =
+        m_preprocessor.get_zoom_factor() *
+        m_converter.get_previous_scale();
+    const path2d<double> &path = Main::get()->state().get_path();
+    for (std::size_t i = 0; i < path.size(); ++i) {
+        QColor color;
+        if (i == 0) { color = Qt::red; }
+        else if (i + 1 == path.size()) { color = Qt::blue; }
+        else { color = Qt::green; }
+        Vector2i v1 = path[i] * combined_scale;
+        painter.setBrush(color);
+        painter.setPen(color);
+        painter.drawEllipse(v1.x() - 4, v1.y() - 4, 8, 8);
+        if (i > 0) {
+            Vector2i v0 = path[i - 1] * combined_scale;
+            painter.setPen(QPen(Qt::green, 2, Qt::DashDotLine, Qt::RoundCap));
+            painter.drawLine(v0.x(), v0.y(), v1.x(), v1.y());
+        }
+    }
+    painter.end();
 }
 
 void ImageViewer::set_frame_rate(double frame_rate) {
@@ -127,6 +165,14 @@ void ImageViewer::handle_recording() {
         log() << "Saving video to: " << file;
         Q_EMIT start_recording(file, m_capture.capture_width(), m_capture.capture_height());
     }
+}
+
+void ImageViewer::toggle_path(bool toggle_path) {
+    m_selecting_path = toggle_path;
+}
+
+void ImageViewer::clear_path() {
+    Main::get()->state().clear_path();
 }
 
 void ImageViewer::toggle_rotation() {

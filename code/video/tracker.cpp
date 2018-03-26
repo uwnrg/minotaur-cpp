@@ -84,16 +84,24 @@ void TrackerModifier::modify(cv::UMat &img) {
             m_state = State::TRACKING;
         }
         m_mutex.unlock();
-        cv::rectangle(img, m_bounding_box.br(), m_bounding_box.tl(), cv::Scalar(255, 0, 0));
+        cv::rectangle(img, m_bounding_box.tl(), m_bounding_box.br(), cv::Scalar(255, 0, 0));
         Q_EMIT object_box(m_bounding_box);
+    }
+}
+
+void TrackerModifier::traverse() {
+    if (m_state == State::TRACKING) {
+        Main::get()->state().begin_traversal();
     }
 }
 
 void TrackerModifier::register_actions(ActionBox *box) {
     ActionButton *start_button = box->add_action("Select ROI");
     ActionButton *clear_button = box->add_action("Clear ROI");
+    ActionButton *traverse_button = box->add_action("Traverse");
     connect(start_button, &ActionButton::clicked, this, &TrackerModifier::beginTracking);
     connect(clear_button, &ActionButton::clicked, this, &TrackerModifier::stopTracking);
+    connect(traverse_button, &ActionButton::clicked, this, &TrackerModifier::traverse);
     box->set_actions();
 }
 

@@ -13,6 +13,9 @@
 #include "recorder.h"
 #include "camerathread.h"
 
+#include "../gui/griddisplay.h"
+#include "../utility/vector2d.h"
+
 namespace Ui {
     class ImageViewer;
 }
@@ -50,6 +53,10 @@ public:
 
     Q_SLOT void handle_recording();
 
+    Q_SLOT void clear_path();
+
+    Q_SLOT void toggle_path(bool toggle_path);
+
     Q_SLOT void toggle_rotation();
 
     Q_SIGNAL void increment_rotation();
@@ -59,6 +66,8 @@ public:
     Q_SIGNAL void start_recording(const QString &file, int width, int height);
 
 private:
+    void mousePressEvent(QMouseEvent *ev) override;
+
     void timerEvent(QTimerEvent *ev) override;
 
     void paintEvent(QPaintEvent *ev) override;
@@ -85,6 +94,8 @@ private:
     bool m_rotate = false;
     int m_rotate_interval;
     int m_fps_update_interval;
+
+    bool m_selecting_path;
 };
 
 #endif //MINOTAUR_CPP_IMAGEVIEWER_H_H

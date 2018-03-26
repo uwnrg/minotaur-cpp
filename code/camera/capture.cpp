@@ -1,23 +1,29 @@
-#include "capture.h"
+    #include "capture.h"
 
 #include "../utility/utility.h"
+#include "../simulator/fakecamera.h"
 
 #include <QTimerEvent>
 
 Capture::Capture() = default;
 
 void Capture::start_capture(int cam) {
-    if (cam < 0) { return; }
-    m_video_capture = std::make_unique<cv::VideoCapture>(cam);
+    if (cam == FakeCamera::FAKE_CAMERA) {
+        m_video_capture = std::make_unique<FakeCamera>();
+    } else {
+        m_video_capture = std::make_unique<cv::VideoCapture>(cam);
+    }
     if (m_video_capture->isOpened()) {
-        m_timer.start(0, this);
+        m_timer.start(33, this);
         Q_EMIT capture_started();
     }
 }
 
 void Capture::stop_capture() {
     m_timer.stop();
-    m_video_capture->release();
+    if (m_video_capture && m_video_capture->isOpened()) {
+        m_video_capture->release();
+    }
     Q_EMIT capture_stopped();
 }
 

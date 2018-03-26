@@ -1,5 +1,5 @@
 #include "procedure.h"
-#include "../controller/solenoid.h"
+#include "../controller/controller.h"
 #include "../gui/mainwindow.h"
 
 #define DEFAULT_TARGET_LOC_ACCEPTANCE 3.0
@@ -50,10 +50,10 @@ QString perp_text(double err_x, double err_y, double norm_sq) {
     return text;
 }
 
-Procedure::Procedure(std::weak_ptr<Solenoid> sol, path2d<double> &&path) :
+Procedure::Procedure(std::weak_ptr<Controller> sol, const path2d<double> &path) :
     m_loc_accept(DEFAULT_TARGET_LOC_ACCEPTANCE),
     m_norm_dev(DEFAULT_MAX_NORMAL_DEVIATION),
-    m_path(std::move(path)),
+    m_path(path),
     m_index(0),
     m_sol(std::move(sol)) {
     if (auto lp = Main::get()->status_box().lock()) {
@@ -78,6 +78,10 @@ void Procedure::start() {
     m_initial = rect_center(Main::get()->state().get_robot_box());
 }
 
+void Procedure::stop() {
+    m_timer.stop();
+}
+
 void Procedure::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() == m_timer.timerId()) {
         movement_loop();
@@ -95,7 +99,7 @@ void Procedure::movement_loop() {
     if (
         !Main::get()->state().is_robot_box_fresh() ||
         !Main::get()->state().is_robot_box_valid()
-    ) { return; }
+        ) { return; }
 
     // Acquire the current robot position
     vector2d<double> center = rect_center(Main::get()->state().get_robot_box(true));
@@ -134,8 +138,8 @@ void Procedure::movement_loop() {
     } else {
         double estimated_power = fabs(err_y);
         // Move in vertical
-        if (target.y() > center.y()) { move_up(estimated_power); }
-        else { move_down(estimated_power); }
+        if (target.y() > center.y()) { move_down(estimated_power); }
+        else { move_up(estimated_power); }
     }
 }
 
