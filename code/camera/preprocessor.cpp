@@ -57,3 +57,7 @@ void Preprocessor::timerEvent(QTimerEvent *ev) {
     m_frame.release();
     m_queue_timer.stop();
 }
+
+double Preprocessor::get_zoom_factor() const {
+    return m_zoom_factor;
+}

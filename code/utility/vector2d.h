@@ -83,7 +83,7 @@ public:
         typename scalar_t,
         typename = enable_if_arithmetic_t<scalar_t>
     >
-    vector2d<val_t> operator*(scalar_t b) {
+    vector2d<val_t> operator*(scalar_t b) const {
         return {
             static_cast<val_t>(m_x * b),
             static_cast<val_t>(m_y * b)
@@ -94,7 +94,7 @@ public:
         typename scalar_t,
         typename = enable_if_arithmetic_t<scalar_t>
     >
-    vector2d<val_t> operator/(scalar_t b) {
+    vector2d<val_t> operator/(scalar_t b) const {
         return {
             static_cast<val_t>(m_x / b),
             static_cast<val_t>(m_y / b)

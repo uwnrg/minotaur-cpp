@@ -26,6 +26,8 @@ public:
 
     Q_SIGNAL void frame_processed(const cv::UMat &frame);
 
+    double get_zoom_factor() const;
+
 private:
     void __queue(const cv::UMat &frame);
 
