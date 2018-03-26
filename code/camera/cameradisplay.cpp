@@ -62,9 +62,11 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->camera_box, SIGNAL(currentIndexChanged(int)), this, SLOT(camera_box_changed(int)));
     connect(m_ui->effect_box, SIGNAL(currentIndexChanged(int)), this, SLOT(effect_box_changed(int)));
     connect(m_ui->picture_button, &QPushButton::clicked, this, &CameraDisplay::take_screen_shot);
-    connect(m_ui->record_button, &QPushButton::clicked, this, &CameraDisplay::record_clicked);
-    connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid_clicked);
-    connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid_clicked);
+    connect(m_ui->record_button, &QPushButton::clicked, this, &CameraDisplay::toggle_record);
+    connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid);
+    connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid);
+    connect(m_ui->toggle_path_button, &QPushButton::clicked, this, &CameraDisplay::toggle_path);
+    connect(m_ui->clear_path_button, &QPushButton::clicked, this, &CameraDisplay::clear_path);
     connect(m_ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
 }
 
@@ -112,10 +114,6 @@ void CameraDisplay::effect_box_changed(int effect) {
     Q_EMIT effect_changed(modifier);
 }
 
-void CameraDisplay::record_clicked() {
-    Q_EMIT toggle_record();
-}
-
 void CameraDisplay::take_screen_shot() {
     QString image_png = QFileDialog::getSaveFileName(this, "Save Screenshot", QDir::currentPath(), "Photos (*.png)");
     ensure_png(image_png);
@@ -126,12 +124,4 @@ void CameraDisplay::take_screen_shot() {
 void CameraDisplay::update_zoom(int value) {
     double zoom_factor = value / 10.0;
     Q_EMIT zoom_changed(zoom_factor);
-}
-
-void CameraDisplay::show_grid_clicked() {
-    Q_EMIT show_grid();
-}
-
-void CameraDisplay::clear_grid_clicked() {
-    Q_EMIT clear_grid();
 }

@@ -30,9 +30,14 @@ public:
         m_y(l.begin()[1]) {}
 
     template<typename u_val_t>
+    vector2d(const vector2d<u_val_t> &p) :
+        m_x(static_cast<val_t>(p.x())),
+        m_y(static_cast<val_t>(p.y())) {}
+
+    template<typename u_val_t>
     vector2d(const cv::Point_<u_val_t> &p) :
-        m_x(p.x),
-        m_y(p.y) {}
+        m_x(static_cast<val_t>(p.x)),
+        m_y(static_cast<val_t>(p.y)) {}
 
     val_t &x() {
         return m_x;
