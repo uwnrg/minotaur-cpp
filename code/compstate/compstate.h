@@ -8,6 +8,7 @@
 #include <QObject>
 
 #include "../utility/array2d.h"
+#include "../utility/vector2d.h"
 #include "../camera/statusbox.h"
 
 class MainWindow;
@@ -38,7 +39,7 @@ public:
         wall_y = 30
     };
 
-    CompetitionState(MainWindow *parent);
+    explicit CompetitionState(MainWindow *parent);
 
     Q_SIGNAL void request_robot_box();
     Q_SIGNAL void request_object_box();
@@ -50,6 +51,11 @@ public:
 
     Q_SLOT void set_robot_calibrated_area(double robot_calibrated_area);
     Q_SLOT void set_object_calibrated_area(double object_calibrated_area);
+
+    Q_SLOT void clear_path();
+    Q_SLOT void append_path(double x, double y);
+
+    const path2d<double> &get_path() const;
 
     cv::Rect2d &get_robot_box(bool consume = false);
     cv::Rect2d &get_object_box(bool consume = false);
@@ -94,6 +100,8 @@ private:
     double m_object_calibrated_area;
 
     double m_acquisition_r_sigma;
+
+    path2d<double> m_path;
 };
 
 Q_DECLARE_METATYPE(std::shared_ptr<CompetitionState::wall_arr>);
