@@ -9,6 +9,7 @@
 
 #include "../video/modify.h"
 #include "../utility/logger.h"
+#include "../utility/utility.h"
 #include "../gui/griddisplay.h"
 
 #define MAX_GRID_WEIGHT 10
@@ -57,6 +58,11 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     m_ui->zoom_slider->setMaximum(40);
     m_ui->zoom_slider->setMinimum(10);
 
+    // Setup rotation slider
+    m_ui->rotate_slider->setTickInterval(45);
+    m_ui->rotate_slider->setTickPosition(QSlider::TicksBelow);
+    m_ui->rotate_slider->setMaximum(180);
+    m_ui->rotate_slider->setMinimum(-180);
     // Setup weight selectors
     m_ui->weight_selector->setRange(-1, MAX_GRID_WEIGHT);
 
@@ -70,7 +76,10 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->record_button, &QPushButton::clicked, this, &CameraDisplay::record_clicked);
     connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid_clicked);
     connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid_clicked);
+    connect(m_ui->play_button, &QPushButton::clicked, this, &CameraDisplay::pressed_play);
     connect(m_ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
+    connect(m_ui->rotate_slider, &QSlider::valueChanged, this, &CameraDisplay::rotation_slider_changed);
+    connect(m_ui->rotation_box, &QLineEdit::editingFinished, this, &CameraDisplay::rotation_box_changed);
     connect(m_ui->weight_list, SIGNAL(currentIndexChanged(int)), this, SLOT(grid_select_changed(int)));
     connect(m_ui->weight_selector, SIGNAL(valueChanged), this, SLOT(weighting_changed(int)));
 }
@@ -149,4 +158,41 @@ void CameraDisplay::show_grid_clicked() {
 
 void CameraDisplay::clear_grid_clicked() {
     Q_EMIT clear_grid();
+}
+
+void CameraDisplay::rotation_slider_changed(int value) {
+    m_ui->rotation_box->setText(QString::number(value));
+    Q_EMIT rotation_changed(value);
+}
+
+void CameraDisplay::rotation_box_changed() {
+    QString value = m_ui->rotation_box->text();
+    int degrees = value.toInt(nullptr, 10);
+    m_ui->rotate_slider->setValue(degrees);
+}
+
+void CameraDisplay::set_rotation(int value) {
+    if (value >= -180 && value <= 180) {
+        m_ui->rotation_box->setText(QString::number(value));
+        m_ui->rotate_slider->setValue(value);
+    }
+}
+
+void CameraDisplay::increment_rotation() {
+    double angle = m_ui->rotate_slider->value();
+    angle += 180;
+    angle += 1;
+    angle = static_cast<int>(angle) % 360;    
+    angle -= 180;
+    set_rotation(static_cast<int>(angle));
+}
+
+void CameraDisplay::pressed_play() {
+    Q_EMIT toggle_rotation();
+    if (m_ui->play_button->text() == "▶") {
+        m_ui->play_button->setText("⏸");
+    }
+    else {
+        m_ui->play_button->setText("▶");
+    }
 }

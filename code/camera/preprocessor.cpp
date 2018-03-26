@@ -16,10 +16,20 @@ void zoom(cv::UMat &src, cv::UMat &dest, double zoom_factor) {
     cv::resize(src, dest, cv::Size(), zoom_factor, zoom_factor, cv::INTER_LINEAR);
 }
 
+void rotate(cv::UMat& src, double angle, cv::UMat& dst) {
+    cv::Point2f pt_cp(src.cols * 0.5, src.rows * 0.5);
+    cv::Mat mat = cv::getRotationMatrix2D(pt_cp, angle, 1.0);
+    cv::warpAffine(src, dst, mat, src.size(), cv::INTER_CUBIC);
+}
+
 Preprocessor::Preprocessor() = default;
 
 void Preprocessor::zoom_changed(double zoom_factor) {
     m_zoom_factor = zoom_factor;
+}
+
+void Preprocessor::rotation_changed(int angle) {
+    m_rotation_angle = angle;
 }
 
 void Preprocessor::convert_rgb(bool convert_rgb) {
@@ -38,6 +48,9 @@ void Preprocessor::preprocess_frame(const cv::UMat &frame) {
 void Preprocessor::__preprocess_frame(cv::UMat frame) {
     // Modifier frame
     if (m_modifier) { m_modifier->modify(frame); }
+    // Rotate frame
+    double angle = static_cast<double>(m_rotation_angle);
+    rotate(frame, angle, frame);
     // Frame zoom
     zoom(frame, frame, m_zoom_factor);
     // Convert to RGB

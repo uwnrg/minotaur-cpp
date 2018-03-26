@@ -1,9 +1,14 @@
 #include "imageviewer.h"
 #include "ui_imageviewer.h"
 #include "cameradisplay.h"
-#include "../utility/logger.h"
 
+#include "../utility/logger.h"
+#include "../gui/griddisplay.h"
+
+#include <QPainter>
 #include <QFileDialog>
+
+#include <memory>
 
 QString color_format(double value, const QString &suffix = "") {
     return QString("<font color=\"#8ae234\">%1%2</font>").arg(value).arg(suffix);
@@ -21,6 +26,8 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     m_converter(this),
     m_recorder(),
 
+    m_rotate(false),
+    m_rotate_interval(25),
     m_fps_update_interval(fps_update_interval) {
 
     ui->setupUi(this);
@@ -54,12 +61,15 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     connect(parent, &CameraDisplay::camera_changed, &m_capture, &Capture::change_camera);
     connect(parent, &CameraDisplay::effect_changed, &m_preprocessor, &Preprocessor::use_modifier);
     connect(parent, &CameraDisplay::zoom_changed, &m_preprocessor, &Preprocessor::zoom_changed);
+    connect(parent, &CameraDisplay::rotation_changed, &m_preprocessor, &Preprocessor::rotation_changed);
+    connect(parent, &CameraDisplay::toggle_rotation, this, &ImageViewer::toggle_rotation);
     connect(parent, &CameraDisplay::save_screenshot, this, &ImageViewer::save_screenshot);
-    connect(parent, &CameraDisplay::zoom_changed, this, &ImageViewer::set_zoom);
     connect(parent, &CameraDisplay::toggle_record, this, &ImageViewer::handle_recording);
+    connect(parent, &CameraDisplay::zoom_changed, this, &ImageViewer::set_zoom);
     connect(parent, &CameraDisplay::show_grid, m_grid_display.get(), &GridDisplay::show_grid);
     connect(parent, &CameraDisplay::clear_grid, m_grid_display.get(), &GridDisplay::clear_selection);
     connect(parent, &CameraDisplay::select_position, m_grid_display.get(), &GridDisplay::selectRobotPosition);
+    connect(this, &ImageViewer::increment_rotation, parent, &CameraDisplay::increment_rotation);
     connect(this, &ImageViewer::start_recording, &m_recorder, &Recorder::start_recording);
     connect(this, &ImageViewer::stop_recording, &m_recorder, &Recorder::stop_recording);
 }
@@ -84,6 +94,8 @@ void ImageViewer::timerEvent(QTimerEvent *ev) {
         int frames = m_converter.get_and_reset_frames();
         double fps = 1000.0 * frames / m_fps_update_interval;
         set_frame_rate(fps);
+    } else if (ev->timerId() == m_rotation_timer.timerId()) {
+        Q_EMIT increment_rotation();
     }
 }
 
@@ -114,5 +126,14 @@ void ImageViewer::handle_recording() {
         QString file = QFileDialog::getSaveFileName(this, "Save Video", QDir::currentPath(), "Videos (*.avi)");
         log() << "Saving video to: " << file;
         Q_EMIT start_recording(file, m_capture.capture_width(), m_capture.capture_height());
+    }
+}
+
+void ImageViewer::toggle_rotation() {
+    m_rotate = !m_rotate;
+    if (m_rotate) {
+        m_rotation_timer.start(m_rotate_interval, this);
+    } else {
+        m_rotation_timer.stop();
     }
 }

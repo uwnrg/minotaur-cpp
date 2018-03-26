@@ -12,7 +12,6 @@
 #include "converter.h"
 #include "recorder.h"
 #include "camerathread.h"
-#include "code/gui/griddisplay.h"
 
 namespace Ui {
     class ImageViewer;
@@ -20,6 +19,8 @@ namespace Ui {
 
 class QPaintEvent;
 class CameraDisplay;
+class GridDisplay;
+
 class GridDisplay;
 
 class ImageViewer : public QWidget {
@@ -49,6 +50,10 @@ public:
 
     Q_SLOT void handle_recording();
 
+    Q_SLOT void toggle_rotation();
+
+    Q_SIGNAL void increment_rotation();
+
     Q_SIGNAL void stop_recording();
 
     Q_SIGNAL void start_recording(const QString &file, int width, int height);
@@ -74,8 +79,11 @@ private:
     IThread m_thread_converter;
     IThread m_thread_recorder;
 
+    QBasicTimer m_rotation_timer;
     QBasicTimer m_frame_timer;
 
+    bool m_rotate = false;
+    int m_rotate_interval;
     int m_fps_update_interval;
 };
 
