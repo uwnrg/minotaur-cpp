@@ -19,7 +19,7 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
 
     ui(new Ui::ImageViewer),
 
-    m_grid_display(std::make_unique<GridDisplay>(this)),
+    m_grid_display(std::make_unique<GridDisplay>(this, parent)),
 
     m_capture(),
     m_preprocessor(),
@@ -66,8 +66,9 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     connect(parent, &CameraDisplay::save_screenshot, this, &ImageViewer::save_screenshot);
     connect(parent, &CameraDisplay::toggle_record, this, &ImageViewer::handle_recording);
     connect(parent, &CameraDisplay::zoom_changed, this, &ImageViewer::set_zoom);
-    connect(parent, &CameraDisplay::show_grid, m_grid_display.get(), &GridDisplay::showGrid);
-    connect(parent, &CameraDisplay::clear_grid, m_grid_display.get(), &GridDisplay::clearSelection);
+    connect(parent, &CameraDisplay::show_grid, m_grid_display.get(), &GridDisplay::show_grid);
+    connect(parent, &CameraDisplay::clear_grid, m_grid_display.get(), &GridDisplay::clear_selection);
+    connect(parent, &CameraDisplay::select_position, m_grid_display.get(), &GridDisplay::selectRobotPosition);
     connect(this, &ImageViewer::increment_rotation, parent, &CameraDisplay::increment_rotation);
     connect(this, &ImageViewer::start_recording, &m_recorder, &Recorder::start_recording);
     connect(this, &ImageViewer::stop_recording, &m_recorder, &Recorder::stop_recording);

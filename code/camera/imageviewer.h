@@ -18,8 +18,8 @@ namespace Ui {
 }
 
 class QPaintEvent;
-
 class CameraDisplay;
+class GridDisplay;
 
 class GridDisplay;
 

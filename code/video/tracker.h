@@ -3,7 +3,7 @@
 #ifndef TRACKER_OFF
 
 #include "modify.h"
-
+#include "../compstate/procedure.h"
 #include <opencv2/tracking.hpp>
 #include <QMutex>
 
@@ -11,12 +11,21 @@ class QVBoxLayout;
 class QPushButton;
 
 class TrackerModifier : public VideoModifier {
+Q_OBJECT
+
 public:
-    TrackerModifier();
+    enum Target {
+        ROBOT,
+        OBJECT
+    };
+
+    explicit TrackerModifier(Target target = ROBOT);
 
     void modify(cv::UMat &img) override;
 
     void register_actions(ActionBox *box) override;
+
+    Q_SIGNAL void object_box(const cv::Rect2d &box);
 
 protected:
     Q_SLOT void beginTracking();
@@ -47,6 +56,7 @@ private:
 
     int m_type;
     int m_state;
+    int m_target;
 
     /**
      * Class mutex instance used to prevent a scenario wherein

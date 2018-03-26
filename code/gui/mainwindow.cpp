@@ -4,18 +4,14 @@
 
 #include "../interpreter/embeddedcontroller.h"
 
-MainWindow::MainWindow(
-    int argc,
-    char *argv[],
-    QWidget *parent,
-    const char *
-) :
-    QMainWindow(parent),
+MainWindow::MainWindow() :
     ui(std::make_unique<Ui::MainWindow>()),
 
-    m_solenoid(std::make_unique<Solenoid>()),
-    m_simulator(std::make_unique<Simulator>()),
+    m_solenoid(std::make_shared<Solenoid>()),
+    m_simulator(std::make_shared<Simulator>()),
     m_controller(m_solenoid),
+
+    m_status_box(std::make_shared<StatusBox>(this)),
 
     m_about_window(std::make_unique<ActionAbout>(this)),
     m_camera_display(std::make_unique<CameraDisplay>(this)),
@@ -24,7 +20,9 @@ MainWindow::MainWindow(
     m_serial_box(std::make_unique<SerialBox>(m_solenoid, this)),
     m_simulator_window(std::make_unique<SimulatorWindow>(m_simulator, this)),
 
-    m_controller_type(Controller::SOLENOID) {
+    m_controller_type(Controller::SOLENOID),
+
+    m_compstate(this) {
 
     ui->setupUi(this);
 
@@ -162,3 +160,21 @@ void MainWindow::invertControllerY() {
     log() << "Inverting Y-axis";
     m_controller->invert_y_axis();
 }
+
+std::weak_ptr<Solenoid> MainWindow::solenoid() const {
+    return m_solenoid;
+}
+
+std::weak_ptr<StatusBox> MainWindow::status_box() const {
+    return m_status_box;
+}
+
+CompetitionState &MainWindow::state() {
+    return m_compstate;
+}
+
+MainWindow *&Main::get() {
+    return instance;
+}
+
+MainWindow *Main::instance = nullptr;

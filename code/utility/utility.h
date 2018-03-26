@@ -31,7 +31,7 @@ template<
 struct shrink_into {
     template<
         typename u_number_t,
-        typename = enable_if_arithmetic_t<number_t>
+        typename = enable_if_arithmetic_t<u_number_t>
     >
     number_t operator()(u_number_t u) {
         if (u > std::numeric_limits<number_t>::max()) {

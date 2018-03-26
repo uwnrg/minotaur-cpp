@@ -8,9 +8,15 @@
 #include <QObject>
 
 #include "../utility/array2d.h"
+#include "../camera/statusbox.h"
+
+class MainWindow;
+
+double acquisition_r(const cv::Rect2d &rect, double calibrated_area);
 
 class CompetitionState : public QObject {
 Q_OBJECT
+
 public:
     typedef bool wall_t;
     typedef array2d<wall_t, int> wall_arr;
@@ -32,7 +38,7 @@ public:
         wall_y = 30
     };
 
-    CompetitionState();
+    CompetitionState(MainWindow *parent);
 
     Q_SIGNAL void request_robot_box();
     Q_SIGNAL void request_object_box();
@@ -42,12 +48,12 @@ public:
     Q_SLOT void acquire_target_box(const cv::Rect2d &target_box);
     Q_SLOT void acquire_walls(std::shared_ptr<wall_arr> &walls);
 
-    cv::Rect2d &get_robot_box();
-    cv::Rect2d &get_object_box();
+    Q_SLOT void set_robot_calibrated_area(double robot_calibrated_area);
+    Q_SLOT void set_object_calibrated_area(double object_calibrated_area);
+
+    cv::Rect2d &get_robot_box(bool consume = false);
+    cv::Rect2d &get_object_box(bool consume = false);
     cv::Rect2d &get_target_box();
-    const cv::Rect2d &get_robot_box() const;
-    const cv::Rect2d &get_object_box() const;
-    const cv::Rect2d &get_target_box() const;
 
     bool is_tracking_robot() const;
     void set_tracking_robot(bool tracking_robot);
@@ -58,10 +64,23 @@ public:
     int object_type() const;
     void set_object_type(int object_type);
 
+    bool is_robot_box_fresh() const;
+    bool is_object_box_fresh() const;
+
+    bool is_robot_box_valid() const;
+    bool is_object_box_valid() const;
+
 private:
+    MainWindow *m_parent;
+
+    StatusLabel *m_robot_loc_label;
+
     bool m_tracking_robot;
     bool m_tracking_object;
     bool m_acquire_walls;
+
+    bool m_robot_box_fresh;
+    bool m_object_box_fresh;
 
     cv::Rect2d m_robot_box;
     cv::Rect2d m_object_box;
@@ -70,6 +89,11 @@ private:
     std::shared_ptr<wall_arr> m_walls;
 
     int m_object_type;
+
+    double m_robot_calibrated_area;
+    double m_object_calibrated_area;
+
+    double m_acquisition_r_sigma;
 };
 
 Q_DECLARE_METATYPE(std::shared_ptr<CompetitionState::wall_arr>);

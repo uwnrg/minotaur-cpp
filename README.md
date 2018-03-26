@@ -13,6 +13,10 @@ with the following goals in mind:
 
 Please checkout the *Projects* tab for information about roadmap and current progress.
 
+# Cloning Repo and Submodules
+This repository has the `googletest` submodule, clone with `--recursive` or 
+be sure to run `git submodule update --init` after cloning.
+
 # Setting up Minotaur on Windows
 These will describe the steps for setting up an environment on Windows.
 This has been tested on a clean installation of Windows 10.
@@ -30,7 +34,7 @@ This has been tested on a clean installation of Windows 10.
 5. Add the Qt tools directory to the <strong>System</strong> PATH: `C:/Qt/tools/mingw492_32/bin`
     - Make sure to restart PowerShell or cmd
 6. Add the Qt 5.6 binaries to the <strong>System</strong> PATH: `C:/Qt/5.6/mingw49_32/bin`
-7. Clone the repo `git clone https://github.com/uwnrg/minotaur-cpp.git`
+7. Clone the repo `git clone --recursive https://github.com/uwnrg/minotaur-cpp.git`
     - `cd minotaur-cpp`
     - `mkdir build`
     - `cd build`
@@ -73,7 +77,7 @@ There may be issues if multiple versions of Python are installed on the system.
 
 ## Building Minotaur
 Here you can either install CLion and import the project (recommended) or
-1. `git clone https://github.com/uwnrg/minotaur-cpp.git`
+1. `git clone --recursive https://github.com/uwnrg/minotaur-cpp.git`
 2. `cd minotaur-cpp`
 3. `mkdir build`
 4. `cd build`
@@ -100,6 +104,8 @@ Additional dependencies
 sudo apt install qtmultimedia5-dev libqt5multimedia5-plugins libqt5serialport5-dev
 ```
 
+If some packages cannot be found, you may need to run `sudo add-apt-repository universe && sudo apt update`.
+
 You will need to build OpenCV 3 from source. Download the OpenCV 3 source
 and build. It is recommended to build with `USE_QT=ON` instead of GTK. 
 Additional instructions found [here](https://github.com/BVLC/caffe/wiki/OpenCV-3.3-Installation-Guide-on-Ubuntu-16.04).
@@ -111,7 +117,7 @@ dependencies may be required.
 Then clone the repository and build with
 
 ```bash
-git clone https://github.com/uwnrg/minotaur-cpp.git
+git clone --recursive https://github.com/uwnrg/minotaur-cpp.git
 cd minotaur-cpp
 mkdir build
 cd build

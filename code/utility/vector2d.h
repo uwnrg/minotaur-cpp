@@ -4,6 +4,8 @@
 #include <sstream>
 #include <iostream>
 
+#include <opencv2/core/types.hpp>
+
 #include "utility.h"
 
 template<typename val_t>
@@ -23,12 +25,25 @@ public:
         m_x(x),
         m_y(y) {}
 
+    vector2d(std::initializer_list<val_t> l) :
+        m_x(l.begin()[0]),
+        m_y(l.begin()[1]) {}
+
+    template<typename u_val_t>
+    vector2d(const cv::Point_<u_val_t> &p) :
+        m_x(p.x),
+        m_y(p.y) {}
+
     val_t &x() {
         return m_x;
     }
 
     val_t &y() {
         return m_y;
+    }
+
+    val_t norm_sq() const {
+        return m_x * m_x + m_y * m_y;
     }
 
     const val_t &x() const {
@@ -93,6 +108,9 @@ template<typename u_val_t>
 std::ostream &operator<<(std::ostream &os, const vector2d<u_val_t> &v) {
     return os << '(' << v.m_x << ',' << ' ' << v.m_y << ')';
 }
+
+template<typename val_t>
+using path2d = std::vector<vector2d<val_t>>;
 
 namespace std {
 

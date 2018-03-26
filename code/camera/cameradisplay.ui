@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>1000</width>
-    <height>800</height>
+    <height>900</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>1000</width>
-    <height>800</height>
+    <height>900</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -130,7 +130,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>110</y>
+     <y>210</y>
      <width>961</width>
      <height>671</height>
     </rect>
@@ -168,6 +168,41 @@
    <property name="autoDefault">
     <bool>false</bool>
    </property>
+  </widget>
+  <widget class="QSpinBox" name="weight_selector">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>100</y>
+     <width>91</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="weight_list">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>100</y>
+     <width>201</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Select Robot Position</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Start Configuration</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>End Configuration</string>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources/>
