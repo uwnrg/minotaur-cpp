@@ -96,9 +96,6 @@ void ImageViewer::timerEvent(QTimerEvent *ev) {
     } else if (ev->timerId() == m_rotation_timer.timerId()) {
         Q_EMIT increment_rotation();
     }
-    else if(ev->timerId() == m_rotation_timer.timerId()) {
-        Q_EMIT increment_rotation();
-    }
 }
 
 void ImageViewer::paintEvent(QPaintEvent *) {
