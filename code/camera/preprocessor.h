@@ -20,6 +20,8 @@ public:
 
     Q_SLOT void zoom_changed(double zoom_factor);
 
+    Q_SLOT void rotation_changed(int angle);
+
     Q_SLOT void convert_rgb(bool convert_rgb);
 
     Q_SLOT void use_modifier(const std::shared_ptr<VideoModifier> &modifier);
@@ -41,6 +43,7 @@ private:
     QBasicTimer m_queue_timer;
 
     double m_zoom_factor = 1.0;
+    int m_rotation_angle = 0;
     bool m_convert_rgb = true;
     bool m_process_all = false;
 };
