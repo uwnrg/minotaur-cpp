@@ -72,7 +72,6 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid_clicked);
     connect(m_ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
     connect(m_ui->weight_list, SIGNAL(currentIndexChanged(int)), this, SLOT(grid_select_changed(int)));
- //   connect(m_ui->weight_selector, &QSpinBox::valueChanged, this, &CameraDisplay::weighting_changed);
     connect(m_ui->weight_selector, SIGNAL(valueChanged), this, SLOT(weighting_changed(int)));
 }
 
