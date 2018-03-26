@@ -32,10 +32,6 @@ void Preprocessor::rotation_changed(int angle) {
     m_rotation_angle = angle;
 }
 
-void Preprocessor::toggle_rotation() {
-    m_rotate = !m_rotate;
-}
-
 void Preprocessor::convert_rgb(bool convert_rgb) {
     m_convert_rgb = convert_rgb;
 }
@@ -54,14 +50,6 @@ void Preprocessor::__preprocess_frame(cv::UMat frame) {
     if (m_modifier) { m_modifier->modify(frame); }
     // Rotate frame
     double angle = (double)m_rotation_angle;
-    if (m_rotate) {
-        angle += 180;
-        angle += 1;
-        angle = (int)angle % 360;    
-        angle -= 180;
-        m_rotation_angle = (int)angle;
-        Q_EMIT update_rotation_ui(m_rotation_angle);
-    }
     rotate(frame, angle, frame);
     // Frame zoom
     zoom(frame, frame, m_zoom_factor);

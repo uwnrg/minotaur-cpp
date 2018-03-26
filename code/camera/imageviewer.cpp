@@ -60,13 +60,13 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     connect(parent, &CameraDisplay::effect_changed, &m_preprocessor, &Preprocessor::use_modifier);
     connect(parent, &CameraDisplay::zoom_changed, &m_preprocessor, &Preprocessor::zoom_changed);
     connect(parent, &CameraDisplay::rotation_changed, &m_preprocessor, &Preprocessor::rotation_changed);
-    connect(parent, &CameraDisplay::toggle_rotation, &m_preprocessor, &Preprocessor::toggle_rotation);
+    connect(parent, &CameraDisplay::toggle_rotation, this, &ImageViewer::toggle_rotation);
     connect(parent, &CameraDisplay::save_screenshot, this, &ImageViewer::save_screenshot);
     connect(parent, &CameraDisplay::toggle_record, this, &ImageViewer::handle_recording);
     connect(parent, &CameraDisplay::zoom_changed, this, &ImageViewer::set_zoom);
     connect(parent, &CameraDisplay::show_grid, m_grid_display.get(), &GridDisplay::showGrid);
     connect(parent, &CameraDisplay::clear_grid, m_grid_display.get(), &GridDisplay::clearSelection);
-    connect(&m_preprocessor, &Preprocessor::update_rotation_ui, parent, &CameraDisplay::set_rotation);
+    connect(this, &ImageViewer::increment_rotation, parent, &CameraDisplay::increment_rotation);
     connect(this, &ImageViewer::start_recording, &m_recorder, &Recorder::start_recording);
     connect(this, &ImageViewer::stop_recording, &m_recorder, &Recorder::stop_recording);
 }
@@ -91,6 +91,9 @@ void ImageViewer::timerEvent(QTimerEvent *ev) {
         int frames = m_converter.get_and_reset_frames();
         double fps = 1000.0 * frames / m_fps_update_interval;
         set_frame_rate(fps);
+    }
+    else if(ev->timerId() == m_rotation_timer.timerId()) {
+        Q_EMIT increment_rotation();
     }
 }
 
@@ -122,4 +125,15 @@ void ImageViewer::handle_recording() {
         log() << "Saving video to: " << file;
         Q_EMIT start_recording(file, m_capture.capture_width(), m_capture.capture_height());
     }
+}
+
+void ImageViewer::toggle_rotation() {
+    m_rotate = !m_rotate;
+    if (m_rotate) {
+        m_rotation_timer.start(m_rotate_interval, this);
+    }
+    else {
+        m_rotation_timer.stop();
+    }
+
 }

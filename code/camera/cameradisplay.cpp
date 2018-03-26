@@ -153,6 +153,15 @@ void CameraDisplay::set_rotation(int value) {
     }
 }
 
+void CameraDisplay::increment_rotation() {
+    double angle = m_ui->rotate_slider->value();
+    angle += 180;
+    angle += 1;
+    angle = (int)angle % 360;    
+    angle -= 180;
+    set_rotation((int)angle);
+}
+
 void CameraDisplay::pressed_play() {
     Q_EMIT toggle_rotation();
     if (m_ui->play_button->text() == "▶") {

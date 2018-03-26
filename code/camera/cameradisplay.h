@@ -43,6 +43,8 @@ public:
 
     Q_SLOT void set_rotation(int value);
 
+    Q_SLOT void increment_rotation();
+
     Q_SLOT void pressed_play();
 
     Q_SIGNAL void display_opened(int camera);
