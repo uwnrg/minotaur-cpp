@@ -12,8 +12,8 @@ public:
     enum Robot {
         WIDTH = 15,
         DELTA_PREF_MAX = 10,
-        DELTA_PREF_MIN = 5,
-        DELTA_ERR = 4
+        DELTA_PREF_MIN = 8,
+        DELTA_ERR = 3
     };
 
     GlobalSim();

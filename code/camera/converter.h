@@ -20,10 +20,13 @@ public:
 
     int get_and_reset_frames();
 
+    double get_previous_scale() const;
+
 private:
     static void umat_delete(void *mat);
 
     int m_frames;
+    double m_scale;
     ImageViewer *m_image_viewer;
 };
 

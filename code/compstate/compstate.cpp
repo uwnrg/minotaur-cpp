@@ -1,6 +1,10 @@
 #include "compstate.h"
 #include "../gui/mainwindow.h"
 
+#ifndef NDEBUG
+#include <QDebug>
+#endif
+
 #define DEFAULT_CALIBRATED_AREA     400.0
 #define DEFAULT_ACQUISITION_R_SIGMA 1.34
 
@@ -131,9 +135,21 @@ void CompetitionState::clear_path() {
 }
 
 void CompetitionState::append_path(double x, double y) {
+#ifndef NDEBUG
+    qDebug() << '(' << x << ',' << ' ' << y << ')';
+#endif
     m_path.emplace_back(x, y);
 }
 
 const path2d<double> &CompetitionState::get_path() const {
     return m_path;
+}
+
+void CompetitionState::begin_traversal() {
+    m_procedure = std::make_unique<Procedure>(Main::get()->controller(), m_path);
+    m_procedure->start();
+}
+
+void CompetitionState::halt_traversal() {
+    m_procedure->stop();
 }

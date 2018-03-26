@@ -11,6 +11,8 @@
 #include "../utility/vector2d.h"
 #include "../camera/statusbox.h"
 
+#include "procedure.h"
+
 class MainWindow;
 
 double acquisition_r(const cv::Rect2d &rect, double calibrated_area);
@@ -54,6 +56,9 @@ public:
 
     Q_SLOT void clear_path();
     Q_SLOT void append_path(double x, double y);
+
+    Q_SLOT void begin_traversal();
+    Q_SLOT void halt_traversal();
 
     const path2d<double> &get_path() const;
 
@@ -102,6 +107,8 @@ private:
     double m_acquisition_r_sigma;
 
     path2d<double> m_path;
+
+    std::unique_ptr<Procedure> m_procedure;
 };
 
 Q_DECLARE_METATYPE(std::shared_ptr<CompetitionState::wall_arr>);

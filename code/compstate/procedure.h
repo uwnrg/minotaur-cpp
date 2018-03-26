@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QBasicTimer>
 
-#include "code/utility/vector2d.h"
+#include "../utility/vector2d.h"
 
 class Controller;
 class StatusLabel;
@@ -15,11 +15,12 @@ class Procedure : public QObject {
 Q_OBJECT
 
 public:
-    explicit Procedure(std::weak_ptr<Controller> sol, path2d<double> &&path);
+    explicit Procedure(std::weak_ptr<Controller> sol, const path2d<double> &path);
 
     ~Procedure() override;
 
     void start();
+    void stop();
 
 private:
     void timerEvent(QTimerEvent *ev) override;

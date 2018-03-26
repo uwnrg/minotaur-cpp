@@ -89,11 +89,19 @@ void TrackerModifier::modify(cv::UMat &img) {
     }
 }
 
+void TrackerModifier::traverse() {
+    if (m_state == State::TRACKING) {
+        Main::get()->state().begin_traversal();
+    }
+}
+
 void TrackerModifier::register_actions(ActionBox *box) {
     ActionButton *start_button = box->add_action("Select ROI");
     ActionButton *clear_button = box->add_action("Clear ROI");
+    ActionButton *traverse_button = box->add_action("Traverse");
     connect(start_button, &ActionButton::clicked, this, &TrackerModifier::beginTracking);
     connect(clear_button, &ActionButton::clicked, this, &TrackerModifier::stopTracking);
+    connect(traverse_button, &ActionButton::clicked, this, &TrackerModifier::traverse);
     box->set_actions();
 }
 

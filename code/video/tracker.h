@@ -32,6 +32,8 @@ protected:
 
     Q_SLOT void stopTracking();
 
+    Q_SLOT void traverse();
+
 private:
     void reset_tracker();
 
