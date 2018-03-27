@@ -4,7 +4,7 @@
 
 #include <opencv2/videoio/videoio_c.h>
 
-Recorder::Recorder(double frame_rate, bool color) :
+Recorder::Recorder(int frame_rate, bool color) :
     m_frame_rate(frame_rate),
     m_color(color),
     m_recording(false) {}

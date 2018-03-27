@@ -1,4 +1,5 @@
 #include "statusbox.h"
+#include "../utility/font.h"
 #include "../utility/utility.h"
 
 #ifndef NDEBUG
@@ -8,12 +9,7 @@
 StatusLabel::StatusLabel(QWidget *parent, std::size_t id, const QString &initial) :
     QLabel(initial, parent),
     m_id(id) {
-    QFont font;
-    font.setFamily("Courier");
-    font.setStyleHint(QFont::Monospace);
-    font.setFixedPitch(true);
-    font.setPointSize(12);
-    setFont(font);
+    setFont(qfont::courier());
 }
 
 std::size_t StatusLabel::id() const {

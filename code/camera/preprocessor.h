@@ -31,9 +31,9 @@ public:
     double get_zoom_factor() const;
 
 private:
-    void __queue(const cv::UMat &frame);
+    void queue_frame(const cv::UMat &frame);
 
-    void __preprocess_frame(cv::UMat frame);
+    void preprocess_frame_delegate(cv::UMat frame);
 
     void timerEvent(QTimerEvent *ev) override;
 
@@ -42,10 +42,10 @@ private:
 
     QBasicTimer m_queue_timer;
 
-    double m_zoom_factor = 1.0;
-    int m_rotation_angle = 0;
-    bool m_convert_rgb = true;
-    bool m_process_all = false;
+    double m_zoom_factor;
+    int m_rotation_angle;
+    bool m_convert_rgb;
+    bool m_process_all;
 };
 
 #endif //MINOTAUR_CPP_PREPROCESSOR_H

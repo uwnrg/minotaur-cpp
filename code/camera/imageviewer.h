@@ -31,17 +31,13 @@ class ImageViewer : public QWidget {
 
 public:
     enum {
-        DEFAULT_FPS_UPDATE = 1000
+        FRAMERATE_UPDATE_INTERVAL = 1000,
+        ROTATE_UPDATE_INTERVAL = 25
     };
 
-    explicit ImageViewer(
-        CameraDisplay *parent = nullptr,
-        int fps_update_interval = DEFAULT_FPS_UPDATE
-    );
+    explicit ImageViewer(CameraDisplay *parent = nullptr);
 
     ~ImageViewer() override;
-
-    const QImage &get_image();
 
     Q_SLOT void set_image(const QImage &img);
 
@@ -57,7 +53,7 @@ public:
 
     Q_SLOT void toggle_path(bool toggle_path);
 
-    Q_SLOT void toggle_rotation();
+    Q_SLOT void toggle_rotation(bool rotate);
 
     Q_SIGNAL void increment_rotation();
 
@@ -90,10 +86,6 @@ private:
 
     QBasicTimer m_rotation_timer;
     QBasicTimer m_frame_timer;
-
-    bool m_rotate = false;
-    int m_rotate_interval;
-    int m_fps_update_interval;
 
     bool m_selecting_path;
 };

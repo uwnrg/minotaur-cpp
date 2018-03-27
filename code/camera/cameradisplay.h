@@ -35,10 +35,6 @@ public:
 
     Q_SLOT void update_zoom(int value);
 
-    Q_SLOT void show_grid_clicked();
-
-    Q_SLOT void clear_grid_clicked();
-
     Q_SLOT void rotation_slider_changed(int value);
 
     Q_SLOT void rotation_box_changed();
@@ -47,7 +43,7 @@ public:
 
     Q_SLOT void increment_rotation();
 
-    Q_SLOT void pressed_play();
+    Q_SLOT void pressed_play(bool checked);
 
     Q_SLOT void grid_select_changed(int weight_index);
 
@@ -67,7 +63,7 @@ public:
 
     Q_SIGNAL void toggle_record();
 
-    Q_SIGNAL void toggle_rotation();
+    Q_SIGNAL void toggle_rotation(bool rotate);
 
     Q_SIGNAL void show_grid();
 
@@ -80,13 +76,29 @@ public:
   Q_SIGNAL void select_position(QString weightSelected);
 
 private:
+    enum Zoom {
+        ZOOM_INTERVAL = 2,
+        ZOOM_MAX = 40,
+        ZOOM_MIN = 10
+    };
+
+    enum Rotation {
+        ROTATION_INTERVAL = 45,
+        ROTATION_MIN = -180,
+        ROTATION_MAX = 180
+    };
+
+    enum Grid {
+        MAX_WEIGHT = 10,
+        MIN_WEIGHT = -1
+    };
+
     Ui::CameraDisplay *m_ui;
 
     std::unique_ptr<ActionBox> m_action_box;
     std::unique_ptr<ImageViewer> m_image_viewer;
 
-    QString m_selected_weight;
-    int m_weighting = 0;
+    int m_weighting;
 };
 
 #endif //MINOTAUR_CPP_CAMERADISPLAY_H

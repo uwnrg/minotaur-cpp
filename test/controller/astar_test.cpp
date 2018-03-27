@@ -12,7 +12,7 @@ TEST(direct_movement, find_path) {
 
     Astar astar = Astar();
     astar.searchPath(a, Astar::Coord{3, 0}, Astar::Coord{0, 3});
-    std::vector<Astar::Coord> generated = astar.getPath();
+    std::vector<Astar::Coord> generated = astar.get_path();
 
     Astar::Coord p1 = Astar::Coord{3, 0};
     Astar::Coord p2 = Astar::Coord{3, 1};

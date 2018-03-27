@@ -8,78 +8,82 @@
 
 using namespace std;
 
-Astar::Astar() {}
+Astar::Astar() = default;
 
-double Astar::manhattanDist(Astar::Coord cur, Astar::Coord dest) {
+double Astar::manhattan_dist(Astar::Coord cur, Astar::Coord dest) {
     return abs(dest.x - cur.x) + abs(dest.y - cur.y);
 }
 
-bool Astar::isValid(int x, int y, int maxRow, int maxCol) {
-    return (x >= 0) && (x < maxRow) && (y >= 0) && (y < maxCol);
+bool Astar::is_valid(int x, int y, int max_row, int max_col) {
+    return (x >= 0) && (x < max_row) && (y >= 0) && (y < max_col);
 }
 
-vector<Astar::Coord> Astar::getNeighbours(Astar::Coord c, int maxRow, int maxCol) {
+vector<Astar::Coord> Astar::get_neighbors(Astar::Coord c, int max_row, int max_col) {
     vector<Astar::Coord> neighbours;
     int cur_x = c.x;
     int cur_y = c.y;
-    if (isValid(cur_x-1, cur_y, maxRow, maxCol)) {
-        neighbours.push_back(Astar::Coord{cur_x-1, cur_y});
+    if (is_valid(cur_x - 1, cur_y, max_row, max_col)) {
+        neighbours.push_back(Astar::Coord{cur_x - 1, cur_y});
     }
-    if (isValid(cur_x+1, cur_y, maxRow, maxCol)) {
-        neighbours.push_back(Astar::Coord{cur_x+1, cur_y});
+    if (is_valid(cur_x + 1, cur_y, max_row, max_col)) {
+        neighbours.push_back(Astar::Coord{cur_x + 1, cur_y});
     }
-    if (isValid(cur_x, cur_y-1, maxRow, maxCol)) {
-        neighbours.push_back(Astar::Coord{cur_x, cur_y-1});
+    if (is_valid(cur_x, cur_y - 1, max_row, max_col)) {
+        neighbours.push_back(Astar::Coord{cur_x, cur_y - 1});
     }
-    if (isValid(cur_x, cur_y+1, maxRow, maxCol)) {
-        neighbours.push_back(Astar::Coord{cur_x, cur_y+1});
+    if (is_valid(cur_x, cur_y + 1, max_row, max_col)) {
+        neighbours.push_back(Astar::Coord{cur_x, cur_y + 1});
     }
 
     return neighbours;
 }
 
-void Astar::backtrack(Astar::Coord start, Astar::Coord dest, map<Astar::Coord, Astar::Coord> parent) {
+void Astar::backtrack(
+    const Astar::Coord &start,
+    const Astar::Coord &dest,
+    const map<Astar::Coord, Astar::Coord> &parent
+) {
     Astar::Coord cur = dest;
     while (cur != start) {
-        path.push_back(cur);
-        cur = parent[cur];
+        m_path.push_back(cur);
+        cur = parent.at(cur);
     }
-    path.push_back(start);
-    reverse(begin(path), end(path));
+    m_path.push_back(start);
+    reverse(begin(m_path), end(m_path));
 }
 
-void Astar::searchPath(array2d<int>& terrain, Astar::Coord start, Astar::Coord dest) {
-    // idea for using maps to keep track of path information came from redblobgames.com
+void Astar::searchPath(array2d<int> &terrain, Astar::Coord start, Astar::Coord dest) {
+    // Idea for using maps to keep track of path information came from redblobgames.com
     map<Astar::Coord, Astar::Coord> parent;
     map<Astar::Coord, double> cost;
-    set< associatedCost > openset;
+    set<associated_cost> open_set;
 
     // initialize base cases
-    openset.insert(make_pair(0, start));
+    open_set.insert(make_pair(0, start));
     parent[start] = start;
     cost[start] = 0;
 
-    int maxRow = terrain.x();
-    int maxCol = terrain.y();
+    auto max_row = static_cast<int>(terrain.x());
+    auto max_col = static_cast<int>(terrain.y());
 
-    while(!openset.empty()) {
+    while (!open_set.empty()) {
         // element returned by begin() C++ set should be lowest
-        Coord cur = (*openset.begin()).second;
+        Coord cur = (*open_set.begin()).second;
         // remove from open list
-        openset.erase(openset.begin());
+        open_set.erase(open_set.begin());
 
-        if (cur == dest) break;
+        if (cur == dest) { break; }
 
-        for (Coord next: getNeighbours(cur, maxRow, maxCol)) {
+        for (Coord next: get_neighbors(cur, max_row, max_col)) {
             // check for obstacles
             if (terrain[next.x][next.y] != -1) {
-                double newCost = cost[cur] + terrain[next.x][next.y];
+                double new_cost = cost[cur] + terrain[next.x][next.y];
                 // We have not encountered this location or new cost is less than previous costs
-                if (!cost.count(next) || newCost < cost[next]) {
+                if (!cost.count(next) || new_cost < cost[next]) {
                     // update cost
-                    cost[next] = newCost;
+                    cost[next] = new_cost;
                     // move into openset with estimated cost
-                    openset.insert(make_pair(newCost + manhattanDist(next, dest), next));
+                    open_set.insert(make_pair(new_cost + manhattan_dist(next, dest), next));
                     // update parent
                     parent[next] = cur;
                 }
@@ -90,18 +94,18 @@ void Astar::searchPath(array2d<int>& terrain, Astar::Coord start, Astar::Coord d
     backtrack(start, dest, parent);
 }
 
-vector<Astar::Coord> Astar::getPath() {
-    return path;
+vector<Astar::Coord> Astar::get_path() {
+    return m_path;
 }
 
-bool operator == (Astar::Coord a, Astar::Coord b) {
+bool operator==(Astar::Coord a, Astar::Coord b) {
     return a.x == b.x && a.y == b.y;
 }
 
-bool operator != (Astar::Coord a, Astar::Coord b) {
+bool operator!=(Astar::Coord a, Astar::Coord b) {
     return !(a == b);
 }
 
-bool operator < (Astar::Coord a, Astar::Coord b) {
+bool operator<(Astar::Coord a, Astar::Coord b) {
     return std::tie(a.x, a.y) < std::tie(b.x, b.y);
 }

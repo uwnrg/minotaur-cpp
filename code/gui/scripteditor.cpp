@@ -5,6 +5,7 @@
 #include "ui_scripteditor.h"
 
 #include "../utility/logger.h"
+#include "../utility/font.h"
 
 ScriptEditor::ScriptEditor(QWidget *parent) :
     QDialog(parent),
@@ -14,16 +15,9 @@ ScriptEditor::ScriptEditor(QWidget *parent) :
     ui->setupUi(this);
 
     // Make the font look like code
-    QFont font;
-    font.setFamily("Courier");
-    font.setStyleHint(QFont::Monospace);
-    font.setFixedPitch(true);
-    font.setPointSize(8);
-    QFontMetrics metrics(font);
-    const int tab_size = 4;
-    const int tab_stop_width = tab_size * metrics.width(' ');
+    QFont font = qfont::courier(8);
     m_code_editor->setFont(font);
-    m_code_editor->setTabStopWidth(tab_stop_width);
+    m_code_editor->setTabStopWidth(qfont::tab_stop(font));
     ui->editorLayout->addWidget(m_code_editor.get());
 
     QPalette palette = m_code_editor->palette();

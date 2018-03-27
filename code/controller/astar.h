@@ -13,26 +13,34 @@ public:
         int y;
     };
 
-    typedef typename std::pair<double, Coord> associatedCost;
+    typedef typename std::pair<double, Coord> associated_cost;
 
     Astar();
-    void searchPath(array2d<int>& terrain, Coord cur, Coord dest);
-    std::vector<Coord> getPath();
+
+    void searchPath(array2d<int> &terrain, Coord cur, Coord dest);
+
+    std::vector<Coord> get_path();
+
 private:
-    std::vector<Coord> path;
+    std::vector<Coord> m_path;
 
-    double manhattanDist(Coord, Coord);
-    bool isValid(int, int, int, int);
+    double manhattan_dist(Coord cur, Coord dest);
 
-    std::vector<Coord> getNeighbours(Coord, int, int);
+    bool is_valid(int x, int y, int max_row, int max_col);
 
-    void backtrack(Coord, Coord, std::map<Coord, Coord>);
+    std::vector<Coord> get_neighbors(Coord c, int max_row, int max_col);
+
+    void backtrack(
+        const Coord &start,
+        const Coord &dest,
+        const std::map<Coord, Coord> &parent
+    );
 };
 
-bool operator == (Astar::Coord, Astar::Coord);
+bool operator==(Astar::Coord a, Astar::Coord b);
 
-bool operator != (Astar::Coord, Astar::Coord);
+bool operator!=(Astar::Coord a, Astar::Coord b);
 
-bool operator < (Astar::Coord, Astar::Coord);
+bool operator<(Astar::Coord a, Astar::Coord b);
 
 #endif

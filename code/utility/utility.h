@@ -43,4 +43,14 @@ struct shrink_into {
     }
 };
 
+template<typename ...Args>
+struct qol {
+    template<typename C, typename R>
+    static constexpr auto of(R(C::*pmf)(Args...)) -> decltype(pmf) {
+        return pmf;
+    }
+};
+
+
+
 #endif

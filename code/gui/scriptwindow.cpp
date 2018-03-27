@@ -4,6 +4,8 @@
 #include "scriptwindow.h"
 #include "ui_scriptwindow.h"
 
+#include "../utility/font.h"
+
 ScriptWindow::ScriptWindow(QWidget *parent) :
     QDialog(parent),
     ui(std::make_unique<Ui::ScriptWindow>()),
@@ -24,18 +26,12 @@ ScriptWindow::ScriptWindow(QWidget *parent) :
     ui->displayLayout->addWidget(m_results_text_display.get());
 
     // Make the font look like code
-    QFont font;
-    font.setFamily("Courier");
-    font.setStyleHint(QFont::Monospace);
-    font.setFixedPitch(true);
-    font.setPointSize(8);
-    QFontMetrics metrics(font);
-    const int tab_size = 4;
-    const int tab_stop_width = tab_size * metrics.width(' ');
+    QFont font = qfont::courier(8);
+    const int tab_stop = qfont::tab_stop(font);
     m_interpreter_text_edit->setFont(font);
     m_results_text_display->setFont(font);
-    m_interpreter_text_edit->setTabStopWidth(tab_stop_width);
-    m_results_text_display->setTabStopWidth(tab_stop_width);
+    m_interpreter_text_edit->setTabStopWidth(tab_stop);
+    m_results_text_display->setTabStopWidth(tab_stop);
 
     // Connect signals to slots
     connect(ui->openEditorButton, &QPushButton::clicked, this, &ScriptWindow::openScriptEditor);

@@ -122,6 +122,9 @@
    <property name="text">
     <string>▶</string>
    </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="autoDefault">
     <bool>false</bool>
    </property>
@@ -140,8 +143,8 @@
   <widget class="QPushButton" name="show_grid_button">
    <property name="geometry">
     <rect>
-     <x>580</x>
-     <y>20</y>
+     <x>350</x>
+     <y>100</y>
      <width>121</width>
      <height>31</height>
     </rect>
@@ -156,8 +159,8 @@
   <widget class="QPushButton" name="clear_grid_button">
    <property name="geometry">
     <rect>
-     <x>580</x>
-     <y>60</y>
+     <x>350</x>
+     <y>140</y>
      <width>121</width>
      <height>31</height>
     </rect>

@@ -2,7 +2,6 @@
 #include "simulatorwindow.h"
 #include "ui_simulatorwindow.h"
 #include "mainwindow.h"
-#include "../graphics/simulatorscene.h"
 
 #ifndef NDEBUG
 #include <QDebug>

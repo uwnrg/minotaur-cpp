@@ -10,8 +10,12 @@ class Recorder : public QObject {
 Q_OBJECT
 
 public:
+    enum {
+        DEFAULT_FRAME_RATE = 30
+    };
+
     explicit Recorder(
-        double frame_rate = 30,
+        int frame_rate = DEFAULT_FRAME_RATE,
         bool color = true
     );
 
@@ -26,7 +30,7 @@ public:
 private:
     std::unique_ptr<cv::VideoWriter> m_video_writer;
 
-    double m_frame_rate;
+    int m_frame_rate;
     bool m_color;
     bool m_recording;
 };
