@@ -52,7 +52,7 @@ void Astar::backtrack(
     reverse(begin(m_path), end(m_path));
 }
 
-void Astar::searchPath(array2d<int> &terrain, Astar::Coord start, Astar::Coord dest) {
+void Astar::search_path(array2d<int> &terrain, Astar::Coord start, Astar::Coord dest) {
     // Idea for using maps to keep track of path information came from redblobgames.com
     map<Astar::Coord, Astar::Coord> parent;
     map<Astar::Coord, double> cost;

@@ -17,7 +17,7 @@ public:
 
     Astar();
 
-    void searchPath(array2d<int> &terrain, Coord cur, Coord dest);
+    void search_path(array2d<int> &terrain, Coord cur, Coord dest);
 
     std::vector<Coord> get_path();
 

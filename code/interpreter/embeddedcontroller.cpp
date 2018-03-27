@@ -1,7 +1,7 @@
 #include "embeddedcontroller.h"
 
 EmbeddedController::EmbeddedController() :
-        m_controller_ptr(nullptr) {}
+    m_controller_ptr(nullptr) {}
 
 void EmbeddedController::bind_controller(std::shared_ptr<Controller> *controller_ptr) {
     this->m_controller_ptr = controller_ptr;
