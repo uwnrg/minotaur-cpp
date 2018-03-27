@@ -77,24 +77,52 @@ namespace Embedded {
         return PyLong_FromLong(res);
     }
 
+    static PyObject *emb_robot_rect(PyObject *, PyObject *) {
+        cv::Rect2d robot_rect = Main::get()->state().get_robot_box(false);
+        PyObject *rect_tuple = PyTuple_New(4);
+        PyTuple_SetItem(rect_tuple, 0, PyFloat_FromDouble(robot_rect.x));
+        PyTuple_SetItem(rect_tuple, 1, PyFloat_FromDouble(robot_rect.y));
+        PyTuple_SetItem(rect_tuple, 2, PyFloat_FromDouble(robot_rect.width));
+        PyTuple_SetItem(rect_tuple, 3, PyFloat_FromDouble(robot_rect.height));
+        return rect_tuple;
+    }
+
+    static PyObject *emb_robot_pos(PyObject *, PyObject *) {
+        cv::Rect2d robot_rect = Main::get()->state().get_robot_box(false);
+        PyObject *pos_tuple = PyTuple_New(2);
+        PyTuple_SetItem(pos_tuple, 0, PyFloat_FromDouble(robot_rect.x + robot_rect.width / 2));
+        PyTuple_SetItem(pos_tuple, 1, PyFloat_FromDouble(robot_rect.y + robot_rect.height / 2));
+        return pos_tuple;
+    }
+
     static PyObject *sim_reset(PyObject *, PyObject *) {
         Main::get()->global_sim().lock()->robot_reset();
         return PyLong_FromLong(true);
     }
 
-    // Embedded python configuration which describes which methods
-    // should be exposed in which module
     static PyMethodDef emb_methods[]{
-        {"move",  emb_move,  METH_VARARGS, "Send move command vector"},
-        {"right", emb_right, METH_VARARGS, "Send move right"},
-        {"left",  emb_left,  METH_VARARGS, "Send move left"},
-        {"down",  emb_down,  METH_VARARGS, "Send move down"},
-        {"up",    emb_up,    METH_VARARGS, "Send move up"},
+        {"move",       emb_move,       METH_VARARGS, "Send move command vector"},
+        {"right",      emb_right,      METH_VARARGS, "Send move right"},
+        {"left",       emb_left,       METH_VARARGS, "Send move left"},
+        {"down",       emb_down,       METH_VARARGS, "Send move down"},
+        {"up",         emb_up,         METH_VARARGS, "Send move up"},
+        {"robot_rect", emb_robot_rect, METH_VARARGS, "Get the current robot rectangle"},
+        {"robot_pos",  emb_robot_pos,  METH_VARARGS, "Get the current robot position"},
+        {nullptr,      nullptr, 0,                   nullptr}
+    };
+
+    static PyMethodDef sim_methods[]{
+        {"reset", sim_reset, METH_VARARGS, "Reset simulator"},
         {nullptr, nullptr, 0,              nullptr}
     };
-    // Method 'move' is exposed in module 'emb' as 'emb.move'
+
     static PyModuleDef emb_module{
         PyModuleDef_HEAD_INIT, "emb", nullptr, -1, emb_methods,
+        nullptr, nullptr, nullptr, nullptr
+    };
+
+    static PyModuleDef sim_module{
+        PyModuleDef_HEAD_INIT, "sim", nullptr, -1, sim_methods,
         nullptr, nullptr, nullptr, nullptr
     };
 
@@ -102,14 +130,6 @@ namespace Embedded {
         return PyModule_Create(&emb_module);
     }
 
-    static PyMethodDef sim_methods[]{
-        {"reset", sim_reset, METH_VARARGS, "Reset simulator"},
-        {nullptr, nullptr, 0,              nullptr}
-    };
-    static PyModuleDef sim_module{
-        PyModuleDef_HEAD_INIT, "sim", nullptr, -1, sim_methods,
-        nullptr, nullptr, nullptr, nullptr
-    };
 
     static PyObject *PyInit_sim() {
         return PyModule_Create(&sim_module);
