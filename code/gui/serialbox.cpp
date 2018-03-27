@@ -1,7 +1,8 @@
 #include "serialbox.h"
+#include "ui_serialbox.h"
 
 #include "../utility/utility.h"
-#include "ui_serialbox.h"
+#include "../utility/font.h"
 
 #include <QMessageBox>
 #include <QSerialPort>
@@ -19,12 +20,7 @@ SerialBox::SerialBox(
     ui->baud_combo_box->setEditable(false);
 
     // Set console font of serial display
-    QFont font;
-    font.setFamily("Courier");
-    font.setStyleHint(QFont::Monospace);
-    font.setFixedPitch(true);
-    font.setPointSize(12);
-    ui->serial_display->setFont(font);
+    ui->serial_display->setFont(qfont::courier(8));
     ui->serial_display->setReadOnly(true);
 
     // Populate combo boxes

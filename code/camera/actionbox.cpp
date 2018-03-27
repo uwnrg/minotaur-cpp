@@ -15,8 +15,6 @@ ActionBox::ActionBox(QWidget *parent)
     setLayout(m_layout.get());
 }
 
-ActionBox::~ActionBox() = default;
-
 void ActionBox::reset_actions() {
     m_layout = std::make_unique<QVBoxLayout>();
     m_actions.clear();

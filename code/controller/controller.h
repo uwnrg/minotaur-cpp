@@ -15,10 +15,10 @@ public:
     };
 
     enum Dir {
-        UP,    // y > 0
-        DOWN,  // y < 0
-        RIGHT, // x > 0
-        LEFT   // x < 0
+        RIGHT, // +X
+        LEFT,  // -X
+        DOWN,  // +Y
+        UP     // -Y
     };
 
     enum Axis {
@@ -27,7 +27,8 @@ public:
     };
 
     enum {
-        STEP_TIME = 50
+        STEP_TIME = 10,
+        NUM_KEYS = 50
     };
 
     // Common robot functions
@@ -62,7 +63,7 @@ protected:
     Controller(bool invert_x, bool invert_y);
 
 private:
-    key_map m_keyMap{50};
+    key_map m_keyMap{NUM_KEYS};
 
     // Variables are true if inputs to the axis are inverted
     bool m_invert_x;

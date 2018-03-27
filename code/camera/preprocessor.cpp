@@ -17,12 +17,16 @@ void zoom(cv::UMat &src, cv::UMat &dest, double zoom_factor) {
 }
 
 void rotate(cv::UMat& src, double angle, cv::UMat& dst) {
-    cv::Point2f pt_cp(src.cols * 0.5, src.rows * 0.5);
+    cv::Point2f pt_cp(src.cols * 0.5f, src.rows * 0.5f);
     cv::Mat mat = cv::getRotationMatrix2D(pt_cp, angle, 1.0);
     cv::warpAffine(src, dst, mat, src.size(), cv::INTER_CUBIC);
 }
 
-Preprocessor::Preprocessor() = default;
+Preprocessor::Preprocessor() :
+    m_zoom_factor(1.0),
+    m_rotation_angle(0),
+    m_convert_rgb(true),
+    m_process_all(false) {}
 
 void Preprocessor::zoom_changed(double zoom_factor) {
     m_zoom_factor = zoom_factor;
@@ -41,16 +45,15 @@ void Preprocessor::use_modifier(const std::shared_ptr<VideoModifier> &modifier) 
 }
 
 void Preprocessor::preprocess_frame(const cv::UMat &frame) {
-    if (m_process_all) { __preprocess_frame(frame); }
-    else { __queue(frame); }
+    if (m_process_all) { preprocess_frame_delegate(frame); }
+    else { queue_frame(frame); }
 }
 
-void Preprocessor::__preprocess_frame(cv::UMat frame) {
+void Preprocessor::preprocess_frame_delegate(cv::UMat frame) {
     // Modifier frame
     if (m_modifier) { m_modifier->modify(frame); }
     // Rotate frame
-    double angle = static_cast<double>(m_rotation_angle);
-    rotate(frame, angle, frame);
+    rotate(frame, static_cast<double>(m_rotation_angle), frame);
     // Frame zoom
     zoom(frame, frame, m_zoom_factor);
     // Convert to RGB
@@ -59,14 +62,14 @@ void Preprocessor::__preprocess_frame(cv::UMat frame) {
     Q_EMIT frame_processed(frame);
 }
 
-void Preprocessor::__queue(const cv::UMat &frame) {
+void Preprocessor::queue_frame(const cv::UMat &frame) {
     m_frame = frame;
     if (!m_queue_timer.isActive()) { m_queue_timer.start(0, this); }
 }
 
 void Preprocessor::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() != m_queue_timer.timerId()) { return; }
-    __preprocess_frame(m_frame);
+    preprocess_frame_delegate(m_frame);
     m_frame.release();
     m_queue_timer.stop();
 }

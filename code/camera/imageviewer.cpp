@@ -1,21 +1,14 @@
 #include "imageviewer.h"
 #include "ui_imageviewer.h"
-#include "cameradisplay.h"
 
 #include "../utility/logger.h"
-#include "../gui/griddisplay.h"
 #include "../gui/mainwindow.h"
-
-#include <QPainter>
-#include <QFileDialog>
-
-#include <memory>
 
 QString color_format(double value, const QString &suffix = "") {
     return QString("<font color=\"#8ae234\">%1%2</font>").arg(value).arg(suffix);
 }
 
-ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
+ImageViewer::ImageViewer(CameraDisplay *parent) :
     QWidget(parent),
 
     ui(new Ui::ImageViewer),
@@ -27,10 +20,7 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     m_converter(this),
     m_recorder(),
 
-    m_selecting_path(false),
-    m_rotate(false),
-    m_rotate_interval(25),
-    m_fps_update_interval(fps_update_interval) {
+    m_selecting_path(false) {
 
     ui->setupUi(this);
     ui->zoom_label->lower();
@@ -49,7 +39,7 @@ ImageViewer::ImageViewer(CameraDisplay *parent, int fps_update_interval) :
     m_recorder.moveToThread(&m_thread_recorder);
 
     // Start the framerate update timer
-    m_frame_timer.start(fps_update_interval, this);
+    m_frame_timer.start(FRAMERATE_UPDATE_INTERVAL, this);
 
     // Connect image pipeline
     connect(&m_capture, &Capture::frame_ready, &m_preprocessor, &Preprocessor::preprocess_frame);
@@ -82,10 +72,6 @@ ImageViewer::~ImageViewer() {
     delete ui;
 }
 
-const QImage &ImageViewer::get_image() {
-    return m_image;
-}
-
 void ImageViewer::set_image(const QImage &img) {
     // Upon first frame capture, resize the widget
     if (m_image.isNull()) { setFixedSize(img.size()); }
@@ -106,7 +92,7 @@ void ImageViewer::mousePressEvent(QMouseEvent *ev) {
 void ImageViewer::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() == m_frame_timer.timerId()) {
         int frames = m_converter.get_and_reset_frames();
-        double fps = 1000.0 * frames / m_fps_update_interval;
+        double fps = 1000.0 * frames / FRAMERATE_UPDATE_INTERVAL;
         set_frame_rate(fps);
     } else if (ev->timerId() == m_rotation_timer.timerId()) {
         Q_EMIT increment_rotation();
@@ -173,10 +159,9 @@ void ImageViewer::clear_path() {
     Main::get()->state().clear_path();
 }
 
-void ImageViewer::toggle_rotation() {
-    m_rotate = !m_rotate;
-    if (m_rotate) {
-        m_rotation_timer.start(m_rotate_interval, this);
+void ImageViewer::toggle_rotation(bool rotate) {
+    if (rotate) {
+        m_rotation_timer.start(ROTATE_UPDATE_INTERVAL, this);
     } else {
         m_rotation_timer.stop();
     }

@@ -22,8 +22,6 @@ Q_OBJECT
 public:
     explicit ActionBox(QWidget *parent = nullptr);
 
-    ~ActionBox() override;
-
     ActionButton *add_action(QString &&label);
 
     Q_SLOT void reset_actions();
