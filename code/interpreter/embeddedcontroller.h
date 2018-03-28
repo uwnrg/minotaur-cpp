@@ -87,11 +87,29 @@ namespace Embedded {
         return rect_tuple;
     }
 
+    static PyObject *emb_object_rect(PyObject *, PyObject *) {
+        cv::Rect object_rect = Main::get()->state().get_object_box(false);
+        PyObject *rect_tuple = PyTuple_New(4);
+        PyTuple_SetItem(rect_tuple, 0, PyFloat_FromDouble(object_rect.x));
+        PyTuple_SetItem(rect_tuple, 1, PyFloat_FromDouble(object_rect.y));
+        PyTuple_SetItem(rect_tuple, 2, PyFloat_FromDouble(object_rect.width));
+        PyTuple_SetItem(rect_tuple, 3, PyFloat_FromDouble(object_rect.height));
+        return rect_tuple;
+    }
+
     static PyObject *emb_robot_pos(PyObject *, PyObject *) {
         cv::Rect2d robot_rect = Main::get()->state().get_robot_box(false);
         PyObject *pos_tuple = PyTuple_New(2);
         PyTuple_SetItem(pos_tuple, 0, PyFloat_FromDouble(robot_rect.x + robot_rect.width / 2));
         PyTuple_SetItem(pos_tuple, 1, PyFloat_FromDouble(robot_rect.y + robot_rect.height / 2));
+        return pos_tuple;
+    }
+
+    static PyObject *emb_object_pos(PyObject *, PyObject *) {
+        cv::Rect2d object_rect = Main::get()->state().get_robot_box(false);
+        PyObject *pos_tuple = PyTuple_New(2);
+        PyTuple_SetItem(pos_tuple, 0, PyFloat_FromDouble(object_rect.x + object_rect.width / 2));
+        PyTuple_SetItem(pos_tuple, 1, PyFloat_FromDouble(object_rect.y + object_rect.height / 2));
         return pos_tuple;
     }
 
@@ -101,14 +119,16 @@ namespace Embedded {
     }
 
     static PyMethodDef emb_methods[]{
-        {"move",       emb_move,       METH_VARARGS, "Send move command vector"},
-        {"right",      emb_right,      METH_VARARGS, "Send move right"},
-        {"left",       emb_left,       METH_VARARGS, "Send move left"},
-        {"down",       emb_down,       METH_VARARGS, "Send move down"},
-        {"up",         emb_up,         METH_VARARGS, "Send move up"},
-        {"robot_rect", emb_robot_rect, METH_VARARGS, "Get the current robot rectangle"},
-        {"robot_pos",  emb_robot_pos,  METH_VARARGS, "Get the current robot position"},
-        {nullptr,      nullptr, 0,                   nullptr}
+        {"move",        emb_move,        METH_VARARGS, "Send move command vector"},
+        {"right",       emb_right,       METH_VARARGS, "Send move right"},
+        {"left",        emb_left,        METH_VARARGS, "Send move left"},
+        {"down",        emb_down,        METH_VARARGS, "Send move down"},
+        {"up",          emb_up,          METH_VARARGS, "Send move up"},
+        {"robot_rect",  emb_robot_rect,  METH_VARARGS, "Get the current robot rectangle"},
+        {"robot_pos",   emb_robot_pos,   METH_VARARGS, "Get the current robot position"},
+        {"object_rect", emb_object_rect, METH_VARARGS, "Get the current object rectangle"},
+        {"object_pos",  emb_object_pos,  METH_VARARGS, "Get the current object position"},
+        {nullptr,       nullptr, 0,                    nullptr}
     };
 
     static PyMethodDef sim_methods[]{
