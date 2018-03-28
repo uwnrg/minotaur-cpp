@@ -26,9 +26,9 @@ double acquisition_r(const cv::Rect2d &rect, double calibrated_area) {
     return fabs(area - calibrated_area) / (area > calibrated_area ? area : calibrated_area) * t;
 }
 
-QString center_text(const cv::Rect2d &rect) {
+QString center_text(const cv::Rect2d &rect, const char *label) {
     QString text;
-    text.sprintf("Robot: (%6.1f , %6.1f )", rect.x + rect.width / 2, rect.y + rect.height / 2);
+    text.sprintf("%6s: (%6.1f , %6.1f )", label, rect.x + rect.width / 2, rect.y + rect.height / 2);
     return text;
 }
 
@@ -42,7 +42,8 @@ CompetitionState::CompetitionState(MainWindow *parent) :
     m_object_calibrated_area(DEFAULT_CALIBRATED_AREA),
     m_acquisition_r_sigma(DEFAULT_ACQUISITION_R_SIGMA) {
     if (auto lp = parent->status_box().lock()) {
-        m_robot_loc_label = lp->add_label(center_text(cv::Rect2d()));
+        m_robot_loc_label = lp->add_label(center_text(cv::Rect2d(), "Robot"));
+        m_object_loc_label = lp->add_label(center_text(cv::Rect2d(), "Object"));
     }
 }
 
@@ -50,12 +51,16 @@ void CompetitionState::acquire_robot_box(const cv::Rect2d &robot_box) {
 #ifndef NDEBUG
     assert(m_robot_loc_label != nullptr);
 #endif
-    m_robot_loc_label->setText(center_text(robot_box));
+    m_robot_loc_label->setText(center_text(robot_box, "Robot"));
     m_robot_box = robot_box;
     m_robot_box_fresh = true;
 }
 
 void CompetitionState::acquire_object_box(const cv::Rect2d &object_box) {
+#ifndef NDEBUG
+    assert(m_object_loc_label != nullptr);
+#endif
+    m_object_loc_label->setText(center_text(object_box, "Object"));
     m_object_box = object_box;
     m_object_box_fresh = true;
 }

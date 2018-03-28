@@ -85,6 +85,7 @@ private:
     MainWindow *m_parent;
 
     StatusLabel *m_robot_loc_label;
+    StatusLabel *m_object_loc_label;
 
     bool m_tracking_robot;
     bool m_tracking_object;
