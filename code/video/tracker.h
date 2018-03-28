@@ -10,34 +10,16 @@
 class QVBoxLayout;
 class QPushButton;
 
-class TrackerModifier : public VideoModifier {
+class __tracker : public QObject {
 Q_OBJECT
 
 public:
-    enum Target {
-        ROBOT,
-        OBJECT
+    enum State {
+        UNINITIALIZED,
+        FIRST_SCAN,
+        TRACKING
     };
 
-    explicit TrackerModifier(Target target = ROBOT);
-
-    void modify(cv::UMat &img) override;
-
-    void register_actions(ActionBox *box) override;
-
-    Q_SIGNAL void object_box(const cv::Rect2d &box);
-
-protected:
-    Q_SLOT void beginTracking();
-
-    Q_SLOT void stopTracking();
-
-    Q_SLOT void traverse();
-
-private:
-    void reset_tracker();
-
-private:
     enum Type {
         BOOSTING,
         MIL,
@@ -47,18 +29,27 @@ private:
         GOTURN
     };
 
-    enum State {
-        UNINITIALIZED,
-        FIRST_SCAN,
-        TRACKING
-    };
+    __tracker();
 
+    void update_track(cv::UMat &img);
+
+    State state() const;
+
+    Q_SIGNAL void target_box(const cv::Rect2d &box);
+
+    Q_SLOT void begin_tracking();
+
+    Q_SLOT void stop_tracking();
+
+private:
+    void reset_tracker();
+
+private:
     cv::Ptr<cv::Tracker> m_tracker;
     cv::Rect2d m_bounding_box;
 
-    int m_type;
-    int m_state;
-    int m_target;
+    Type m_type;
+    State m_state;
 
     /**
      * Class mutex instance used to prevent a scenario wherein
@@ -69,6 +60,25 @@ private:
      * modify() are called in different threads.
      */
     QMutex m_mutex;
+};
+
+class TrackerModifier : public VideoModifier {
+Q_OBJECT
+
+public:
+    TrackerModifier();
+
+    void modify(cv::UMat &img) override;
+
+    void register_actions(ActionBox *box) override;
+
+protected:
+    Q_SLOT void traverse();
+
+private:
+    __tracker m_robot_tracker;
+    __tracker m_object_tracker;
+
 };
 
 #endif

@@ -20,17 +20,18 @@
 #define TRACKER_TYPE Type::MIL
 #endif
 
-TrackerModifier::TrackerModifier(Target target)
-    : m_bounding_box(),
-      m_type(TRACKER_TYPE),
-      m_state(State::UNINITIALIZED),
-      m_target(target) {
+__tracker::__tracker() :
+    m_bounding_box(),
+    m_type(TRACKER_TYPE),
+    m_state(State::UNINITIALIZED) {
     reset_tracker();
-    connect(this, &TrackerModifier::object_box, &Main::get()->state(), &CompetitionState::acquire_robot_box);
 }
 
-void TrackerModifier::reset_tracker() {
+void __tracker::reset_tracker() {
     m_mutex.lock();
+    // At this point MIL seems to be the best performing tracker
+    // Accuracy is more important than performance so long as
+    // framerate remains above at least 12
     switch (m_type) {
         case Type::BOOSTING:
             m_tracker = cv::TrackerBoosting::create();
@@ -59,13 +60,13 @@ void TrackerModifier::reset_tracker() {
     m_mutex.unlock();
 }
 
-void TrackerModifier::beginTracking() {
+void __tracker::begin_tracking() {
     if (m_state == State::UNINITIALIZED) {
         m_state = State::FIRST_SCAN;
     }
 }
 
-void TrackerModifier::stopTracking() {
+void __tracker::stop_tracking() {
     if (m_state != State::UNINITIALIZED) {
         reset_tracker();
         m_state = State::UNINITIALIZED;
@@ -73,7 +74,7 @@ void TrackerModifier::stopTracking() {
     }
 }
 
-void TrackerModifier::modify(cv::UMat &img) {
+void __tracker::update_track(cv::UMat &img) {
     if (m_state != State::UNINITIALIZED) {
         m_mutex.lock();
         if (m_state == State::TRACKING) {
@@ -85,24 +86,45 @@ void TrackerModifier::modify(cv::UMat &img) {
         }
         m_mutex.unlock();
         cv::rectangle(img, m_bounding_box.tl(), m_bounding_box.br(), cv::Scalar(255, 0, 0));
-        Q_EMIT object_box(m_bounding_box);
+        Q_EMIT target_box(m_bounding_box);
     }
 }
 
+__tracker::State __tracker::state() const {
+    return m_state;
+}
+
+TrackerModifier::TrackerModifier() :
+    m_robot_tracker(),
+    m_object_tracker() {
+    CompetitionState *state = &Main::get()->state();
+    connect(&m_robot_tracker, &__tracker::target_box, state, &CompetitionState::acquire_robot_box);
+    connect(&m_object_tracker, &__tracker::target_box, state, &CompetitionState::acquire_object_box);
+}
+
 void TrackerModifier::traverse() {
-    if (m_state == State::TRACKING) {
+    if (m_robot_tracker.state() == __tracker::TRACKING) {
         Main::get()->state().begin_traversal();
     }
 }
 
 void TrackerModifier::register_actions(ActionBox *box) {
-    ActionButton *start_button = box->add_action("Select ROI");
-    ActionButton *clear_button = box->add_action("Clear ROI");
     ActionButton *traverse_button = box->add_action("Traverse");
-    connect(start_button, &ActionButton::clicked, this, &TrackerModifier::beginTracking);
-    connect(clear_button, &ActionButton::clicked, this, &TrackerModifier::stopTracking);
-    connect(traverse_button, &ActionButton::clicked, this, &TrackerModifier::traverse);
+    ActionButton *select_robot_roi = box->add_action("Select Robot ROI");
+    ActionButton *select_object_roi = box->add_action("Select Object ROI");
+    ActionButton *clear_robot_roi = box->add_action("Clear Robot ROI");
+    ActionButton *clear_object_roi = box->add_action("Clear Object ROI");
+    connect(traverse_button, &QPushButton::clicked, this, &TrackerModifier::traverse);
+    connect(select_robot_roi, &QPushButton::clicked, &m_robot_tracker, &__tracker::begin_tracking);
+    connect(select_object_roi, &QPushButton::clicked, &m_object_tracker, &__tracker::begin_tracking);
+    connect(clear_robot_roi, &QPushButton::clicked, &m_robot_tracker, &__tracker::stop_tracking);
+    connect(clear_object_roi, &QPushButton::clicked, &m_object_tracker, &__tracker::stop_tracking);
     box->set_actions();
+}
+
+void TrackerModifier::modify(cv::UMat &img) {
+    m_robot_tracker.update_track(img);
+    m_object_tracker.update_track(img);
 }
 
 #endif
