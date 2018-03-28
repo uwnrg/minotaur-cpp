@@ -74,7 +74,7 @@ static cv::UMat findShapes(
 
     // Find contours
     std::vector<std::vector<cv::Point> > contours;
-    cv::findContours(bw.clone(), contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);    //(image, output, mode, method)
+    cv::findContours(bw, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);    //(image, output, mode, method)
     cv::drawContours(src, contours, -1, cv::Scalar(255, 0, 0), 2, CV_AA);
 
     //Close contours
@@ -85,7 +85,7 @@ static cv::UMat findShapes(
     // drawShapes(drawing, ConvexHullPoints, "Contours Convex Hull");
 
     std::vector<cv::Point> approx;
-    cv::UMat dst(src.clone());
+    cv::UMat dst(src);
 
     /*
      * Shape detection using contours.
