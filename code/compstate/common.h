@@ -3,12 +3,16 @@
 
 #include "../utility/vector.h"
 
-vector2d rect_center(const cv::Rect2d &rect);
+namespace algo {
 
-vector2d perp_intersect(
-    const vector2d &c,
-    const vector2d &p0,
-    const vector2d &p1
-);
+    vector2d rect_center(const cv::Rect2d &rect);
+
+    vector2d perp_intersect(
+        const vector2d &c,
+        const vector2d &p0,
+        const vector2d &p1
+    );
+
+}
 
 #endif //MINOTAUR_CPP_COMMON_H

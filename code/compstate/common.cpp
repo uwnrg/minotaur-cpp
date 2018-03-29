@@ -1,10 +1,10 @@
 #include "common.h"
 
-vector2d rect_center(const cv::Rect2d &rect)  {
+vector2d algo::rect_center(const cv::Rect2d &rect)  {
     return {rect.x + rect.width / 2, rect.y + rect.height / 2};
 }
 
-vector2d perp_intersect(
+vector2d algo::perp_intersect(
     const vector2d &c,
     const vector2d &p0,
     const vector2d &p1

@@ -61,7 +61,7 @@ bool Procedure::is_stopped() const {
 
 void Procedure::start() {
     m_timer.start(200, this);
-    m_initial = rect_center(Main::get()->state().get_robot_box());
+    m_initial = algo::rect_center(Main::get()->state().get_robot_box());
     Q_EMIT started();
 }
 
@@ -92,7 +92,7 @@ void Procedure::movement_loop() {
         ) { return; }
 
     // Acquire the current robot position
-    vector2d center = rect_center(Main::get()->state().get_robot_box(true));
+    vector2d center = algo::rect_center(Main::get()->state().get_robot_box(true));
     vector2d target = m_path[m_index];
     vector2d source = m_index > 0 ? m_path[m_index - 1] : m_initial;
 
@@ -109,7 +109,7 @@ void Procedure::movement_loop() {
     m_index_label->setText(index_text(m_index));
 
     // Calculate perpendicular distance to ensure the robot is straddling the line
-    vector2d intersect = perp_intersect(center, source, target);
+    vector2d intersect = algo::perp_intersect(center, source, target);
     vector2d norm_diff = intersect - center;
     double norm_diff_sq = norm_diff.norm_sq();
     m_perp_label->setText(perp_text(norm_diff.x(), norm_diff.y(), norm_diff_sq));
