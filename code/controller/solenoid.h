@@ -36,9 +36,9 @@ public:
 
     ~Solenoid() override;
 
-    Vector2i to_vector2i(Dir dir) override;
+    vector2i to_vector2i(Dir dir) override;
 
-    void __move_delegate(Vector2i dir, int timer) override;
+    void __move_delegate(vector2i dir, int timer) override;
 
     /**
      * @return if the QSerialPort is currently managing an active connection
@@ -95,7 +95,7 @@ public:
      * @param dir the vector representing movement direction
      * @return vector encoded as a single byte
      */
-    static QByteArray encode_message(Vector2i dir, int time);
+    static QByteArray encode_message(vector2i dir, int time);
 
 private:
     enum Direction {

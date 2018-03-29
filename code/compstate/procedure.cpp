@@ -10,14 +10,14 @@
 #define DIR_DOWN  "DOWN"
 #define DIR_UP    "UP"
 
-vector2d<double> rect_center(const cv::Rect2d &rect) {
+vector2d rect_center(const cv::Rect2d &rect) {
     return {rect.x + rect.width / 2, rect.y + rect.height / 2};
 }
 
-vector2d<double> perp_intersect(
-    const vector2d<double> &c,
-    const vector2d<double> &p0,
-    const vector2d<double> &p1
+vector2d perp_intersect(
+    const vector2d &c,
+    const vector2d &p0,
+    const vector2d &p1
 ) {
     double dy1 = p1.y() - p0.y();
     double dx1 = p1.x() - p0.x();
@@ -50,7 +50,7 @@ QString perp_text(double err_x, double err_y, double norm_sq) {
     return text;
 }
 
-Procedure::Procedure(std::weak_ptr<Controller> sol, const path2d<double> &path) :
+Procedure::Procedure(std::weak_ptr<Controller> sol, const path2d &path) :
     m_loc_accept(DEFAULT_TARGET_LOC_ACCEPTANCE),
     m_norm_dev(DEFAULT_MAX_NORMAL_DEVIATION),
     m_path(path),
@@ -102,9 +102,9 @@ void Procedure::movement_loop() {
         ) { return; }
 
     // Acquire the current robot position
-    vector2d<double> center = rect_center(Main::get()->state().get_robot_box(true));
-    vector2d<double> target = m_path[m_index];
-    vector2d<double> source = m_index > 0 ? m_path[m_index - 1] : m_initial;
+    vector2d center = rect_center(Main::get()->state().get_robot_box(true));
+    vector2d target = m_path[m_index];
+    vector2d source = m_index > 0 ? m_path[m_index - 1] : m_initial;
 
     // Find differences in each axis
     double err_x = target.x() - center.x();
@@ -119,8 +119,8 @@ void Procedure::movement_loop() {
     m_index_label->setText(index_text(m_index));
 
     // Calculate perpendicular distance to ensure the robot is straddling the line
-    vector2d<double> intersect = perp_intersect(center, source, target);
-    vector2d<double> norm_diff = intersect - center;
+    vector2d intersect = perp_intersect(center, source, target);
+    vector2d norm_diff = intersect - center;
     double norm_diff_sq = norm_diff.norm_sq();
     m_perp_label->setText(perp_text(norm_diff.x(), norm_diff.y(), norm_diff_sq));
     if (norm_diff_sq > m_norm_dev * m_norm_dev) {

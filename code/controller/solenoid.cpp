@@ -84,7 +84,7 @@ void Solenoid::readSerial() {
     }
 }
 
-Vector2i Solenoid::to_vector2i(Dir dir) {
+vector2i Solenoid::to_vector2i(Dir dir) {
     constexpr int power = 255;
     switch (dir) {
         case Dir::UP:
@@ -100,7 +100,7 @@ Vector2i Solenoid::to_vector2i(Dir dir) {
     }
 }
 
-void Solenoid::__move_delegate(Vector2i dir, int time) {
+void Solenoid::__move_delegate(vector2i dir, int time) {
 #ifndef NDEBUG
     debug() << "Moving Solenoid controller";
     debug() << "Attempting to move " << dir;
@@ -141,9 +141,9 @@ const QSerialPort &Solenoid::serial_port() const {
     return m_serial;
 }
 
-QByteArray Solenoid::encode_message(Vector2i dir, int time) {
+QByteArray Solenoid::encode_message(vector2i dir, int time) {
     shrink_into<int16_t> s;
-    vector2d<int16_t> short_vec(s(dir.x()), s(dir.y()));
+    nrg::vector<int16_t> short_vec(s(dir.x()), s(dir.y()));
     char raw[6];
     *reinterpret_cast<int16_t *>(raw) = short_vec.x();
     *reinterpret_cast<int16_t *>(raw + 2) = short_vec.y();

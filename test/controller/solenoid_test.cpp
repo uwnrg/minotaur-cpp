@@ -3,7 +3,7 @@
 #include <code/controller/solenoid.h>
 
 TEST(encode_movement, direction_and_time) {
-    Vector2i vec(-1234, 1000);
+    vector2i vec(-1234, 1000);
     int time = 240;
     QByteArray result = Solenoid::encode_message(vec, time);
     ASSERT_EQ(result.size(), 6);

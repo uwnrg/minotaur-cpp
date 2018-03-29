@@ -146,7 +146,7 @@ void CompetitionState::append_path(double x, double y) {
     m_path.emplace_back(x, y);
 }
 
-const path2d<double> &CompetitionState::get_path() const {
+const path2d &CompetitionState::get_path() const {
     return m_path;
 }
 

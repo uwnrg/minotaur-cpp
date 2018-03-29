@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "../utility/vector2d.h"
+#include "code/utility/vector.h"
 
 class GlobalSim : public QObject {
 Q_OBJECT
@@ -24,13 +24,13 @@ public:
     Q_SLOT void robot_down();
     Q_SLOT void robot_up();
 
-    vector2d<double> &robot();
+    vector2d &robot();
 
 private:
     double get_di() const;
     double get_dk() const;
 
-    vector2d<double> m_robot;
+    vector2d m_robot;
 };
 
 #endif

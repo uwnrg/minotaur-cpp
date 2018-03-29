@@ -14,7 +14,7 @@
 #include "camerathread.h"
 
 #include "../gui/griddisplay.h"
-#include "../utility/vector2d.h"
+#include "code/utility/vector.h"
 
 namespace Ui {
     class ImageViewer;

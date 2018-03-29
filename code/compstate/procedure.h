@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QBasicTimer>
 
-#include "../utility/vector2d.h"
+#include "code/utility/vector.h"
 
 class Controller;
 class StatusLabel;
@@ -15,7 +15,7 @@ class Procedure : public QObject {
 Q_OBJECT
 
 public:
-    explicit Procedure(std::weak_ptr<Controller> sol, const path2d<double> &path);
+    explicit Procedure(std::weak_ptr<Controller> sol, const path2d &path);
 
     ~Procedure() override;
 
@@ -36,8 +36,8 @@ private:
 
     double m_loc_accept;
     double m_norm_dev;
-    path2d<double> m_path;
-    vector2d<double> m_initial;
+    path2d m_path;
+    vector2d m_initial;
     std::size_t m_index;
     std::weak_ptr<Controller> m_sol;
     QBasicTimer m_timer;

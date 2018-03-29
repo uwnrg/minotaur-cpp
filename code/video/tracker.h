@@ -78,7 +78,6 @@ protected:
 private:
     __tracker m_robot_tracker;
     __tracker m_object_tracker;
-
 };
 
 #endif
