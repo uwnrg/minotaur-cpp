@@ -6,9 +6,10 @@
 #include <QObject>
 #include <QBasicTimer>
 
-#include "code/utility/vector.h"
+#include "../utility/vector.h"
 
 class Controller;
+
 class StatusLabel;
 
 class Procedure : public QObject {
@@ -20,6 +21,7 @@ public:
     ~Procedure() override;
 
     void start();
+
     void stop();
 
 private:
@@ -30,8 +32,11 @@ private:
     // estimated_power is the positive error in the direction of movement,
     // and it is up to the controller to translate this into a solenoid voltage
     void move_right(double estimated_power);
+
     void move_left(double estimated_power);
+
     void move_up(double estimated_power);
+
     void move_down(double estimated_power);
 
     double m_loc_accept;

@@ -43,6 +43,10 @@ namespace nrg {
             return m_y;
         }
 
+        val_t norm() const {
+            return sqrt(norm_sq());
+        }
+
         val_t norm_sq() const {
             return m_x * m_x + m_y * m_y;
         }
@@ -53,6 +57,15 @@ namespace nrg {
 
         const val_t &y() const {
             return m_y;
+        }
+
+        vector<val_t> n() const {
+            return *this / norm();
+        }
+
+        vector<val_t> n_inv() const {
+            val_t n = norm();
+            return {n / m_x, n / m_y};
         }
 
         vector<val_t> operator+(const vector<val_t> &o) const {
@@ -96,6 +109,14 @@ namespace nrg {
                 static_cast<val_t>(m_y / b)
             };
         };
+
+        val_t dot(const vector<val_t> &v) const {
+            return m_x * v.m_x + m_y * v.m_y;
+        }
+
+        val_t cross(const vector<val_t> &w) const {
+            return m_x * w.m_y - m_y * w.m_x;
+        }
 
         template<typename u_val_t>
         friend std::ostream &operator<<(std::ostream &os, const vector<u_val_t> &v);

@@ -8,7 +8,7 @@
 #include <QObject>
 
 #include "../utility/array2d.h"
-#include "code/utility/vector.h"
+#include "../utility/vector.h"
 #include "../camera/statusbox.h"
 
 #include "procedure.h"

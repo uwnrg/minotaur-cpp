@@ -2,6 +2,7 @@
 #define MINOTAUR_CPP_RECT_H
 
 #include "vector.h"
+#include "ray.h"
 
 #include <opencv2/core/types.hpp>
 
@@ -94,6 +95,42 @@ namespace nrg {
             return *this;
         }
 
+        vector<val_t> tl() const {
+            return {m_x, m_y};
+        }
+
+        vector<val_t> tr() const {
+            return {m_x + m_w, m_y};
+        }
+
+        vector<val_t> bl() const {
+            return {m_x, m_y + m_h};
+        }
+
+        vector<val_t> br() const {
+            return {m_x + m_w, m_y + m_h};
+        }
+
+        vector<val_t> center() const {
+            return {m_x + m_w / 2, m_y + m_h / w};
+        }
+
+        ray<val_t> tltr() const {
+            return {tl(), tr()};
+        }
+
+        ray<val_t> trbr() const {
+            return {tr(), br()};
+        }
+
+        ray<val_t> brbl() const {
+            return {br(), bl()};
+        }
+
+        ray<val_t> bltl() const {
+            return {bl(), tl()};
+        }
+
     private:
         val_t m_x;
         val_t m_y;
@@ -102,5 +139,9 @@ namespace nrg {
     };
 
 }
+
+typedef nrg::rect<int> rect2i;
+typedef nrg::rect<float> rect2f;
+typedef nrg::rect<double> rect2d;
 
 #endif //MINOTAUR_CPP_RECT_H

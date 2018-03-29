@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "code/utility/vector.h"
+#include "../utility/vector.h"
 
 class GlobalSim : public QObject {
 Q_OBJECT

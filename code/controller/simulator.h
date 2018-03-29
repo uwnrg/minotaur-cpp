@@ -2,7 +2,7 @@
 #define SIMULATOR_H
 
 #include "controller.h"
-#include "code/utility/vector.h"
+#include "../utility/vector.h"
 
 class SimulatorScene;
 class GlobalSim;
