@@ -16,13 +16,23 @@ class Procedure : public QObject {
 Q_OBJECT
 
 public:
-    explicit Procedure(std::weak_ptr<Controller> sol, const path2d &path);
+    Procedure(std::weak_ptr<Controller> sol, const path2d &path);
 
     ~Procedure() override;
 
     void start();
 
     void stop();
+
+    bool is_done() const;
+
+    bool is_stopped() const;
+
+    Q_SIGNAL void started();
+
+    Q_SIGNAL void stopped();
+
+    Q_SIGNAL void finished();
 
 private:
     void timerEvent(QTimerEvent *ev) override;
@@ -51,6 +61,8 @@ private:
     StatusLabel *m_err_label;
     StatusLabel *m_index_label;
     StatusLabel *m_perp_label;
+
+    bool m_done;
 };
 
 #endif //MINOTAUR_CPP_PROCEDURE_H

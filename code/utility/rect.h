@@ -112,7 +112,7 @@ namespace nrg {
         }
 
         vector<val_t> center() const {
-            return {m_x + m_w / 2, m_y + m_h / w};
+            return {m_x + m_w / 2, m_y + m_h / 2};
         }
 
         ray<val_t> tltr() const {

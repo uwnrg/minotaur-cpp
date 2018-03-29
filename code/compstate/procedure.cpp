@@ -1,38 +1,15 @@
 #include "procedure.h"
+#include "common.h"
 #include "../controller/controller.h"
 #include "../gui/mainwindow.h"
 
-#define DEFAULT_TARGET_LOC_ACCEPTANCE 3.0
-#define DEFAULT_MAX_NORMAL_DEVIATION  15.0
+#define DEFAULT_TARGET_LOC_ACCEPTANCE 3.5
+#define DEFAULT_MAX_NORMAL_DEVIATION  6.5
 
 #define DIR_RIGHT "RIGHT"
 #define DIR_LEFT  "LEFT"
 #define DIR_DOWN  "DOWN"
 #define DIR_UP    "UP"
-
-vector2d rect_center(const cv::Rect2d &rect) {
-    return {rect.x + rect.width / 2, rect.y + rect.height / 2};
-}
-
-vector2d perp_intersect(
-    const vector2d &c,
-    const vector2d &p0,
-    const vector2d &p1
-) {
-    double dy1 = p1.y() - p0.y();
-    double dx1 = p1.x() - p0.x();
-    double m_l = dy1 / dx1;
-    double m_r = -1 / m_l;
-    // y - y0 = (x - x0) * m_l
-    // y - yc = (x - xc) * m_r
-    // y0 - yc = (x - xc) * m_r + (x0 - x) * m_l
-    // y0 - yc + xc * m_r - x0 * m_l = x * (m_r - m_l)
-    double xi = (p0.y() - c.y() + c.x() * m_r - p0.x() * m_l) / (m_r - m_l);
-    // y - y0 = (x - x0) * m_l
-    // yi = (xi - x0) * m_l + y0
-    double yi = (xi - p0.x()) * m_l + p0.y();
-    return {xi, yi};
-}
 
 QString err_text(double x, double y) {
     QString text;
@@ -55,7 +32,8 @@ Procedure::Procedure(std::weak_ptr<Controller> sol, const path2d &path) :
     m_norm_dev(DEFAULT_MAX_NORMAL_DEVIATION),
     m_path(path),
     m_index(0),
-    m_sol(std::move(sol)) {
+    m_sol(std::move(sol)),
+    m_done(false) {
     if (auto lp = Main::get()->status_box().lock()) {
         m_dir_label = lp->add_label("IDLE");
         m_err_label = lp->add_label(err_text(0, 0));
@@ -73,13 +51,23 @@ Procedure::~Procedure() {
     }
 }
 
+bool Procedure::is_done() const {
+    return m_done;
+}
+
+bool Procedure::is_stopped() const {
+    return !m_timer.isActive();
+}
+
 void Procedure::start() {
     m_timer.start(200, this);
     m_initial = rect_center(Main::get()->state().get_robot_box());
+    Q_EMIT started();
 }
 
 void Procedure::stop() {
     m_timer.stop();
+    Q_EMIT stopped();
 }
 
 void Procedure::timerEvent(QTimerEvent *ev) {
@@ -92,6 +80,8 @@ void Procedure::movement_loop() {
     // If the path has been traversed or solenoid expired, stop timer
     if (m_index == m_path.size() || m_sol.expired()) {
         m_timer.stop();
+        m_done = true;
+        Q_EMIT finished();
         return;
     }
 
