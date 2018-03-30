@@ -89,7 +89,7 @@ void Procedure::movement_loop() {
     if (
         !Main::get()->state().is_robot_box_fresh() ||
         !Main::get()->state().is_robot_box_valid()
-        ) { return; }
+    ) { return; }
 
     // Acquire the current robot position
     vector2d center = algo::rect_center(Main::get()->state().get_robot_box(true));
