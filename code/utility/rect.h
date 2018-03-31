@@ -8,9 +8,24 @@
 
 namespace nrg {
 
+    // Sides of a box ordered clockwise starting from the top
+    enum side {
+        TOP = 0,
+        RIGHT = 1,
+        BOTTOM = 2,
+        LEFT = 3
+    };
+
+    /**
+     * Axis-aligned rectangle represented by its top-left corner,
+     * with lowest (x, y) values, width, and height.
+     *
+     * @tparam val_t
+     */
     template<typename val_t>
     class rect {
     public:
+
         rect() :
             m_x(0),
             m_y(0),
@@ -109,6 +124,22 @@ namespace nrg {
 
         vector<val_t> br() const {
             return {m_x + m_w, m_y + m_h};
+        }
+
+        vector<val_t> mt() const {
+            return {m_x + m_w / 2, m_y};
+        }
+
+        vector<val_t> mb() const {
+            return {m_x + m_w / 2, m_y + m_h};
+        }
+
+        vector<val_t> ml() const {
+            return {m_x, m_y + m_h / 2};
+        }
+
+        vector<val_t> mr() const {
+            return {m_x + m_w, m_y + m_h / 2};
         }
 
         vector<val_t> center() const {

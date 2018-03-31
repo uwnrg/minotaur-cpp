@@ -10,6 +10,11 @@
 
 namespace nrg {
 
+    /**
+     * A coordinate point or vector quantity.
+     *
+     * @tparam val_t
+     */
     template<typename val_t>
     class vector {
     public:

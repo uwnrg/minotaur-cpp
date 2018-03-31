@@ -5,6 +5,12 @@
 
 namespace nrg {
 
+    /**
+     * A directed line segment, represented by two points.
+     * Segment starts from a and goes to b.
+     * 
+     * @tparam val_t
+     */
     template<typename val_t>
     class ray {
     public:

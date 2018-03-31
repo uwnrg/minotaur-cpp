@@ -197,33 +197,33 @@ namespace algo {
      * object for a certain movement.
      *
      * @tparam val_t value type
-     * @param r0 robot initial position
-     * @param r1 robot target positoin
-     * @param ob object bounding box
+     * @param r robot initial position
+     * @param c robot target position center
+     * @param s object bounding box
      * @return true if a collision occurs
      */
     template<typename val_t>
     bool swept_collide(
-        const nrg::rect<val_t> &r0,
-        const nrg::rect<val_t> &r1,
-        const nrg::rect<val_t> &ob
+        const nrg::rect<val_t> &r,
+        const nrg::rect<val_t> &s,
+        const nrg::vector<val_t> &c
     ) {
         val_t x_entry_inv, y_entry_inv;
         val_t x_exit_inv, y_exit_inv;
-        nrg::vector<val_t> delta = r1.center() - r0.center();
+        nrg::vector<val_t> delta = c - r.center();
         if (delta.x() > 0) {
-            x_entry_inv = ob.x() - (r0.x() + r0.width());
-            x_exit_inv = (ob.x() + ob.width()) - r0.x();
+            x_entry_inv = s.x() - (r.x() + r.width());
+            x_exit_inv = (s.x() + s.width()) - r.x();
         } else {
-            x_entry_inv = (ob.x() + ob.width()) - r0.x();
-            x_exit_inv = ob.x() - (r0.x() + r0.width());
+            x_entry_inv = (s.x() + s.width()) - r.x();
+            x_exit_inv = s.x() - (r.x() + r.width());
         }
         if (delta.y() > 0) {
-            y_entry_inv = ob.y() - (r0.y() + r0.height());
-            y_exit_inv = (ob.y() + ob.height()) - r0.y();
+            y_entry_inv = s.y() - (r.y() + r.height());
+            y_exit_inv = (s.y() + s.height()) - r.y();
         } else {
-            y_entry_inv = (ob.y() + ob.height()) - r0.y();
-            y_exit_inv = ob.y() - (r0.y() + r0.height());
+            y_entry_inv = (s.y() + s.height()) - r.y();
+            y_exit_inv = s.y() - (r.y() + r.height());
         }
         val_t x_entry, y_entry;
         val_t x_exit, y_exit;
@@ -246,10 +246,17 @@ namespace algo {
         return !(
             entry_time > exit_time ||
             x_entry < 0 && y_entry < 0 ||
-            x_entry > 1 ||
-            y_entry > 1
+            x_entry >= 1 ||
+            y_entry >= 1
         );
     }
+
+    template<typename val_t>
+    bool swept_collide(
+        const nrg::rect<val_t> &r0,
+        const nrg::rect<val_t> &r1,
+        const nrg::rect<val_t> &ob
+    ) { return swept_collide(r0, ob, r1.center()); }
 
 }
 

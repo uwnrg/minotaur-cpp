@@ -8,6 +8,12 @@
 
 namespace nrg {
 
+    /**
+     * Node element in a graph2d has a coordinate position
+     * and a unique id.
+     *
+     * @tparam val_t
+     */
     template<typename val_t>
     class node2d {
     public:
@@ -30,6 +36,12 @@ namespace nrg {
         vector<val_t> m_pos;
     };
 
+    /**
+     * Basic graph implementation on a two dimensional coordinate
+     * system, where each node occupies a point in a plane.
+     *
+     * @tparam val_t
+     */
     template<typename val_t>
     class graph2d {
     public:
@@ -118,6 +130,10 @@ namespace nrg {
                 }
             }
             return {};
+        }
+
+        const id_set &connections_of(const node2d<val_t> &node) {
+            return m_connections.at(node.id());
         }
 
     private:
