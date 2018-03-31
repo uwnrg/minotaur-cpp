@@ -51,6 +51,16 @@ struct qol {
     }
 };
 
-
+/**
+ * Sign function. Returns -1 if val < 0, 1 if val > 0, 0 if val == 0.
+ *
+ * @tparam sgn_t
+ * @param val
+ * @return
+ */
+template<typename sgn_t>
+int sgn(sgn_t val) {
+    return (sgn_t(0) < val) - (val < sgn_t(0));
+}
 
 #endif

@@ -12,6 +12,7 @@
 #include "../camera/statusbox.h"
 
 #include "procedure.h"
+#include "readymove.h"
 
 class MainWindow;
 
@@ -59,6 +60,9 @@ public:
 
     Q_SLOT void begin_traversal();
     Q_SLOT void halt_traversal();
+
+    Q_SLOT void begin_object_move();
+    Q_SLOT void halt_object_move();
 
     const path2d &get_path() const;
 
@@ -110,6 +114,7 @@ private:
     path2d m_path;
 
     std::unique_ptr<Procedure> m_procedure;
+    std::unique_ptr<ReadyMove> m_ready_move;
 };
 
 Q_DECLARE_METATYPE(std::shared_ptr<CompetitionState::wall_arr>);

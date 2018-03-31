@@ -1,4 +1,4 @@
-#include "objectstrategy.h"
+#include "readymove.h"
 #include "common.h"
 #include "../utility/algorithm.h"
 #include "../gui/mainwindow.h"
@@ -9,32 +9,42 @@ namespace det_ {
         COLLIDE_LOC_ACPT = 3,
 
         RDY_MV_NORM_DEV = 3,
-        RDY_MV_LOC_ACPT = 2
+        RDY_MV_LOC_ACPT = 2,
     };
 }
 
-ObjectStrategy::ObjectStrategy(std::weak_ptr<Controller> sol, double delta, nrg::dir dir) :
+ReadyMove::ReadyMove(std::weak_ptr<Controller> sol, nrg::dir dir) :
     m_sol(std::move(sol)),
-    m_delta(delta),
     m_dir(dir),
 
-    m_state(State::UNINITIALIZED) {}
+    m_state(State::UNINITIALIZED),
 
-void ObjectStrategy::start() {
-    m_timer.start(10, this);
+    m_done(false) {}
+
+void ReadyMove::start() {
+    m_timer.start(200, this);
 }
 
-void ObjectStrategy::stop() {
+void ReadyMove::stop() {
     m_timer.stop();
 }
 
-void ObjectStrategy::timerEvent(QTimerEvent *ev) {
+void ReadyMove::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() == m_timer.timerId()) {
         movement_loop();
     }
 }
 
-void ObjectStrategy::movement_loop() {
+void ReadyMove::movement_loop() {
+    CompetitionState &state = Main::get()->state();
+    if (
+        !state.is_object_box_fresh() ||
+        !state.is_object_box_valid() ||
+        !state.is_robot_box_fresh() ||
+        !state.is_robot_box_valid()
+        ) {
+        return;
+    }
     switch (m_state) {
         case UNINITIALIZED:
             do_uninitialized();
@@ -56,40 +66,10 @@ void ObjectStrategy::movement_loop() {
     }
 }
 
-void ObjectStrategy::do_uninitialized() {
+void ReadyMove::do_uninitialized() {
+    // Check for collision first
     CompetitionState &state = Main::get()->state();
-    if (
-        !state.is_object_box_fresh() ||
-        !state.is_object_box_valid() ||
-        !state.is_robot_box_fresh() ||
-        !state.is_robot_box_valid()
-    ) {
-        return;
-    }
-    // Initialize the target location
     rect2d obj_rect = state.get_object_box(true);
-    m_target = obj_rect.center();
-    switch (m_dir) {
-        case nrg::dir::RIGHT:
-            m_target.x() += m_delta;
-            break;
-        case nrg::dir::LEFT:
-            m_target.x() -= m_delta;
-            break;
-        case nrg::dir::DOWN:
-            m_target.y() += m_delta;
-            break;
-        case nrg::dir::UP:
-            m_target.y() -= m_delta;
-            break;
-        default:
-            break;
-    }
-    // Check for collision
-    ready_move_collide_block(state, obj_rect);
-}
-
-void ObjectStrategy::ready_move_collide_block(CompetitionState &state, const rect2d &obj_rect) {
     rect2d rob_rect = state.get_robot_box(true);
     if (algo::aabb_collide(rob_rect, obj_rect)) {
         vector2d resolve_delta = algo::resolve_aabb_collide(rob_rect, obj_rect);
@@ -102,20 +82,21 @@ void ObjectStrategy::ready_move_collide_block(CompetitionState &state, const rec
     }
 }
 
-void ObjectStrategy::do_colliding() {
+void ReadyMove::do_colliding() {
 #ifndef NDEBUG
     assert(m_resolve.x() != 0);
     assert(m_resolve.y() != 0);
 #endif
+    path2d path = {m_resolve};
     m_proc = std::make_unique<Procedure>(
-        m_sol, {m_resolve},
+        m_sol, path,
         det_::COLLIDE_LOC_ACPT, det_::COLLIDE_NORM_DEV
     );
     m_proc->start();
     m_state = State::COLLIDING_PROC;
 }
 
-void ObjectStrategy::do_colliding_proc() {
+void ReadyMove::do_colliding_proc() {
 #ifndef NDEBUG
     assert(!!m_proc);
 #endif
@@ -125,18 +106,10 @@ void ObjectStrategy::do_colliding_proc() {
         return;
     }
     // Check for collision
-    CompetitionState &state = Main::get()->state();
-    rect2d obj_rect = state.get_object_box(true);
-    ready_move_collide_block(state, obj_rect);
+    do_uninitialized();
 }
 
-nrg::dir move_dir_to_side(nrg::dir dir) {
-    // Direction is cyclic modulus 4 and
-    // TOP + 2 = BOTTOM
-    return (dir + 2) % 4;
-}
-
-void ObjectStrategy::do_ready_move() {
+void ReadyMove::do_ready_move() {
     CompetitionState &state = Main::get()->state();
     // Grab and consume object and robot boxes
     rect2d obj_rect = state.get_object_box(true);
@@ -155,7 +128,7 @@ void ObjectStrategy::do_ready_move() {
     m_state = State::READY_MOVE_PROC;
 }
 
-void ObjectStrategy::do_ready_move_proc() {
+void ReadyMove::do_ready_move_proc() {
 #ifndef NDEBUG
     assert(!!m_proc);
 #endif
@@ -164,5 +137,10 @@ void ObjectStrategy::do_ready_move_proc() {
     } else {
         return;
     }
-    m_state = PUSHING;
+    m_timer.stop();
+    m_done = true;
+}
+
+bool ReadyMove::is_done() const {
+    return m_done;
 }

@@ -78,6 +78,8 @@ public:
 protected:
     Q_SLOT void traverse();
 
+    Q_SLOT void move_object();
+
 private:
     __tracker m_robot_tracker;
     __tracker m_object_tracker;

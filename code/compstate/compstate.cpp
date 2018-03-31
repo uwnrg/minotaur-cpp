@@ -158,3 +158,12 @@ void CompetitionState::begin_traversal() {
 void CompetitionState::halt_traversal() {
     m_procedure->stop();
 }
+
+void CompetitionState::begin_object_move() {
+    m_ready_move = std::make_unique<ReadyMove>(Main::get()->controller(), nrg::dir::RIGHT);
+    m_ready_move->start();
+}
+
+void CompetitionState::halt_object_move() {
+    m_ready_move->stop();
+}

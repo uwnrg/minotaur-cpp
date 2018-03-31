@@ -28,11 +28,9 @@ public:
     ~Procedure() override;
 
     void start();
-
     void stop();
 
     bool is_done() const;
-
     bool is_stopped() const;
 
     Q_SIGNAL void started();
@@ -41,20 +39,17 @@ public:
 
     Q_SIGNAL void finished();
 
+    // estimated_power is the positive error in the direction of movement,
+    // and it is up to the controller to translate this into a solenoid voltage
+    void move_right(double estimated_power);
+    void move_left(double estimated_power);
+    void move_up(double estimated_power);
+    void move_down(double estimated_power);
+
 private:
     void timerEvent(QTimerEvent *ev) override;
 
     void movement_loop();
-
-    // estimated_power is the positive error in the direction of movement,
-    // and it is up to the controller to translate this into a solenoid voltage
-    void move_right(double estimated_power);
-
-    void move_left(double estimated_power);
-
-    void move_up(double estimated_power);
-
-    void move_down(double estimated_power);
 
     double m_loc_accept;
     double m_norm_dev;

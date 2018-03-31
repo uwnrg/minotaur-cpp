@@ -127,13 +127,24 @@ void TrackerModifier::traverse() {
     }
 }
 
+void TrackerModifier::move_object() {
+    if (
+        m_robot_tracker.state() == __tracker::TRACKING &&
+        m_object_tracker.state() == __tracker::TRACKING
+    ) {
+        Main::get()->state().begin_object_move();
+    }
+}
+
 void TrackerModifier::register_actions(ActionBox *box) {
     ActionButton *traverse_button = box->add_action("Traverse");
+    ActionButton *object_move_button = box->add_action("Move Object");
     ActionButton *select_robot_roi = box->add_action("Select Robot ROI");
     ActionButton *select_object_roi = box->add_action("Select Object ROI");
     ActionButton *clear_robot_roi = box->add_action("Clear Robot ROI");
     ActionButton *clear_object_roi = box->add_action("Clear Object ROI");
     connect(traverse_button, &QPushButton::clicked, this, &TrackerModifier::traverse);
+    connect(object_move_button, &QPushButton::clicked, this, &TrackerModifier::move_object);
     connect(select_robot_roi, &QPushButton::clicked, &m_robot_tracker, &__tracker::begin_tracking);
     connect(select_object_roi, &QPushButton::clicked, &m_object_tracker, &__tracker::begin_tracking);
     connect(clear_robot_roi, &QPushButton::clicked, &m_robot_tracker, &__tracker::stop_tracking);

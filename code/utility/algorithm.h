@@ -260,4 +260,15 @@ namespace algo {
 
 }
 
+inline nrg::dir move_dir_to_side(nrg::dir dir) {
+    // Direction is cyclic modulus 4 and
+    // TOP + 2 = BOTTOM
+    return static_cast<nrg::dir>((dir + 2) % 4);
+}
+
+inline bool is_dir_hor(nrg::dir dir) {
+    // Odd values are horizontal
+    return static_cast<bool>(dir % 2);
+}
+
 #endif //MINOTAUR_CPP_ALGORITHM_H
