@@ -8,15 +8,22 @@
 
 #include "../utility/vector.h"
 
-class Controller;
+#define DEFAULT_TARGET_LOC_ACCEPTANCE 3.5
+#define DEFAULT_MAX_NORMAL_DEVIATION  6.5
 
+class Controller;
 class StatusLabel;
 
 class Procedure : public QObject {
 Q_OBJECT
 
 public:
-    Procedure(std::weak_ptr<Controller> sol, const path2d &path);
+    Procedure(
+        std::weak_ptr<Controller> sol,
+        const path2d &path,
+        double loc_accept = DEFAULT_TARGET_LOC_ACCEPTANCE,
+        double norm_dev = DEFAULT_MAX_NORMAL_DEVIATION
+    );
 
     ~Procedure() override;
 

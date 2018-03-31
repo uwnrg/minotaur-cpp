@@ -52,7 +52,7 @@ path2d algo::object_traverse_points(
 path2d algo::robot_object_path(
     const rect2d &rob,
     const rect2d &obj,
-    nrg::side side
+    nrg::dir side
 ) {
     path2d points =  algo::object_traverse_points(rob, obj);
 #ifndef NDEBUG

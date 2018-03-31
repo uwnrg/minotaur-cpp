@@ -10,10 +10,12 @@ Q_OBJECT
 
 public:
     enum Robot {
-        WIDTH = 15,
-        DELTA_PREF_MAX = 10,
-        DELTA_PREF_MIN = 8,
-        DELTA_ERR = 3
+        WIDTH = 16,
+        DELTA_PREF_MAX = 7,
+        DELTA_PREF_MIN = 6,
+        DELTA_ERR = 3,
+        RESOLVE_PREF = 3,
+        RESOLVE_ERR = 2
     };
 
     GlobalSim();
@@ -25,12 +27,16 @@ public:
     Q_SLOT void robot_up();
 
     vector2d &robot();
+    vector2d &object();
 
 private:
     double get_di() const;
     double get_dk() const;
 
+    void check_collide();
+
     vector2d m_robot;
+    vector2d m_object;
 };
 
 #endif

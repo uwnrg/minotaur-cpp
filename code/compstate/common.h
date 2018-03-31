@@ -53,7 +53,7 @@ namespace algo {
     path2d robot_object_path(
         const rect2d &rob,
         const rect2d &obj,
-        nrg::side side
+        nrg::dir side
     );
 
 }

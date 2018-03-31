@@ -4,7 +4,7 @@
 TEST(common, robot_object_path) {
     rect2d obj(-10, -10, 20, 10);
     rect2d rob(3, 10, 4, 4);
-    path2d res_left = algo::robot_object_path(rob, obj, nrg::side::LEFT);
+    path2d res_left = algo::robot_object_path(rob, obj, nrg::dir::LEFT);
     path2d exp_left = {
         {5, 12},
         {-12, 2},
@@ -15,7 +15,7 @@ TEST(common, robot_object_path) {
         ASSERT_EQ(exp_left[i].x(), res_left[i].x());
         ASSERT_EQ(exp_left[i].y(), res_left[i].y());
     }
-    path2d res_top = algo::robot_object_path(rob, obj, nrg::side::TOP);
+    path2d res_top = algo::robot_object_path(rob, obj, nrg::dir::TOP);
     path2d exp_top = {
         {5, 12},
         {12, 2},

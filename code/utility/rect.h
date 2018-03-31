@@ -9,11 +9,14 @@
 namespace nrg {
 
     // Sides of a box ordered clockwise starting from the top
-    enum side {
+    enum dir {
         TOP = 0,
         RIGHT = 1,
         BOTTOM = 2,
-        LEFT = 3
+        LEFT = 3,
+
+        UP = 0,
+        DOWN = 2
     };
 
     /**

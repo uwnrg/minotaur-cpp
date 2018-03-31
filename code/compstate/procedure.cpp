@@ -3,9 +3,6 @@
 #include "../controller/controller.h"
 #include "../gui/mainwindow.h"
 
-#define DEFAULT_TARGET_LOC_ACCEPTANCE 3.5
-#define DEFAULT_MAX_NORMAL_DEVIATION  6.5
-
 #define DIR_RIGHT "RIGHT"
 #define DIR_LEFT  "LEFT"
 #define DIR_DOWN  "DOWN"
@@ -27,9 +24,14 @@ QString perp_text(double err_x, double err_y, double norm_sq) {
     return text;
 }
 
-Procedure::Procedure(std::weak_ptr<Controller> sol, const path2d &path) :
-    m_loc_accept(DEFAULT_TARGET_LOC_ACCEPTANCE),
-    m_norm_dev(DEFAULT_MAX_NORMAL_DEVIATION),
+Procedure::Procedure(
+    std::weak_ptr<Controller> sol,
+    const path2d &path,
+    double loc_accept,
+    double norm_dev
+) :
+    m_loc_accept(loc_accept),
+    m_norm_dev(norm_dev),
     m_path(path),
     m_index(0),
     m_sol(std::move(sol)),

@@ -17,7 +17,8 @@ public:
     enum State {
         UNINITIALIZED,
         FIRST_SCAN,
-        TRACKING
+        TRACKING,
+        FAILED
     };
 
     enum Type {
@@ -32,6 +33,8 @@ public:
     __tracker();
 
     void update_track(cv::UMat &img);
+
+    void draw_bounding_box(cv::UMat &img);
 
     State state() const;
 
