@@ -137,7 +137,7 @@ void Procedure::movement_loop() {
 
 void Procedure::move_right(double estimated_power) {
     // Right => +X
-    m_dir_label->setText(DIR_RIGHT);
+    if (m_dir_label) { m_dir_label->setText(DIR_RIGHT); }
     if (auto sol = m_sol.lock()) {
         sol->move({static_cast<int>(estimated_power), 0});
     }
@@ -145,7 +145,7 @@ void Procedure::move_right(double estimated_power) {
 
 void Procedure::move_left(double estimated_power) {
     // Left => -X
-    m_dir_label->setText(DIR_LEFT);
+    if (m_dir_label) { m_dir_label->setText(DIR_LEFT); }
     if (auto sol = m_sol.lock()) {
         sol->move({-static_cast<int>(estimated_power), 0});
     }
@@ -153,7 +153,7 @@ void Procedure::move_left(double estimated_power) {
 
 void Procedure::move_up(double estimated_power) {
     // Up => -Y
-    m_dir_label->setText(DIR_UP);
+    if (m_dir_label) { m_dir_label->setText(DIR_UP); }
     if (auto sol = m_sol.lock()) {
         sol->move({0, -static_cast<int>(estimated_power)});
     }
@@ -161,7 +161,7 @@ void Procedure::move_up(double estimated_power) {
 
 void Procedure::move_down(double estimated_power) {
     // Down => +Y
-    m_dir_label->setText(DIR_DOWN);
+    if (m_dir_label) { m_dir_label->setText(DIR_DOWN); }
     if (auto sol = m_sol.lock()) {
         sol->move({0, static_cast<int>(estimated_power)});
     }

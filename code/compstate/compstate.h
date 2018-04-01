@@ -12,7 +12,7 @@
 #include "../camera/statusbox.h"
 
 #include "procedure.h"
-#include "readymove.h"
+#include "objectline.h"
 
 class MainWindow;
 
@@ -114,7 +114,7 @@ private:
     path2d m_path;
 
     std::unique_ptr<Procedure> m_procedure;
-    std::unique_ptr<ReadyMove> m_ready_move;
+    std::unique_ptr<ObjectLine> m_object_line;
 };
 
 Q_DECLARE_METATYPE(std::shared_ptr<CompetitionState::wall_arr>);

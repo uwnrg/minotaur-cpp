@@ -26,8 +26,9 @@ public:
     explicit ReadyMove(std::weak_ptr<Controller> sol, nrg::dir dir);
 
     void start();
-
     void stop();
+
+    bool is_done() const;
 
 private:
     void timerEvent(QTimerEvent *ev) override;
@@ -40,7 +41,6 @@ private:
     void do_ready_move();
     void do_ready_move_proc();
 
-    bool is_done() const;
 
 private:
     std::weak_ptr<Controller> m_sol;

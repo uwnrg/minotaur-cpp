@@ -8,8 +8,8 @@ namespace det_ {
         COLLIDE_NORM_DEV = 4,
         COLLIDE_LOC_ACPT = 3,
 
-        RDY_MV_NORM_DEV = 3,
-        RDY_MV_LOC_ACPT = 2,
+        RDY_MV_NORM_DEV = 4,
+        RDY_MV_LOC_ACPT = 3,
     };
 }
 
@@ -45,6 +45,7 @@ void ReadyMove::movement_loop() {
         ) {
         return;
     }
+    log() << "Ready Move State: " << m_state;
     switch (m_state) {
         case UNINITIALIZED:
             do_uninitialized();
@@ -118,7 +119,7 @@ void ReadyMove::do_ready_move() {
     assert(!algo::aabb_collide(obj_rect, rob_rect));
 #endif
     // Generate the traverse path
-    path2d path = algo::robot_object_path(rob_rect, obj_rect, move_dir_to_side(m_dir));
+    path2d path = algo::robot_object_path(rob_rect, obj_rect, m_dir);
     // Create the procedure and hand over control
     m_proc = std::make_unique<Procedure>(
         m_sol, path,
