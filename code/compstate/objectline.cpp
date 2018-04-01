@@ -18,7 +18,7 @@ ObjectLine::ObjectLine(
     m_state(State::REQUIRE_READY_MOVE) {}
 
 void ObjectLine::start() {
-    m_timer.start(200, this);
+    m_timer.start(50, this);
 }
 
 void ObjectLine::stop() {

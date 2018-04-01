@@ -11,11 +11,11 @@ Q_OBJECT
 public:
     enum Robot {
         WIDTH = 16,
-        DELTA_PREF_MAX = 7,
-        DELTA_PREF_MIN = 6,
-        DELTA_ERR = 3,
-        RESOLVE_PREF = 3,
-        RESOLVE_ERR = 2
+        DELTA_PREF_MAX = 3,
+        DELTA_PREF_MIN = 2,
+        DELTA_ERR = 1,
+        RESOLVE_PREF = 2,
+        RESOLVE_ERR = 1
     };
 
     GlobalSim();

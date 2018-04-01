@@ -22,7 +22,7 @@ ReadyMove::ReadyMove(std::weak_ptr<Controller> sol, nrg::dir dir) :
     m_done(false) {}
 
 void ReadyMove::start() {
-    m_timer.start(200, this);
+    m_timer.start(50, this);
 }
 
 void ReadyMove::stop() {

@@ -3,7 +3,7 @@
 
 namespace det_ {
     enum {
-        MOVE_ALIGNMENT = 3
+        MOVE_ALIGNMENT = 2
     };
 }
 
@@ -33,7 +33,7 @@ ObjectMove::Stop ObjectMove::get_stop() const {
 }
 
 void ObjectMove::start() {
-    m_timer.start(200, this);
+    m_timer.start(50, this);
 }
 
 void ObjectMove::stop() {
@@ -48,6 +48,14 @@ void ObjectMove::timerEvent(QTimerEvent *ev) {
 
 void ObjectMove::movement_loop() {
     CompetitionState &state = Main::get()->state();
+    if (
+        !state.is_robot_box_fresh() ||
+        !state.is_robot_box_valid() ||
+        !state.is_object_box_fresh() ||
+        !state.is_object_box_valid()
+        ) {
+        return;
+    }
     rect2d rob = state.get_robot_box(true);
     rect2d obj = state.get_object_box(true);
     vector2d obj_loc = obj.center();
@@ -69,12 +77,15 @@ void ObjectMove::movement_loop() {
     }
     // Make sure the robot is aligned for proper movement
     double align_err = alignment_err(rob_loc, obj_loc);
+    double tgt_err = target_err(obj_loc);
+    log() << "Align Err:  " << align_err;
+    log() << "Target Err: " << tgt_err;
     if (align_err > det_::MOVE_ALIGNMENT) {
         // Correct for alignment
         correct(align_err);
     } else {
         // Move in desired direction
-        do_move(target_err(obj_loc));
+        do_move(tgt_err);
     }
 }
 
@@ -118,13 +129,13 @@ void ObjectMove::correct(double delta) {
 bool ObjectMove::beyond_target(const vector2d &obj_loc) const {
     switch (m_dir) {
         case nrg::dir::RIGHT:
-            return obj_loc.x() > m_target;
+            return obj_loc.x() >= m_target;
         case nrg::dir::LEFT:
-            return obj_loc.x() < m_target;
+            return obj_loc.x() <= m_target;
         case nrg::dir::DOWN:
-            return obj_loc.y() > m_target;
+            return obj_loc.y() >= m_target;
         case nrg::dir::UP:
-            return obj_loc.y() < m_target;
+            return obj_loc.y() <= m_target;
         default:
             return false;
     }

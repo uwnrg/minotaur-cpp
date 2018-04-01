@@ -62,7 +62,7 @@ bool Procedure::is_stopped() const {
 }
 
 void Procedure::start() {
-    m_timer.start(200, this);
+    m_timer.start(50, this);
     m_initial = algo::rect_center(Main::get()->state().get_robot_box());
     Q_EMIT started();
 }
