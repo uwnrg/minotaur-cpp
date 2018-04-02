@@ -106,8 +106,7 @@ void ReadyMove::do_colliding_proc() {
     } else {
         return;
     }
-    // Check for collision
-    do_uninitialized();
+    m_state = State::READY_MOVE;
 }
 
 void ReadyMove::do_ready_move() {
@@ -116,7 +115,7 @@ void ReadyMove::do_ready_move() {
     rect2d obj_rect = state.get_object_box(true);
     rect2d rob_rect = state.get_robot_box(true);
 #ifndef NDEBUG
-    assert(!algo::aabb_collide(obj_rect, rob_rect));
+    //assert(!algo::aabb_collide(obj_rect, rob_rect));
 #endif
     // Generate the traverse path
     path2d path = algo::robot_object_path(rob_rect, obj_rect, m_dir);

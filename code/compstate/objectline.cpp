@@ -80,7 +80,7 @@ void ObjectLine::movement_loop() {
 }
 
 void ObjectLine::do_require_ready_move() {
-    nrg::dir side_dir = move_dir_to_side(m_dir);
+    nrg::dir side_dir = invert_dir(m_dir);
     m_ready_move = std::make_unique<ReadyMove>(m_sol, side_dir);
     m_ready_move->start();
     m_state = State::DOING_READY_MOVE;
@@ -155,7 +155,7 @@ void ObjectLine::do_require_correction() {
 }
 
 void ObjectLine::do_require_correction_ready_move() {
-    nrg::dir side_dir = move_dir_to_side(m_correction_dir);
+    nrg::dir side_dir = invert_dir(m_correction_dir);
     m_ready_move = std::make_unique<ReadyMove>(m_sol, side_dir);
     m_ready_move->start();
     m_state = State::DOING_CORRECTION_READY_MOVE;

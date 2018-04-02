@@ -160,15 +160,10 @@ void CompetitionState::halt_traversal() {
 }
 
 void CompetitionState::begin_object_move() {
-    m_object_line = std::make_unique<ObjectLine>(
-        Main::get()->controller(),
-        nrg::dir::RIGHT,
-        m_path[0].x(),
-        m_object_box.y + m_object_box.height / 2
-    );
-    m_object_line->start();
+    m_object_procedure = std::make_unique<ObjectProcedure>(Main::get()->controller(), m_path);
+    m_object_procedure->start();
 }
 
 void CompetitionState::halt_object_move() {
-    m_object_line->stop();
+    m_object_procedure->stop();
 }

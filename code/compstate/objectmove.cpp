@@ -21,6 +21,7 @@ ObjectMove::ObjectMove(
     m_norm_dev(norm_dev),
 
     m_done(false),
+    m_stop(Stop::OKAY),
 
     m_delegate(std::move(sol), {}) {}
 

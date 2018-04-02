@@ -20,7 +20,7 @@ public:
         WRONG_SIDE
     };
 
-    ObjectMove(
+    explicit ObjectMove(
         std::weak_ptr<Controller> sol,
         nrg::dir dir,
         double target,

@@ -59,7 +59,7 @@ path2d algo::robot_object_path(
     // There should be eight points and the bounding boxes
     // should not be colliding at this point
     assert(points.size() == 8);
-    assert(!algo::aabb_collide(rob, obj));
+    //assert(!algo::aabb_collide(rob, obj));
 #endif
     nrg::graph2d<double> graph;
     std::vector<nrg::node2d<double>> nodes{
