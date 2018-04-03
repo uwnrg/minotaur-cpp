@@ -10,6 +10,8 @@
 #include <QObject>
 #include <QTimer>
 
+class StatusLabel;
+
 class ReadyMove : public QObject {
 Q_OBJECT
 
@@ -24,6 +26,7 @@ public:
     };
 
     explicit ReadyMove(std::weak_ptr<Controller> sol, nrg::dir dir);
+    ~ReadyMove();
 
     void start();
     void stop();
@@ -50,6 +53,8 @@ private:
     vector2d m_resolve;
 
     std::unique_ptr<Procedure> m_proc;
+
+    StatusLabel *m_state_label;
 
     QBasicTimer m_timer;
 

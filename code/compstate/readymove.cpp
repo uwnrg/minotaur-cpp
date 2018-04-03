@@ -19,7 +19,17 @@ ReadyMove::ReadyMove(std::weak_ptr<Controller> sol, nrg::dir dir) :
 
     m_state(State::UNINITIALIZED),
 
-    m_done(false) {}
+    m_done(false) {
+    if (auto lp = Main::get()->status_box().lock()) {
+        m_state_label = lp->add_label("Ready State: 0");
+    }
+}
+
+ReadyMove::~ReadyMove() {
+    if (auto lp = Main::get()->status_box().lock()) {
+        lp->remove_label(m_state_label);
+    }
+}
 
 void ReadyMove::start() {
     m_timer.start(50, this);
@@ -46,6 +56,7 @@ void ReadyMove::movement_loop() {
         return;
     }
     log() << "Ready Move State: " << m_state;
+    m_state_label->setText("Ready State: " + QString::number(m_state));
     switch (m_state) {
         case UNINITIALIZED:
             do_uninitialized();

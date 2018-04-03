@@ -7,6 +7,18 @@ namespace det_ {
     };
 }
 
+QString align_text(double align_err) {
+    QString text;
+    text.sprintf("Align Err:  %.1f", align_err);
+    return text;
+}
+
+QString target_text(double target_err) {
+    QString text;
+    text.sprintf("Target Err: %.1f", target_err);
+    return text;
+}
+
 ObjectMove::ObjectMove(
     std::weak_ptr<Controller> sol,
     nrg::dir dir,
@@ -23,7 +35,19 @@ ObjectMove::ObjectMove(
     m_done(false),
     m_stop(Stop::OKAY),
 
-    m_delegate(std::move(sol), {}) {}
+    m_delegate(std::move(sol), {}) {
+    if (auto lp = Main::get()->status_box().lock()) {
+        m_align_label = lp->add_label(align_text(0));
+        m_target_label = lp->add_label(target_text(0));
+    }
+}
+
+ObjectMove::~ObjectMove() {
+    if (auto lp = Main::get()->status_box().lock()) {
+        lp->remove_label(m_align_label);
+        lp->remove_label(m_target_label);
+    }
+}
 
 bool ObjectMove::is_done() const {
     return m_done;
@@ -81,6 +105,8 @@ void ObjectMove::movement_loop() {
     double tgt_err = target_err(obj_loc);
     log() << "Align Err:  " << align_err;
     log() << "Target Err: " << tgt_err;
+    m_align_label->setText(align_text(align_err));
+    m_target_label->setText(target_text(tgt_err));
     if (align_err > det_::MOVE_ALIGNMENT) {
         // Correct for alignment
         correct(align_err);
@@ -91,7 +117,7 @@ void ObjectMove::movement_loop() {
 }
 
 void ObjectMove::do_move(double delta) {
-    if (delta == 0) { return; }
+    if (delta < 1) { delta = 1; }
     switch (m_dir) {
         case nrg::dir::RIGHT:
             m_delegate.move_right(delta);
@@ -112,13 +138,13 @@ void ObjectMove::do_move(double delta) {
 
 void ObjectMove::correct(double delta) {
     switch (m_dir) {
-        case nrg::dir::RIGHT:
-        case nrg::dir::LEFT:
+        case nrg::dir::DOWN:
+        case nrg::dir::UP:
             if (delta > 0) { m_delegate.move_right(delta); }
             else if (delta < 0) { m_delegate.move_left(-delta); }
             break;
-        case nrg::dir::DOWN:
-        case nrg::dir::UP:
+        case nrg::dir::RIGHT:
+        case nrg::dir::LEFT:
             if (delta > 0) { m_delegate.move_down(delta); }
             else if (delta < 0) { m_delegate.move_up(delta); }
             break;

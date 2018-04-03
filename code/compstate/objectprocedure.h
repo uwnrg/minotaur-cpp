@@ -6,6 +6,8 @@
 
 #include "objectline.h"
 
+class StatusLabel;
+
 class ObjectProcedure : public QObject {
 Q_OBJECT
 
@@ -17,6 +19,7 @@ public:
     };
 
     explicit ObjectProcedure(std::weak_ptr<Controller> sol, const path2d &path);
+    ~ObjectProcedure() override;
 
     void start();
     void stop();
@@ -25,7 +28,7 @@ public:
 
 private:
     static std::vector<move_node> path_to_move_nodes(const path2d &path);
-    static move_node delta_to_move_node(double base, double delta, bool ver);
+    static move_node delta_to_move_node(double start, double delta, double base, bool ver);
 
     void timerEvent(QTimerEvent *ev) override;
 
@@ -38,6 +41,8 @@ private:
     vector2d m_initial;
 
     QBasicTimer m_timer;
+
+    StatusLabel *m_index_label;
 
     bool m_done;
     bool m_start;

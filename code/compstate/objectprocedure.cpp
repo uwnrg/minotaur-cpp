@@ -1,45 +1,32 @@
 #include "objectprocedure.h"
 #include "compstate.h"
+#include "../camera/statusbox.h"
 #include "../utility/algorithm.h"
 #include "../gui/mainwindow.h"
 
-#include <QTimerEvent>
-
-#ifndef NDEBUG
-#include <cassert>
-#endif
-
-#define DELTA_THRES 2.0
-
 ObjectProcedure::move_node
-ObjectProcedure::delta_to_move_node(double base, double target, bool ver) {
+ObjectProcedure::delta_to_move_node(double start, double target, double base, bool ver) {
 #ifndef NDEBUG
-    assert(fabs(target - base) >= DELTA_THRES);
+    //assert(fabs(target - start) >= DELTA_THRES);
 #endif
     move_node node{};
     node.base = base;
     node.target = target;
-    node.dir = target > base ? nrg::dir::RIGHT : nrg::dir::LEFT;
+    node.dir = target > start ? nrg::dir::RIGHT : nrg::dir::LEFT;
     node.dir = ver ? rotate_cw(node.dir) : node.dir;
     return node;
 }
 
 std::vector<ObjectProcedure::move_node>
 ObjectProcedure::path_to_move_nodes(const path2d &path) {
-    // Rectangular movement only, and prefer horizontal first
-    std::vector<move_node> move_nodes; // at most two per point
-    std::size_t max = path.size() - 1;
-    for (std::size_t i = 0; i < max; ++i) {
+    std::vector<move_node> move_nodes;
+    for (std::size_t i = 0; i < path.size() - 1; ++i) {
         const vector2d &prev = path[i];
         const vector2d &next = path[i + 1];
-        if (fabs(next.x() - prev.x()) >= DELTA_THRES) {
-            move_nodes.push_back(delta_to_move_node(prev.x(), next.x(), false));
-        }
-        if (fabs(next.y() - prev.y()) >= DELTA_THRES) {
-            move_nodes.push_back(delta_to_move_node(prev.y(), next.y(), true));
-        }
+        move_nodes.push_back(delta_to_move_node(prev.x(), next.x(), prev.y(), false));
+        move_nodes.push_back(delta_to_move_node(prev.y(), next.y(), next.x(), true));
     }
-    return move_nodes; // move constructor
+    return move_nodes;
 }
 
 ObjectProcedure::ObjectProcedure(std::weak_ptr<Controller> sol, const path2d &path) :
@@ -47,7 +34,17 @@ ObjectProcedure::ObjectProcedure(std::weak_ptr<Controller> sol, const path2d &pa
     m_path(path),
     m_done(false),
     m_start(false),
-    m_index(0) {}
+    m_index(0) {
+    if (auto lp = Main::get()->status_box().lock()) {
+        m_index_label = lp->add_label("Obj Index: 0");
+    }
+}
+
+ObjectProcedure::~ObjectProcedure() {
+    if (auto lp = Main::get()->status_box().lock()) {
+        lp->remove_label(m_index_label);
+    }
+}
 
 void ObjectProcedure::start() {
     m_timer.start(50, this);
@@ -68,6 +65,7 @@ bool ObjectProcedure::is_done() {
 }
 
 void ObjectProcedure::movement_loop() {
+    m_index_label->setText("Obj Index: " + QString::number(m_index));
     CompetitionState &state = Main::get()->state();
     if (!state.is_robot_box_fresh() || !state.is_robot_box_valid()) {
         return;
@@ -76,8 +74,8 @@ void ObjectProcedure::movement_loop() {
     if (!m_start) {
         m_start = true;
         path2d path;
-        vector2d robot_loc = rect2d(state.get_robot_box(true)).center();
-        path.push_back(robot_loc);
+        vector2d object_loc = rect2d(state.get_object_box(true)).center();
+        path.push_back(object_loc);
         path.insert(path.end(), m_path.begin(), m_path.end());
         m_path = std::move(path);
         m_move_nodes = path_to_move_nodes(m_path);

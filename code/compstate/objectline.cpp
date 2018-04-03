@@ -15,7 +15,17 @@ ObjectLine::ObjectLine(
 
     m_done(false),
 
-    m_state(State::REQUIRE_READY_MOVE) {}
+    m_state(State::REQUIRE_READY_MOVE) {
+    if (auto lp = Main::get()->status_box().lock()) {
+        m_state_label = lp->add_label("Line State: 0");
+    }
+}
+
+ObjectLine::~ObjectLine() {
+    if (auto lp = Main::get()->status_box().lock()) {
+        lp->remove_label(m_state_label);
+    }
+}
 
 void ObjectLine::start() {
     m_timer.start(50, this);
@@ -46,6 +56,7 @@ void ObjectLine::movement_loop() {
         return;
     }
     log() << "Line State: " <<  m_state;
+    m_state_label->setText("Line State: " + QString::number(m_state));
     switch (m_state) {
         case State::REQUIRE_READY_MOVE:
             do_require_ready_move();

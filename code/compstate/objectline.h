@@ -6,11 +6,14 @@
 #include "objectmove.h"
 #include "readymove.h"
 
+class StatusLabel;
+
 class ObjectLine : public QObject {
 Q_OBJECT
 
 public:
     explicit ObjectLine(std::weak_ptr<Controller> sol, nrg::dir dir, double target, double base);
+    ~ObjectLine() override;
 
     void start();
     void stop();
@@ -57,6 +60,8 @@ private:
     State m_state;
 
     QBasicTimer m_timer;
+
+    StatusLabel *m_state_label;
 
     std::unique_ptr<ReadyMove> m_ready_move;
     std::unique_ptr<ObjectMove> m_object_move;

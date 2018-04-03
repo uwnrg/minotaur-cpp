@@ -9,6 +9,8 @@
 #include "../controller/controller.h"
 #include "../utility/rect.h"
 
+class StatusLabel;
+
 class ObjectMove : public QObject {
 Q_OBJECT
 
@@ -27,6 +29,7 @@ public:
         double norm_base,
         double norm_dev
     );
+    ~ObjectMove() override;
 
     void start();
     void stop();
@@ -56,6 +59,9 @@ private:
 
     bool m_done;
     Stop m_stop;
+
+    StatusLabel *m_align_label;
+    StatusLabel *m_target_label;
 
     QBasicTimer m_timer;
 
