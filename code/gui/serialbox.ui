@@ -22,9 +22,9 @@
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>190</y>
-     <width>261</width>
+     <x>25</x>
+     <y>526</y>
+     <width>276</width>
      <height>32</height>
     </rect>
    </property>
@@ -43,7 +43,7 @@
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>71</width>
+     <width>86</width>
      <height>21</height>
     </rect>
    </property>
@@ -64,7 +64,7 @@
     <rect>
      <x>70</x>
      <y>20</y>
-     <width>201</width>
+     <width>231</width>
      <height>25</height>
     </rect>
    </property>
@@ -87,7 +87,7 @@
     <rect>
      <x>30</x>
      <y>100</y>
-     <width>81</width>
+     <width>96</width>
      <height>17</height>
     </rect>
    </property>
@@ -105,7 +105,7 @@
     <rect>
      <x>30</x>
      <y>60</y>
-     <width>81</width>
+     <width>96</width>
      <height>17</height>
     </rect>
    </property>
@@ -123,7 +123,7 @@
     <rect>
      <x>110</x>
      <y>100</y>
-     <width>161</width>
+     <width>191</width>
      <height>25</height>
     </rect>
    </property>
@@ -138,8 +138,8 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>140</y>
-     <width>251</width>
+     <y>476</y>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -149,12 +149,18 @@
       <property name="text">
        <string>Disconnect</string>
       </property>
+      <property name="autoDefault">
+        <bool>false</bool>
+      </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="connect_button">
       <property name="text">
        <string>Connect</string>
+      </property>
+      <property name="autoDefault">
+        <bool>false</bool>
       </property>
      </widget>
     </item>
@@ -165,7 +171,7 @@
     <rect>
      <x>110</x>
      <y>60</y>
-     <width>161</width>
+     <width>191</width>
      <height>25</height>
     </rect>
    </property>
@@ -179,11 +185,69 @@
   <widget class="QPlainTextEdit" name="serial_display">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>320</x>
      <y>20</y>
-     <width>381</width>
+     <width>351</width>
      <height>561</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QSlider" name="left_slider">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>278</y>
+     <width>128</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="invertedAppearance">
+    <bool>true</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="right_slider">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>278</y>
+     <width>128</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="up_slider">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>145</y>
+     <width>30</width>
+     <height>128</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="down_slider">
+   <property name="geometry">
+    <rect>
+     <x>145</x>
+     <y>313</y>
+     <width>30</width>
+     <height>128</height>
+    </rect>
+   </property>
+   <property name="invertedAppearance">
+    <bool>true</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
    </property>
   </widget>
  </widget>

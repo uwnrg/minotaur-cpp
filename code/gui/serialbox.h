@@ -29,6 +29,12 @@ public:
     Q_SLOT void append_text(const std::string &text);
 
 private:
+    enum Power {
+        POWER_INTERVAL = 16,
+        POWER_MAX = 255,
+        POWER_MIN = 0
+    };
+
     Ui::SerialBox *ui;
     std::shared_ptr<Solenoid> m_solenoid;
 

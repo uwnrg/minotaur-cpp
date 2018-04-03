@@ -100,7 +100,7 @@
   <widget class="QLineEdit" name="rotation_box">
    <property name="geometry">
     <rect>
-     <x>467</x>
+     <x>465</x>
      <y>20</y>
      <width>40</width>
      <height>31</height>
@@ -143,9 +143,9 @@
   <widget class="QPushButton" name="show_grid_button">
    <property name="geometry">
     <rect>
-     <x>350</x>
+     <x>280</x>
      <y>100</y>
-     <width>121</width>
+     <width>100</width>
      <height>31</height>
     </rect>
    </property>
@@ -159,9 +159,9 @@
   <widget class="QPushButton" name="clear_grid_button">
    <property name="geometry">
     <rect>
-     <x>350</x>
+     <x>280</x>
      <y>140</y>
-     <width>121</width>
+     <width>100</width>
      <height>31</height>
     </rect>
    </property>
@@ -175,10 +175,10 @@
   <widget class="QSpinBox" name="weight_selector">
    <property name="geometry">
     <rect>
-     <x>240</x>
+     <x>210</x>
      <y>100</y>
-     <width>91</width>
-     <height>24</height>
+     <width>60</width>
+     <height>31</height>
     </rect>
    </property>
   </widget>
@@ -187,8 +187,8 @@
     <rect>
      <x>20</x>
      <y>100</y>
-     <width>201</width>
-     <height>26</height>
+     <width>180</width>
+     <height>31</height>
     </rect>
    </property>
    <item>
@@ -225,6 +225,9 @@
    <property name="checked">
     <bool>false</bool>
    </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
   </widget>
   <widget class="QPushButton" name="clear_path_button">
    <property name="geometry">
@@ -237,6 +240,9 @@
    </property>
    <property name="text">
     <string>Clear Path</string>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
    </property>
   </widget>
  </widget>
