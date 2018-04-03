@@ -107,18 +107,18 @@ void ImageViewer::paintEvent(QPaintEvent *) {
     double combined_scale =
         m_preprocessor.get_zoom_factor() *
         m_converter.get_previous_scale();
-    const path2d<double> &path = Main::get()->state().get_path();
+    const path2d &path = Main::get()->state().get_path();
     for (std::size_t i = 0; i < path.size(); ++i) {
         QColor color;
         if (i == 0) { color = Qt::red; }
         else if (i + 1 == path.size()) { color = Qt::blue; }
         else { color = Qt::green; }
-        Vector2i v1 = path[i] * combined_scale;
+        vector2i v1 = path[i] * combined_scale;
         painter.setBrush(color);
         painter.setPen(color);
         painter.drawEllipse(v1.x() - 4, v1.y() - 4, 8, 8);
         if (i > 0) {
-            Vector2i v0 = path[i - 1] * combined_scale;
+            vector2i v0 = path[i - 1] * combined_scale;
             painter.setPen(QPen(Qt::green, 2, Qt::DashDotLine, Qt::RoundCap));
             painter.drawLine(v0.x(), v0.y(), v1.x(), v1.y());
         }

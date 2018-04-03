@@ -146,7 +146,7 @@ void CompetitionState::append_path(double x, double y) {
     m_path.emplace_back(x, y);
 }
 
-const path2d<double> &CompetitionState::get_path() const {
+const path2d &CompetitionState::get_path() const {
     return m_path;
 }
 
@@ -157,4 +157,13 @@ void CompetitionState::begin_traversal() {
 
 void CompetitionState::halt_traversal() {
     m_procedure->stop();
+}
+
+void CompetitionState::begin_object_move() {
+    m_object_procedure = std::make_unique<ObjectProcedure>(Main::get()->controller(), m_path);
+    m_object_procedure->start();
+}
+
+void CompetitionState::halt_object_move() {
+    m_object_procedure->stop();
 }

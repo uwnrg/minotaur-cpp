@@ -8,10 +8,11 @@
 #include <QObject>
 
 #include "../utility/array2d.h"
-#include "../utility/vector2d.h"
+#include "../utility/vector.h"
 #include "../camera/statusbox.h"
 
 #include "procedure.h"
+#include "objectprocedure.h"
 
 class MainWindow;
 
@@ -60,7 +61,10 @@ public:
     Q_SLOT void begin_traversal();
     Q_SLOT void halt_traversal();
 
-    const path2d<double> &get_path() const;
+    Q_SLOT void begin_object_move();
+    Q_SLOT void halt_object_move();
+
+    const path2d &get_path() const;
 
     cv::Rect2d &get_robot_box(bool consume = false);
     cv::Rect2d &get_object_box(bool consume = false);
@@ -107,9 +111,10 @@ private:
 
     double m_acquisition_r_sigma;
 
-    path2d<double> m_path;
+    path2d m_path;
 
     std::unique_ptr<Procedure> m_procedure;
+    std::unique_ptr<ObjectProcedure> m_object_procedure;
 };
 
 Q_DECLARE_METATYPE(std::shared_ptr<CompetitionState::wall_arr>);

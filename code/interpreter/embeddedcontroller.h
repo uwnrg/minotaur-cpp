@@ -33,7 +33,7 @@ public:
     void bind_controller(std::shared_ptr<Controller> *controller_ptr);
 
     // Send a movement to the active controller
-    bool send_movement(Vector2i &move_vector);
+    bool send_movement(vector2i &move_vector);
 
     bool move_right();
 
@@ -52,7 +52,7 @@ namespace Embedded {
         if (!PyArg_ParseTuple(args, "ii", &x, &y)) {
             return PyLong_FromLong(-1);
         }
-        Vector2i move_vector(x, y);
+        vector2i move_vector(x, y);
         bool res = EmbeddedController::getInstance().send_movement(move_vector);
         return PyLong_FromLong(res);
     }

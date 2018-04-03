@@ -2,7 +2,7 @@
 #define SIMULATOR_H
 
 #include "controller.h"
-#include "../utility/vector2d.h"
+#include "../utility/vector.h"
 
 class SimulatorScene;
 class GlobalSim;
@@ -14,10 +14,10 @@ Q_OBJECT
 public:
     Simulator(GlobalSim *sim);
 
-    void __move_delegate(Vector2i dir, int timer) override;
+    void __move_delegate(vector2i dir, int timer) override;
 
     // Get (x,y) position of the robot
-    Vector2i *getRobotPos();
+    vector2i *getRobotPos();
 
     Q_SIGNAL void move_right();
     Q_SIGNAL void move_left();
@@ -25,7 +25,7 @@ public:
     Q_SIGNAL void move_up();
 
 private:
-    Vector2i robot_pos;
+    vector2i robot_pos;
 };
 
 #endif // SIMULATOR_H

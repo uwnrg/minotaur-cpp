@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 #include "../utility/logger.h"
-#include "../utility/vector2d.h"
+#include "../utility/vector.h"
 
 class Controller : public QObject {
 Q_OBJECT
@@ -32,14 +32,14 @@ public:
     };
 
     // Common robot functions
-    virtual Vector2i to_vector2i(Dir dir);
+    virtual vector2i to_vector2i(Dir dir);
 
     // Movement
     void move(Dir dir, int timer = STEP_TIME);
 
-    void move(Vector2i dir, int timer = STEP_TIME);
+    void move(vector2i dir, int timer = STEP_TIME);
 
-    virtual void __move_delegate(Vector2i dir, int timer) = 0;
+    virtual void __move_delegate(vector2i dir, int timer) = 0;
 
     // Key press functions
     void keyPressed(int key);

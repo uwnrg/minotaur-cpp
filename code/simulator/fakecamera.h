@@ -4,6 +4,8 @@
 #include <QObject>
 #include <opencv2/videoio.hpp>
 
+#include "../utility/vector.h"
+
 /**
  * Mocked VideoCapture class for use with simulated robot and
  * frame production.
@@ -21,7 +23,8 @@ public:
     FakeCamera();
     ~FakeCamera() override;
 
-    cv::Rect2d get_robot_rect();
+    static cv::Rect2d get_robot_rect();
+    static cv::Point2d get_object_rect();
 
     bool open(const cv::String &filename) override;
     bool open(const cv::String &filename, int api_pref) override;

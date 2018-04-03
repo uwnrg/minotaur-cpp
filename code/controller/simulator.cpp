@@ -9,7 +9,7 @@ Simulator::Simulator(GlobalSim *sim) :
     connect(this, &Simulator::move_up, sim, &GlobalSim::robot_up);
 }
 
-void Simulator::__move_delegate(Vector2i dir, int timer) {
+void Simulator::__move_delegate(vector2i dir, int timer) {
     // Update the robot position
 #ifndef NDEBUG
     debug() << "Moved " << dir << " in " << timer << " sec";
@@ -26,6 +26,6 @@ void Simulator::__move_delegate(Vector2i dir, int timer) {
     }
 }
 
-Vector2i *Simulator::getRobotPos() {
+vector2i *Simulator::getRobotPos() {
     return &robot_pos;
 }
