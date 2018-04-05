@@ -6,6 +6,10 @@
 #include <memory>
 #include <opencv2/videoio.hpp>
 
+/**
+ * This class handles a cv::VideoWriter instance that is used to
+ * write preprocessed cv::Mat objects to a video file.
+ */
 class Recorder : public QObject {
 Q_OBJECT
 
