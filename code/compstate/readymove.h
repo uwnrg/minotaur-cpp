@@ -12,10 +12,24 @@
 
 class StatusLabel;
 
+/**
+ * This procedure object leverages the robot Procedure with the goal
+ * of moving the robot to the position around the object to move the object.
+ *
+ * For instance, if the object must be moved downwards, this object will
+ * move the robot to the top side of the object, without colliding.
+ */
 class ReadyMove : public QObject {
 Q_OBJECT
 
 public:
+    /**
+     * States of the object. The ReadyMove can be uninitialized, which requires
+     * checking the status of the robot.
+     *
+     * In COLLIDING, the robot and object's bounding box collision is resolved, and
+     * in READY_MOVE the robot is moved along a path to the correct location.
+     */
     enum State {
         UNINITIALIZED,
         COLLIDING,
@@ -44,14 +58,26 @@ private:
     void do_ready_move();
     void do_ready_move_proc();
 
-
 private:
     std::weak_ptr<Controller> m_sol;
+    /**
+     * The desired side of the object to be on.
+     */
     nrg::dir m_dir;
 
+    /**
+     * Internal state of the object.
+     */
     State m_state;
+    /**
+     * The collision resolution vector.
+     */
     vector2d m_resolve;
 
+    /**
+     * Procedure instance used to traverse paths and
+     * resolve collisions.
+     */
     std::unique_ptr<Procedure> m_proc;
 
     StatusLabel *m_state_label;

@@ -16,8 +16,24 @@
 
 class MainWindow;
 
+/**
+ * Determine the likelihood that a bounding box actually contains the
+ * object or robot that is tracked, based on the squareness of the rectangle
+ * and its closeness to the calibrated area.
+ *
+ * @param rect            bounding box rectangle
+ * @param calibrated_area the expected area of the object or robot
+ * @return a value representing accuracy
+ */
 double acquisition_r(const cv::Rect2d &rect, double calibrated_area);
 
+/**
+ * This competition state object is held global and is used as the middleman
+ * for communication between various object instances that contribute to
+ * running the robot and object at competition time.
+ *
+ * The global instance is held in the MainWindow.
+ */
 class CompetitionState : public QObject {
 Q_OBJECT
 
@@ -88,6 +104,8 @@ public:
 private:
     MainWindow *m_parent;
 
+    // Status labels to display the robot and object positions
+    // based on rectangles posted to the object
     StatusLabel *m_robot_loc_label;
     StatusLabel *m_object_loc_label;
 
@@ -95,9 +113,12 @@ private:
     bool m_tracking_object;
     bool m_acquire_walls;
 
+    // Whether a received bounding box for the robot and object
+    // from the trackers has been consumed by a procedure
     bool m_robot_box_fresh;
     bool m_object_box_fresh;
 
+    // Contained rectangles for the robot and object boxes
     cv::Rect2d m_robot_box;
     cv::Rect2d m_object_box;
     cv::Rect2d m_target_box;
@@ -106,14 +127,29 @@ private:
 
     int m_object_type;
 
+    // Stored calibrated area values for the object and robot
     double m_robot_calibrated_area;
     double m_object_calibrated_area;
 
+    /**
+     * The accuracy threshold to determine whether the robot or
+     * object bounding box is accurate
+     */
     double m_acquisition_r_sigma;
 
+    /**
+     * The desired robot or object traversal path. Object that seek
+     * to update this should modify it directly through access functions.
+     */
     path2d m_path;
 
+    /**
+     * Stored procedure instance for traversing the path.
+     */
     std::unique_ptr<Procedure> m_procedure;
+    /**
+     * Stored object procedure instance for moving the object along the path.
+     */
     std::unique_ptr<ObjectProcedure> m_object_procedure;
 };
 

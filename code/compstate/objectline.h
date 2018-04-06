@@ -8,6 +8,17 @@
 
 class StatusLabel;
 
+/**
+ * This object combines ReadyMove and ObjectMove to have the robot push the
+ * object along an axis-aligned line. This object will place the robot on the
+ * correct side of the object to begin moving, and then hand control over to
+ * ObjectMove.
+ *
+ * If the ReadyMove returns WRONG_SIDE, this class will move the robot
+ * back to the correct side. If ReadyMove returns EXCEEDED_NORM, ObjectLine will
+ * move the robot to a correction side and use ObjectMove to reduce the normal
+ * deviation, without caring for displacement along the line of motion.
+ */
 class ObjectLine : public QObject {
 Q_OBJECT
 

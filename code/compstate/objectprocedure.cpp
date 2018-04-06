@@ -1,6 +1,5 @@
 #include "objectprocedure.h"
 #include "compstate.h"
-#include "../camera/statusbox.h"
 #include "../utility/algorithm.h"
 #include "../gui/mainwindow.h"
 
@@ -9,6 +8,7 @@ ObjectProcedure::delta_to_move_node(double start, double target, double base, bo
 #ifndef NDEBUG
     //assert(fabs(target - start) >= DELTA_THRES);
 #endif
+    // Create a move node
     move_node node{};
     node.base = base;
     node.target = target;
@@ -20,6 +20,7 @@ ObjectProcedure::delta_to_move_node(double start, double target, double base, bo
 std::vector<ObjectProcedure::move_node>
 ObjectProcedure::path_to_move_nodes(const path2d &path) {
     std::vector<move_node> move_nodes;
+    // Translate general plane path to rectangular paths
     for (std::size_t i = 0; i < path.size() - 1; ++i) {
         const vector2d &prev = path[i];
         const vector2d &next = path[i + 1];
@@ -47,7 +48,7 @@ ObjectProcedure::~ObjectProcedure() {
 }
 
 void ObjectProcedure::start() {
-    m_timer.start(50, this);
+    m_timer.start(Procedure::TIMER_FAST, this);
 }
 
 void ObjectProcedure::stop() {

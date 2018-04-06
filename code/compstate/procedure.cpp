@@ -36,6 +36,7 @@ Procedure::Procedure(
     m_index(0),
     m_sol(std::move(sol)),
     m_done(false) {
+    // Create the status labels and set their initial values
     if (auto lp = Main::get()->status_box().lock()) {
         m_dir_label = lp->add_label("IDLE");
         m_err_label = lp->add_label(err_text(0, 0));
@@ -45,6 +46,7 @@ Procedure::Procedure(
 }
 
 Procedure::~Procedure() {
+    // Remove status labels
     if (auto lp = Main::get()->status_box().lock()) {
         lp->remove_label(m_dir_label);
         lp->remove_label(m_err_label);
@@ -62,12 +64,14 @@ bool Procedure::is_stopped() const {
 }
 
 void Procedure::start() {
-    m_timer.start(50, this);
+    // Start the time and grab the initial robot location
+    m_timer.start(Procedure::TIMER_REG, this);
     m_initial = algo::rect_center(Main::get()->state().get_robot_box());
     Q_EMIT started();
 }
 
 void Procedure::stop() {
+    // Stop the timer
     m_timer.stop();
     Q_EMIT stopped();
 }
@@ -96,6 +100,7 @@ void Procedure::movement_loop() {
     // Acquire the current robot position
     vector2d center = algo::rect_center(Main::get()->state().get_robot_box(true));
     vector2d target = m_path[m_index];
+    // Source node is either the initial position or the last node
     vector2d source = m_index > 0 ? m_path[m_index - 1] : m_initial;
 
     // Find differences in each axis

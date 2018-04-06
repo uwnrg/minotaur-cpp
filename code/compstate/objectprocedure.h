@@ -8,6 +8,10 @@
 
 class StatusLabel;
 
+/**
+ * This procedure combines ObjectLine procedures to move the object
+ * in a series of rectangular paths.
+ */
 class ObjectProcedure : public QObject {
 Q_OBJECT
 

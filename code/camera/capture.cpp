@@ -8,12 +8,18 @@
 Capture::Capture() = default;
 
 void Capture::start_capture(int cam) {
+    // Create the capture instance
     if (cam == FakeCamera::FAKE_CAMERA) {
+        // Override capture instance with FakeCamera
+        // if it has been selected
         m_video_capture = std::make_unique<FakeCamera>();
     } else {
         m_video_capture = std::make_unique<cv::VideoCapture>(cam);
     }
     if (m_video_capture->isOpened()) {
+        // Max at 30 frames per second
+        // Limit mainly applies to the FakeCamera so that
+        // Qt's event resources are clogged up
         m_timer.start(33, this);
         Q_EMIT capture_started();
     }
@@ -21,6 +27,7 @@ void Capture::start_capture(int cam) {
 
 void Capture::stop_capture() {
     m_timer.stop();
+    // Release the video capture resources
     if (m_video_capture && m_video_capture->isOpened()) {
         m_video_capture->release();
     }
@@ -28,6 +35,7 @@ void Capture::stop_capture() {
 }
 
 void Capture::change_camera(int camera) {
+    // Halt current capture and start with the new camera
     stop_capture();
     start_capture(camera);
 }
@@ -36,6 +44,7 @@ void Capture::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() != m_timer.timerId()) {
         return;
     }
+    // Grab the frame from the video capture and emit
     cv::UMat frame;
     *m_video_capture >> frame;
     Q_EMIT frame_ready(frame);
