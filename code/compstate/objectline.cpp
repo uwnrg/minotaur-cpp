@@ -28,7 +28,7 @@ ObjectLine::~ObjectLine() {
 }
 
 void ObjectLine::start() {
-    m_timer.start(50, this);
+    m_timer.start(Procedure::TIMER_FAST, this);
 }
 
 void ObjectLine::stop() {
@@ -52,9 +52,8 @@ void ObjectLine::movement_loop() {
         !state.is_robot_box_valid() ||
         !state.is_object_box_fresh() ||
         !state.is_object_box_valid()
-    ) {
-        return;
-    }
+    ) { return; }
+
     log() << "Line State: " <<  m_state;
     m_state_label->setText("Line State: " + QString::number(m_state));
     switch (m_state) {
@@ -91,8 +90,10 @@ void ObjectLine::movement_loop() {
 }
 
 void ObjectLine::do_require_ready_move() {
+    // Find the side of the object on which the robot needs to be
     nrg::dir side_dir = invert_dir(m_dir);
     m_ready_move = std::make_unique<ReadyMove>(m_sol, side_dir);
+    // Hand control over to ReadyMove
     m_ready_move->start();
     m_state = State::DOING_READY_MOVE;
 }
@@ -101,6 +102,7 @@ void ObjectLine::do_doing_ready_move() {
 #ifndef NDEBUG
     assert(!!m_ready_move);
 #endif
+    // When the ReadyMove is done, process the ObjectMove
     if (m_ready_move->is_done()) {
         m_ready_move.reset();
         m_state = State::REQUIRE_OBJECT_MOVE;
@@ -112,6 +114,7 @@ void ObjectLine::do_require_object_move() {
     double target = m_target;
     double norm_base = m_base;
     double norm_dev = 10;
+    // Hand control over to the ObjectMove
     m_object_move = std::make_unique<ObjectMove>(m_sol, dir, target, norm_base, norm_dev);
     m_object_move->start();
     m_state = State::DOING_OBJECT_MOVE;
@@ -124,6 +127,7 @@ void ObjectLine::do_doing_object_move() {
     if (!m_object_move->is_done()) {
         return;
     }
+    // Check the stop condition
     ObjectMove::Stop stop_cond = m_object_move->get_stop();
 #ifndef NDEBUG
     assert(stop_cond != ObjectMove::Stop::OKAY);
@@ -132,13 +136,16 @@ void ObjectLine::do_doing_object_move() {
     log() << "Stop Condition: " << stop_cond;
     switch (stop_cond) {
         case ObjectMove::Stop::AT_TARGET:
+            // If the ObjectMove is at the target, then this procedure is complete
             m_timer.stop();
             m_done = true;
             return;
         case ObjectMove::Stop::WRONG_SIDE:
+            // Go back to needing a ReadyMove
             m_state = State::REQUIRE_READY_MOVE;
             return;
         case ObjectMove::Stop::EXCEEDED_NORM:
+            // Perform a correction
             m_state = State::REQUIRE_CORRECTION;
             return;
         default:
@@ -167,6 +174,7 @@ void ObjectLine::do_require_correction() {
 
 void ObjectLine::do_require_correction_ready_move() {
     nrg::dir side_dir = invert_dir(m_correction_dir);
+    // ReadyMove over to the correction side
     m_ready_move = std::make_unique<ReadyMove>(m_sol, side_dir);
     m_ready_move->start();
     m_state = State::DOING_CORRECTION_READY_MOVE;
@@ -178,6 +186,7 @@ void ObjectLine::do_doing_correction_ready_move() {
 #endif
     if (m_ready_move->is_done()) {
         m_ready_move.reset();
+        // Ready to perform correction move
         m_state = State::REQUIRE_CORRECTION_OBJECT_MOVE;
     }
 }
@@ -185,10 +194,11 @@ void ObjectLine::do_doing_correction_ready_move() {
 void ObjectLine::do_require_correction_object_move() {
     nrg::dir dir = m_correction_dir;
     double target = m_base;
-    // Base and deviation don't matter
+    // Base and deviation don't matter in this case
     double norm_base = 0;
     double norm_dev = 10000;
     m_object_move = std::make_unique<ObjectMove>(m_sol, dir, target, norm_base, norm_dev);
+    // Hand over control
     m_object_move->start();
     m_state = State::DOING_CORRECTION_OBJECT_MOVE;
 }
@@ -202,7 +212,9 @@ void ObjectLine::do_doing_correction_object_move() {
     }
     ObjectMove::Stop stop_cond = m_object_move->get_stop();
 #ifndef NDEBUG
+    // Should not stop when condition is OKAY
     assert(stop_cond != ObjectMove::Stop::OKAY);
+    // Should never stop due to exceeded normal
     assert(stop_cond != ObjectMove::Stop::EXCEEDED_NORM);
 #endif
     m_object_move.reset();

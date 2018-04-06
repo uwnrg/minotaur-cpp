@@ -32,7 +32,7 @@ ReadyMove::~ReadyMove() {
 }
 
 void ReadyMove::start() {
-    m_timer.start(50, this);
+    m_timer.start(Procedure::TIMER_FAST, this);
 }
 
 void ReadyMove::stop() {
@@ -87,9 +87,12 @@ void ReadyMove::do_uninitialized() {
         vector2d resolve_delta = algo::resolve_aabb_collide(rob_rect, obj_rect);
         resolve_delta.x() *= 1.5;
         resolve_delta.y() *= 1.5;
+        // If the bounding boxes collide resolve the collision
+        // before moving
         m_resolve = rob_rect.center() + resolve_delta;
         m_state = State::COLLIDING;
     } else {
+        // Ready to move to the correct side
         m_state = State::READY_MOVE;
     }
 }
@@ -100,6 +103,8 @@ void ReadyMove::do_colliding() {
     assert(m_resolve.y() != 0);
 #endif
     path2d path = {m_resolve};
+    // Create a procedure whose goal is to move to the location
+    // that resolves the collision
     m_proc = std::make_unique<Procedure>(
         m_sol, path,
         det_::COLLIDE_LOC_ACPT, det_::COLLIDE_NORM_DEV
@@ -112,11 +117,13 @@ void ReadyMove::do_colliding_proc() {
 #ifndef NDEBUG
     assert(!!m_proc);
 #endif
+    // Check to see if the procedure has completed
     if (m_proc->is_done()) {
         m_proc.reset();
     } else {
         return;
     }
+    // Ready to move
     m_state = State::READY_MOVE;
 }
 
@@ -148,6 +155,7 @@ void ReadyMove::do_ready_move_proc() {
     } else {
         return;
     }
+    // When this procedure is finished, this ReadyMove is finished
     m_timer.stop();
     m_done = true;
 }

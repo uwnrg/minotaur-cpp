@@ -14,6 +14,7 @@ vector2d algo::perp_intersect(
     const vector2d &p0,
     const vector2d &p1
 ) {
+    // Find slope of line and perpendicular line
     double dy1 = p1.y() - p0.y();
     double dx1 = p1.x() - p0.x();
     double m_l = dy1 / dx1;
@@ -22,9 +23,11 @@ vector2d algo::perp_intersect(
     // y - yc = (x - xc) * m_r
     // y0 - yc = (x - xc) * m_r + (x0 - x) * m_l
     // y0 - yc + xc * m_r - x0 * m_l = x * (m_r - m_l)
+    // Solve the x-intersect between the two lines
     double xi = (p0.y() - c.y() + c.x() * m_r - p0.x() * m_l) / (m_r - m_l);
     // y - y0 = (x - x0) * m_l
     // yi = (xi - x0) * m_l + y0
+    // Compute the y-intersect using one of the equations
     double yi = (xi - p0.x()) * m_l + p0.y();
     return {xi, yi};
 }
@@ -37,6 +40,8 @@ path2d algo::object_traverse_points(
     // Compute half-width and half-height
     double hw = 0.5 * rob.width();
     double hh = 0.5 * rob.height();
+    // Traverse points are half-width and half-height from each
+    // vertex and midpoint
     return {
         obj.tl() + vector2d(-hw, -hh),
         obj.mt() + vector2d(0, -hh),
