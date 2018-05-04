@@ -18,18 +18,15 @@ weak_ref<ParameterSlot> ParameterBox::add_slot(
     const QString &name,
     const QVariant &def
 ) {
-    std::size_t index = m_slots.size();
-    m_slots.emplace_back(name, def, this);
-    ParameterSlot *slot = m_slots[index].get();
+    auto *slot = new ParameterSlot(name, def, this);
+    m_slots.emplace_back(slot);
     ui->layout->addWidget(slot);
-    return slot;
+    return as_weak(slot);
 }
 
-void ParameterBox::remove_slot(const weak_ref<ParameterSlot> &slot) {
+void ParameterBox::remove_slot(weak_ref<ParameterSlot> &slot) {
     auto it = m_slots.begin();
     for (; it != m_slots.end() && it->get() != slot.get(); ++it);
-    if (it != m_slots.end()) {
-        ui->layout->removeWidget(slot.get());
-        m_slots.erase(it);
-    }
+    ui->layout->removeWidget(slot.get());
+    if (it != m_slots.end()) { m_slots.erase(it); }
 }

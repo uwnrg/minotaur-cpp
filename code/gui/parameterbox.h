@@ -26,7 +26,7 @@ public:
         const QVariant &def
     );
 
-    void remove_slot(const weak_ref<ParameterSlot> &slot);
+    void remove_slot(weak_ref<ParameterSlot> &slot);
 
 private:
     Ui::ParameterBox *ui;

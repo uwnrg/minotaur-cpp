@@ -102,6 +102,7 @@ private:
 
     std::unique_ptr<SerialBox> m_serial_box;
     std::unique_ptr<SimulatorWindow> m_simulator_window;
+    std::unique_ptr<ParameterBox> m_parameter_box;
 
     Controller::Type m_controller_type;
 

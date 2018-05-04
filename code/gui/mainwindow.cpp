@@ -20,6 +20,7 @@ MainWindow::MainWindow() :
 
     m_serial_box(std::make_unique<SerialBox>(m_solenoid, this)),
     m_simulator_window(std::make_unique<SimulatorWindow>(m_simulator, this)),
+    m_parameter_box(std::make_unique<ParameterBox>(this)),
 
     m_controller_type(Controller::SOLENOID),
 
