@@ -17,6 +17,7 @@
 #include "scriptwindow.h"
 #include "serialbox.h"
 #include "simulatorwindow.h"
+#include "parameterbox.h"
 
 namespace Ui {
     class MainWindow;
