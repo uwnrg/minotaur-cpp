@@ -1,34 +1,37 @@
-#ifndef MINOTAUR_CPP_PARAMETERBOX_H
-#define MINOTAUR_CPP_PARAMETERBOX_H
+#ifndef PARAMETERBOX_H
+#define PARAMETERBOX_H
 
 #include <QDialog>
 #include <memory>
 
+#include "../utility/weak_ref.h"
+
 namespace Ui {
     class ParameterBox;
-    class ParameterSlot;
 }
 
-class ParameterBox;
-
-class ParameterSlot : public QWidget {
-Q_OBJECT
-
-public:
-    explicit ParameterSlot(ParameterBox *parent, QString &&name);
-
-private:
-    std::unique_ptr<Ui::ParameterSlot> ui;
-};
+class MainWindow;
+class ParameterSlot;
 
 class ParameterBox : public QDialog {
 Q_OBJECT
 
 public:
-    explicit ParameterBox(QWidget *parent = nullptr);
+    explicit ParameterBox(MainWindow *parent = nullptr);
+
+    ~ParameterBox() override;
+
+    weak_ref<ParameterSlot> add_slot(
+        const QString &name,
+        const QVariant &def
+    );
+
+    void remove_slot(const weak_ref<ParameterSlot> &slot);
 
 private:
-    std::unique_ptr<Ui::ParameterBox> ui;
+    Ui::ParameterBox *ui;
+
+    std::vector<std::unique_ptr<ParameterSlot>> m_slots;
 };
 
-#endif //MINOTAUR_CPP_PARAMETERBOX_H
+#endif // PARAMETERBOX_H

@@ -6,34 +6,34 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>325</width>
+    <width>350</width>
     <height>50</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLineEdit" name="edit">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>10</y>
-     <width>140</width>
-     <height>27</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>141</width>
-     <height>27</height>
+     <width>210</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="edit">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>10</y>
+     <width>113</width>
+     <height>30</height>
+    </rect>
    </property>
   </widget>
  </widget>
