@@ -68,9 +68,6 @@ public:
     Q_SLOT void acquire_target_box(const cv::Rect2d &target_box);
     Q_SLOT void acquire_walls(std::shared_ptr<wall_arr> &walls);
 
-    Q_SLOT void set_robot_calibrated_area(double robot_calibrated_area);
-    Q_SLOT void set_object_calibrated_area(double object_calibrated_area);
-
     Q_SLOT void clear_path();
     Q_SLOT void append_path(double x, double y);
 
@@ -126,16 +123,6 @@ private:
     std::shared_ptr<wall_arr> m_walls;
 
     int m_object_type;
-
-    // Stored calibrated area values for the object and robot
-    double m_robot_calibrated_area;
-    double m_object_calibrated_area;
-
-    /**
-     * The accuracy threshold to determine whether the robot or
-     * object bounding box is accurate
-     */
-    double m_acquisition_r_sigma;
 
     /**
      * The desired robot or object traversal path. Object that seek

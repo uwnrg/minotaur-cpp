@@ -8,6 +8,8 @@ ParameterBox::ParameterBox(MainWindow *parent) :
     QDialog(parent),
     ui(new Ui::ParameterBox) {
     ui->setupUi(this);
+
+    connect(ui->set_btn, &QPushButton::clicked, this, &ParameterBox::set_values);
 }
 
 ParameterBox::~ParameterBox() {
@@ -21,6 +23,7 @@ weak_ref<ParameterSlot> ParameterBox::add_slot(
     auto *slot = new ParameterSlot(name, def, this);
     m_slots.emplace_back(slot);
     ui->layout->addWidget(slot);
+    connect(this, &ParameterBox::set_values, slot, &ParameterSlot::set_value);
     return as_weak(slot);
 }
 

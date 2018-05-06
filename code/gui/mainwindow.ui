@@ -178,7 +178,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="start_python_interpreter"/>
     <addaction name="separator"/>
     <addaction name="open_serial_box"/>
-    <addaction name="parameters"/>
+    <addaction name="open_status_box"/>
+    <addaction name="open_parameter_box"/>
     <addaction name="separator"/>
     <addaction name="exit"/>
    </widget>
@@ -390,9 +391,14 @@ p, li { white-space: pre-wrap; }
     <string>Python Interpreter</string>
    </property>
   </action>
-  <action name="parameters">
+  <action name="open_parameter_box">
    <property name="text">
     <string>Parameters</string>
+   </property>
+  </action>
+  <action name="open_status_box">
+   <property name="text">
+    <string>Status Box</string>
    </property>
   </action>
  </widget>

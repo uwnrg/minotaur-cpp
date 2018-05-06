@@ -1,7 +1,11 @@
 #include "procedure.h"
+#include "compstate.h"
 #include "common.h"
+#include "../gui/global.h"
+#include "../camera/statusbox.h"
 #include "../controller/controller.h"
-#include "../gui/mainwindow.h"
+
+#include <QTimerEvent>
 
 #define DIR_RIGHT "RIGHT"
 #define DIR_LEFT  "LEFT"
@@ -65,8 +69,9 @@ bool Procedure::is_stopped() const {
 
 void Procedure::start() {
     // Start the time and grab the initial robot location
+    CompetitionState &state = Main::get()->state();
     m_timer.start(Procedure::TIMER_REG, this);
-    m_initial = algo::rect_center(Main::get()->state().get_robot_box());
+    m_initial = algo::rect_center(state.get_robot_box());
     Q_EMIT started();
 }
 
@@ -92,9 +97,10 @@ void Procedure::movement_loop() {
     }
 
     // If the box has not been updated, tracker has lost acquisition, skip this loop
+    CompetitionState &state = Main::get()->state();
     if (
-        !Main::get()->state().is_robot_box_fresh() ||
-        !Main::get()->state().is_robot_box_valid()
+        !state.is_robot_box_fresh() ||
+        !state.is_robot_box_valid()
     ) { return; }
 
     // Acquire the current robot position

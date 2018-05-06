@@ -1,6 +1,7 @@
 #include "fakecamera.h"
 #include "globalsim.h"
 #include "../gui/mainwindow.h"
+#include "../gui/global.h"
 
 FakeCamera::FakeCamera() {
     open(FAKE_CAMERA);

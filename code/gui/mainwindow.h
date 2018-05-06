@@ -46,6 +46,8 @@ public:
 
     std::weak_ptr<StatusBox> status_box() const;
 
+    std::weak_ptr<ParameterBox> param_box() const;
+
     std::weak_ptr<GlobalSim> global_sim() const;
 
     CompetitionState &state();
@@ -91,6 +93,7 @@ private:
 
     std::shared_ptr<StatusBox> m_status_box;
     std::shared_ptr<GlobalSim> m_global_sim;
+    std::shared_ptr<ParameterBox> m_parameter_box;
 
     std::shared_ptr<Solenoid> m_solenoid;
     std::shared_ptr<Simulator> m_simulator;
@@ -102,18 +105,10 @@ private:
 
     std::unique_ptr<SerialBox> m_serial_box;
     std::unique_ptr<SimulatorWindow> m_simulator_window;
-    std::unique_ptr<ParameterBox> m_parameter_box;
 
     Controller::Type m_controller_type;
 
     CompetitionState m_compstate;
-};
-
-struct Main {
-    static MainWindow *&get();
-
-private:
-    static MainWindow *instance;
 };
 
 #endif // MAINWINDOW_H

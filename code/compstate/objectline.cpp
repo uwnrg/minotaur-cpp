@@ -1,6 +1,11 @@
 #include "objectline.h"
-#include "../gui/mainwindow.h"
+#include "compstate.h"
+#include "parammanager.h"
+#include "../gui/global.h"
 #include "../utility/algorithm.h"
+
+#include <cassert>
+#include <QTimerEvent>
 
 ObjectLine::ObjectLine(
     std::weak_ptr<Controller> sol,
@@ -113,7 +118,7 @@ void ObjectLine::do_require_object_move() {
     nrg::dir dir = m_dir;
     double target = m_target;
     double norm_base = m_base;
-    double norm_dev = 10;
+    double norm_dev = g_pm->objline_move_dev;
     // Hand control over to the ObjectMove
     m_object_move = std::make_unique<ObjectMove>(m_sol, dir, target, norm_base, norm_dev);
     m_object_move->start();
@@ -196,7 +201,7 @@ void ObjectLine::do_require_correction_object_move() {
     double target = m_base;
     // Base and deviation don't matter in this case
     double norm_base = 0;
-    double norm_dev = 10000;
+    double norm_dev = std::numeric_limits<double>::max();
     m_object_move = std::make_unique<ObjectMove>(m_sol, dir, target, norm_base, norm_dev);
     // Hand over control
     m_object_move->start();

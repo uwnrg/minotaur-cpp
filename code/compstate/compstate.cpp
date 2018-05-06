@@ -1,12 +1,11 @@
 #include "compstate.h"
-#include "../gui/mainwindow.h"
+#include "parammanager.h"
+#include "../gui/global.h"
 
 #ifndef NDEBUG
+#include <cassert>
 #include <QDebug>
 #endif
-
-#define DEFAULT_CALIBRATED_AREA     400.0
-#define DEFAULT_ACQUISITION_R_SIGMA 1.34
 
 /**
  * Based off formula in
@@ -37,10 +36,7 @@ CompetitionState::CompetitionState(MainWindow *parent) :
     m_tracking_robot(false),
     m_tracking_object(false),
     m_acquire_walls(false),
-    m_object_type(UNACQUIRED),
-    m_robot_calibrated_area(DEFAULT_CALIBRATED_AREA),
-    m_object_calibrated_area(DEFAULT_CALIBRATED_AREA),
-    m_acquisition_r_sigma(DEFAULT_ACQUISITION_R_SIGMA) {
+    m_object_type(UNACQUIRED) {
     if (auto lp = parent->status_box().lock()) {
         m_robot_loc_label = lp->add_label(center_text(cv::Rect2d(), "Robot"));
         m_object_loc_label = lp->add_label(center_text(cv::Rect2d(), "Object"));
@@ -71,14 +67,6 @@ void CompetitionState::acquire_target_box(const cv::Rect2d &target_box) {
 
 void CompetitionState::acquire_walls(std::shared_ptr<wall_arr> &walls) {
     m_walls = walls;
-}
-
-void CompetitionState::set_robot_calibrated_area(double robot_calibrated_area) {
-    m_robot_calibrated_area = robot_calibrated_area;
-}
-
-void CompetitionState::set_object_calibrated_area(double object_calibrated_area) {
-    m_object_calibrated_area = object_calibrated_area;
 }
 
 bool CompetitionState::is_tracking_robot() const {
@@ -128,11 +116,11 @@ bool CompetitionState::is_object_box_fresh() const {
 }
 
 bool CompetitionState::is_robot_box_valid() const {
-    return acquisition_r(m_robot_box, m_robot_calibrated_area) < m_acquisition_r_sigma;
+    return acquisition_r(m_robot_box, g_pm->robot_calib_area) < g_pm->area_acq_r_sigma;
 }
 
 bool CompetitionState::is_object_box_valid() const {
-    return acquisition_r(m_object_box, m_object_calibrated_area) < m_acquisition_r_sigma;
+    return acquisition_r(m_object_box, g_pm->object_calib_area) < g_pm->area_acq_r_sigma;
 }
 
 void CompetitionState::clear_path() {

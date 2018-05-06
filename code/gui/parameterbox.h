@@ -28,6 +28,9 @@ public:
 
     void remove_slot(weak_ref<ParameterSlot> &slot);
 
+protected:
+    Q_SIGNAL void set_values();
+
 private:
     Ui::ParameterBox *ui;
 

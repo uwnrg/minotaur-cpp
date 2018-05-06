@@ -1,5 +1,6 @@
 #include <QApplication>
 
+#include "gui/global.h"
 #include "gui/mainwindow.h"
 #include "video/modify.h"
 

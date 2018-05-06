@@ -22,7 +22,7 @@ public:
 
     ~ParameterSlot() override;
 
-    void set_value();
+    Q_SLOT void set_value();
 
     Q_SIGNAL void value_set(const QVariant &value);
 

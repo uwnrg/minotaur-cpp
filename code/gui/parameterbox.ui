@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>370</width>
-    <height>500</height>
+    <width>470</width>
+    <height>540</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,11 +18,24 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>350</width>
+     <width>450</width>
      <height>480</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="layout"/>
+  </widget>
+  <widget class="QPushButton" name="set_btn">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>500</y>
+     <width>99</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Set</string>
+   </property>
   </widget>
  </widget>
  <resources/>

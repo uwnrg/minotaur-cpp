@@ -7,6 +7,7 @@
 
 #include "../controller/controller.h"
 #include "../gui/mainwindow.h"
+#include "../gui/global.h"
 
 // Singleton controller instance
 class EmbeddedController {
