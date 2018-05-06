@@ -8,7 +8,7 @@
 
 #define MANAGE_PARAM(paramType, paramName, defValue)            \
 public:                                                         \
-paramType paramName = defValue;                                 \
+volatile paramType paramName = defValue;                        \
 private:                                                        \
 weak_ref<ParameterSlot> paramName##_slot{nullptr};              \
 inline void obtain_##paramName##_slot(parent_t p) {             \
