@@ -1,6 +1,7 @@
 #include "procedure.h"
 #include "compstate.h"
 #include "common.h"
+#include "parammanager.h"
 #include "../gui/global.h"
 #include "../camera/statusbox.h"
 #include "../controller/controller.h"
@@ -70,7 +71,7 @@ bool Procedure::is_stopped() const {
 void Procedure::start() {
     // Start the time and grab the initial robot location
     CompetitionState &state = Main::get()->state();
-    m_timer.start(Procedure::TIMER_REG, this);
+    m_timer.start(g_pm->timer_reg, this);
     m_initial = algo::rect_center(state.get_robot_box());
     Q_EMIT started();
 }

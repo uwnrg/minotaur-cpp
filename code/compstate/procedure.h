@@ -31,12 +31,6 @@ class Procedure : public QObject {
 Q_OBJECT
 
 public:
-    enum {
-        TIMER_FAST = 50,
-        TIMER_REG = 200,
-        TIMER_SLOW = 500
-    };
-
     /**
      * Create a new procedure instance. This constructor will
      * create a copy of the path to be traversed.

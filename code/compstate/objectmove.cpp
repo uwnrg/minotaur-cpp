@@ -54,7 +54,7 @@ ObjectMove::Stop ObjectMove::get_stop() const {
 }
 
 void ObjectMove::start() {
-    m_timer.start(Procedure::TIMER_REG, this);
+    m_timer.start(g_pm->timer_reg, this);
 }
 
 void ObjectMove::stop() {

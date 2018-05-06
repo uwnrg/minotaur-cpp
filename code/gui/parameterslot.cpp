@@ -16,6 +16,8 @@ ParameterSlot::ParameterSlot(
     ui->edit->setText(def.toString());
 }
 
+#include <QDebug>
+
 void ParameterSlot::set_value() {
     Q_EMIT value_set(QVariant::fromValue(ui->edit->text()));
 }

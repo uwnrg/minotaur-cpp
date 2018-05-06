@@ -24,7 +24,7 @@ ReadyMove::~ReadyMove() {
 }
 
 void ReadyMove::start() {
-    m_timer.start(Procedure::TIMER_FAST, this);
+    m_timer.start(g_pm->timer_fast, this);
 }
 
 void ReadyMove::stop() {

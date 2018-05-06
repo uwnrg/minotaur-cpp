@@ -33,7 +33,7 @@ ObjectLine::~ObjectLine() {
 }
 
 void ObjectLine::start() {
-    m_timer.start(Procedure::TIMER_FAST, this);
+    m_timer.start(g_pm->timer_fast, this);
 }
 
 void ObjectLine::stop() {

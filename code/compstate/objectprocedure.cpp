@@ -1,4 +1,5 @@
 #include "objectprocedure.h"
+#include "parammanager.h"
 #include "compstate.h"
 #include "../utility/algorithm.h"
 #include "../gui/mainwindow.h"
@@ -49,7 +50,7 @@ ObjectProcedure::~ObjectProcedure() {
 }
 
 void ObjectProcedure::start() {
-    m_timer.start(Procedure::TIMER_FAST, this);
+    m_timer.start(g_pm->timer_fast, this);
 }
 
 void ObjectProcedure::stop() {
