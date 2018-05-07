@@ -107,7 +107,7 @@ void ObjectMove::movement_loop() {
     log() << "Target Err: " << tgt_err;
     m_align_label->setText(align_text(align_err));
     m_target_label->setText(target_text(tgt_err));
-    if (align_err > det_::MOVE_ALIGNMENT) {
+    if (fabs(align_err) > det_::MOVE_ALIGNMENT) {
         // Correct for alignment
         correct(align_err);
     } else {
