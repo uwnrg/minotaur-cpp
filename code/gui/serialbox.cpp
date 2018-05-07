@@ -53,33 +53,10 @@ SerialBox::SerialBox(
     update_status(m_status);
 
     // Setup sliders
-    ui->up_slider->setTickInterval(Power::POWER_INTERVAL);
-    ui->up_slider->setTickPosition(QSlider::TicksBothSides);
-    ui->up_slider->setMaximum(Power::POWER_MAX);
-    ui->up_slider->setMinimum(Power::POWER_MIN);
-    ui->up_slider->setTracking(false);
-    ui->up_slider->setValue(255);
-
-    ui->down_slider->setTickInterval(Power::POWER_INTERVAL);
-    ui->down_slider->setTickPosition(QSlider::TicksBothSides);
-    ui->down_slider->setMaximum(Power::POWER_MAX);
-    ui->down_slider->setMinimum(Power::POWER_MIN);
-    ui->down_slider->setTracking(false);
-    ui->down_slider->setValue(255);
-
-    ui->left_slider->setTickInterval(Power::POWER_INTERVAL);
-    ui->left_slider->setTickPosition(QSlider::TicksBothSides);
-    ui->left_slider->setMaximum(Power::POWER_MAX);
-    ui->left_slider->setMinimum(Power::POWER_MIN);
-    ui->left_slider->setTracking(false);
-    ui->left_slider->setValue(255);
-
-    ui->right_slider->setTickInterval(Power::POWER_INTERVAL);
-    ui->right_slider->setTickPosition(QSlider::TicksBothSides);
-    ui->right_slider->setMaximum(Power::POWER_MAX);
-    ui->right_slider->setMinimum(Power::POWER_MIN);
-    ui->right_slider->setTracking(false);
-    ui->right_slider->setValue(255);
+    setup_power_slider(*(ui->up_slider));
+    setup_power_slider(*(ui->down_slider));
+    setup_power_slider(*(ui->left_slider));
+    setup_power_slider(*(ui->right_slider));
 
     connect(m_solenoid.get(), &Solenoid::serial_status, this, &SerialBox::update_status);
     connect(ui->disconnect_button, &QPushButton::clicked, m_solenoid.get(), &Solenoid::attempt_disconnect);
@@ -133,4 +110,13 @@ void SerialBox::append_text(const std::string &text) {
     display->moveCursor(QTextCursor::End);
     display->insertPlainText(QString::fromStdString(text));
     display->moveCursor(QTextCursor::End);
+}
+
+void SerialBox::setup_power_slider(QSlider &slider) {
+    slider.setTickInterval(Power::POWER_INTERVAL);
+    slider.setTickPosition(QSlider::TicksBothSides);
+    slider.setMaximum(Power::POWER_MAX);
+    slider.setMinimum(Power::POWER_MIN);
+    slider.setTracking(false);
+    slider.setValue(255);
 }

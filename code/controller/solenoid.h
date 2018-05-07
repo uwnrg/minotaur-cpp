@@ -113,6 +113,8 @@ private:
         UP = 119
     };
 
+    void change_power(int value, enum Direction direction);
+
     QSerialPort m_serial;
 };
 
