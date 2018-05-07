@@ -24,7 +24,7 @@ Q_OBJECT
 
 public:
     /**
-     * Default constructor will attempt to auto-dectect and connect
+     * Default constructor will attempt to auto-detect and connect
      * using default baud rate of 9600.
      */
     Solenoid();
@@ -69,6 +69,14 @@ public:
      * is currently connected.
      */
     Q_SLOT void attempt_disconnect();
+
+    Q_SLOT void change_up_power(int value);
+
+    Q_SLOT void change_down_power(int value);
+
+    Q_SLOT void change_left_power(int value);
+
+    Q_SLOT void change_right_power(int value);
 
     /**
      * Signal emitted when the Arduino has sent a message to Minotaur.

@@ -1,5 +1,7 @@
 #include "solenoid.h"
 
+#include "../utility/logger.h"
+
 #include <QSerialPortInfo>
 
 Solenoid::Solenoid()
@@ -139,6 +141,46 @@ bool Solenoid::is_connected() const {
 
 const QSerialPort &Solenoid::serial_port() const {
     return m_serial;
+}
+
+void Solenoid::change_up_power(int value) {
+    log() << "Changing up solenoid power to " << value;
+    char signal = 'p';
+    char dir = UP;
+    char power = static_cast<char>(value);
+    m_serial.write(&signal, 1);
+    m_serial.write(&dir, 1);
+    m_serial.write(&power, 1);
+}
+
+void Solenoid::change_down_power(int value) {
+    log() << "Changing down solenoid power to " << value;
+    char signal = 'p';
+    char dir = DOWN;
+    char power = static_cast<char>(value);
+    m_serial.write(&signal, 1);
+    m_serial.write(&dir, 1);
+    m_serial.write(&power, 1);
+}
+
+void Solenoid::change_left_power(int value) {
+    log() << "Changing left solenoid power to " << value;
+    char signal = 'p';
+    char dir = LEFT;
+    char power = static_cast<char>(value);
+    m_serial.write(&signal, 1);
+    m_serial.write(&dir, 1);
+    m_serial.write(&power, 1);
+}
+
+void Solenoid::change_right_power(int value) {
+    log() << "Changing right solenoid power to " << value;
+    char signal = 'p';
+    char dir = RIGHT;
+    char power = static_cast<char>(value);
+    m_serial.write(&signal, 1);
+    m_serial.write(&dir, 1);
+    m_serial.write(&power, 1);
 }
 
 QByteArray Solenoid::encode_message(Vector2i dir, int time) {

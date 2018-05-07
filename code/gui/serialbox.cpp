@@ -57,25 +57,37 @@ SerialBox::SerialBox(
     ui->up_slider->setTickPosition(QSlider::TicksBothSides);
     ui->up_slider->setMaximum(Power::POWER_MAX);
     ui->up_slider->setMinimum(Power::POWER_MIN);
+    ui->up_slider->setTracking(false);
+    ui->up_slider->setValue(255);
 
     ui->down_slider->setTickInterval(Power::POWER_INTERVAL);
     ui->down_slider->setTickPosition(QSlider::TicksBothSides);
     ui->down_slider->setMaximum(Power::POWER_MAX);
     ui->down_slider->setMinimum(Power::POWER_MIN);
+    ui->down_slider->setTracking(false);
+    ui->down_slider->setValue(255);
 
     ui->left_slider->setTickInterval(Power::POWER_INTERVAL);
     ui->left_slider->setTickPosition(QSlider::TicksBothSides);
     ui->left_slider->setMaximum(Power::POWER_MAX);
     ui->left_slider->setMinimum(Power::POWER_MIN);
+    ui->left_slider->setTracking(false);
+    ui->left_slider->setValue(255);
 
     ui->right_slider->setTickInterval(Power::POWER_INTERVAL);
     ui->right_slider->setTickPosition(QSlider::TicksBothSides);
     ui->right_slider->setMaximum(Power::POWER_MAX);
     ui->right_slider->setMinimum(Power::POWER_MIN);
+    ui->right_slider->setTracking(false);
+    ui->right_slider->setValue(255);
 
     connect(m_solenoid.get(), &Solenoid::serial_status, this, &SerialBox::update_status);
     connect(ui->disconnect_button, &QPushButton::clicked, m_solenoid.get(), &Solenoid::attempt_disconnect);
     connect(ui->connect_button, &QPushButton::clicked, this, &SerialBox::attempt_connection);
+    connect(ui->up_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_up_power);
+    connect(ui->down_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_down_power);
+    connect(ui->left_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_left_power);
+    connect(ui->right_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_right_power);
 
     // Close SerialBox when Cancel is clicked
     connect(ui->button_box->button(QDialogButtonBox::Close), &QPushButton::clicked, this, &QDialog::close);
