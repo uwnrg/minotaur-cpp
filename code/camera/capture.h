@@ -8,6 +8,12 @@
 
 Q_DECLARE_METATYPE(cv::UMat);
 
+/**
+ * This object is the beginning of the image pipeline and
+ * is responsible for managing the OpenCV Video Capture
+ * object that polls frames from the active camera. These frames
+ * are emitted to the preprocessor.
+ */
 class Capture : public QObject {
     Q_OBJECT
 
@@ -22,6 +28,10 @@ public:
 
     Q_SIGNAL void capture_stopped();
 
+    /**
+     * Signal emitted when a frame has been received
+     * by the Capture.
+     */
     Q_SIGNAL void frame_ready(const cv::UMat &);
 
     Q_SLOT void start_capture(int cam);
@@ -33,7 +43,14 @@ public:
 private:
     void timerEvent(QTimerEvent *ev) override;
 
+    /**
+     * Timer fires at a fixed interval to pull images
+     * from the capture.
+     */
     QBasicTimer m_timer;
+    /**
+     * Video Capture instance that produces images.
+     */
     std::unique_ptr<cv::VideoCapture> m_video_capture;
 };
 

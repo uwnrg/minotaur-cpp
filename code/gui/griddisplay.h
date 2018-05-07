@@ -14,10 +14,10 @@
 
 #include "../utility/array2d.h"
 #include "../utility/utility.h"
-#include "../code/camera/cameradisplay.h"
-#include "../code/camera/imageviewer.h"
-#include "../code/utility/array2d.h"
-#include "../code/utility/utility.h"
+#include "../camera/cameradisplay.h"
+#include "../camera/imageviewer.h"
+#include "../utility/array2d.h"
+#include "../utility/utility.h"
 
 class CameraDisplay;
 

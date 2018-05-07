@@ -23,9 +23,12 @@ ImageViewer::ImageViewer(CameraDisplay *parent) :
     m_selecting_path(false) {
 
     ui->setupUi(this);
+    // Lower the labels so that they do not block mouse events to the
+    // GridDisplay and path selection
     ui->zoom_label->lower();
     ui->fps_label->lower();
 
+    // Opaque paint event used to draw the image
     setAttribute(Qt::WA_OpaquePaintEvent);
 
     // Start threads and move image pipeline objects to threads
@@ -76,14 +79,17 @@ void ImageViewer::set_image(const QImage &img) {
     // Upon first frame capture, resize the widget
     if (m_image.isNull()) { setFixedSize(img.size()); }
     m_image = img;
+    // Trigger rerender
     update();
 }
 
 void ImageViewer::mousePressEvent(QMouseEvent *ev) {
     if (m_selecting_path) {
+        // Calculate the combined scale for the click coordinates
         double combined_scale =
             m_preprocessor.get_zoom_factor() *
             m_converter.get_previous_scale();
+        // Append the unscaled coordinates to the path
         Main::get()->state().append_path(ev->x() / combined_scale, ev->y() / combined_scale);
     }
     QWidget::mousePressEvent(ev);
@@ -101,24 +107,27 @@ void ImageViewer::timerEvent(QTimerEvent *ev) {
 
 void ImageViewer::paintEvent(QPaintEvent *) {
     QPainter painter(this);
+    // Draw the image first
     painter.drawImage(0, 0, m_image);
     painter.setRenderHint(QPainter::Antialiasing);
-    // Draw dots on each vertex and connecting lines
+    // Need to rescale the path nodes
     double combined_scale =
         m_preprocessor.get_zoom_factor() *
         m_converter.get_previous_scale();
-    const path2d<double> &path = Main::get()->state().get_path();
+    const path2d &path = Main::get()->state().get_path();
     for (std::size_t i = 0; i < path.size(); ++i) {
+        // Draw each node and connect lines between them
         QColor color;
+        // Color based on start and end
         if (i == 0) { color = Qt::red; }
         else if (i + 1 == path.size()) { color = Qt::blue; }
         else { color = Qt::green; }
-        Vector2i v1 = path[i] * combined_scale;
+        vector2i v1 = path[i] * combined_scale;
         painter.setBrush(color);
         painter.setPen(color);
         painter.drawEllipse(v1.x() - 4, v1.y() - 4, 8, 8);
         if (i > 0) {
-            Vector2i v0 = path[i - 1] * combined_scale;
+            vector2i v0 = path[i - 1] * combined_scale;
             painter.setPen(QPen(Qt::green, 2, Qt::DashDotLine, Qt::RoundCap));
             painter.drawLine(v0.x(), v0.y(), v1.x(), v1.y());
         }
@@ -144,7 +153,7 @@ void ImageViewer::handle_recording() {
         // Stop recording
         Q_EMIT stop_recording();
     } else {
-        // Start recording
+        // Grab the video save path and start recording
         QString file = QFileDialog::getSaveFileName(this, "Save Video", QDir::currentPath(), "Videos (*.avi)");
         log() << "Saving video to: " << file;
         Q_EMIT start_recording(file, m_capture.capture_width(), m_capture.capture_height());

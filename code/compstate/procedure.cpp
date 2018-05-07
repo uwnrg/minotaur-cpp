@@ -1,38 +1,12 @@
 #include "procedure.h"
+#include "common.h"
 #include "../controller/controller.h"
 #include "../gui/mainwindow.h"
-
-#define DEFAULT_TARGET_LOC_ACCEPTANCE 3.0
-#define DEFAULT_MAX_NORMAL_DEVIATION  15.0
 
 #define DIR_RIGHT "RIGHT"
 #define DIR_LEFT  "LEFT"
 #define DIR_DOWN  "DOWN"
 #define DIR_UP    "UP"
-
-vector2d<double> rect_center(const cv::Rect2d &rect) {
-    return {rect.x + rect.width / 2, rect.y + rect.height / 2};
-}
-
-vector2d<double> perp_intersect(
-    const vector2d<double> &c,
-    const vector2d<double> &p0,
-    const vector2d<double> &p1
-) {
-    double dy1 = p1.y() - p0.y();
-    double dx1 = p1.x() - p0.x();
-    double m_l = dy1 / dx1;
-    double m_r = -1 / m_l;
-    // y - y0 = (x - x0) * m_l
-    // y - yc = (x - xc) * m_r
-    // y0 - yc = (x - xc) * m_r + (x0 - x) * m_l
-    // y0 - yc + xc * m_r - x0 * m_l = x * (m_r - m_l)
-    double xi = (p0.y() - c.y() + c.x() * m_r - p0.x() * m_l) / (m_r - m_l);
-    // y - y0 = (x - x0) * m_l
-    // yi = (xi - x0) * m_l + y0
-    double yi = (xi - p0.x()) * m_l + p0.y();
-    return {xi, yi};
-}
 
 QString err_text(double x, double y) {
     QString text;
@@ -50,12 +24,19 @@ QString perp_text(double err_x, double err_y, double norm_sq) {
     return text;
 }
 
-Procedure::Procedure(std::weak_ptr<Controller> sol, const path2d<double> &path) :
-    m_loc_accept(DEFAULT_TARGET_LOC_ACCEPTANCE),
-    m_norm_dev(DEFAULT_MAX_NORMAL_DEVIATION),
+Procedure::Procedure(
+    std::weak_ptr<Controller> sol,
+    const path2d &path,
+    double loc_accept,
+    double norm_dev
+) :
+    m_loc_accept(loc_accept),
+    m_norm_dev(norm_dev),
     m_path(path),
     m_index(0),
-    m_sol(std::move(sol)) {
+    m_sol(std::move(sol)),
+    m_done(false) {
+    // Create the status labels and set their initial values
     if (auto lp = Main::get()->status_box().lock()) {
         m_dir_label = lp->add_label("IDLE");
         m_err_label = lp->add_label(err_text(0, 0));
@@ -65,6 +46,7 @@ Procedure::Procedure(std::weak_ptr<Controller> sol, const path2d<double> &path) 
 }
 
 Procedure::~Procedure() {
+    // Remove status labels
     if (auto lp = Main::get()->status_box().lock()) {
         lp->remove_label(m_dir_label);
         lp->remove_label(m_err_label);
@@ -73,13 +55,25 @@ Procedure::~Procedure() {
     }
 }
 
+bool Procedure::is_done() const {
+    return m_done;
+}
+
+bool Procedure::is_stopped() const {
+    return !m_timer.isActive();
+}
+
 void Procedure::start() {
-    m_timer.start(200, this);
-    m_initial = rect_center(Main::get()->state().get_robot_box());
+    // Start the time and grab the initial robot location
+    m_timer.start(Procedure::TIMER_REG, this);
+    m_initial = algo::rect_center(Main::get()->state().get_robot_box());
+    Q_EMIT started();
 }
 
 void Procedure::stop() {
+    // Stop the timer
     m_timer.stop();
+    Q_EMIT stopped();
 }
 
 void Procedure::timerEvent(QTimerEvent *ev) {
@@ -92,6 +86,8 @@ void Procedure::movement_loop() {
     // If the path has been traversed or solenoid expired, stop timer
     if (m_index == m_path.size() || m_sol.expired()) {
         m_timer.stop();
+        m_done = true;
+        Q_EMIT finished();
         return;
     }
 
@@ -99,12 +95,13 @@ void Procedure::movement_loop() {
     if (
         !Main::get()->state().is_robot_box_fresh() ||
         !Main::get()->state().is_robot_box_valid()
-        ) { return; }
+    ) { return; }
 
     // Acquire the current robot position
-    vector2d<double> center = rect_center(Main::get()->state().get_robot_box(true));
-    vector2d<double> target = m_path[m_index];
-    vector2d<double> source = m_index > 0 ? m_path[m_index - 1] : m_initial;
+    vector2d center = algo::rect_center(Main::get()->state().get_robot_box(true));
+    vector2d target = m_path[m_index];
+    // Source node is either the initial position or the last node
+    vector2d source = m_index > 0 ? m_path[m_index - 1] : m_initial;
 
     // Find differences in each axis
     double err_x = target.x() - center.x();
@@ -119,8 +116,8 @@ void Procedure::movement_loop() {
     m_index_label->setText(index_text(m_index));
 
     // Calculate perpendicular distance to ensure the robot is straddling the line
-    vector2d<double> intersect = perp_intersect(center, source, target);
-    vector2d<double> norm_diff = intersect - center;
+    vector2d intersect = algo::perp_intersect(center, source, target);
+    vector2d norm_diff = intersect - center;
     double norm_diff_sq = norm_diff.norm_sq();
     m_perp_label->setText(perp_text(norm_diff.x(), norm_diff.y(), norm_diff_sq));
     if (norm_diff_sq > m_norm_dev * m_norm_dev) {
@@ -145,7 +142,7 @@ void Procedure::movement_loop() {
 
 void Procedure::move_right(double estimated_power) {
     // Right => +X
-    m_dir_label->setText(DIR_RIGHT);
+    if (m_dir_label) { m_dir_label->setText(DIR_RIGHT); }
     if (auto sol = m_sol.lock()) {
         sol->move({static_cast<int>(estimated_power), 0});
     }
@@ -153,7 +150,7 @@ void Procedure::move_right(double estimated_power) {
 
 void Procedure::move_left(double estimated_power) {
     // Left => -X
-    m_dir_label->setText(DIR_LEFT);
+    if (m_dir_label) { m_dir_label->setText(DIR_LEFT); }
     if (auto sol = m_sol.lock()) {
         sol->move({-static_cast<int>(estimated_power), 0});
     }
@@ -161,7 +158,7 @@ void Procedure::move_left(double estimated_power) {
 
 void Procedure::move_up(double estimated_power) {
     // Up => -Y
-    m_dir_label->setText(DIR_UP);
+    if (m_dir_label) { m_dir_label->setText(DIR_UP); }
     if (auto sol = m_sol.lock()) {
         sol->move({0, -static_cast<int>(estimated_power)});
     }
@@ -169,7 +166,7 @@ void Procedure::move_up(double estimated_power) {
 
 void Procedure::move_down(double estimated_power) {
     // Down => +Y
-    m_dir_label->setText(DIR_DOWN);
+    if (m_dir_label) { m_dir_label->setText(DIR_DOWN); }
     if (auto sol = m_sol.lock()) {
         sol->move({0, static_cast<int>(estimated_power)});
     }

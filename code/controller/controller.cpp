@@ -4,8 +4,8 @@ Controller::Controller(bool invert_x, bool invert_y) :
     m_invert_x(invert_x),
     m_invert_y(invert_y) {}
 
-Vector2i Controller::to_vector2i(Dir dir) {
-    Vector2i vector_dir(0, 0);
+vector2i Controller::to_vector2i(Dir dir) {
+    vector2i vector_dir(0, 0);
     switch (dir) {
         case UP:
             vector_dir.y() = -1;
@@ -78,7 +78,7 @@ void Controller::move(Dir dir, int timer) {
     move(Controller::to_vector2i(dir), timer);
 }
 
-void Controller::move(Vector2i dir, int step_time) {
+void Controller::move(vector2i dir, int step_time) {
     __move_delegate({dir.x() * (m_invert_x ? -1 : 1), dir.y() * (m_invert_y ? -1 : 1)}, step_time);
 }
 

@@ -8,7 +8,9 @@
 #include "../gui/mainwindow.h"
 
 #ifndef NDEBUG
+
 #include <QDebug>
+
 #endif
 
 // CMake will try to find goturn.caffemodel and goturn.prototxt, which need
@@ -17,7 +19,7 @@
 #ifdef GOTURN_FOUND
 #define TRACKER_TYPE Type::GOTURN
 #else
-#define TRACKER_TYPE Type::MIL
+#define TRACKER_TYPE Type::KCF
 #endif
 
 __tracker::__tracker() :
@@ -75,18 +77,35 @@ void __tracker::stop_tracking() {
 }
 
 void __tracker::update_track(cv::UMat &img) {
+    if (m_state == State::FAILED) {
+        reset_tracker();
+        if (m_tracker->init(img, m_bounding_box)) {
+            m_state = State::TRACKING;
+        }
+        return;
+    }
     if (m_state != State::UNINITIALIZED) {
         m_mutex.lock();
         if (m_state == State::TRACKING) {
-            m_tracker->update(img, m_bounding_box);
+            if (!m_tracker->update(img, m_bounding_box)) {
+                m_state = State::FAILED;
+            }
         } else if (m_state == State::FIRST_SCAN) {
             m_bounding_box = cv::selectROI(img);
-            m_tracker->init(img, m_bounding_box);
-            m_state = State::TRACKING;
+            if (m_tracker->init(img, m_bounding_box)) {
+                m_state = State::TRACKING;
+            } else {
+                m_state = State::FAILED;
+            }
         }
         m_mutex.unlock();
-        cv::rectangle(img, m_bounding_box.tl(), m_bounding_box.br(), cv::Scalar(255, 0, 0));
         Q_EMIT target_box(m_bounding_box);
+    }
+}
+
+void __tracker::draw_bounding_box(cv::UMat &img) {
+    if (m_state == State::TRACKING) {
+        cv::rectangle(img, m_bounding_box.tl(), m_bounding_box.br(), cv::Scalar(255, 0, 0));
     }
 }
 
@@ -108,13 +127,24 @@ void TrackerModifier::traverse() {
     }
 }
 
+void TrackerModifier::move_object() {
+    if (
+        m_robot_tracker.state() == __tracker::TRACKING &&
+        m_object_tracker.state() == __tracker::TRACKING
+    ) {
+        Main::get()->state().begin_object_move();
+    }
+}
+
 void TrackerModifier::register_actions(ActionBox *box) {
     ActionButton *traverse_button = box->add_action("Traverse");
+    ActionButton *object_move_button = box->add_action("Move Object");
     ActionButton *select_robot_roi = box->add_action("Select Robot ROI");
     ActionButton *select_object_roi = box->add_action("Select Object ROI");
     ActionButton *clear_robot_roi = box->add_action("Clear Robot ROI");
     ActionButton *clear_object_roi = box->add_action("Clear Object ROI");
     connect(traverse_button, &QPushButton::clicked, this, &TrackerModifier::traverse);
+    connect(object_move_button, &QPushButton::clicked, this, &TrackerModifier::move_object);
     connect(select_robot_roi, &QPushButton::clicked, &m_robot_tracker, &__tracker::begin_tracking);
     connect(select_object_roi, &QPushButton::clicked, &m_object_tracker, &__tracker::begin_tracking);
     connect(clear_robot_roi, &QPushButton::clicked, &m_robot_tracker, &__tracker::stop_tracking);
@@ -125,6 +155,8 @@ void TrackerModifier::register_actions(ActionBox *box) {
 void TrackerModifier::modify(cv::UMat &img) {
     m_robot_tracker.update_track(img);
     m_object_tracker.update_track(img);
+    m_robot_tracker.draw_bounding_box(img);
+    m_object_tracker.draw_bounding_box(img);
 }
 
 #endif

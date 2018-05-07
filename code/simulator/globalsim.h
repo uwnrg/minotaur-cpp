@@ -3,17 +3,19 @@
 
 #include <QObject>
 
-#include "../utility/vector2d.h"
+#include "../utility/vector.h"
 
 class GlobalSim : public QObject {
 Q_OBJECT
 
 public:
     enum Robot {
-        WIDTH = 15,
-        DELTA_PREF_MAX = 10,
-        DELTA_PREF_MIN = 8,
-        DELTA_ERR = 3
+        WIDTH = 16,
+        DELTA_PREF_MAX = 3,
+        DELTA_PREF_MIN = 2,
+        DELTA_ERR = 1,
+        RESOLVE_PREF = 2,
+        RESOLVE_ERR = 1
     };
 
     GlobalSim();
@@ -24,13 +26,17 @@ public:
     Q_SLOT void robot_down();
     Q_SLOT void robot_up();
 
-    vector2d<double> &robot();
+    vector2d &robot();
+    vector2d &object();
 
 private:
     double get_di() const;
     double get_dk() const;
 
-    vector2d<double> m_robot;
+    void check_collide();
+
+    vector2d m_robot;
+    vector2d m_object;
 };
 
 #endif

@@ -12,29 +12,38 @@
 #include "../simulator/fakecamera.h"
 
 void populate_camera_box(QComboBox *box) {
+    // Grab the list of selected cameras
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
     log() << "Found " << cameras.size() << " cameras";
     int i;
     for (i = 0; i < cameras.size(); ++i) {
+        // Push them to the combo box with their index
         box->addItem(cameras[i].deviceName(), QVariant::fromValue(i));
     }
+    // Add the simulated camera
     box->addItem("Simulated", QVariant::fromValue(i));
 }
 
 void populate_effect_box(QComboBox *box) {
+    // Call the video modifier list adder
     VideoModifier::add_modifier_list(box);
 }
 
 void ensure_png(QString &file) {
+    // Ensure that the file extension ends with png
     if (file.rightRef(4) != ".png") {
         file.append(".png");
     }
 }
 
 int get_camera_index(const QCameraInfo &info) {
+    // The camera index is the last character value
+    // This method is only really reliable on Linux, where the
+    // hardware indices are in the name as /dev/vid1, for example
     QString name = info.deviceName();
     QChar index_char = name.at(name.length() - 1);
     int index = index_char.unicode() - '0';
+    // If the index is out of range, go to the default camera
     return index > 9 ? 0 : index;
 }
 
@@ -98,6 +107,7 @@ void CameraDisplay::setVisible(bool visible) {
         QDialog::setVisible(false);
         return;
     }
+    // When opening, grab the camera index and emit
     int camera_index = FakeCamera::FAKE_CAMERA;
     if (!QCameraInfo::availableCameras().empty()) {
         camera_index = get_camera_index(QCameraInfo::availableCameras()[0]);
@@ -108,6 +118,7 @@ void CameraDisplay::setVisible(bool visible) {
 
 void CameraDisplay::reject() {
     QDialog::reject();
+    // Ensure that the image viewer stops when the dialog is rejected
     Q_EMIT display_closed();
 }
 
@@ -118,18 +129,23 @@ void CameraDisplay::camera_box_changed(int camera) {
         int camera_index = get_camera_index(info);
         Q_EMIT camera_changed(camera_index);
     } else {
+        // Emit fake camera if the index is out of range
         Q_EMIT camera_changed(FakeCamera::FAKE_CAMERA);
     }
 }
 
 void CameraDisplay::effect_box_changed(int effect) {
+    // Grab the modifier corresponding to the effect index
     std::shared_ptr<VideoModifier> modifier = VideoModifier::get_modifier(effect);
     m_action_box->reset_actions();
+    // Register actions of the modifier
     if (modifier) { modifier->register_actions(m_action_box.get()); }
+    // Emit new modifier
     Q_EMIT effect_changed(modifier);
 }
 
 void CameraDisplay::take_screen_shot() {
+    // Open file dialog so that the user can select the file
     QString image_png = QFileDialog::getSaveFileName(this, "Save Screenshot", QDir::currentPath(), "Photos (*.png)");
     ensure_png(image_png);
     log() << "Saving screenshot: " << image_png;
@@ -137,6 +153,7 @@ void CameraDisplay::take_screen_shot() {
 }
 
 void CameraDisplay::update_zoom(int value) {
+    // Scale the zoom factor
     double zoom_factor = value / 10.0;
     Q_EMIT zoom_changed(zoom_factor);
 }
