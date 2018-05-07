@@ -15,10 +15,10 @@ public:
     };
 
     enum Dir {
-        RIGHT, // +X
-        LEFT,  // -X
+        UP,    // -Y
         DOWN,  // +Y
-        UP     // -Y
+        RIGHT, // +X
+        LEFT   // -X
     };
 
     enum Axis {
