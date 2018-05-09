@@ -1,5 +1,7 @@
 #include "solenoid.h"
 
+#include "../utility/logger.h"
+
 #include <QSerialPortInfo>
 
 Solenoid::Solenoid()
@@ -139,6 +141,32 @@ bool Solenoid::is_connected() const {
 
 const QSerialPort &Solenoid::serial_port() const {
     return m_serial;
+}
+
+void Solenoid::change_power(int value, Direction direction) {
+    log() << "Changing " << (direction == UP ? "up" : direction == DOWN ? "down" : direction == RIGHT ? "right" : "left") << " solenoid power to " << value;
+    char signal = 'p';
+    char dir = direction;
+    char power = static_cast<char>(value);
+    m_serial.write(&signal, 1);
+    m_serial.write(&dir, 1);
+    m_serial.write(&power, 1);
+}
+
+void Solenoid::change_up_power(int value) {
+    change_power(value, UP);
+}
+
+void Solenoid::change_down_power(int value) {
+    change_power(value, DOWN);
+}
+
+void Solenoid::change_left_power(int value) {
+    change_power(value, LEFT);
+}
+
+void Solenoid::change_right_power(int value) {
+    change_power(value, RIGHT);
 }
 
 QByteArray Solenoid::encode_message(vector2i dir, int time) {

@@ -51,9 +51,20 @@ SerialBox::SerialBox(
         m_status = SerialStatus::CONNECTED;
     }
     update_status(m_status);
+
+    // Setup sliders
+    setup_power_slider(*(ui->up_slider));
+    setup_power_slider(*(ui->down_slider));
+    setup_power_slider(*(ui->left_slider));
+    setup_power_slider(*(ui->right_slider));
+
     connect(m_solenoid.get(), &Solenoid::serial_status, this, &SerialBox::update_status);
     connect(ui->disconnect_button, &QPushButton::clicked, m_solenoid.get(), &Solenoid::attempt_disconnect);
     connect(ui->connect_button, &QPushButton::clicked, this, &SerialBox::attempt_connection);
+    connect(ui->up_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_up_power);
+    connect(ui->down_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_down_power);
+    connect(ui->left_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_left_power);
+    connect(ui->right_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_right_power);
 
     // Close SerialBox when Cancel is clicked
     connect(ui->button_box->button(QDialogButtonBox::Close), &QPushButton::clicked, this, &QDialog::close);
@@ -99,4 +110,13 @@ void SerialBox::append_text(const std::string &text) {
     display->moveCursor(QTextCursor::End);
     display->insertPlainText(QString::fromStdString(text));
     display->moveCursor(QTextCursor::End);
+}
+
+void SerialBox::setup_power_slider(QSlider &slider) {
+    slider.setTickInterval(Power::POWER_INTERVAL);
+    slider.setTickPosition(QSlider::TicksBothSides);
+    slider.setMaximum(Power::POWER_MAX);
+    slider.setMinimum(Power::POWER_MIN);
+    slider.setTracking(false);
+    slider.setValue(255);
 }
