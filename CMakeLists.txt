@@ -63,7 +63,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 get_target_property(QtCore_location Qt5::Core LOCATION)
-add_library(minotaur-lib ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES})
+add_library(minotaur-lib ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES} code/gui/gridbutton.cpp code/gui/gridbutton.h)
 
 # Qt5 modules
 qt5_use_modules(minotaur-lib SerialPort)

@@ -95,6 +95,7 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
     connect(m_ui->rotate_slider, &QSlider::valueChanged, this, &CameraDisplay::rotation_slider_changed);
     connect(m_ui->rotation_box, &QLineEdit::editingFinished, this, &CameraDisplay::rotation_box_changed);
+    //    connect(m_ui->clear_path_button, &QPushButton::clicked, this, &GridDisplay::mouse_clicked);
 }
 
 CameraDisplay::~CameraDisplay() {

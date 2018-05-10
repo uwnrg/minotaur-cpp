@@ -1,5 +1,6 @@
 #include <QDebug>
 #include "griddisplay.h"
+#include "gridbutton.h"
 #include "../camera/cameradisplay.h"
 
 /* TODO (improvements):
@@ -51,8 +52,8 @@ void GridDisplay::button_clicked(int x, int y) {
     if (m_start_pos_selected) {
         m_square_selected[x][y] = START_WEIGHT;
         m_button[x][y]->setStyleSheet(startSelectedStyle);
-        m_start_position.x = x;
-        m_start_position.y = y;
+        set_coordinates(m_start_position, x, y);
+        qDebug() << "Robot Start Position (" << m_start_position.x << "," << m_start_position.y << ") = " << m_square_selected[x][y];
         m_start_pos_selected = false;
 #ifndef NDEBUG
         qDebug() << "Robot Start Position (" << x << "," << y << ") = " << m_square_selected[x][y];
@@ -68,8 +69,7 @@ void GridDisplay::button_clicked(int x, int y) {
         }
         m_square_selected[x][y] = END_WEIGHT;
         m_button[x][y]->setStyleSheet(endSelectedStyle);
-        m_end_position.x = x;
-        m_end_position.y = y;
+        set_coordinates(m_end_position, x, y);
         m_end_pos_selected = false;
 #ifndef NDEBUG
         qDebug() << "Robot End Position (" << x << "," << y << ") = " << m_square_selected[x][y];
@@ -95,12 +95,12 @@ void GridDisplay::draw_buttons() {
     for (int y = 0; y < m_row_count; y++) {
         for (int x = 0; x < m_column_count; x++) {
             QString text = QString::number(x);
-            m_button[x][y] = new QPushButton();
+            m_button[x][y] = new GridButton(this);
             m_button[x][y]->setGeometry(QRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE));
             m_button[x][y]->setStyleSheet(buttonStyle);
             m_square_selected[x][y] = NOT_SELECTED_WEIGHT;
             // Lambda function to receive signals from multiple buttons
-            connect(m_button[x][y], &QPushButton::clicked, [=]() { this->button_clicked(x, y); });
+            connect(m_button[x][y], &GridButton::clicked, [=]() { this->button_clicked(x, y); });
             m_scene->addWidget(m_button[x][y]);
         }
     }
@@ -154,25 +154,97 @@ void GridDisplay::hide_grid() {
 
 void GridDisplay::selectRobotPosition(QString weight_selected) {
     // TODO: Use enum instead of strings
-    // TODO: simplify boolean expressions since there's a lot of branching
-    if (weight_selected == "Start Configuration") {
-        m_start_pos_selected = true;
-        m_end_pos_selected = false;
-    } else if (weight_selected == "End Configuration") {
-        m_start_pos_selected = false;
-        m_end_pos_selected = true;
-    } else {
-        m_start_pos_selected = false;
-        m_end_pos_selected = false;
-    }
+    m_start_pos_selected = (weight_selected == "Start Configuration");
+    m_end_pos_selected = (weight_selected == "End Configuration");
+//    if (weight_selected == "Start Configuration") {
+//        m_start_pos_selected = true;
+//        m_end_pos_selected = false;
+//    } else if (weight_selected == "End Configuration") {
+//        m_start_pos_selected = false;
+//        m_end_pos_selected = true;
+//    } else {
+//        m_start_pos_selected = false;
+//        m_end_pos_selected = false;
+//    }
 }
 
 void GridDisplay::init_start_end_pos() {
-    m_start_position.x = NOT_SELECTED_WEIGHT;
-    m_start_position.y = NOT_SELECTED_WEIGHT;
-    m_end_position.x = NOT_SELECTED_WEIGHT;
-    m_end_position.y = NOT_SELECTED_WEIGHT;
+    set_coordinates(m_start_position, NOT_SELECTED_WEIGHT, NOT_SELECTED_WEIGHT);
+    set_coordinates(m_end_position, NOT_SELECTED_WEIGHT, NOT_SELECTED_WEIGHT);
 }
 
-GridDisplay::~GridDisplay() {
+void GridDisplay::mouse_clicked() {
+
+}
+
+void GridDisplay::mousePressEvent(QMouseEvent *ev) {
+    qDebug() << "Mouse pressed: " << m_mouse_click_start.x << ", " << m_mouse_click_start.y << endl;
+    QWidget::mousePressEvent(ev);
+    select_start = QPoint(m_mouse_click_start.x, m_mouse_click_start.y);
+
+    rubber_band = new QRubberBand(QRubberBand::Rectangle, this);
+    rubber_band->setGeometry(QRect(ev->pos(), QSize()));
+    rubber_band->show();
+}
+
+void GridDisplay::mouseReleaseEvent(QMouseEvent *ev) {
+    qDebug() << "Mouse released: " << m_mouse_click_release.x << ", " << m_mouse_click_release.y << endl;
+    QWidget::mouseReleaseEvent(ev);
+    rubber_band->hide();
+    rect_select_buttons(m_mouse_click_start, m_mouse_click_release);
+}
+
+void GridDisplay::mouseMoveEvent(QMouseEvent *ev) {
+    qDebug() << "Mouse move event: " << ev->pos() << endl;
+    QWidget::mouseMoveEvent(ev);
+    rubber_band->setGeometry(QRect(select_start, ev->pos()).normalized());
+}
+
+void GridDisplay::paintEvent(QPaintEvent *ev) {
+//    QPainter painter(this);
+//    QRect rect = ev->rect();
+//    painter.drawLine()
+}
+
+void GridDisplay::rect_select_buttons(const Coord top_left, const Coord bottom_right) {
+//    selection_box->topLeft();
+//    QPoint(selection_box->topLeft().x() + selection_box->width(), selection_box->topLeft().y() + selection_box->height());
+    //do calculation to get buttons encompassed between these two points
+//    int button_x = (m_mouse_click_start.x/20);
+//    int button_y = (m_mouse_click_start.y/20);
+
+    for (int x = top_left.x/GRID_SIZE; x <= bottom_right.x/GRID_SIZE; x++) {
+        for (int y = top_left.y/GRID_SIZE; y <= bottom_right.y/GRID_SIZE; y++) {
+            button_clicked(x, y);   //need to fix this code
+        }
+    }
+}
+
+void GridDisplay::set_coordinates(Coord& coord, const int x, const int y) {
+    coord.x = x;
+    coord.y = y;
+}
+
+void GridDisplay::set_coordinates(Coord& coord, const QPoint& pos) {
+    set_coordinates(coord, pos.x(), pos.y());
+}
+
+int GridDisplay::get_row_count() {
+    return m_row_count;
+}
+
+int GridDisplay::get_column_count() {
+    return m_column_count;
+}
+
+void GridDisplay::set_mouse_start(const QPoint& pos) {
+    set_coordinates(m_mouse_click_start, pos.x(), pos.y());
+}
+
+void GridDisplay::set_mouse_release(const QPoint& pos) {
+    set_coordinates(m_mouse_click_release, pos.x(), pos.y());
+}
+
+GridDisplay::~GridDisplay () {
+
 }
