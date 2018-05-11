@@ -100,7 +100,7 @@ void GridDisplay::draw_buttons() {
             m_button[x][y]->setStyleSheet(buttonStyle);
             m_square_selected[x][y] = NOT_SELECTED_WEIGHT;
             // Lambda function to receive signals from multiple buttons
-            connect(m_button[x][y], &GridButton::clicked, [=]() { this->button_clicked(x, y); });
+            //connect(m_button[x][y], &GridButton::clicked, [=]() { this->button_clicked(x, y); });
             m_scene->addWidget(m_button[x][y]);
         }
     }
@@ -206,16 +206,53 @@ void GridDisplay::paintEvent(QPaintEvent *ev) {
 //    painter.drawLine()
 }
 
-void GridDisplay::rect_select_buttons(const Coord top_left, const Coord bottom_right) {
-//    selection_box->topLeft();
-//    QPoint(selection_box->topLeft().x() + selection_box->width(), selection_box->topLeft().y() + selection_box->height());
-    //do calculation to get buttons encompassed between these two points
-//    int button_x = (m_mouse_click_start.x/20);
-//    int button_y = (m_mouse_click_start.y/20);
+void GridDisplay::swap_rect_coords(int &x1, int &y1, int &x2, int &y2) {
+    if (x1 > x2 && y1 > y2) {
+        swap(x1, x2);
+        swap(y1, y2);
+    }
+    else if (x1 > x2 && y1 < y2) {
+        swap(x1, x2);
+    }
+    else if (x1 < x2 && y1 > y2) {
+        swap(y1, y2);
+    }
+}
 
+void GridDisplay::swap(int &x, int &y) {
+    int temp = x;
+    x = y;
+    y = temp;
+}
+
+void GridDisplay::rect_select_buttons(Coord top_left, Coord bottom_right) {
+    swap_rect_coords(top_left.x, top_left.y, bottom_right.x, bottom_right.y);
     for (int x = top_left.x/GRID_SIZE; x <= bottom_right.x/GRID_SIZE; x++) {
         for (int y = top_left.y/GRID_SIZE; y <= bottom_right.y/GRID_SIZE; y++) {
-            button_clicked(x, y);   //need to fix this code
+            if (m_square_selected[x][y] < DEFAULT_WEIGHT) {  //if one square in the selection box is not selected, select the whole thing
+                rect_select_all_buttons(top_left, bottom_right);
+                return;
+            }
+        }
+    }
+    // Only deselect buttons if all the buttons in the selection box are selected
+    rect_deselect_all_buttons(top_left, bottom_right);
+}
+
+void GridDisplay::rect_select_all_buttons(const Coord top_left, const Coord bottom_right) {
+    for (int x = top_left.x/GRID_SIZE; x <= bottom_right.x/GRID_SIZE; x++) {
+        for (int y = top_left.y / GRID_SIZE; y <= bottom_right.y / GRID_SIZE; y++) {
+            m_square_selected[x][y] = m_camera_display->get_weighting();
+            m_button[x][y]->setStyleSheet(buttonSelectedStyle.arg(255 - 10 * m_camera_display->get_weighting()));
+        }
+    }
+}
+
+void GridDisplay::rect_deselect_all_buttons(const Coord top_left, const Coord bottom_right) {
+    for (int x = top_left.x/GRID_SIZE; x <= bottom_right.x/GRID_SIZE; x++) {
+        for (int y = top_left.y / GRID_SIZE; y <= bottom_right.y / GRID_SIZE; y++) {
+            m_square_selected[x][y] = NOT_SELECTED_WEIGHT;
+            m_button[x][y]->setStyleSheet(buttonStyle);
         }
     }
 }

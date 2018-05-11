@@ -30,7 +30,7 @@ public:
         END_WEIGHT = -3,
         START_WEIGHT = -2,
         NOT_SELECTED_WEIGHT = -1,
-        DEFAULT_WEIGHT = 0,
+        DEFAULT_WEIGHT = 0,     //All selected squares should have values greater or equal to 0
         GRID_SIZE = 20,
         SCENE_WIDTH = 100,      // Default: 800
         SCENE_HEIGHT = 100,     // Default: 400
@@ -91,7 +91,15 @@ private:
 
     void mouse_clicked();
 
-    void rect_select_buttons(const Coord top_left, const Coord bottom_right);
+    void rect_select_buttons(Coord top_left, Coord bottom_right);
+
+    void rect_select_all_buttons(const Coord top_left, const Coord bottom_right);
+
+    void rect_deselect_all_buttons(const Coord top_left, const Coord bottom_right);
+
+    void swap_rect_coords(int &x1, int &y1, int &x2, int &y2);
+
+    void swap(int &x, int &y);
 
     std::unique_ptr<QGraphicsScene> m_scene;
     std::unique_ptr<QGraphicsView> m_view;
