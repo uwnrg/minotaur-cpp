@@ -189,6 +189,12 @@ public:
      * Signal fired to tell the grid display to hide buttons
      * and grid elements.
      */
+    Q_SIGNAL void hide_grid();
+
+    /**
+     * Signal fired to tell the grid display to clear selected
+     * grid elements.
+     */
     Q_SIGNAL void clear_grid();
 
     /**

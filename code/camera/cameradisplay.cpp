@@ -88,6 +88,7 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->picture_button, &QPushButton::clicked, this, &CameraDisplay::take_screen_shot);
     connect(m_ui->record_button, &QPushButton::clicked, this, &CameraDisplay::toggle_record);
     connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid);
+    connect(m_ui->hide_grid_button, &QPushButton::clicked, this, &CameraDisplay::hide_grid);
     connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid);
     connect(m_ui->toggle_path_button, &QPushButton::clicked, this, &CameraDisplay::toggle_path);
     connect(m_ui->clear_path_button, &QPushButton::clicked, this, &CameraDisplay::clear_path);
