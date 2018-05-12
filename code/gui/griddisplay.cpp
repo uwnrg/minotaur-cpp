@@ -278,10 +278,10 @@ void GridDisplay::set_mouse_release(const QPoint& pos) {
     set_coordinates(m_mouse_click_release, pos.x(), pos.y());
 }
 void GridDisplay::is_valid_coord(Coord& point) {
-    point.x = (point.x < 0) ? 0 : point.x;
-    point.x = (point.x > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1 : point.x;
-    point.y = (point.y < 0) ? 0 : point.y;
-    point.x = (point.y > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1: point.y;
+    point.x = ((point.x < 0) ? 0 : point.x);
+    point.x = ((point.x > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1 : point.x);
+    point.y = ((point.y < 0) ? 0 : point.y);
+    point.y = ((point.y > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1 : point.y);
 }
 
 GridDisplay::~GridDisplay () {

@@ -156,22 +156,6 @@
     <bool>false</bool>
    </property>
   </widget>
-    <widget class="QPushButton" name="hide_grid_button">
-     <property name="geometry">
-         <rect>
-             <x>280</x>
-             <y>180</y>
-             <width>100</width>
-             <height>31</height>
-         </rect>
-     </property>
-     <property name="text">
-         <string>Hide Grid</string>
-     </property>
-     <property name="autoDefault">
-         <bool>false</bool>
-     </property>
-    </widget>
   <widget class="QPushButton" name="clear_grid_button">
    <property name="geometry">
     <rect>
