@@ -105,6 +105,8 @@ private:
         const vector2i &bottom_right
     );
 
+    void is_valid_coord(vector2i& point);
+
     std::unique_ptr<QGraphicsScene> m_scene;
     std::unique_ptr<QGraphicsView> m_view;
 
