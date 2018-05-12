@@ -151,8 +151,7 @@ void GridDisplay::show_grid() {
         init_start_end_pos();
         m_grid_displayed = true;
     } else {
-        // Show all the elements instead of redrawing them
-
+        show_view();
     }
 }
 
@@ -165,16 +164,12 @@ void GridDisplay::draw_grid() {
 }
 
 void GridDisplay::hide_grid() {
-    // TODO
-    for (int y = 0; y < m_row_count; y++) {
-        for (int x = 0; x < m_column_count; x++) {
-            //m_button[x][y]->setVisible(false);
-            m_button[x][y]->hide();
-            //m_scene->;
-        }
+    if (m_grid_displayed) {
+        m_view->hide();
+#ifdef NDEBUG
+        qDebug() << "Hide grid";
+#endif
     }
-    qDebug() << "Hide Grid";
-
 }
 
 void GridDisplay::select_robot_position(QString weight_selected) {
@@ -193,7 +188,6 @@ void GridDisplay::mousePressEvent(QMouseEvent *ev) {
     m_select_start = QPoint(m_mouse_click_start.x, m_mouse_click_start.y);
 
     m_rubber_band = std::make_unique<QRubberBand>(QRubberBand::Rectangle, this);
-    //m_rubber_band = new QRubberBand(QRubberBand::Rectangle, this);
     m_rubber_band->setGeometry(m_mouse_click_start.x, m_mouse_click_start.y, 2, 2);
     m_rubber_band->show();
     m_rubber_band->raise();
@@ -215,13 +209,14 @@ void GridDisplay::mouseMoveEvent(QMouseEvent *ev) {
     m_rubber_band->raise();
 }
 
-void GridDisplay::rect_select_buttons(Coord top_left, Coord bottom_right) {
+void GridDisplay::rect_select_buttons(Coord& top_left, Coord& bottom_right) {
+    is_valid_coord(top_left);
+    is_valid_coord(bottom_right);
     // If only one button is selected
     if (abs(top_left.x - bottom_right.x) < GRID_SIZE && abs(top_left.y - bottom_right.y) < GRID_SIZE) {
         button_clicked(bottom_right.x / GRID_SIZE, bottom_right.y / GRID_SIZE);
         return;
     }
-
     swap_rect_coords(top_left.x, top_left.y, bottom_right.x, bottom_right.y);
     for (int x = top_left.x / GRID_SIZE; x <= bottom_right.x / GRID_SIZE; x++) {
         for (int y = top_left.y / GRID_SIZE; y <= bottom_right.y / GRID_SIZE; y++) {
@@ -236,7 +231,7 @@ void GridDisplay::rect_select_buttons(Coord top_left, Coord bottom_right) {
     rect_deselect_all_buttons(top_left, bottom_right);
 }
 
-void GridDisplay::rect_select_all_buttons(const Coord top_left, const Coord bottom_right) {
+void GridDisplay::rect_select_all_buttons(Coord& top_left, Coord& bottom_right) {
     for (int x = top_left.x / GRID_SIZE; x <= bottom_right.x / GRID_SIZE; x++) {
         for (int y = top_left.y / GRID_SIZE; y <= bottom_right.y / GRID_SIZE; y++) {
             m_square_selected[x][y] = m_camera_display->get_weighting();
@@ -245,7 +240,7 @@ void GridDisplay::rect_select_all_buttons(const Coord top_left, const Coord bott
     }
 }
 
-void GridDisplay::rect_deselect_all_buttons(const Coord top_left, const Coord bottom_right) {
+void GridDisplay::rect_deselect_all_buttons(Coord& top_left, Coord& bottom_right) {
     for (int x = top_left.x / GRID_SIZE; x <= bottom_right.x / GRID_SIZE; x++) {
         for (int y = top_left.y / GRID_SIZE; y <= bottom_right.y / GRID_SIZE; y++) {
             m_square_selected[x][y] = NOT_SELECTED_WEIGHT;
@@ -282,10 +277,11 @@ void GridDisplay::set_mouse_move(const QPoint& pos) {
 void GridDisplay::set_mouse_release(const QPoint& pos) {
     set_coordinates(m_mouse_click_release, pos.x(), pos.y());
 }
-
-bool GridDisplay::is_valid_coord(const Coord &coord) {
-    // Check if coordinate is within the widget
-
+void GridDisplay::is_valid_coord(Coord& point) {
+    point.x = (point.x < 0) ? 0 : point.x;
+    point.x = (point.x > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1 : point.x;
+    point.y = (point.y < 0) ? 0 : point.y;
+    point.x = (point.y > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1: point.y;
 }
 
 GridDisplay::~GridDisplay () {

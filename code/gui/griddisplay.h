@@ -88,13 +88,13 @@ private:
 
     void init_start_end_pos();
 
-    void rect_select_buttons(Coord top_left, Coord bottom_right);
+    void rect_select_buttons(Coord& top_left, Coord& bottom_right);
 
-    void rect_select_all_buttons(const Coord top_left, const Coord bottom_right);
+    void rect_select_all_buttons(Coord& top_left, Coord& bottom_right);
 
-    void rect_deselect_all_buttons(const Coord top_left, const Coord bottom_right);
+    void rect_deselect_all_buttons(Coord& top_left, Coord& bottom_right);
 
-    bool is_valid_coord(const Coord &coord);
+    void is_valid_coord(Coord& point);
 
     std::unique_ptr<QGraphicsScene> m_scene;
     std::unique_ptr<QGraphicsView> m_view;

@@ -12,13 +12,18 @@ GridButton::GridButton(GridDisplay *grid_display) :
 }
 
 void GridButton::mousePressEvent(QMouseEvent *ev) {
+//    if (is_valid_coord(mapToParent(ev->pos()))) {
 #ifndef NDEBUG
-    qDebug() << "Mouse pressed: " << mapToParent(ev->pos());
+        qDebug() << "Mouse pressed: " << mapToParent(ev->pos());
 #endif
-    mouse_clicked = true;
-    m_grid_display->set_mouse_start(mapToParent(ev->pos()));
-    m_grid_display->mousePressEvent(ev);
-    QPushButton::mousePressEvent(ev);
+        mouse_clicked = true;
+        m_grid_display->set_mouse_start(mapToParent(ev->pos()));
+        m_grid_display->mousePressEvent(ev);
+        QPushButton::mousePressEvent(ev);
+//    } else {
+//        qDebug() << "Moved outside widget";
+//        return;
+//    }
 }
 
 void GridButton::mouseReleaseEvent(QMouseEvent *ev) {
