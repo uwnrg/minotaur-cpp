@@ -4,6 +4,17 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 include(Util)
 include(Python)
 
+# Release and Debug builds
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif ()
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+if (NOT (CMAKE_BUILD_TYPE MATCHES Debug))
+    set(NO_DEBUG ON)
+endif ()
+
 # Fix for finding the correct Python version on Apple
 if (APPLE)
     unset(PYTHON_LIBRARY CACHE)
