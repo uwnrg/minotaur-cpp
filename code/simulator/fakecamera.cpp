@@ -89,7 +89,7 @@ cv::VideoCapture &FakeCamera::operator>>(cv::UMat &image) {
     return *this;
 }
 
-bool FakeCamera::read(cv::OutputArray image) {
+bool FakeCamera::read(cv::OutputArray) {
     return false;
 }
 
