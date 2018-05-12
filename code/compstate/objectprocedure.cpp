@@ -55,6 +55,9 @@ void ObjectProcedure::start() {
 
 void ObjectProcedure::stop() {
     m_timer.stop();
+    if (m_object_line != nullptr) {
+        m_object_line->stop();
+    }
 }
 
 void ObjectProcedure::timerEvent(QTimerEvent *ev) {

@@ -29,6 +29,9 @@ void ReadyMove::start() {
 
 void ReadyMove::stop() {
     m_timer.stop();
+    if (m_proc != nullptr) {
+        m_proc->stop();
+    }
 }
 
 void ReadyMove::timerEvent(QTimerEvent *ev) {
