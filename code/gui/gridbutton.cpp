@@ -1,9 +1,9 @@
-#include <QDebug>
 #include "gridbutton.h"
 #include "griddisplay.h"
 
-//create class that extends QPushButton -> replace all QPushButton with your own button name
-//subclass QPushButton and then call events on parents
+#ifndef NDEBUG
+#include <QDebug>
+#endif
 
 GridButton::GridButton(GridDisplay *grid_display) :
     QPushButton(),
@@ -12,36 +12,29 @@ GridButton::GridButton(GridDisplay *grid_display) :
 }
 
 void GridButton::mousePressEvent(QMouseEvent *ev) {
-    qDebug() << "Mouse pressed: " << this->mapToParent(ev->pos());
+#ifndef NDEBUG
+    qDebug() << "Mouse pressed: " << mapToParent(ev->pos());
+#endif
     mouse_clicked = true;
-    m_grid_display->set_mouse_start(this->mapToParent(ev->pos()));
+    m_grid_display->set_mouse_start(mapToParent(ev->pos()));
     m_grid_display->mousePressEvent(ev);
     QPushButton::mousePressEvent(ev);
 }
 
 void GridButton::mouseReleaseEvent(QMouseEvent *ev) {
-    qDebug() << "Button Mouse released: " << ev->pos();
+#ifndef NDEBUG
+    qDebug() << "Mouse released: " << ev->pos();
+#endif
     mouse_clicked = false;
-    m_grid_display->set_mouse_release(this->mapToParent(ev->pos()));
+    m_grid_display->set_mouse_release(mapToParent(ev->pos()));
     m_grid_display->mouseReleaseEvent(ev);
     QPushButton::mouseReleaseEvent(ev);
 }
 
 void GridButton::mouseMoveEvent(QMouseEvent *ev) {
     if (hasMouseTracking() && mouse_clicked) {
+        m_grid_display->set_mouse_move(mapToParent(ev->pos()));
         m_grid_display->mouseMoveEvent(ev);
         QPushButton::mouseMoveEvent(ev);
     }
-}
-
-void GridButton::paintEvent(QPaintEvent *ev) {
-
-}
-
-bool GridButton::mouse_is_clicked() {
-    return mouse_clicked;
-}
-
-GridButton::~GridButton() {
-
 }

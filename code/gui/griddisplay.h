@@ -45,19 +45,21 @@ public:
 
     ~GridDisplay() override;
 
+    static void swap_rect_coords(int &x1, int &y1, int &x2, int &y2);
+
     void mousePressEvent(QMouseEvent *ev) override;
 
     void mouseReleaseEvent(QMouseEvent *ev) override;
 
     void mouseMoveEvent(QMouseEvent *ev) override;
 
-    void paintEvent(QPaintEvent *ev) override;
-
     void set_coordinates(Coord& coord, const int x, const int y);
 
     void set_coordinates(Coord& coord, const QPoint& pos);
 
     void set_mouse_start(const QPoint& pos);
+
+    void set_mouse_move(const QPoint& pos);
 
     void set_mouse_release(const QPoint& pos);
 
@@ -71,9 +73,8 @@ public Q_SLOTS:
     void show_grid();
 
     void hide_grid();
-
-    //TODO: figure out refactoring conflict
-    void selectRobotPosition(QString);
+    
+    void select_robot_position(QString);
 
 protected Q_SLOTS:
     void button_clicked(int x, int y);
@@ -89,17 +90,11 @@ private:
 
     void init_start_end_pos();
 
-    void mouse_clicked();
-
     void rect_select_buttons(Coord top_left, Coord bottom_right);
 
     void rect_select_all_buttons(const Coord top_left, const Coord bottom_right);
 
     void rect_deselect_all_buttons(const Coord top_left, const Coord bottom_right);
-
-    void swap_rect_coords(int &x1, int &y1, int &x2, int &y2);
-
-    void swap(int &x, int &y);
 
     std::unique_ptr<QGraphicsScene> m_scene;
     std::unique_ptr<QGraphicsView> m_view;
@@ -120,11 +115,12 @@ private:
     Coord m_end_position;
 
     Coord m_mouse_click_start;
+    Coord m_mouse_move;
     Coord m_mouse_click_release;
 
-    QPoint select_start;
-    QRect select_box;
-    QRubberBand *rubber_band;
+    QPoint m_select_start;
+    QRect m_select_box;
+    std::unique_ptr<QRubberBand> m_rubber_band;
 };
 
 #endif //MINOTAUR_CPP_GRIDDISPLAY_H

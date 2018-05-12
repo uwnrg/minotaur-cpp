@@ -1,7 +1,11 @@
-#include <QDebug>
 #include "griddisplay.h"
 #include "gridbutton.h"
 #include "../camera/cameradisplay.h"
+#include "../utility/logger.h"
+
+#ifndef NDEBUG
+#include <QDebug>
+#endif
 
 /* TODO (improvements):
  * Allow user to select or deselect an area (using mouse events)
@@ -53,11 +57,9 @@ void GridDisplay::button_clicked(int x, int y) {
         m_square_selected[x][y] = START_WEIGHT;
         m_button[x][y]->setStyleSheet(startSelectedStyle);
         set_coordinates(m_start_position, x, y);
-        qDebug() << "Robot Start Position (" << m_start_position.x << "," << m_start_position.y << ") = " << m_square_selected[x][y];
         m_start_pos_selected = false;
-#ifndef NDEBUG
-        qDebug() << "Robot Start Position (" << x << "," << y << ") = " << m_square_selected[x][y];
-#endif
+
+    log() << "Robot Start Position (" << x << "," << y << ") = " << m_square_selected[x][y];
     } else if (m_end_pos_selected) {
         // Executes if another end position was previously selected
         if (
@@ -71,9 +73,9 @@ void GridDisplay::button_clicked(int x, int y) {
         m_button[x][y]->setStyleSheet(endSelectedStyle);
         set_coordinates(m_end_position, x, y);
         m_end_pos_selected = false;
-#ifndef NDEBUG
-        qDebug() << "Robot End Position (" << x << "," << y << ") = " << m_square_selected[x][y];
-#endif
+
+    log() << "Robot End Position (" << x << "," << y << ") = " << m_square_selected[x][y];
+
     } else if (
         m_square_selected[x][y] > NOT_SELECTED_WEIGHT ||
         m_square_selected[x][y] == START_WEIGHT ||
@@ -152,20 +154,10 @@ void GridDisplay::hide_grid() {
     //m_grid_displayed = true;
 }
 
-void GridDisplay::selectRobotPosition(QString weight_selected) {
+void GridDisplay::select_robot_position(QString weight_selected) {
     // TODO: Use enum instead of strings
     m_start_pos_selected = (weight_selected == "Start Configuration");
     m_end_pos_selected = (weight_selected == "End Configuration");
-//    if (weight_selected == "Start Configuration") {
-//        m_start_pos_selected = true;
-//        m_end_pos_selected = false;
-//    } else if (weight_selected == "End Configuration") {
-//        m_start_pos_selected = false;
-//        m_end_pos_selected = true;
-//    } else {
-//        m_start_pos_selected = false;
-//        m_end_pos_selected = false;
-//    }
 }
 
 void GridDisplay::init_start_end_pos() {
@@ -173,63 +165,58 @@ void GridDisplay::init_start_end_pos() {
     set_coordinates(m_end_position, NOT_SELECTED_WEIGHT, NOT_SELECTED_WEIGHT);
 }
 
-void GridDisplay::mouse_clicked() {
-
-}
-
 void GridDisplay::mousePressEvent(QMouseEvent *ev) {
-    qDebug() << "Mouse pressed: " << m_mouse_click_start.x << ", " << m_mouse_click_start.y << endl;
     QWidget::mousePressEvent(ev);
-    select_start = QPoint(m_mouse_click_start.x, m_mouse_click_start.y);
+    m_select_start = QPoint(m_mouse_click_start.x, m_mouse_click_start.y);
 
-    rubber_band = new QRubberBand(QRubberBand::Rectangle, this);
-    rubber_band->setGeometry(QRect(ev->pos(), QSize()));
-    rubber_band->show();
+    m_rubber_band = std::make_unique<QRubberBand>(QRubberBand::Rectangle, this);
+    //m_rubber_band = new QRubberBand(QRubberBand::Rectangle, this);
+    m_rubber_band->setGeometry(m_mouse_click_start.x, m_mouse_click_start.y, 2, 2);
+    m_rubber_band->show();
+    m_rubber_band->raise();
 }
 
 void GridDisplay::mouseReleaseEvent(QMouseEvent *ev) {
-    qDebug() << "Mouse released: " << m_mouse_click_release.x << ", " << m_mouse_click_release.y << endl;
     QWidget::mouseReleaseEvent(ev);
-    rubber_band->hide();
+    m_rubber_band->hide();
     rect_select_buttons(m_mouse_click_start, m_mouse_click_release);
 }
 
 void GridDisplay::mouseMoveEvent(QMouseEvent *ev) {
+#ifndef NDEBUG
     qDebug() << "Mouse move event: " << ev->pos() << endl;
+#endif
     QWidget::mouseMoveEvent(ev);
-    rubber_band->setGeometry(QRect(select_start, ev->pos()).normalized());
-}
-
-void GridDisplay::paintEvent(QPaintEvent *ev) {
-//    QPainter painter(this);
-//    QRect rect = ev->rect();
-//    painter.drawLine()
+    //m_rubber_band->resize(QRect(m_select_start, QPoint(m_mouse_move.x, m_mouse_move.y)).size());
+    m_rubber_band->setGeometry(QRect(m_select_start, QPoint(m_mouse_move.x, m_mouse_move.y)));
+    m_rubber_band->raise();
 }
 
 void GridDisplay::swap_rect_coords(int &x1, int &y1, int &x2, int &y2) {
     if (x1 > x2 && y1 > y2) {
-        swap(x1, x2);
-        swap(y1, y2);
+        std::swap(x1, x2);
+        std::swap(y1, y2);
     }
     else if (x1 > x2 && y1 < y2) {
-        swap(x1, x2);
+        std::swap(x1, x2);
     }
     else if (x1 < x2 && y1 > y2) {
-        swap(y1, y2);
+        std::swap(y1, y2);
     }
-}
-
-void GridDisplay::swap(int &x, int &y) {
-    int temp = x;
-    x = y;
-    y = temp;
 }
 
 void GridDisplay::rect_select_buttons(Coord top_left, Coord bottom_right) {
+    // If only one button is selected
+    if (abs(top_left.x - bottom_right.x) < GRID_SIZE || abs(top_left.y - bottom_right.y) < GRID_SIZE) {
+        button_clicked(bottom_right.x / GRID_SIZE, bottom_right.y / GRID_SIZE);
+        return;
+    }
+
     swap_rect_coords(top_left.x, top_left.y, bottom_right.x, bottom_right.y);
-    for (int x = top_left.x/GRID_SIZE; x <= bottom_right.x/GRID_SIZE; x++) {
-        for (int y = top_left.y/GRID_SIZE; y <= bottom_right.y/GRID_SIZE; y++) {
-            if (m_square_selected[x][y] < DEFAULT_WEIGHT) {  //if one square in the selection box is not selected, select the whole thing
+    for (int x = top_left.x / GRID_SIZE; x <= bottom_right.x / GRID_SIZE; x++) {
+        for (int y = top_left.y / GRID_SIZE; y <= bottom_right.y / GRID_SIZE; y++) {
+            // If any square in the selection box is not selected, select all the squares in the box
+            if (m_square_selected[x][y] < DEFAULT_WEIGHT) {
                 rect_select_all_buttons(top_left, bottom_right);
                 return;
             }
@@ -240,7 +227,7 @@ void GridDisplay::rect_select_buttons(Coord top_left, Coord bottom_right) {
 }
 
 void GridDisplay::rect_select_all_buttons(const Coord top_left, const Coord bottom_right) {
-    for (int x = top_left.x/GRID_SIZE; x <= bottom_right.x/GRID_SIZE; x++) {
+    for (int x = top_left.x / GRID_SIZE; x <= bottom_right.x / GRID_SIZE; x++) {
         for (int y = top_left.y / GRID_SIZE; y <= bottom_right.y / GRID_SIZE; y++) {
             m_square_selected[x][y] = m_camera_display->get_weighting();
             m_button[x][y]->setStyleSheet(buttonSelectedStyle.arg(255 - 10 * m_camera_display->get_weighting()));
@@ -249,7 +236,7 @@ void GridDisplay::rect_select_all_buttons(const Coord top_left, const Coord bott
 }
 
 void GridDisplay::rect_deselect_all_buttons(const Coord top_left, const Coord bottom_right) {
-    for (int x = top_left.x/GRID_SIZE; x <= bottom_right.x/GRID_SIZE; x++) {
+    for (int x = top_left.x / GRID_SIZE; x <= bottom_right.x / GRID_SIZE; x++) {
         for (int y = top_left.y / GRID_SIZE; y <= bottom_right.y / GRID_SIZE; y++) {
             m_square_selected[x][y] = NOT_SELECTED_WEIGHT;
             m_button[x][y]->setStyleSheet(buttonStyle);
@@ -276,6 +263,10 @@ int GridDisplay::get_column_count() {
 
 void GridDisplay::set_mouse_start(const QPoint& pos) {
     set_coordinates(m_mouse_click_start, pos.x(), pos.y());
+}
+
+void GridDisplay::set_mouse_move(const QPoint& pos) {
+    set_coordinates(m_mouse_move, pos.x(), pos.y());
 }
 
 void GridDisplay::set_mouse_release(const QPoint& pos) {

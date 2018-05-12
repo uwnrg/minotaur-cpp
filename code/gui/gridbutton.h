@@ -11,18 +11,12 @@ Q_OBJECT
 public:
     explicit GridButton(GridDisplay *grid_display);
 
-    bool mouse_is_clicked();
-protected:
-    ~GridButton();
-
 private:
     void mousePressEvent(QMouseEvent *ev) override;
 
     void mouseReleaseEvent(QMouseEvent *ev) override;
 
     void mouseMoveEvent(QMouseEvent *ev) override;
-
-    void paintEvent(QPaintEvent *ev) override;
 
     GridDisplay *m_grid_display;
 
