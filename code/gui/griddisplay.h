@@ -94,6 +94,8 @@ private:
 
     void rect_deselect_all_buttons(const Coord top_left, const Coord bottom_right);
 
+    bool is_valid_coord(const Coord &coord);
+
     std::unique_ptr<QGraphicsScene> m_scene;
     std::unique_ptr<QGraphicsView> m_view;
 

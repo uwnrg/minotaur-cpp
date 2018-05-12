@@ -150,6 +150,8 @@ void GridDisplay::show_grid() {
         show_view();
         init_start_end_pos();
         m_grid_displayed = true;
+    } else {
+
     }
 }
 
@@ -165,6 +167,8 @@ void GridDisplay::hide_grid() {
     // TODO
     // Hide or disable qgraphicsview
     //m_grid_displayed = true;
+
+
 }
 
 void GridDisplay::select_robot_position(QString weight_selected) {
@@ -207,7 +211,7 @@ void GridDisplay::mouseMoveEvent(QMouseEvent *ev) {
 
 void GridDisplay::rect_select_buttons(Coord top_left, Coord bottom_right) {
     // If only one button is selected
-    if (abs(top_left.x - bottom_right.x) < GRID_SIZE || abs(top_left.y - bottom_right.y) < GRID_SIZE) {
+    if (abs(top_left.x - bottom_right.x) < GRID_SIZE && abs(top_left.y - bottom_right.y) < GRID_SIZE) {
         button_clicked(bottom_right.x / GRID_SIZE, bottom_right.y / GRID_SIZE);
         return;
     }
@@ -271,6 +275,11 @@ void GridDisplay::set_mouse_move(const QPoint& pos) {
 
 void GridDisplay::set_mouse_release(const QPoint& pos) {
     set_coordinates(m_mouse_click_release, pos.x(), pos.y());
+}
+
+bool GridDisplay::is_valid_coord(const Coord &coord) {
+    // Check if coordinate is within the widget
+
 }
 
 GridDisplay::~GridDisplay () {
