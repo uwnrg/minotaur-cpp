@@ -151,6 +151,7 @@ void GridDisplay::show_grid() {
         init_start_end_pos();
         m_grid_displayed = true;
     } else {
+        // Show all the elements instead of redrawing them
 
     }
 }
@@ -165,9 +166,14 @@ void GridDisplay::draw_grid() {
 
 void GridDisplay::hide_grid() {
     // TODO
-    // Hide or disable qgraphicsview
-    //m_grid_displayed = true;
-
+    for (int y = 0; y < m_row_count; y++) {
+        for (int x = 0; x < m_column_count; x++) {
+            //m_button[x][y]->setVisible(false);
+            m_button[x][y]->hide();
+            //m_scene->;
+        }
+    }
+    qDebug() << "Hide Grid";
 
 }
 

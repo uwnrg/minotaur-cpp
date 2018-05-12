@@ -64,6 +64,7 @@ ImageViewer::ImageViewer(CameraDisplay *parent) :
     connect(parent, &CameraDisplay::clear_path, this, &ImageViewer::clear_path);
     connect(parent, &CameraDisplay::zoom_changed, this, &ImageViewer::set_zoom);
     connect(parent, &CameraDisplay::show_grid, m_grid_display.get(), &GridDisplay::show_grid);
+    connect(parent, &CameraDisplay::hide_grid, m_grid_display.get(), &GridDisplay::hide_grid);
     connect(parent, &CameraDisplay::clear_grid, m_grid_display.get(), &GridDisplay::clear_selection);
     connect(parent, &CameraDisplay::select_position, m_grid_display.get(), &GridDisplay::select_robot_position);
     connect(this, &ImageViewer::increment_rotation, parent, &CameraDisplay::increment_rotation);
