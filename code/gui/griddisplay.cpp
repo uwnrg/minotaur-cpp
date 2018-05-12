@@ -38,6 +38,19 @@ const QString endSelectedStyle =
         "width: 8px;"
         "height: 8px;";
 
+static void swap_rect_coords(int &x1, int &y1, int &x2, int &y2) {
+    if (x1 > x2 && y1 > y2) {
+        std::swap(x1, x2);
+        std::swap(y1, y2);
+    }
+    else if (x1 > x2 && y1 < y2) {
+        std::swap(x1, x2);
+    }
+    else if (x1 < x2 && y1 > y2) {
+        std::swap(y1, y2);
+    }
+}
+
 GridDisplay::GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display) :
     QWidget(image_viewer),
     m_square_selected(40, 20),
@@ -190,19 +203,6 @@ void GridDisplay::mouseMoveEvent(QMouseEvent *ev) {
     //m_rubber_band->resize(QRect(m_select_start, QPoint(m_mouse_move.x, m_mouse_move.y)).size());
     m_rubber_band->setGeometry(QRect(m_select_start, QPoint(m_mouse_move.x, m_mouse_move.y)));
     m_rubber_band->raise();
-}
-
-void GridDisplay::swap_rect_coords(int &x1, int &y1, int &x2, int &y2) {
-    if (x1 > x2 && y1 > y2) {
-        std::swap(x1, x2);
-        std::swap(y1, y2);
-    }
-    else if (x1 > x2 && y1 < y2) {
-        std::swap(x1, x2);
-    }
-    else if (x1 < x2 && y1 > y2) {
-        std::swap(y1, y2);
-    }
 }
 
 void GridDisplay::rect_select_buttons(Coord top_left, Coord bottom_right) {

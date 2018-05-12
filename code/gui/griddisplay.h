@@ -45,8 +45,6 @@ public:
 
     ~GridDisplay() override;
 
-    static void swap_rect_coords(int &x1, int &y1, int &x2, int &y2);
-
     void mousePressEvent(QMouseEvent *ev) override;
 
     void mouseReleaseEvent(QMouseEvent *ev) override;
@@ -73,7 +71,7 @@ public Q_SLOTS:
     void show_grid();
 
     void hide_grid();
-    
+
     void select_robot_position(QString);
 
 protected Q_SLOTS:
