@@ -2,7 +2,7 @@
 #include "ui_imageviewer.h"
 
 #include "../utility/logger.h"
-#include "../gui/mainwindow.h"
+#include "../gui/global.h"
 
 QString color_format(double value, const QString &suffix = "") {
     return QString("<font color=\"#8ae234\">%1%2</font>").arg(value).arg(suffix);

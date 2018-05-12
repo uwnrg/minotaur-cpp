@@ -1,17 +1,9 @@
 #include "readymove.h"
 #include "common.h"
+#include "parammanager.h"
 #include "../utility/algorithm.h"
 #include "../gui/mainwindow.h"
-
-namespace det_ {
-    enum {
-        COLLIDE_NORM_DEV = 4,
-        COLLIDE_LOC_ACPT = 3,
-
-        RDY_MV_NORM_DEV = 4,
-        RDY_MV_LOC_ACPT = 3,
-    };
-}
+#include "../gui/global.h"
 
 ReadyMove::ReadyMove(std::weak_ptr<Controller> sol, nrg::dir dir) :
     m_sol(std::move(sol)),
@@ -32,7 +24,7 @@ ReadyMove::~ReadyMove() {
 }
 
 void ReadyMove::start() {
-    m_timer.start(Procedure::TIMER_FAST, this);
+    m_timer.start(g_pm->timer_fast, this);
 }
 
 void ReadyMove::stop() {
@@ -107,7 +99,7 @@ void ReadyMove::do_colliding() {
     // that resolves the collision
     m_proc = std::make_unique<Procedure>(
         m_sol, path,
-        det_::COLLIDE_LOC_ACPT, det_::COLLIDE_NORM_DEV
+        g_pm->objproc_loc_acpt, g_pm->objproc_norm_dev
     );
     m_proc->start();
     m_state = State::COLLIDING_PROC;
@@ -140,7 +132,7 @@ void ReadyMove::do_ready_move() {
     // Create the procedure and hand over control
     m_proc = std::make_unique<Procedure>(
         m_sol, path,
-        det_::RDY_MV_LOC_ACPT, det_::RDY_MV_NORM_DEV
+        g_pm->objproc_loc_acpt, g_pm->objproc_norm_dev
     );
     m_proc->start();
     m_state = State::READY_MOVE_PROC;

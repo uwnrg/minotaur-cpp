@@ -3,12 +3,16 @@
 #include "ui_serialbox.h"
 
 #include "../interpreter/embeddedcontroller.h"
+#include "../compstate/parammanager.h"
+
+param_manager *g_pm = nullptr;
 
 MainWindow::MainWindow() :
     ui(std::make_unique<Ui::MainWindow>()),
 
     m_status_box(std::make_shared<StatusBox>(this)),
     m_global_sim(std::make_shared<GlobalSim>()),
+    m_parameter_box(std::make_shared<ParameterBox>(this)),
 
     m_solenoid(std::make_shared<Solenoid>()),
     m_simulator(std::make_shared<Simulator>(m_global_sim.get())),
@@ -47,6 +51,8 @@ MainWindow::MainWindow() :
     connect(ui->open_about, &QAction::triggered, m_about_window.get(), &QDialog::show);
     connect(ui->open_camera_display, &QAction::triggered, m_camera_display.get(), &QDialog::show);
     connect(ui->open_serial_box, &QAction::triggered, m_serial_box.get(), &QDialog::show);
+    connect(ui->open_status_box, &QAction::triggered, m_status_box.get(), &QDialog::show);
+    connect(ui->open_parameter_box, &QAction::triggered, m_parameter_box.get(), &QDialog::show);
 
     // Drop-down actions
     connect(ui->action_clear_log, &QAction::triggered, this, &MainWindow::clearLogOutput);
@@ -57,6 +63,14 @@ MainWindow::MainWindow() :
     this->installEventFilter(this);
     this->setFocus();
     this->setFixedSize(this->size());
+
+    // Initialize global parameter manager
+    g_pm = new param_manager(this);
+}
+
+MainWindow::~MainWindow() {
+    // Delete global parameter manager
+    delete g_pm;
 }
 
 bool MainWindow::eventFilter(QObject *, QEvent *event) {
@@ -111,8 +125,6 @@ void MainWindow::mousePressEvent(QMouseEvent *) {
     // restore focus to the main window
     this->setFocus();
 }
-
-MainWindow::~MainWindow() = default;
 
 void MainWindow::moveButtonClicked() {
     auto dir = (Controller::Dir) ui->selected_direction->currentIndex();
@@ -175,6 +187,10 @@ std::weak_ptr<StatusBox> MainWindow::status_box() const {
     return m_status_box;
 }
 
+std::weak_ptr<ParameterBox> MainWindow::param_box() const {
+    return m_parameter_box;
+}
+
 std::weak_ptr<GlobalSim> MainWindow::global_sim() const {
     return m_global_sim;
 }
@@ -182,9 +198,3 @@ std::weak_ptr<GlobalSim> MainWindow::global_sim() const {
 CompetitionState &MainWindow::state() {
     return m_compstate;
 }
-
-MainWindow *&Main::get() {
-    return instance;
-}
-
-MainWindow *Main::instance = nullptr;

@@ -1,7 +1,7 @@
 #include <QApplication>
 
+#include "gui/global.h"
 #include "gui/mainwindow.h"
-#include "compstate/compstate.h"
 #include "video/modify.h"
 
 Q_DECLARE_METATYPE(cv::Rect2d);

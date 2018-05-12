@@ -17,6 +17,7 @@
 #include "scriptwindow.h"
 #include "serialbox.h"
 #include "simulatorwindow.h"
+#include "parameterbox.h"
 
 namespace Ui {
     class MainWindow;
@@ -44,6 +45,8 @@ public:
     std::weak_ptr<Solenoid> solenoid() const;
 
     std::weak_ptr<StatusBox> status_box() const;
+
+    std::weak_ptr<ParameterBox> param_box() const;
 
     std::weak_ptr<GlobalSim> global_sim() const;
 
@@ -90,6 +93,7 @@ private:
 
     std::shared_ptr<StatusBox> m_status_box;
     std::shared_ptr<GlobalSim> m_global_sim;
+    std::shared_ptr<ParameterBox> m_parameter_box;
 
     std::shared_ptr<Solenoid> m_solenoid;
     std::shared_ptr<Simulator> m_simulator;
@@ -105,13 +109,6 @@ private:
     Controller::Type m_controller_type;
 
     CompetitionState m_compstate;
-};
-
-struct Main {
-    static MainWindow *&get();
-
-private:
-    static MainWindow *instance;
 };
 
 #endif // MAINWINDOW_H

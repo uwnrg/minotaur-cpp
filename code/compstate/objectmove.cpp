@@ -1,11 +1,7 @@
 #include "objectmove.h"
+#include "parammanager.h"
 #include "../gui/mainwindow.h"
-
-namespace det_ {
-    enum {
-        MOVE_ALIGNMENT = 2
-    };
-}
+#include "../gui/global.h"
 
 QString align_text(double align_err) {
     QString text;
@@ -58,7 +54,7 @@ ObjectMove::Stop ObjectMove::get_stop() const {
 }
 
 void ObjectMove::start() {
-    m_timer.start(Procedure::TIMER_REG, this);
+    m_timer.start(g_pm->timer_reg, this);
 }
 
 void ObjectMove::stop() {
@@ -107,7 +103,7 @@ void ObjectMove::movement_loop() {
     log() << "Target Err: " << tgt_err;
     m_align_label->setText(align_text(align_err));
     m_target_label->setText(target_text(tgt_err));
-    if (fabs(align_err) > det_::MOVE_ALIGNMENT) {
+    if (fabs(align_err) > g_pm->objmove_algn_err) {
         // Correct for alignment
         correct(align_err);
     } else {
