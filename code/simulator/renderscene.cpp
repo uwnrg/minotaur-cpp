@@ -38,7 +38,7 @@ RenderScene::~RenderScene() {
 
 void RenderScene::animate() {
     int solenoidKeys[4] = {Qt::Key_Up, Qt::Key_Down, Qt::Key_Left, Qt::Key_Right};
-    for (int i = 0; i < m_solenoids.size(); ++i) {
+    for (std::size_t i = 0; i < m_solenoids.size(); ++i) {
         m_solenoids[i].setCurrent(m_simulator->isKeyDown(solenoidKeys[i]) ? -100 : 0);
     }
     update();

@@ -4,6 +4,8 @@
 #include <sstream>
 #include <iostream>
 
+#include <QPoint>
+
 #include <opencv2/core/types.hpp>
 
 #include "utility.h"
@@ -29,6 +31,15 @@ namespace nrg {
         vector(std::initializer_list<val_t> l) :
             m_x(l.begin()[0]),
             m_y(l.begin()[1]) {}
+
+        template<typename u_val_t>
+        vector(std::initializer_list<u_val_t> l) :
+            m_x(static_cast<val_t>(l.begin()[0])),
+            m_y(static_cast<val_t>(l.begin()[1])) {}
+
+        vector(const QPoint &p) :
+            m_x(static_cast<val_t>(p.x())),
+            m_y(static_cast<val_t>(p.y())) {}
 
         template<typename u_val_t>
         vector(const vector<u_val_t> &p) :
@@ -73,6 +84,26 @@ namespace nrg {
             return {n / m_x, n / m_y};
         }
 
+        vector<val_t> &operator=(std::initializer_list<val_t> l) {
+            m_x = l.begin()[0];
+            m_y = l.begin()[1];
+            return *this;
+        }
+
+        template<typename u_val_t>
+        vector<val_t> &operator=(std::initializer_list<u_val_t> l) {
+            m_x = static_cast<val_t>(l.begin()[0]);
+            m_y = static_cast<val_t>(l.begin()[1]);
+            return *this;
+        }
+
+        template<typename u_val_t>
+        vector<val_t> &operator=(const cv::Point_<u_val_t> &p) {
+            m_x = static_cast<val_t>(p.x);
+            m_y = static_cast<val_t>(p.y);
+            return *this;
+        }
+
         vector<val_t> operator+(const vector<val_t> &o) const {
             return {m_x + o.m_x, m_y + o.m_y};
         }
@@ -91,6 +122,14 @@ namespace nrg {
             m_x -= o.m_x;
             m_y -= o.m_y;
             return *this;
+        }
+
+        bool operator==(const vector<val_t> &o) const {
+            return (m_x == o.m_x) && (m_y == o.m_y);
+        }
+
+        bool operator!=(const vector<val_t> &o) const {
+            return (m_x != o.m_x) || (m_y != o.m_y);
         }
 
         template<

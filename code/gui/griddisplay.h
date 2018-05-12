@@ -16,6 +16,7 @@
 
 #include "../utility/array2d.h"
 #include "../utility/utility.h"
+#include "../utility/vector.h"
 #include "../camera/cameradisplay.h"
 #include "../camera/imageviewer.h"
 
@@ -30,15 +31,12 @@ public:
         END_WEIGHT = -3,
         START_WEIGHT = -2,
         NOT_SELECTED_WEIGHT = -1,
-        DEFAULT_WEIGHT = 0,     //All selected squares should have values greater or equal to 0
+        DEFAULT_WEIGHT = 0,     // All selected squares should have values greater or equal to 0
         GRID_SIZE = 20,
         SCENE_WIDTH = 100,      // Default: 800
         SCENE_HEIGHT = 100,     // Default: 400
-    };
-
-    struct Coord {
-        int x;
-        int y;
+        MAX_BUTTONS_X = 50,
+        MAX_BUTTONS_Y = 50
     };
 
     GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display);
@@ -51,21 +49,24 @@ public:
 
     void mouseMoveEvent(QMouseEvent *ev) override;
 
-    void set_coordinates(Coord& coord, const int x, const int y);
+    void set_vector2iinates(vector2i &vector2i, const int x, const int y);
 
-    void set_coordinates(Coord& coord, const QPoint& pos);
+    void set_vector2iinates(vector2i &vector2i, const QPoint &pos);
 
-    void set_mouse_start(const QPoint& pos);
+    void set_mouse_start(const QPoint &pos);
 
-    void set_mouse_move(const QPoint& pos);
+    void set_mouse_move(const QPoint &pos);
 
-    void set_mouse_release(const QPoint& pos);
+    void set_mouse_release(const QPoint &pos);
 
-    int get_row_count();
+    int get_num_rows() const;
+    int get_num_cols() const;
 
-    int get_column_count();
+    const vector2i &get_pos_start() const;
+    const vector2i &get_pos_end() const;
 
 public Q_SLOTS:
+
     void clear_selection();
 
     void show_grid();
@@ -75,6 +76,7 @@ public Q_SLOTS:
     void select_robot_position(QString);
 
 protected Q_SLOTS:
+
     void button_clicked(int x, int y);
 
 private:
@@ -88,19 +90,28 @@ private:
 
     void init_start_end_pos();
 
-    void rect_select_buttons(Coord top_left, Coord bottom_right);
+    void rect_select_buttons(
+        vector2i top_left,
+        vector2i bottom_right
+    );
 
-    void rect_select_all_buttons(const Coord top_left, const Coord bottom_right);
+    void rect_select_all_buttons(
+        const vector2i &top_left,
+        const vector2i &bottom_right
+    );
 
-    void rect_deselect_all_buttons(const Coord top_left, const Coord bottom_right);
+    void rect_deselect_all_buttons(
+        const vector2i &top_left,
+        const vector2i &bottom_right
+    );
 
     std::unique_ptr<QGraphicsScene> m_scene;
     std::unique_ptr<QGraphicsView> m_view;
 
     CameraDisplay *m_camera_display;
 
-    GridButton *m_button[40][20];
-    array2d<int> m_square_selected {40, 20};
+    GridButton *m_button[MAX_BUTTONS_X][MAX_BUTTONS_Y];
+    array2d<int> m_square_selected{MAX_BUTTONS_X, MAX_BUTTONS_Y};
 
     int m_column_count = SCENE_WIDTH / GRID_SIZE;   // Default: 40
     int m_row_count = SCENE_HEIGHT / GRID_SIZE;     // Default: 20
@@ -109,12 +120,12 @@ private:
     bool m_start_pos_selected = false;
     bool m_end_pos_selected = false;
 
-    Coord m_start_position;
-    Coord m_end_position;
+    vector2i m_start_position;
+    vector2i m_end_position;
 
-    Coord m_mouse_click_start;
-    Coord m_mouse_move;
-    Coord m_mouse_click_release;
+    vector2i m_mouse_click_start;
+    vector2i m_mouse_move;
+    vector2i m_mouse_click_release;
 
     QPoint m_select_start;
     QRect m_select_box;

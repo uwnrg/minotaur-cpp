@@ -159,7 +159,7 @@ void CameraDisplay::update_zoom(int value) {
     Q_EMIT zoom_changed(zoom_factor);
 }
 
-void CameraDisplay::grid_select_changed(int weight_index) {
+void CameraDisplay::grid_select_changed(int) {
     Q_EMIT select_position(m_ui->weight_list->currentText());
 }
 
