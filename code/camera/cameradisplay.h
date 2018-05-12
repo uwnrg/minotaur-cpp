@@ -245,6 +245,7 @@ private:
      * The currently selected grid weighting.
      */
     int m_weighting;
+
 };
 
 #endif //MINOTAUR_CPP_CAMERADISPLAY_H

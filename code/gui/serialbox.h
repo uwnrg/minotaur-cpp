@@ -4,6 +4,7 @@
 #include <memory>
 
 #include <QDialog>
+#include <QSlider>
 
 #include "../controller/solenoid.h"
 
@@ -22,6 +23,8 @@ public:
 
     ~SerialBox();
 
+    void setup_power_slider(QSlider &slider);
+
     Q_SLOT void update_status(SerialStatus new_status);
 
     Q_SLOT void attempt_connection();
@@ -29,6 +32,12 @@ public:
     Q_SLOT void append_text(const std::string &text);
 
 private:
+    enum Power {
+        POWER_INTERVAL = 8,
+        POWER_MAX = 255,
+        POWER_MIN = 0
+    };
+
     Ui::SerialBox *ui;
     std::shared_ptr<Solenoid> m_solenoid;
 

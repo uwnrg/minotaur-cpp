@@ -242,20 +242,12 @@ p, li { white-space: pre-wrap; }
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionMicroscopic_Camera_View">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Microscopic Camera View</string>
-   </property>
-  </action>
   <action name="open_camera_display">
    <property name="enabled">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Camera</string>
+    <string>Open Camera Display</string>
    </property>
   </action>
   <action name="action_invert_x_axis">
