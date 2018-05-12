@@ -49,11 +49,11 @@ bool FakeCamera::grab() {
     return true;
 }
 
-bool FakeCamera::retrieve(cv::OutputArray image, int) {
+bool FakeCamera::retrieve(cv::OutputArray, int) {
     return false;
 }
 
-cv::VideoCapture &FakeCamera::operator>>(cv::Mat &image) {
+cv::VideoCapture &FakeCamera::operator>>(cv::Mat &) {
     return *this;
 }
 

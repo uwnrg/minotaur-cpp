@@ -9,9 +9,9 @@
 
 ScriptEditor::ScriptEditor(QWidget *parent) :
     QDialog(parent),
-    m_active_file(),
     ui(std::make_unique<Ui::ScriptEditor>()),
-    m_code_editor(std::make_unique<CodeEditor>(this)) {
+    m_code_editor(std::make_unique<CodeEditor>(this)),
+    m_active_file() {
     ui->setupUi(this);
 
     // Make the font look like code

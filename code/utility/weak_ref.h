@@ -24,14 +24,17 @@ public:
 
     weak_ref<ref_t> &operator=(const weak_ref<ref_t> &ref) {
         m_ptr = ref.m_ptr;
+        return *this;
     }
 
     weak_ref<ref_t> &operator=(ref_t *ptr) {
         m_ptr = ptr;
+        return *this;
     }
 
     weak_ref<ref_t> &operator=(nullptr_t) {
         m_ptr = nullptr;
+        return *this;
     }
 
     operator ref_t *weak_ref<ref_t>::*() const { return m_ptr == nullptr ? 0 : &weak_ref<ref_t>::m_ptr; }

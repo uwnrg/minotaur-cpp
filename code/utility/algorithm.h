@@ -245,7 +245,7 @@ namespace algo {
         val_t exit_time = std::min(x_exit, y_exit);
         return !(
             entry_time > exit_time ||
-            x_entry < 0 && y_entry < 0 ||
+            (x_entry < 0 && y_entry < 0) ||
             x_entry >= 1 ||
             y_entry >= 1
         );

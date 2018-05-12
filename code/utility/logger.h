@@ -65,7 +65,7 @@ public:
      */
     template<typename string_t>
     static bool log(const string_t &message, LogType type = INFO) {
-        s_logger.log_message<string_t>(message, type);
+        return s_logger.log_message<string_t>(message, type);
     }
 
     /**
