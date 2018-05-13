@@ -1,6 +1,8 @@
 #include "imageviewer.h"
 #include "ui_imageviewer.h"
 
+#include "../compstate/parammanager.h"
+#include "../controller/astar.h"
 #include "../utility/logger.h"
 #include "../gui/global.h"
 
@@ -63,6 +65,7 @@ ImageViewer::ImageViewer(CameraDisplay *parent) :
     connect(parent, &CameraDisplay::toggle_path, this, &ImageViewer::toggle_path);
     connect(parent, &CameraDisplay::clear_path, this, &ImageViewer::clear_path);
     connect(parent, &CameraDisplay::zoom_changed, this, &ImageViewer::set_zoom);
+    connect(parent, &CameraDisplay::set_grid_path, this, &ImageViewer::set_grid_path);
     connect(parent, &CameraDisplay::show_grid, m_grid_display.get(), &GridDisplay::show_grid);
     connect(parent, &CameraDisplay::hide_grid, m_grid_display.get(), &GridDisplay::hide_grid);
     connect(parent, &CameraDisplay::clear_grid, m_grid_display.get(), &GridDisplay::clear_selection);
@@ -76,6 +79,15 @@ ImageViewer::~ImageViewer() {
     delete ui;
 }
 
+void ImageViewer::add_path_point(double pixel_x, double pixel_y) {
+    double combined_scale =
+        m_preprocessor.get_zoom_factor() *
+        m_converter.get_previous_scale();
+    double path_x = pixel_x / combined_scale;
+    double path_y = pixel_y / combined_scale;
+    Main::get()->state().append_path(path_x, path_y);
+}
+
 void ImageViewer::set_image(const QImage &img) {
     // Upon first frame capture, resize the widget
     if (m_image.isNull()) { setFixedSize(img.size()); }
@@ -84,14 +96,26 @@ void ImageViewer::set_image(const QImage &img) {
     update();
 }
 
+void ImageViewer::set_path(const std::vector<vector2i> &pixel_path) {
+    log() << "Setting path with " << pixel_path.size() << " nodes";
+    CompetitionState &state = Main::get()->state();
+    double combined_scale =
+        m_preprocessor.get_zoom_factor() *
+        m_converter.get_previous_scale();
+    double inv_scale = 1.0 / combined_scale;
+    double path_x;
+    double path_y;
+    state.clear_path();
+    for (const vector2i &p : pixel_path) {
+        path_x = p.x() * inv_scale;
+        path_y = p.y() * inv_scale;
+        state.append_path(path_x, path_y);
+    }
+}
+
 void ImageViewer::mousePressEvent(QMouseEvent *ev) {
     if (m_selecting_path) {
-        // Calculate the combined scale for the click coordinates
-        double combined_scale =
-            m_preprocessor.get_zoom_factor() *
-            m_converter.get_previous_scale();
-        // Append the unscaled coordinates to the path
-        Main::get()->state().append_path(ev->x() / combined_scale, ev->y() / combined_scale);
+        add_path_point(ev->x(), ev->y());
     }
     QWidget::mousePressEvent(ev);
 }
@@ -163,6 +187,13 @@ void ImageViewer::handle_recording() {
 
 void ImageViewer::toggle_path(bool toggle_path) {
     m_selecting_path = toggle_path;
+}
+
+void ImageViewer::set_grid_path() {
+#ifndef NDEBUG
+    assert(g_pm != nullptr);
+#endif
+    nrg::connect_path(m_grid_display.get(), g_pm);
 }
 
 void ImageViewer::clear_path() {

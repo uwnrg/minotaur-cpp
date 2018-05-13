@@ -2,6 +2,8 @@
 #define MINOTAUR_CPP_2DARRAY_H
 
 #include <cstddef>
+#include <utility>
+#include <cstring>
 
 template<typename val_t, typename size_t>
 class __array2d_access {
@@ -10,6 +12,10 @@ public:
     __array2d_access(val_t *sub_arr, size_t len)
         : m_sub_arr(sub_arr),
           m_len(len) {}
+
+    val_t *get() {
+        return m_sub_arr;
+    }
 
     val_t &operator[](size_t t) {
         return m_sub_arr[t];
@@ -73,6 +79,12 @@ public:
         return m_x * m_y;
     }
 
+    void zero_clear() {
+        for (size_t x = 0; x < m_x; ++x) {
+            memset(m_arr[x], 0, m_y * sizeof(val_t));
+        }
+    }
+
     array2d<val_t, size_t> &operator=(array2d<val_t, size_t> &&arr) noexcept {
         m_x = arr.m_x;
         m_y = arr.m_y;
@@ -80,7 +92,12 @@ public:
         arr.m_x = 0;
         arr.m_y = 0;
         arr.m_arr = nullptr;
+        return *this;
     };
+
+    val_t **get() {
+        return m_arr;
+    }
 
     __array2d_access<val_t, size_t> operator[](size_t x) {
         return __array2d_access<val_t, size_t>(m_arr[x], m_y);
@@ -99,6 +116,7 @@ private:
         m_arr = new val_t *[x];
         for (int tx = 0; tx < x; ++tx) {
             m_arr[tx] = new val_t[y];
+            memset(m_arr[tx], 0, y * sizeof(val_t));
         }
     }
 
@@ -109,9 +127,9 @@ private:
         delete[] m_arr;
     }
 
-    val_t **m_arr = nullptr;
     size_t m_x = 0;
     size_t m_y = 0;
+    val_t **m_arr = nullptr;
 };
 
 #endif //MINOTAUR_CPP_2DARRAY_H

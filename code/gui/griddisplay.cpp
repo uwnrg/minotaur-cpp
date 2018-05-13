@@ -133,11 +133,6 @@ void GridDisplay::clear_selection() {
     }
 }
 
-void GridDisplay::update_scene() {
-    m_scene->update();
-    show_view();
-}
-
 void GridDisplay::show_grid() {
     if (!m_grid_displayed) {
         draw_grid();
@@ -283,6 +278,10 @@ const vector2i &GridDisplay::get_pos_start() const {
 
 const vector2i &GridDisplay::get_pos_end() const {
     return m_end_position;
+}
+
+array2d<int> &GridDisplay::selected() {
+    return m_square_selected;
 }
 
 void GridDisplay::set_mouse_start(const QPoint &pos) {

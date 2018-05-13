@@ -32,9 +32,9 @@ public:
         START_WEIGHT = -2,
         NOT_SELECTED_WEIGHT = -1,
         DEFAULT_WEIGHT = 0,     // All selected squares should have values greater or equal to 0
-        GRID_SIZE = 20,
-        SCENE_WIDTH = 100,      // Default: 800
-        SCENE_HEIGHT = 100,     // Default: 400
+        GRID_SIZE = 20,         // Size in pixels
+        SCENE_WIDTH = 800,      // Default: 800
+        SCENE_HEIGHT = 400,     // Default: 400
         MAX_BUTTONS_X = 50,
         MAX_BUTTONS_Y = 50
     };
@@ -44,19 +44,11 @@ public:
     ~GridDisplay() override;
 
     void mousePressEvent(QMouseEvent *ev) override;
-
     void mouseReleaseEvent(QMouseEvent *ev) override;
-
     void mouseMoveEvent(QMouseEvent *ev) override;
 
-    void set_vector2iinates(vector2i &vector2i, const int x, const int y);
-
-    void set_vector2iinates(vector2i &vector2i, const QPoint &pos);
-
     void set_mouse_start(const QPoint &pos);
-
     void set_mouse_move(const QPoint &pos);
-
     void set_mouse_release(const QPoint &pos);
 
     int get_num_rows() const;
@@ -65,12 +57,13 @@ public:
     const vector2i &get_pos_start() const;
     const vector2i &get_pos_end() const;
 
+    array2d<int> &selected();
+
 public Q_SLOTS:
 
     void clear_selection();
 
     void show_grid();
-
     void hide_grid();
 
     void select_robot_position(QString);
@@ -81,8 +74,6 @@ protected Q_SLOTS:
 
 private:
     void show_view();
-
-    void update_scene();
 
     void draw_grid();
 
@@ -130,7 +121,6 @@ private:
     vector2i m_mouse_click_release;
 
     QPoint m_select_start;
-    QRect m_select_box;
     std::unique_ptr<QRubberBand> m_rubber_band;
 };
 

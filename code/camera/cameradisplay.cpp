@@ -92,6 +92,7 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid);
     connect(m_ui->toggle_path_button, &QPushButton::clicked, this, &CameraDisplay::toggle_path);
     connect(m_ui->clear_path_button, &QPushButton::clicked, this, &CameraDisplay::clear_path);
+    connect(m_ui->set_grid_path_button, &QPushButton::clicked, this, &CameraDisplay::set_grid_path);
     connect(m_ui->play_button, &QPushButton::clicked, this, &CameraDisplay::pressed_play);
     connect(m_ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
     connect(m_ui->rotate_slider, &QSlider::valueChanged, this, &CameraDisplay::rotation_slider_changed);
