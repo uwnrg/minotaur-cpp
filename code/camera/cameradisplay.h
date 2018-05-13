@@ -203,6 +203,11 @@ public:
     Q_SIGNAL void clear_path();
 
     /**
+     * Signal fired to set path from grid display.
+     */
+    Q_SIGNAL void set_grid_path();
+
+    /**
      * Signal fired to toggle selecting the robot or object
      * path in the ImageViewer.
      *

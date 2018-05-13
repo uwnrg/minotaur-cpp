@@ -1,46 +1,41 @@
 #ifndef ASTAR_H
 #define ASTAR_H
 
-#include <vector>
-#include <map>
-#include <stack>
 #include "../utility/array2d.h"
+#include "../utility/vector.h"
+#include "../utility/weak_ref.h"
 
-class Astar {
-public:
-    struct Coord {
-        int x;
-        int y;
-    };
+class GridDisplay;
 
-    typedef typename std::pair<double, Coord> associated_cost;
+class param_manager;
 
-    Astar();
-
-    void search_path(array2d<int> &terrain, Coord cur, Coord dest);
-
-    std::vector<Coord> get_path();
-
-private:
-    std::vector<Coord> m_path;
-
-    double manhattan_dist(Coord cur, Coord dest);
-
-    bool is_valid(int x, int y, int max_row, int max_col);
-
-    std::vector<Coord> get_neighbors(Coord c, int max_row, int max_col);
-
-    void backtrack(
-        const Coord &start,
-        const Coord &dest,
-        const std::map<Coord, Coord> &parent
+namespace nrg {
+    void search_path(
+        array2d<int> &terrain,
+        const vector2i &start,
+        const vector2i &dest,
+        std::vector<vector2i> &path
     );
-};
 
-bool operator==(Astar::Coord a, Astar::Coord b);
+    array2d<int> grid_kernelize(
+        weak_ref<GridDisplay> grid,
+        weak_ref<param_manager> pm
+    );
 
-bool operator!=(Astar::Coord a, Astar::Coord b);
+    std::vector<vector2i> grid_path(
+        weak_ref<GridDisplay> grid,
+        weak_ref<param_manager> pm
+    );
 
-bool operator<(Astar::Coord a, Astar::Coord b);
+    void scale_path_pixels(
+        weak_ref<GridDisplay> grid,
+        std::vector<vector2i> &path
+    );
+
+    void connect_path(
+        weak_ref<GridDisplay> grid,
+        weak_ref<param_manager> pm
+    );
+}
 
 #endif

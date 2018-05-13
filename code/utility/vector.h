@@ -132,6 +132,10 @@ namespace nrg {
             return (m_x != o.m_x) || (m_y != o.m_y);
         }
 
+        bool operator<(const vector<val_t> &o) const {
+            return std::tie(m_x, m_y) < std::tie(o.m_x, o.m_y);
+        }
+
         template<
             typename scalar_t,
             typename = enable_if_arithmetic_t<scalar_t>

@@ -46,6 +46,26 @@ public:
     ~ImageViewer() override;
 
     /**
+     * Add a point to the CompetitionState path given the pixel
+     * location of the point on ImageViewer. The pixel
+     * location will be converted to true value using the combined scale.
+     *
+     * @param pixel_x pixel x-axis location
+     * @param pixel_y pixel y-axis location
+     */
+    void add_path_point(double pixel_x, double pixel_y);
+
+    /**
+     * Clear and then set the CompetitionState path to the
+     * one specified. The given path should have location in pixel
+     * values and will need to be scaled.
+     *
+     * @param pixel_path
+     */
+    void set_path(const std::vector<vector2i> &pixel_path);
+
+public:
+    /**
      * Set the image that is displayed by the image viewer. This slot is
      * called with a newly converted QImage from Converter
      *
@@ -95,6 +115,11 @@ public:
     Q_SLOT void toggle_path(bool toggle_path);
 
     /**
+     * Slot called to set path from GridDisplay.
+     */
+    Q_SLOT void set_grid_path();
+
+    /**
      * Slot called to enable or disable play rotation/
      *
      * @param rotate whether rotation should occur
@@ -142,6 +167,7 @@ private:
      */
     void paintEvent(QPaintEvent *ev) override;
 
+private:
     Ui::ImageViewer *ui;
 
     std::unique_ptr<GridDisplay> m_grid_display;
