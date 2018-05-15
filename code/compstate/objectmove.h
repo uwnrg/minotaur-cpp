@@ -129,7 +129,7 @@ private:
     bool m_done;
     /**
      * The stop condition, which is OKAY unless the ObjectMove
-     * is completed. Whewn is_done() == true, this value is set
+     * is completed. When is_done() == true, this value is set
      * to the reason for stopping.
      */
     Stop m_stop;
@@ -140,7 +140,7 @@ private:
     QBasicTimer m_timer;
 
     /**
-     * Delgate procedure which is used to fire the controller.
+     * Delegate procedure which is used to fire the controller.
      */
     Procedure m_delegate;
 };
