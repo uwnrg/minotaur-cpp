@@ -17,6 +17,13 @@ namespace nrg {
         std::vector<vector2i> &path
     );
 
+    void search_path_del(
+        array2d<int> &terrain,
+        const vector2i &start,
+        const vector2i &dest,
+        std::vector<vector2i> &path
+    );
+
     array2d<int> grid_kernelize(
         weak_ref<GridDisplay> grid,
         weak_ref<param_manager> pm
@@ -35,6 +42,13 @@ namespace nrg {
     void connect_path(
         weak_ref<GridDisplay> grid,
         weak_ref<param_manager> pm
+    );
+
+    void smooth_path(std::vector<vector2i> &path);
+
+    void optimize_path(
+        std::vector<vector2i> &path,
+        array2d<int> &walls
     );
 }
 
