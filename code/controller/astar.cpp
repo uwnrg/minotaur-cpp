@@ -222,7 +222,7 @@ void nrg::search_path(
     }
 }
 
-void search_path_del(
+void nrg::search_path_del(
     array2d<int> &terrain,
     const vector2i &start,
     const vector2i &dest,

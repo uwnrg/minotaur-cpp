@@ -9,7 +9,7 @@ TEST(direct_movement, find_path) {
                      {1,   1, -1, 1}};
 
     std::vector<vector2i> path;
-    nrg::search_path(a, {3, 0}, {0, 3}, path);
+    nrg::search_path_del(a, {3, 0}, {0, 3}, path);
 
     vector2i p1 = {3, 0};
     vector2i p2 = {3, 1};
