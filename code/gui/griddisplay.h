@@ -41,8 +41,6 @@ public:
 
     GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display);
 
-    ~GridDisplay() override;
-
     void mousePressEvent(QMouseEvent *ev) override;
 
     void mouseReleaseEvent(QMouseEvent *ev) override;
@@ -58,6 +56,8 @@ public:
     void set_mouse_move(const QPoint &pos);
 
     void set_mouse_release(const QPoint &pos);
+
+    vector2i get_mouse_start ();
 
     int get_num_rows() const;
     int get_num_cols() const;
