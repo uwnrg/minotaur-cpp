@@ -128,6 +128,16 @@ static void astar_search_path(
                 continue;
             }
             int cur_g = cur->g + get_h(cur, neigh) + world[neigh->x][neigh->y]->terrain;
+
+            if (cur->parent) {
+                int dx = cur->x - cur->parent->x;
+                int dy = cur->y - cur->parent->y;
+                bool turned =
+                    dx != neigh->x - cur->x ||
+                    dy != neigh->y - cur->y;
+                cur_g += turned * 5;
+            }
+
             if (cur_g <= neigh->g || neigh->g == 0) {
                 neigh->g = cur_g;
                 neigh->h = get_h(neigh, dest);
@@ -260,7 +270,45 @@ void nrg::search_path_del(
     backtrack(start, dest, parent, path);
 }
 
-static void apply_kernel(
+static bool is_wall_or_outside(
+    array2d<int> &terrain,
+    int x, int y, int wall
+) {
+    return
+        x < 0 ||
+        y < 0 ||
+        x >= static_cast<int>(terrain.x()) ||
+        y >= static_cast<int>(terrain.y()) ||
+        terrain[x][y] == wall;
+}
+
+static int count_walls_around(
+    array2d<int> &terrain,
+    int x, int y, int wall
+) {
+#ifndef NDEBUG
+    assert(x >= 0);
+    assert(y >= 0);
+    assert(x < static_cast<int>(terrain.x()));
+    assert(y < static_cast<int>(terrain.y()));
+    assert(terrain[x][y] != wall);
+#endif
+    int count = 0;
+    int left = x - 1;
+    int right = x + 1;
+    int bot = y - 1;
+    int top = y + 1;
+    int xs[] = {left, left, left, x, x, right, right, right};
+    int ys[] = {top, y, bot, top, bot, top, y, bot};
+    for (int i = 0; i < 8; ++i) {
+        if (is_wall_or_outside(terrain, xs[i], ys[i], wall)) {
+            ++count;
+        }
+    }
+    return count;
+}
+
+/*static void apply_kernel(
     array2d<int> &source,
     array2d<int> &target,
     unsigned int x, unsigned int y,
@@ -289,7 +337,7 @@ static void apply_kernel(
             }
         }
     }
-}
+}*/
 
 static void kernelize(
     array2d<int> &source,
@@ -300,15 +348,43 @@ static void kernelize(
     assert(source.x() == target.x());
     assert(source.y() == target.y());
 #endif
+    // TODO cut out the repeated code
     for (unsigned int x = 0; x < source.x(); ++x) {
         for (unsigned int y = 0; y < source.y(); ++y) {
             if (source[x][y] == wall) {
                 target[x][y] = TERRAIN_WALL;
-                apply_kernel(
+                /*apply_kernel(
                     source, target,
                     x, y, wall,
                     wp0, wp1, wp2
-                );
+                );*/
+            }
+        }
+    }
+    for (unsigned int x = 0; x < source.x(); ++x) {
+        for (unsigned int y = 0; y < source.y(); ++y) {
+            if (target[x][y] != TERRAIN_WALL &&
+                count_walls_around(target, x, y, TERRAIN_WALL) > 0) {
+                target[x][y] = wp0;
+            }
+        }
+    }
+    for (unsigned int x = 0; x < source.x(); ++x) {
+        for (unsigned int y = 0; y < source.y(); ++y) {
+            if (target[x][y] != TERRAIN_WALL &&
+                target[x][y] != wp0 &&
+                count_walls_around(target, x, y, wp0) > 0) {
+                target[x][y] = wp1;
+            }
+        }
+    }
+    for (unsigned int x = 0; x < source.x(); ++x) {
+        for (unsigned int y = 0; y < source.y(); ++y) {
+            if (target[x][y] != TERRAIN_WALL &&
+                target[x][y] != wp0 &&
+                target[x][y] != wp1 &&
+                count_walls_around(target, x, y, wp1) > 0) {
+                target[x][y] = wp2;
             }
         }
     }
