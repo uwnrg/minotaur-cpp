@@ -57,6 +57,7 @@ SerialBox::SerialBox(
     setup_power_slider(*(ui->down_slider));
     setup_power_slider(*(ui->left_slider));
     setup_power_slider(*(ui->right_slider));
+    setup_slider(*(ui->delay_slider), Delay::DELAY_DEFAULT, Delay::DELAY_MIN, Delay::DELAY_MAX, Delay::DELAY_INTERVAL);
 
     connect(m_solenoid.get(), &Solenoid::serial_status, this, &SerialBox::update_status);
     connect(ui->disconnect_button, &QPushButton::clicked, m_solenoid.get(), &Solenoid::attempt_disconnect);
@@ -65,6 +66,7 @@ SerialBox::SerialBox(
     connect(ui->down_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_down_power);
     connect(ui->left_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_left_power);
     connect(ui->right_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_right_power);
+    connect(ui->delay_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_delay);
 
     // Close SerialBox when Cancel is clicked
     connect(ui->button_box->button(QDialogButtonBox::Close), &QPushButton::clicked, this, &QDialog::close);
@@ -113,10 +115,14 @@ void SerialBox::append_text(const std::string &text) {
 }
 
 void SerialBox::setup_power_slider(QSlider &slider) {
-    slider.setTickInterval(Power::POWER_INTERVAL);
+    setup_slider(slider, 255, Power::POWER_MIN, Power::POWER_MAX, Power::POWER_INTERVAL);
+}
+
+void SerialBox::setup_slider(QSlider &slider, int value, int min, int max, int interval) {
+    slider.setTickInterval(interval);
     slider.setTickPosition(QSlider::TicksBothSides);
-    slider.setMaximum(Power::POWER_MAX);
-    slider.setMinimum(Power::POWER_MIN);
+    slider.setMaximum(max);
+    slider.setMinimum(min);
     slider.setTracking(false);
-    slider.setValue(255);
+    slider.setValue(value);
 }

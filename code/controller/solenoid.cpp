@@ -143,6 +143,14 @@ const QSerialPort &Solenoid::serial_port() const {
     return m_serial;
 }
 
+void Solenoid::change_delay(int value) {
+    log() << "Changing delay time to " << value;
+    char signal = 'l';
+    char power = static_cast<char>(value);
+    m_serial.write(&signal, 1);
+    m_serial.write(&power, 1);
+}
+
 void Solenoid::change_power(int value, Direction direction) {
     log() << "Changing " << (direction == UP ? "up" : direction == DOWN ? "down" : direction == RIGHT ? "right" : "left") << " solenoid power to " << value;
     char signal = 'p';
