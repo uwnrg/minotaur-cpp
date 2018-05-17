@@ -40,6 +40,7 @@ const QString endSelectedStyle =
     "width: 8px;"
     "height: 8px;";
 
+// Swap two coordinates so that x is the top left point and y is the bottom right
 static void swap_rect_coords(int &x1, int &y1, int &x2, int &y2) {
     if (x1 > x2 && y1 > y2) {
         std::swap(x1, x2);
@@ -177,11 +178,10 @@ void GridDisplay::mousePressEvent(QMouseEvent *ev) {
     QWidget::mousePressEvent(ev);
     m_select_start = QPoint(m_mouse_click_start.x(), m_mouse_click_start.y());
 
-    m_rubber_band = std::make_unique<QRubberBand>(QRubberBand::Rectangle, this);
-    //m_rubber_band = new QRubberBand(QRubberBand::Rectangle, this);
+    m_rubber_band = std::make_unique<QRubberBand>(QRubberBand::Rectangle, nullptr);
+    m_scene->addWidget(m_rubber_band.get());
     m_rubber_band->setGeometry(m_mouse_click_start.x(), m_mouse_click_start.y(), 2, 2);
     m_rubber_band->show();
-    m_rubber_band->raise();
 }
 
 void GridDisplay::mouseReleaseEvent(QMouseEvent *ev) {
@@ -195,9 +195,9 @@ void GridDisplay::mouseMoveEvent(QMouseEvent *ev) {
     qDebug() << "Mouse move event: " << ev->pos() << endl;
 #endif
     QWidget::mouseMoveEvent(ev);
-    //m_rubber_band->resize(QRect(m_select_start, QPoint(m_mouse_move.x, m_mouse_move.y)).size());
-    m_rubber_band->setGeometry(QRect(m_select_start, QPoint(m_mouse_move.x(), m_mouse_move.y())));
-    m_rubber_band->raise();
+    m_rubber_band->setGeometry(QRect(
+        QPoint(m_mouse_click_start.x(), m_mouse_click_start.y()),
+        QPoint(m_mouse_move.x(), m_mouse_move.y())).normalized());
 }
 
 void GridDisplay::rect_select_buttons(
@@ -212,7 +212,6 @@ void GridDisplay::rect_select_buttons(
         button_clicked(bottom_right.x() / GRID_SIZE, bottom_right.y() / GRID_SIZE);
         return;
     }
-
     swap_rect_coords(top_left.x(), top_left.y(), bottom_right.x(), bottom_right.y());
     int x0 = top_left.x() / GRID_SIZE;
     int y0 = top_left.y() / GRID_SIZE;
@@ -220,7 +219,7 @@ void GridDisplay::rect_select_buttons(
     int y1 = bottom_right.y() / GRID_SIZE;
     for (int x = x0; x <= x1; ++x) {
         for (int y = y0; y <= y1; ++y) {
-            // If any square in the selection box is not selected
+            // If any square in the selection box is not selected,
             // select all the squares in the box
             if (m_square_selected[x][y] < DEFAULT_WEIGHT) {
                 rect_select_all_buttons(top_left, bottom_right);
@@ -295,13 +294,14 @@ void GridDisplay::set_mouse_move(const QPoint &pos) {
 void GridDisplay::set_mouse_release(const QPoint &pos) {
     m_mouse_click_release = pos;
 }
-void GridDisplay::is_valid_coord(vector2i& point) {
-    point.x() = ((point.x() < 0) ? 0 : point.x());
-    point.x() = ((point.x() > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1 : point.x());
-    point.y() = ((point.y() < 0) ? 0 : point.y());
-    point.y() = ((point.y() > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1 : point.y());
+
+vector2i GridDisplay::get_mouse_start() {
+    return m_mouse_click_start;
 }
 
-GridDisplay::~GridDisplay() {
-
+void GridDisplay::is_valid_coord(vector2i& point) {
+    point.x() = (point.x() < 0) ? 0 : point.x();
+    point.x() = (point.x() > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1 : point.x();
+    point.y() = (point.y() < 0) ? 0 : point.y();
+    point.y() = (point.y() > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1 : point.y();
 }

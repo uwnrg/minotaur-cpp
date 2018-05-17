@@ -33,15 +33,13 @@ public:
         NOT_SELECTED_WEIGHT = -1,
         DEFAULT_WEIGHT = 0,     // All selected squares should have values greater or equal to 0
         GRID_SIZE = 20,         // Size in pixels
-        SCENE_WIDTH = 800,      // Default: 800
-        SCENE_HEIGHT = 400,     // Default: 400
+        SCENE_WIDTH = 100,      // Default: 800
+        SCENE_HEIGHT = 100,     // Default: 400
         MAX_BUTTONS_X = 50,
         MAX_BUTTONS_Y = 50
     };
 
     GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display);
-
-    ~GridDisplay() override;
 
     void mousePressEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
@@ -50,6 +48,8 @@ public:
     void set_mouse_start(const QPoint &pos);
     void set_mouse_move(const QPoint &pos);
     void set_mouse_release(const QPoint &pos);
+
+    vector2i get_mouse_start ();
 
     int get_num_rows() const;
     int get_num_cols() const;
@@ -120,7 +120,9 @@ private:
     vector2i m_mouse_move;
     vector2i m_mouse_click_release;
 
-    QPoint m_select_start;
+    vector2i m_select_start;
+    QRect m_select_box;
+
     std::unique_ptr<QRubberBand> m_rubber_band;
 };
 
