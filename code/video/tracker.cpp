@@ -144,12 +144,14 @@ void TrackerModifier::register_actions(ActionBox *box) {
     ActionButton *select_object_roi = box->add_action("Select Object ROI");
     ActionButton *clear_robot_roi = box->add_action("Clear Robot ROI");
     ActionButton *clear_object_roi = box->add_action("Clear Object ROI");
+    ActionButton *stop_button = box->add_action("Stop Object");
     connect(traverse_button, &QPushButton::clicked, this, &TrackerModifier::traverse);
     connect(object_move_button, &QPushButton::clicked, this, &TrackerModifier::move_object);
     connect(select_robot_roi, &QPushButton::clicked, &m_robot_tracker, &__tracker::begin_tracking);
     connect(select_object_roi, &QPushButton::clicked, &m_object_tracker, &__tracker::begin_tracking);
     connect(clear_robot_roi, &QPushButton::clicked, &m_robot_tracker, &__tracker::stop_tracking);
     connect(clear_object_roi, &QPushButton::clicked, &m_object_tracker, &__tracker::stop_tracking);
+    connect(stop_button, &QPushButton::clicked, &Main::get()->state(), &CompetitionState::halt_object_move);
     box->set_actions();
 }
 

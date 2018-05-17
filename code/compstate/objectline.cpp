@@ -38,6 +38,12 @@ void ObjectLine::start() {
 
 void ObjectLine::stop() {
     m_timer.stop();
+    if (m_ready_move != nullptr) {
+        m_ready_move->stop();
+    }
+    if (m_object_move != nullptr) {
+        m_object_move->stop();
+    }
 }
 
 bool ObjectLine::is_done() const {

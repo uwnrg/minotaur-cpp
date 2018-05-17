@@ -50,7 +50,7 @@ public:
     // CompetitionState
     MANAGE_PARAM(double,  robot_calib_area, 400.0)
     MANAGE_PARAM(double, object_calib_area, 400.0)
-    MANAGE_PARAM(double,  area_acq_r_sigma, 1.34)
+    MANAGE_PARAM(double,  area_acq_r_sigma,  1.34)
 
     // Procedure
     MANAGE_PARAM(int, timer_fast,  50)
@@ -58,10 +58,14 @@ public:
 
     // ObjectProcedure
     MANAGE_PARAM(double, objline_move_dev,  10.0)
-    MANAGE_PARAM(double, objmove_algn_err,  2.0)
+    MANAGE_PARAM(double, objmove_algn_err,   2.0)
     MANAGE_PARAM(double, objproc_norm_dev,   4.0)
     MANAGE_PARAM(double, objproc_loc_acpt,   3.0)
 
+    // AStar
+    MANAGE_PARAM(int, wall_penalty_0, 10)
+    MANAGE_PARAM(int, wall_penalty_1,  5)
+    MANAGE_PARAM(int, wall_penalty_2,  2)
 
 public:
     inline explicit param_manager(parent_t p) :

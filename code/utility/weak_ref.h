@@ -7,10 +7,10 @@ public:
     weak_ref() :
         m_ptr(nullptr) {}
 
-    explicit weak_ref(nullptr_t) :
+    weak_ref(nullptr_t) :
         m_ptr(nullptr) {}
 
-    explicit weak_ref(ref_t *ptr) :
+    weak_ref(ref_t *ptr) :
         m_ptr(ptr) {}
 
     weak_ref(const weak_ref<ref_t> &ref) :
