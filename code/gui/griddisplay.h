@@ -129,7 +129,7 @@ private:
     vector2i m_mouse_move;
     vector2i m_mouse_click_release;
 
-    QPoint m_select_start;
+    vector2i m_select_start;
     QRect m_select_box;
     std::unique_ptr<QRubberBand> m_rubber_band;
 };

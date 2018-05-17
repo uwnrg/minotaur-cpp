@@ -40,6 +40,7 @@ const QString endSelectedStyle =
     "width: 8px;"
     "height: 8px;";
 
+// Swap two coordinates so that x is the top left point and y is the bottom right
 static void swap_rect_coords(int &x1, int &y1, int &x2, int &y2) {
     if (x1 > x2 && y1 > y2) {
         std::swap(x1, x2);
@@ -186,7 +187,6 @@ void GridDisplay::mousePressEvent(QMouseEvent *ev) {
     m_scene->addWidget(m_rubber_band.get());
     m_rubber_band->setGeometry(m_mouse_click_start.x(), m_mouse_click_start.y(), 2, 2);
     m_rubber_band->show();
-    //m_rubber_band->raise();
 }
 
 void GridDisplay::mouseReleaseEvent(QMouseEvent *ev) {
@@ -200,14 +200,9 @@ void GridDisplay::mouseMoveEvent(QMouseEvent *ev) {
     qDebug() << "Mouse move event: " << ev->pos() << endl;
 #endif
     QWidget::mouseMoveEvent(ev);
-    swap_rect_coords(m_mouse_click_start.x(), m_mouse_click_start.y(), m_mouse_move.x(), m_mouse_move.y());
     m_rubber_band->setGeometry(QRect(
-        m_mouse_click_start.x(),
-        m_mouse_click_start.y(),
-        abs(m_mouse_move.x() - m_mouse_click_start.x()),
-        abs(m_mouse_move.y() - m_mouse_click_start.y())));
-//    m_rubber_band->show();
-//    m_rubber_band->raise();
+        QPoint(m_mouse_click_start.x(), m_mouse_click_start.y()),
+        QPoint(m_mouse_move.x(), m_mouse_move.y())).normalized());
 }
 
 void GridDisplay::rect_select_buttons(
@@ -222,7 +217,6 @@ void GridDisplay::rect_select_buttons(
         button_clicked(bottom_right.x() / GRID_SIZE, bottom_right.y() / GRID_SIZE);
         return;
     }
-
     swap_rect_coords(top_left.x(), top_left.y(), bottom_right.x(), bottom_right.y());
     int x0 = top_left.x() / GRID_SIZE;
     int y0 = top_left.y() / GRID_SIZE;
