@@ -78,6 +78,8 @@ public:
 
     Q_SLOT void change_right_power(int value);
 
+    Q_SLOT void change_delay(int value);
+
     /**
      * Signal emitted when the Arduino has sent a message to Minotaur.
      *

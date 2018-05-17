@@ -25,6 +25,8 @@ public:
 
     void setup_power_slider(QSlider &slider);
 
+    void setup_slider(QSlider &slider, int value, int min, int max, int interval);
+
     Q_SLOT void update_status(SerialStatus new_status);
 
     Q_SLOT void attempt_connection();
@@ -36,6 +38,13 @@ private:
         POWER_INTERVAL = 8,
         POWER_MAX = 255,
         POWER_MIN = 0
+    };
+
+    enum Delay {
+        DELAY_INTERVAL = 10,
+        DELAY_MAX = 150,
+        DELAY_MIN = 10,
+        DELAY_DEFAULT = 50
     };
 
     Ui::SerialBox *ui;
