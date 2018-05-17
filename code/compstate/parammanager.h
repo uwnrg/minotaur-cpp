@@ -63,9 +63,9 @@ public:
     MANAGE_PARAM(double, objproc_loc_acpt,   3.0)
 
     // AStar
-    MANAGE_PARAM(int, wall_penalty_0, 10)
-    MANAGE_PARAM(int, wall_penalty_1,  5)
-    MANAGE_PARAM(int, wall_penalty_2,  2)
+    MANAGE_PARAM(int, wall_penalty_0, 233)
+    MANAGE_PARAM(int, wall_penalty_1,  16)
+    MANAGE_PARAM(int, wall_penalty_2,   4)
 
 public:
     inline explicit param_manager(parent_t p) :
@@ -84,6 +84,11 @@ public:
         PARAM_INIT(objmove_algn_err)
         PARAM_INIT(objproc_norm_dev)
         PARAM_INIT(objproc_loc_acpt)
+
+        // AStar
+        PARAM_INIT(wall_penalty_0);
+        PARAM_INIT(wall_penalty_1);
+        PARAM_INIT(wall_penalty_2);
     }
 
     inline ~param_manager() override {
@@ -101,6 +106,11 @@ public:
         PARAM_DEINIT(objmove_algn_err)
         PARAM_DEINIT(objproc_norm_dev)
         PARAM_DEINIT(objproc_loc_acpt)
+
+        // AStar
+        PARAM_DEINIT(wall_penalty_0);
+        PARAM_DEINIT(wall_penalty_1);
+        PARAM_DEINIT(wall_penalty_2);
     }
 };
 

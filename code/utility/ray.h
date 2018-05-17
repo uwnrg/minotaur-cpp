@@ -26,6 +26,11 @@ namespace nrg {
             m_a(a),
             m_b(b) {}
 
+        template<typename v = vector<val_t>>
+        ray(std::initializer_list<v> l) :
+            m_a(l.begin()[0]),
+            m_b(l.begin()[1]) {}
+
         vector<val_t> &a() {
             return m_a;
         }
