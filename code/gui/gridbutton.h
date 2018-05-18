@@ -4,6 +4,8 @@
 #include <QPushButton>
 #include <QRubberBand>
 
+#include <memory>
+
 class GridDisplay;
 
 class GridButton : public QPushButton {
