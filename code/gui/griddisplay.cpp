@@ -15,30 +15,46 @@
  * Set bounding rectangle of m_scene to m_img.size()
 */
 
+enum {
+    END_WEIGHT = -3,
+    START_WEIGHT = -2,
+    NOT_SELECTED_WEIGHT = -1,
+    DEFAULT_WEIGHT = 0,     // All selected squares should have values greater or equal to 0
+    GRID_SIZE = 10,         // Size in pixels
+    SCENE_WIDTH = 400,      // Default: 800
+    SCENE_HEIGHT = 300,     // Default: 400
+    MAX_BUTTONS_X = 50,
+    MAX_BUTTONS_Y = 50
+};
+
 const QString buttonStyle =
     // Clear button style
     "background-color: rgba(0, 0, 0, 0%);"
-    "width: 8px;"
-    "height: 8px;";
+    "width: 0px;"
+    "height: 0px;"
+    "border-style: none;";
 
 const QString buttonSelectedStyle =
     // Green buttons with varying shades
     // %1 is a placeholder for an argument when stylesheet is called
     "background-color: rgba(0, %1, 0, 20%);"
-    "width: 8px;"
-    "height: 8px;";
+    "width: 0px;"
+    "height: 0px;"
+    "border-style: none;";
 
 const QString startSelectedStyle =
     // Red button for robot start configuration
     "background-color: rgba(255, 0, 0, 20%);"
-    "width: 8px;"
-    "height: 8px;";
+    "width: 0px;"
+    "height: 0px;"
+    "border-style: none;";
 
 const QString endSelectedStyle =
     // Blue button for end goal
     "background-color: rgba(0, 0, 255, 20%);"
-    "width: 8px;"
-    "height: 8px;";
+    "width: 0px;"
+    "height: 0px;"
+    "border-style: none;";
 
 // Swap two coordinates so that x is the top left point and y is the bottom right
 static void swap_rect_coords(int &x1, int &y1, int &x2, int &y2) {
@@ -52,18 +68,62 @@ static void swap_rect_coords(int &x1, int &y1, int &x2, int &y2) {
     }
 }
 
+int GridDisplay::default_weight() {
+    return DEFAULT_WEIGHT;
+}
+
+int GridDisplay::grid_size() {
+    return GRID_SIZE;
+}
+
+double GridDisplay::scene_width() {
+    return m_scene->width();
+}
+
+double GridDisplay::scene_height() {
+    return m_scene->height();
+}
+
+double GridDisplay::parent_width() {
+    return m_image_viewer->width();
+}
+
+double GridDisplay::parent_height() {
+    return m_image_viewer->height();
+}
+
+double GridDisplay::x() {
+    return m_view->x();
+}
+
+double GridDisplay::y() {
+    return m_view->y();
+}
+
 GridDisplay::GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display) :
     QWidget(image_viewer),
-    m_square_selected(40, 20),
+    m_image_viewer(image_viewer),
+
+    m_column_count(0),
+    m_row_count(0),
+
+    m_button(m_column_count, m_row_count),
+    m_square_selected(m_column_count, m_row_count),
+
     m_camera_display(camera_display) {
-    // Set up graphics scene and view
+
     m_scene = std::make_unique<QGraphicsScene>(this);
-    m_scene->setSceneRect(QRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT));   //TODO: set bounding rectangle to m_img.size()
+    m_scene->setSceneRect(QRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT));
+    
+    //TODO: set bounding rectangle to m_img.size()
+
     m_view = std::make_unique<QGraphicsView>(m_scene.get(), image_viewer);
     m_view->setStyleSheet("background: transparent");
-    m_view->setMinimumSize(SCENE_WIDTH, SCENE_HEIGHT);
+    m_view->setMinimumSize(0, 0);
+    
     m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->hide();
 }
 
 void GridDisplay::button_clicked(int x, int y) {
@@ -135,6 +195,13 @@ void GridDisplay::clear_selection() {
 }
 
 void GridDisplay::show_grid() {
+    m_row_count = (m_image_viewer->height() / 2) / GRID_SIZE;
+    m_column_count = (m_image_viewer->width() / 2) / GRID_SIZE;
+    m_scene->setSceneRect(QRect(0, 0, m_column_count * GRID_SIZE, m_row_count * GRID_SIZE));
+    m_view->resize(m_column_count * GRID_SIZE, m_row_count * GRID_SIZE);
+    m_view->move(m_image_viewer->width() / 2 - m_scene->width() / 2, m_image_viewer->height() / 2 - m_scene->height() / 2);
+    m_button = array2d<GridButton *>(m_column_count, m_row_count);
+    m_square_selected = array2d<int>(m_column_count, m_row_count);
     if (!m_grid_displayed) {
         draw_grid();
         draw_buttons();
@@ -299,9 +366,9 @@ vector2i GridDisplay::get_mouse_start() {
     return m_mouse_click_start;
 }
 
-void GridDisplay::is_valid_coord(vector2i& point) {
+void GridDisplay::is_valid_coord(vector2i &point) {
     point.x() = (point.x() < 0) ? 0 : point.x();
-    point.x() = (point.x() > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1 : point.x();
+    point.x() = (point.x() > m_scene->width()) ? m_scene->width() - 1 : point.x();
     point.y() = (point.y() < 0) ? 0 : point.y();
-    point.y() = (point.y() > GridDisplay::SCENE_WIDTH) ? GridDisplay::SCENE_WIDTH - 1 : point.y();
+    point.y() = (point.y() > m_scene->height()) ? m_scene->height() - 1 : point.y();
 }
