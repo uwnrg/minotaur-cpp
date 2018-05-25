@@ -5,6 +5,7 @@
 
 #include <QDialog>
 #include <QSlider>
+#include <QLineEdit>
 
 #include "../controller/solenoid.h"
 
@@ -33,11 +34,31 @@ public:
 
     Q_SLOT void append_text(const std::string &text);
 
+    Q_SLOT void up_slider_changed(int value);
+
+    Q_SLOT void down_slider_changed(int value);
+
+    Q_SLOT void left_slider_changed(int value);
+
+    Q_SLOT void right_slider_changed(int value);
+
+    Q_SLOT void up_box_changed();
+
+    Q_SLOT void down_box_changed();
+
+    Q_SLOT void left_box_changed();
+
+    Q_SLOT void right_box_changed();
+
+    void slider_changed(int value, int dir);
+
+    void box_changed(int value, int dir);
+
 private:
     enum Power {
-        POWER_INTERVAL = 8,
+        POWER_INTERVAL = 1,
         POWER_MAX = 255,
-        POWER_MIN = 0
+        POWER_MIN = 240
     };
 
     enum Delay {
@@ -49,6 +70,9 @@ private:
 
     Ui::SerialBox *ui;
     std::shared_ptr<Solenoid> m_solenoid;
+
+    QSlider *m_sliders[4];
+    QLineEdit *m_edit_boxes[4];
 
     SerialStatus m_status;
 };
