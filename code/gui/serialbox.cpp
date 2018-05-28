@@ -67,8 +67,8 @@ SerialBox::SerialBox(
     m_sliders[2] = ui->left_slider;
     m_sliders[3] = ui->right_slider;
 
+    // Turn default state off for dialog close button
     QDialogButtonBox *button_box = ui->button_box;
-
     QPushButton *close_button = button_box->button(QDialogButtonBox::Close);
     close_button->setAutoDefault(false);
     close_button->setDefault(false);
@@ -128,40 +128,31 @@ void SerialBox::right_slider_changed(int value) {
     slider_changed(value, 3);
 }
 
-void SerialBox::box_changed(int value, int dir) {
-    m_sliders[dir]->setValue(value);
+void SerialBox::box_changed(QString value, int dir) {
+    int power = value.toInt(nullptr, 10);
+    if(power >= Power::POWER_MIN && power <= Power::POWER_MAX) {
+        m_sliders[dir]->setValue(power);
+    }
 }
 
 void SerialBox::up_box_changed() {
     QString value = ui->up_box->text();
-    int power = value.toInt(nullptr, 10);
-    if(power >= Power::POWER_MIN && power <= Power::POWER_MAX) {
-        box_changed(power, 0);
-    }
+    box_changed(value, 0);
 }
 
 void SerialBox::down_box_changed() {
-    QString value = ui->up_box->text();
-    int power = value.toInt(nullptr, 10);
-    if(power >= Power::POWER_MIN && power <= Power::POWER_MAX) {
-        box_changed(power, 1);
-    }
+    QString value = ui->down_box->text();
+    box_changed(value, 1);
 }
 
 void SerialBox::left_box_changed() {
-    QString value = ui->up_box->text();
-    int power = value.toInt(nullptr, 10);
-    if(power >= Power::POWER_MIN && power <= Power::POWER_MAX) {
-        box_changed(power, 2);
-    }
+    QString value = ui->left_box->text();
+    box_changed(value, 2);
 }
 
 void SerialBox::right_box_changed() {
-    QString value = ui->up_box->text();
-    int power = value.toInt(nullptr, 10);
-    if(power >= Power::POWER_MIN && power <= Power::POWER_MAX) {
-        box_changed(power, 3);
-    }
+    QString value = ui->right_box->text();
+    box_changed(value, 3);
 }
 
 void SerialBox::attempt_connection() {

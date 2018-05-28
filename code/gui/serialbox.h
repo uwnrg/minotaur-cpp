@@ -52,7 +52,7 @@ public:
 
     void slider_changed(int value, int dir);
 
-    void box_changed(int value, int dir);
+    void box_changed(QString value, int dir);
 
 private:
     enum Power {
