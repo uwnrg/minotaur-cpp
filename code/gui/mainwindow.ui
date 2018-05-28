@@ -173,7 +173,6 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Setup</string>
     </property>
-    <addaction name="switch_to_simulator_mode"/>
     <addaction name="separator"/>
     <addaction name="start_python_interpreter"/>
     <addaction name="separator"/>
@@ -215,17 +214,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuEdit"/>
    <addaction name="menuHelp"/>
   </widget>
-  <action name="switch_to_simulator_mode">
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Simulator mode</string>
-   </property>
-  </action>
   <action name="open_serial_box">
    <property name="checkable">
     <bool>false</bool>
