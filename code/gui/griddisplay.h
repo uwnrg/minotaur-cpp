@@ -68,6 +68,8 @@ public Q_SLOTS:
 
     void select_robot_position(QString);
 
+    void update_grid_location(double x, double y);
+
 protected Q_SLOTS:
 
     void button_clicked(int x, int y);
@@ -98,8 +100,13 @@ private:
 
     void is_valid_coord(vector2i &point);
 
+    void move_grid();
+
     int m_column_count;
     int m_row_count;
+
+    double m_x;
+    double m_y;
 
     array2d<GridButton *> m_button;
     array2d<int> m_square_selected;

@@ -106,6 +106,8 @@ GridDisplay::GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_displa
 
     m_column_count(0),
     m_row_count(0),
+    m_x(0),
+    m_y(0),
 
     m_button(m_column_count, m_row_count),
     m_square_selected(m_column_count, m_row_count),
@@ -135,8 +137,8 @@ void GridDisplay::button_clicked(int x, int y) {
         log() << "Robot Start Position (" << x << "," << y << ") = " << m_square_selected[x][y];
     } else if (m_end_pos_selected) {
         // Executes if another end position was previously selected
-        if (m_end_position.x() != NOT_SELECTED_WEIGHT &&
-            m_end_position.y() != NOT_SELECTED_WEIGHT) {
+        if (m_end_position.x() == END_WEIGHT &&
+            m_end_position.y() == END_WEIGHT) {
             m_square_selected[m_end_position.x()][m_end_position.y()] = -1;
             m_button[m_end_position.x()][m_end_position.y()]->setStyleSheet(buttonStyle);
         }
@@ -186,23 +188,27 @@ void GridDisplay::clear_selection() {
 #ifndef NDEBUG
     qDebug() << "Clear Selection";
 #endif
+    std::cout << "clear" << std::endl;
+    std::cout << m_row_count << std::endl;
+    std::cout << m_column_count << std::endl;
     for (int y = 0; y < m_row_count; y++) {
         for (int x = 0; x < m_column_count; x++) {
             m_button[x][y]->setStyleSheet(buttonStyle);
             m_square_selected[x][y] = NOT_SELECTED_WEIGHT;
         }
     }
+    std::cout << "clear done" << std::endl;
 }
 
 void GridDisplay::show_grid() {
-    m_row_count = (m_image_viewer->height() / 2) / GRID_SIZE;
-    m_column_count = (m_image_viewer->width() / 2) / GRID_SIZE;
-    m_scene->setSceneRect(QRect(0, 0, m_column_count * GRID_SIZE, m_row_count * GRID_SIZE));
-    m_view->resize(m_column_count * GRID_SIZE, m_row_count * GRID_SIZE);
-    m_view->move(m_image_viewer->width() / 2 - m_scene->width() / 2, m_image_viewer->height() / 2 - m_scene->height() / 2);
-    m_button = array2d<GridButton *>(m_column_count, m_row_count);
-    m_square_selected = array2d<int>(m_column_count, m_row_count);
     if (!m_grid_displayed) {
+        m_row_count = (m_image_viewer->height() / 2) / GRID_SIZE;
+        m_column_count = (m_image_viewer->width() / 2) / GRID_SIZE;
+        m_scene->setSceneRect(QRect(0, 0, m_column_count * GRID_SIZE, m_row_count * GRID_SIZE));
+        m_view->resize(m_column_count * GRID_SIZE, m_row_count * GRID_SIZE);
+        move_grid();
+        m_button = array2d<GridButton *>(m_column_count, m_row_count);
+        m_square_selected = array2d<int>(m_column_count, m_row_count);
         draw_grid();
         draw_buttons();
         show_view();
@@ -371,4 +377,14 @@ void GridDisplay::is_valid_coord(vector2i &point) {
     point.x() = (point.x() > m_scene->width()) ? m_scene->width() - 1 : point.x();
     point.y() = (point.y() < 0) ? 0 : point.y();
     point.y() = (point.y() > m_scene->height()) ? m_scene->height() - 1 : point.y();
+}
+
+void GridDisplay::update_grid_location(double x, double y) {
+    m_x = x;
+    m_y = y;
+    move_grid();
+}
+
+void GridDisplay::move_grid() {
+    m_view->move((1 + m_x) * (m_image_viewer->width() / 2 - m_scene->width() / 2), (1 - m_y) * (m_image_viewer->height() / 2 - m_scene->height() / 2));
 }

@@ -63,16 +63,14 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     populate_effect_box(m_ui->effect_box);
 
     // Setup zoom slider
-    m_ui->zoom_slider->setTickInterval(Zoom::ZOOM_INTERVAL);
-    m_ui->zoom_slider->setTickPosition(QSlider::TicksBelow);
-    m_ui->zoom_slider->setMaximum(Zoom::ZOOM_MAX);
-    m_ui->zoom_slider->setMinimum(Zoom::ZOOM_MIN);
+    setup_slider(*(m_ui->zoom_slider), 10, Zoom::ZOOM_MIN, Zoom::ZOOM_MAX, Zoom::ZOOM_INTERVAL, true);
 
     // Setup rotation slider
-    m_ui->rotate_slider->setTickInterval(Rotation::ROTATION_INTERVAL);
-    m_ui->rotate_slider->setTickPosition(QSlider::TicksBelow);
-    m_ui->rotate_slider->setMaximum(Rotation::ROTATION_MAX);
-    m_ui->rotate_slider->setMinimum(Rotation::ROTATION_MIN);
+    setup_slider(*(m_ui->rotate_slider), 0, Rotation::ROTATION_MIN, Rotation::ROTATION_MAX, Rotation::ROTATION_INTERVAL, true);
+
+    // Setup griddisplay sliders
+    setup_slider(*(m_ui->horizontal_grid_slider), 0, GridLocation::GRIDLOCATION_MIN, GridLocation::GRIDLOCATION_MAX, GridLocation::GRIDLOCATION_INTERVAL, true);
+    setup_slider(*(m_ui->vertical_grid_slider), 0, GridLocation::GRIDLOCATION_MIN, GridLocation::GRIDLOCATION_MAX, GridLocation::GRIDLOCATION_INTERVAL, true);
 
     // Setup weight selectors
     m_ui->weight_selector->setRange(Grid::MIN_WEIGHT, Grid::MAX_WEIGHT);
@@ -87,8 +85,8 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->weight_selector, qol<int>::of(&QSpinBox::valueChanged), this, &CameraDisplay::weighting_changed);
     connect(m_ui->picture_button, &QPushButton::clicked, this, &CameraDisplay::take_screen_shot);
     connect(m_ui->record_button, &QPushButton::clicked, this, &CameraDisplay::toggle_record);
-    connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid);
-    connect(m_ui->hide_grid_button, &QPushButton::clicked, this, &CameraDisplay::hide_grid);
+    connect(m_ui->show_grid_button, &QPushButton::clicked, this, &CameraDisplay::show_grid_button_pushed);
+    connect(m_ui->hide_grid_button, &QPushButton::clicked, this, &CameraDisplay::hide_grid_button_pushed);
     connect(m_ui->clear_grid_button, &QPushButton::clicked, this, &CameraDisplay::clear_grid);
     connect(m_ui->toggle_path_button, &QPushButton::clicked, this, &CameraDisplay::toggle_path);
     connect(m_ui->clear_path_button, &QPushButton::clicked, this, &CameraDisplay::clear_path);
@@ -97,6 +95,8 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     connect(m_ui->zoom_slider, &QSlider::valueChanged, this, &CameraDisplay::update_zoom);
     connect(m_ui->rotate_slider, &QSlider::valueChanged, this, &CameraDisplay::rotation_slider_changed);
     connect(m_ui->rotation_box, &QLineEdit::editingFinished, this, &CameraDisplay::rotation_box_changed);
+    connect(m_ui->horizontal_grid_slider, &QSlider::valueChanged, this, &CameraDisplay::grid_slider_moved);
+    connect(m_ui->vertical_grid_slider, &QSlider::valueChanged, this, &CameraDisplay::grid_slider_moved);
     //    connect(m_ui->clear_path_button, &QPushButton::clicked, this, &GridDisplay::mouse_clicked);
 }
 
@@ -200,4 +200,31 @@ void CameraDisplay::increment_rotation() {
 void CameraDisplay::pressed_play(bool checked) {
     Q_EMIT toggle_rotation(checked);
     m_ui->play_button->setText(checked ? "⏸" : "▶");
+}
+
+void CameraDisplay::setup_slider(QSlider &slider, int value, int min, int max, int interval, bool tracking) {
+    slider.setTickInterval(interval);
+    slider.setTickPosition(QSlider::TicksBelow);
+    slider.setMaximum(max);
+    slider.setMinimum(min);
+    slider.setTracking(tracking);
+    slider.setValue(value);
+}
+
+void CameraDisplay::grid_slider_moved(int value) {
+    double x = m_ui->horizontal_grid_slider->value() / 100.0;
+    double y = m_ui->vertical_grid_slider->value() / 100.0;
+    Q_EMIT move_grid(x, y);
+}
+
+void CameraDisplay::show_grid_button_pushed() {
+    m_ui->horizontal_grid_slider->setEnabled(true);
+    m_ui->vertical_grid_slider->setEnabled(true);
+    Q_EMIT show_grid();
+}
+
+void CameraDisplay::hide_grid_button_pushed() {
+    m_ui->horizontal_grid_slider->setEnabled(false);
+    m_ui->vertical_grid_slider->setEnabled(false);
+    Q_EMIT hide_grid();
 }

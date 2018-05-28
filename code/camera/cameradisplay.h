@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <QDialog>
+#include <QSlider>
 
 #include "actionbox.h"
 #include "imageviewer.h"
@@ -34,6 +35,8 @@ public:
      * @return the currently selected grid weighting
      */
     int get_weighting();
+
+    void setup_slider(QSlider &slider, int value, int min, int max, int interval, bool tracking);
 
     /**
      * Slot called when the weight list has changed.
@@ -112,6 +115,12 @@ public:
      * @param weight_index index of the new mode
      */
     Q_SLOT void grid_select_changed(int weight_index);
+
+    Q_SLOT void grid_slider_moved(int value);
+
+    Q_SLOT void show_grid_button_pushed();
+
+    Q_SLOT void hide_grid_button_pushed();
 
     /**
      * Signal fired when the CameraDisplay opens so that
@@ -222,6 +231,8 @@ public:
      */
     Q_SIGNAL void select_position(QString weight_selected);
 
+    Q_SIGNAL void move_grid(double x, double y);
+
 private:
     enum Zoom {
         ZOOM_INTERVAL = 2,
@@ -233,6 +244,12 @@ private:
         ROTATION_INTERVAL = 45,
         ROTATION_MIN = -180,
         ROTATION_MAX = 180
+    };
+
+    enum GridLocation {
+        GRIDLOCATION_INTERVAL = 10,
+        GRIDLOCATION_MIN = -100,
+        GRIDLOCATION_MAX = 100
     };
 
     enum Grid {
