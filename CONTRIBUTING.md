@@ -1,146 +1,71 @@
 Contributing Guidelines
 =======================
 
-Before diving into the codebase, it's highly recommended that you have some basic knowledge
-about how OOP works in C++. Some concepts that you should know include inheritance, polymorphism,
-virtual members, etc. Knowledge of the C++ Standard Template Library (STL) is also helpful. [Effective
-STL](https://www.amazon.ca/Effective-STL-Specific-Standard-Template/dp/0201749629) is a great book
-that covers useful STL concepts in depth.
+It is expected that you have basic C++, STL, and Object-Oriented knowledge before diving into Minotaur. Wherever you may lack, Google and Stack Overflow are your friends (so are your fellow members!). 
 
 Table of Contents
 -----------------
-* [Style Guide](#style-guide)
-  - [Common C++ Naming Conventions](#common-c-naming-conventions)
-  - [Distinguish Private Object Data](#distinguish-private-object-data)
-  - [Don't name anything starting with `_`](#dont-name-anything-starting-with-_)
-  - [Enable out-of-source-directory builds](#enable-out-of-source-directory-builds)
-  - [Use `nullptr`](#use-nullptr)
-  - [Comments](#comments)
-  - [Never use `using namespace` in a header file](#never-use-using-namespace-in-a-header-file)
-  - [Include guards](#include-guards)
-  - [{} are required for blocks](#-are-required-for-blocks)
-  - [Keep lines a reasonable length](#keep-lines-a-reasonable-length)
-  - [Use "" for including local files](#use--for-including-local-files)
-  - [Initialize member variables](#initialize-member-variables)
-  - [Use the correct integer type for standard library features](#use-the-correct-integer-type-for-standard-library-features)
-  - [Use .h and .cpp for your file extensions](#use-h-and-cpp-for-your-file-extensions)
-  - [Never mix tabs and spaces](#never-mix-tabs-and-spaces)
-  - [Don't be afraid of templates](#dont-be-afraid-of-templates)
-  - [Use operator overloads judiciously](#use-operator-overloads-judiciously)
-  - [Avoid implicit conversions](#avoid-implicit-conversions)
-  - [Consider the rule of zero](#consider-the-rule-of-zero)
-
-* [Collaboration Guide](#collaboration-guide)
-
----
 
 Style Guide
 -----------
-> An slightly modified excerpt from [C++ Best Practices](https://www.gitbook.com/book/sadmansk/cpp-best-practices/details)
+Consistent coding style across Minotaur is essential for a readable and understandable codebase. We don't follow a strict style but these are basic guidelines for coding in Minotaur.
 
+### Naming Conventions
+ * Types begin capitalized and follow camel-case: `RowLineHighlighter`, `QSlider`
+   * Generic types are snake-case: `point`, `rect`, `unordered_map`
+ * Functions and variables are snake-case: `reorder_path()`, `row_count`
+   * `override` functions from Qt may be camel-case: `timerEvent(...)`
+ * Constants and macros are all-caps with underscores: `FIND_MIN`
+   * `constexpr` variables follow normal variable naming
+ * Template type parameters are capitalized and camel-case: `typename Element`
+   * None-type or generic template parameters are snake-case: `int block_size`
+ * Files names are all lower-case, no underscores: `simulatorwindow.cpp`
+ * Header files use `.h` and source files use `.cpp`
 
-Consistency is the most important aspect of style. The second most important aspect is following a style that the average C++ programmer is used to reading.
+### Distinguish Private Class Members
 
-C++ allows for arbitrary-length identifier names, so there's no reason to be terse when naming things. Use descriptive names, and be consistent in the style.
+Private class members should be prefixed with `m_`.
 
- * `CamelCase`
- * `snake_case`
-
-are common examples. *snake_case* has the advantage that it can also work with spell checkers, if desired.
-
-### Common C++ Naming Conventions
-
- * Types start with upper case: `MyClass`.
- * Functions and variables start with lower case: `myMethod`.
- * Constants are all upper case: `const double PI = 3.14159265358979323;`.
-
-C++ Standard Library (and other well-known C++ libraries like [Boost](http://www.boost.org/)) use these guidelines:
-
- * Macro names use upper case with underscores: `INT_MAX`.
- * Template parameter names use camel case: `InputIterator`.
- * All other names use snake case: `unordered_map`.
-
-### Distinguish Private Object Data
-
-Name private data with a `m_` prefix to distinguish it from public data. `m_` stands for "member" data.
-
-```cpp
-class PrivateSize
-{
-  public:
-    int width() const { return m_width; }
-    int height() const { return m_height; }
-    PrivateSize(int width, int height) : m_width(width), m_height(height) {}
-
-  private:
-    int m_width;
+```c++
+class Rectangle {
+public:
+	Rectangle(int width, int height);
+    
+private:
+	int m_width;
     int m_height;
 };
 ```
 
 
+### Don't Start and End Names with Underscores
 
+Unless you want to indicate a non-public type.
 
-### Don't Name Anything Starting With `_`
+### Use `nullptr` instead of `NULL`
 
-If you do, you risk colliding with names reserved for compiler and standard library implementation use:
-
-http://stackoverflow.com/questions/228783/what-are-the-rules-about-using-an-underscore-in-a-c-identifier
-
-
-### Well-Formed Example
-
-```cpp
-class MyClass
-{
-public:
-    MyClass(int t_data)
-        : m_data(t_data) {
-    }
-
-    int getData() const {
-        return m_data;
-    }
-
-private:
-    int m_data;
-};
-```
-
-
-### Enable Out-of-Source-Directory Builds
-
-Make sure generated files go into an output folder that is separate from the source folder.
-
-
-### Use `nullptr`
-
-C++11 introduces `nullptr` which is a special value denoting a null pointer. This should be used instead of `0` or `NULL` to indicate a null pointer.
+`nullptr` is more portable and nicer on the eyes.
 
 ### Comments
 
-Comment blocks should use `//`, not `/* */`. Using `//` makes it much easier to comment out a block of code while debugging.
-
-```cpp
-// this function does something
-int myFunc() {
-
-}
+Single and multi-line comments should always begin with `//`, be followed with a space, and be capitalized: `// Add the x and y components`. Periods should only be used for multi-line comments:
+```c++
+// This is a multi-line comment inside a block
+// of code, which uses double slashes.
 ```
 
-To comment out this function block during debugging we might do:
-
-```cpp
-/*
-// this function does something
-int myFunc() {
-
-}
-*/
+Block comments with `/* */` should be avoided inside code. Javadoc-style comments are encouraged for functions and classes:
+```c++
+/**
+ * Element-wise addition of vectors.
+ * 
+ * @param a    first vector to add
+ * @param b    second vector to add
+ * @param res  vector to store result
+ * @param size number of elements
+ */
+void vector_add(float *a, float *b, float *res, int size);
 ```
-
-which would be impossible if the function comment header used `/* */` (since the comment would only go until the first `*/`
-that is encountered.
 
 ### Never Use `using namespace` in a Header File
 
