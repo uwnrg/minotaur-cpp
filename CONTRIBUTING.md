@@ -312,7 +312,68 @@ struct functor_type {
 };
 ```
 
+### Pass by Reference and Avoid Copying
 
+To avoid unnecessary copying. Consider the case,
+
+```c++
+class ListHolder {
+...
+public:
+    std::vector<int> get_list() { return m_list; }
+};
+
+...
+std::vector<int> my_list = holder.get_list();
+```
+
+The function `get_list()` will return a copy of `m_list`, then `list = holder.get_list()` will make another
+copy of that list into `my_list`. Instead, we can do
+
+```c++
+std::vector<int> &get_list() { return m_list; }
+...
+std::vector<int> &my_list = holder.get_list();
+```
+
+This way `my_list` is a reference to the list in `holder`, so no copying is done. If you don't want the list to be 
+modified, return `const std::vector<int> &` instead.
+
+The same is for function arguments,
+
+```c++
+int append_and_sum(int v, std::vector<int> list) {
+    list.push_back(v);
+    ...
+    return sum;
+}
+
+...
+int list_sum = append_and_sum(5, my_list);
+```
+
+Here, `my_list` is copied into the function before the summing occurs. Passing by reference, 
+`int append_and_sum(int v, std::vector<int> &list)` removes the copy operation, but side effects
+will now occur on `list`.
+
+### Make Use of Move Operations
+
+Consider the function which creates a returns list,
+
+```c++
+std::vector<int> make_consecutive_list(std::size_t max) {
+    std::vector<int> list(max);
+    for (std::size_t i = 0; i < max; ++i) { list[i] = i; }
+    return list;
+}
+
+...
+std:vector<int> filled_list = make_consecutive_list(128);
+```
+
+In C++11 no copying or destruction of the list is done; the return value is "moved" to `filled_list` using a move constructor:
+`template<typename U> vector(vector<U> &&list)`. This is a bit nicer than having the caller first allocate the list as in
+`void make_consecutive_list(std::size_t max, std::vector<int> &list)`.
 
 Qt Guidelines
 -----------
