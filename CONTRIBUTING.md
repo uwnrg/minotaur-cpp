@@ -419,3 +419,38 @@ ImageViewer::ImageViewer(QWidget *parent) :
 ```
 
 The MOC will also generate a `moc_imageviewer.cpp` based on `imageviewer.h` which controls the `Q_SIGNAL`s and `Q_SLOT`s. 
+
+### Use Signal and Slot References
+
+In Minotaur we avoid usage of `SIGNAL(...)` and `SLOT(...)`. Instead do,
+
+```c++
+connect(pButton, &QPushButton::clicked, pWidget, &MyWidget::clicked_slot);
+```
+
+### Connect Signals to Signals
+
+You can connect signals to signals if you need to bounce them around the widget tree,
+
+```c++
+connect(pButton, &QPushButton::clicked, pParent, &ParentWidget::clicked_signal);
+connect(pParent, &ParentWidget::clicked_signal, pChild, &ChildWidget::click_slot);
+```
+
+### Always Pass a Parent
+
+If there is one available. Qt default constructors will have a `nullptr` parent, so we should
+try to pass one if there is one available.
+
+### Sometimes You Don't Need More Slots
+
+Signals and slots are used by Qt with its event and thread management system. Signals and slots are
+recommended for dealing with events or communicating across threads by allowing Qt to handle
+synchronization. But you don't need a series of signals and slots if you're only working in one thread,
+
+```c++
+Q_SIGNAL void clicked_signal(); // connected to post_clicked
+
+Q_SLOT void button_clicked(); // does something and emits clicked_signal
+Q_SLOT void post_clicked(); // just call post_clicked() without a slot
+```
