@@ -76,7 +76,7 @@ void vector_add(float *a, float *b, float *res, int size);
 
 ### Never Put `using` in a Header File 
 
-Headers are copy-pasted with the `#include` directive so includes a header with `using` will pollute the namespace.
+Headers are copy-pasted with the `#include` directive so including a header with `using` will pollute the namespace.
 
 
 ### Always Put Include Guards in Headers
@@ -103,13 +103,13 @@ int function_with_logic(int a, int b, int c) {
 
 ### Line Continuation
 
-Lines should be much less than 120 characters long. Continuation indents should be at least four tabs and align to the previous line, and operators should lead indentations,
+Lines should be much less than 120 characters long. Continuation indents should be at least four tabs and align to the previous line, and operators should tail indentations,
 
 ```c++
 int function_with_logic(int a, int b, int c) {
-    if (a + b < c
-        && abs(c - a) < abs(a - b)
-        && a + b + c < 0) { ... }
+    if (a + b < c &&
+        abs(c - a) < abs(a - b) &&
+        a + b + c < 0) { ... }
 }
 ```
 
