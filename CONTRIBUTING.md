@@ -375,6 +375,24 @@ In C++11 no copying or destruction of the list is done; the return value is "mov
 `template<typename U> vector(vector<U> &&list)`. This is a bit nicer than having the caller first allocate the list as in
 `void make_consecutive_list(std::size_t max, std::vector<int> &list)`.
 
+### Use Emplace
+
+STL containers typically have `emplace` or similar functions which make code less verbose but may also avoid a copy operation,
+
+```c++
+struct ListItem {
+    ListItem(int first, double second, std::string third) { ... }
+};
+
+...
+std::vector<ListItem> list;
+list.emplace_back(4, 76.33, "hello");
+```
+
+Qt containers like `QList` don't have these operations.
+
+
+
 Qt Guidelines
 -----------
 
@@ -446,11 +464,26 @@ try to pass one if there is one available.
 
 Signals and slots are used by Qt with its event and thread management system. Signals and slots are
 recommended for dealing with events or communicating across threads by allowing Qt to handle
-synchronization. But you don't need a series of signals and slots if you're only working in one thread,
+synchronization. But you don't need a series of signals and slots if you're only working in one thread.
+
+### Avoid Usage of Qt Containers
+
+STL containers are typically more optimized and are better handled by the compiler. Keep in mind that some Qt functions will return Qt containers. Also, signals and slots that use STL containers will need to have the type registered,
 
 ```c++
-Q_SIGNAL void clicked_signal(); // connected to post_clicked
+// somewhere in a header file
+Q_DECLARE_METATYPE(std::vector<int>);
 
-Q_SLOT void button_clicked(); // does something and emits clicked_signal
-Q_SLOT void post_clicked(); // just call post_clicked() without a slot
+// at the start of main()
+qRegisterMetaType<std::vector<int>>();
 ```
+
+
+
+## Common Errors
+
+We recommend using an IDE because it can help detect errors. CLion is free for students and works well with Minotaur, but others work as well. Here is a list of errors that IDEs usually don't detect.
+
+#### Emplacement Constructors
+
+IDEs usually don't detect constructors called from emplacement operations, like container `emplace` functions, or `std::make_unique`. If you get a deluge of template errors from a `make_unique` double check that the parameters passed match the constructor of the type.
