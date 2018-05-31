@@ -3,6 +3,8 @@ Contributing Guidelines
 
 It is expected that you have basic C++, STL, and Object-Oriented knowledge before diving into Minotaur. Wherever you may lack, Google and Stack Overflow are your friends (so are your fellow members!). 
 
+I recommend you a quick read of the Style Guide and then look over carefully the Git Workflow.
+
 Style Guide
 -----------
 Consistent coding style across Minotaur is essential for a readable and understandable codebase. We don't follow a strict style but these are basic guidelines for coding in Minotaur.
