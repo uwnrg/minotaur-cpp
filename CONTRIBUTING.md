@@ -479,7 +479,6 @@ qRegisterMetaType<std::vector<int>>();
 ```
 
 
-
 ## Common Errors
 
 We recommend using an IDE because it can help detect errors. CLion is free for students and works well with Minotaur, but others work as well. Here is a list of errors that IDEs usually don't detect.
@@ -487,3 +486,105 @@ We recommend using an IDE because it can help detect errors. CLion is free for s
 #### Emplacement Constructors
 
 IDEs usually don't detect constructors called from emplacement operations, like container `emplace` functions, or `std::make_unique`. If you get a deluge of template errors from a `make_unique` double check that the parameters passed match the constructor of the type.
+
+
+## Git and Github Guidelines
+
+Git tends to be a fine art and it takes some experience to avoid strange merge or rebasing issues. This section
+will outline some Git best practices.
+
+### Git Workflow
+
+You should always work on a fork of the main `minotaur-cpp` repository. To set up your local workspace, click `fork` on the repo main page and clone your fork. This sets up your fork as the remote named `origin`. You'll then want to add the main
+repo as a remote called `upstream`. This might look like
+
+```bash
+git clone https://github.com/mogball/minotaur-cpp.git
+cd minotaur-cpp
+git remote add upstream https://github.com/uwnrg/minotaur-cpp.git
+```
+
+#### Keeping an Updated `master`
+
+You should now have one branch, `master`, which Git will try to synchronize with the `master` branch on your fork. You should
+periodically update your local `master` branch with the upstream `master`. You can "watch" the main repo for any updates to
+the upstream `master` branch. To update your local `master` branch, 
+
+1. Fetch the upstream repo with `git fetch upstream`
+  * This updates a local copy of the upstream repo
+2. Merge or rebase your `master` branch on the `upstream/master`
+  * `git merge upstream master` or
+  * `git rebase upstream master`
+3. If all goes well you should see a "fast-forwarding" message, which means that
+   your local copy of `master` is smoothly updated with the recent changes to the upstream branch
+4. You should also do `git push`, which will update `master` on your fork, in case you need to start over
+
+If you accidentally made local commits to your `master` branch (i.e. you forgot to create
+a new branch for changes) either you will have merge conflicts, a merge commit from `git merge`,
+or `replaying your changes` message from `git rebase`. In this case your local branch will
+diverge from the upstream `master`, which will only make things worse.
+
+1. If you have merge conflicts, abort the merge first `git merge --abort`
+2. Make a copy of your modified master `git checkout -b master_copy`
+3. Delete your modified master `git branch -D master`
+4. Check out a fresh copy of master from upstream `git checkout master upstream/master`
+5. Point your branch back to your fork `git branch master -u origin/master`
+
+Since pull requests are always squashed when merged, make sure you keep your
+`master` updated with upstream.
+
+#### Create Feature Branches
+
+When you make a new feature, first ensure that your local `master` is up-to-date with
+the upstream repo. Then, checkout a new branch hopefully with the name format `<your_name>/<feature_or_fix>`
+
+```bash
+git fetch upstream
+git rebase upstream/master
+git checkout -b jeff/fixing_stuff
+```
+
+You will make all your changes on this branch. Whenever you feel you have reached a milestone, or may
+need to back up your code, you can add your changes and commit them. You should get into the habit of
+running `git status` to see which changes have not been staged, and which have not been committed, to avoid
+adding or committing accidental changes.
+
+```bash
+# Check for unexpected changes
+git status
+# All good! Stage all changes
+git add .
+# Commit staged changes
+git commit -m "my commit message"
+```
+
+Commit messages should briefly describe the changes you have made. Frequent and meaningful commits,
+even if they are one-liners, are good.
+
+If you see in `git status` that you made changes to a file you don't recognize or made by accident (you can
+double check by running `git diff`, you can erase unstaged changes (you will lose these changes!) run
+`git checkout -- folder/file_to_reset.c`. To erase all unstage changes from root run `git checkout -- .` and
+to unstage changes you added do `git reset HEAD folder/file_to_unstage.c`. 
+
+Once you are satisfied with your commit(s), push them to your fork,
+
+```bash
+git push -u origin jeff/fixing_stuff
+```
+
+You only need to specify the upstream master with `-u` the first time.
+If you forget the names of your branches, `git branch` will list local 
+branches that are checked out and indicate which you are on.
+
+#### Pull Requests
+
+Once you have pushed your new commits, you can create a Pull Request on Github. Usually an option to do so
+from your recently updated branch will appear on the main repo site, or you can go to your fork and click 
+"New Pull Request". PRs will show up on the main repo and will show the changes and additions you've made.
+Usually someone will review your PR, suggesting changes. Additional commits pushed to your fork feature
+branch will automatically be updated on the PR. Once your changes are approved, they will be squashed and merged.
+**No additional changes should be added to this branch.**
+
+You should then go and update your master `git checkout master && git pull upstream master` and delete your 
+local feature branch `git branch -D jeff/fixing_stuff`. You can keep the branches on your fork for history, 
+but I recommend keeping branches to a minimum locally.
