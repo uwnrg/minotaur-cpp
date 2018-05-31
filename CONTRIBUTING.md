@@ -588,3 +588,49 @@ branch will automatically be updated on the PR. Once your changes are approved, 
 You should then go and update your master `git checkout master && git pull upstream master` and delete your 
 local feature branch `git branch -D jeff/fixing_stuff`. You can keep the branches on your fork for history, 
 but I recommend keeping branches to a minimum locally.
+
+### Dealing with Merge Conflicts
+
+Usually we try to work in different files, and coordinate when we modify the same files so that
+features and fixes aren't lost in a merge conflict resolution process. If you are resolving
+merge conflicts in a file that has recently been modified, double check to make sure you aren't
+overriding important features. 
+
+Merge conflicts usually arise when comparing a pull request with `master`. Simple ones can be resolved
+through the Github GUI but more complicated ones need to be resolved through the command line. If conflicts
+are too difficult to resolve you can try merging with a previous commit. If you know the recent few commits to 
+master had lots of changes to a file you are working on, use `git log` to see the commit history. Grab the commit
+hash, looks something like `044d8cd4a4d44e7a307f20999f38daa16f812d3e`, then you can `git merge <commit_hash>` or
+`git rebase <commit_hash>`. Before moving onto the more difficult merges.
+
+### Squashing
+
+Larger pull requests may not be squashed into one commit and can instead be squashed by the 
+PR author into several commits and rebased onto `master`. If you want to squash the last 10 commits
+into 3 commits, run `git rebase -i HEAD~10`. Make sure you leave the top commit as `pick`. 
+Choose 2 other commits to leave as `pick`, and commits below them changed to `squash` will be
+squashed into the `pick` commit above. 
+
+If you have merged commits in your PR things will get messy, because you will need to re-resolve
+all conflicts, and the commit history and git diff will be messed up. More surgical methods
+are needed if we still want to squash. (It is recommended to `rebase` to keep up-to-date with `master`).
+
+### Disaster Recovery
+
+Sometimes Git goes wrong. Here are some things you can do.
+
+#### Commit Splitting
+
+If you need to break apart commits to move around, `git reset HEAD~` will reset and unstage changes of
+the most recent commit. You can then `git add` and `git commit` to separate the file changes into different
+commits. 
+
+#### Commit Recovery
+
+If you've accidentally squashed into master and need to recover your commits, `git reflog` will show you
+commits that have been lost on the tree. Hopefully they show up there. Make a new copy of `master` and `git cherry-pick`
+these commits in order onto that branch, using the commit hashes.
+
+If a lost commit doesn't show up in `git reflog` more advanced disaster recovery is available. Check out
+the Git documentation.
+
