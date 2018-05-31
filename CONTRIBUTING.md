@@ -1,524 +1,638 @@
 Contributing Guidelines
 =======================
 
-Before diving into the codebase, it's highly recommended that you have some basic knowledge
-about how OOP works in C++. Some concepts that you should know include inheritance, polymorphism,
-virtual members, etc. Knowledge of the C++ Standard Template Library (STL) is also helpful. [Effective
-STL](https://www.amazon.ca/Effective-STL-Specific-Standard-Template/dp/0201749629) is a great book
-that covers useful STL concepts in depth.
+It is expected that you have basic C++, STL, and Object-Oriented knowledge before diving into Minotaur. Wherever you may lack, Google and Stack Overflow are your friends (so are your fellow members!). 
 
-Table of Contents
------------------
-* [Style Guide](#style-guide)
-  - [Common C++ Naming Conventions](#common-c-naming-conventions)
-  - [Distinguish Private Object Data](#distinguish-private-object-data)
-  - [Don't name anything starting with `_`](#dont-name-anything-starting-with-_)
-  - [Enable out-of-source-directory builds](#enable-out-of-source-directory-builds)
-  - [Use `nullptr`](#use-nullptr)
-  - [Comments](#comments)
-  - [Never use `using namespace` in a header file](#never-use-using-namespace-in-a-header-file)
-  - [Include guards](#include-guards)
-  - [{} are required for blocks](#-are-required-for-blocks)
-  - [Keep lines a reasonable length](#keep-lines-a-reasonable-length)
-  - [Use "" for including local files](#use--for-including-local-files)
-  - [Initialize member variables](#initialize-member-variables)
-  - [Use the correct integer type for standard library features](#use-the-correct-integer-type-for-standard-library-features)
-  - [Use .h and .cpp for your file extensions](#use-h-and-cpp-for-your-file-extensions)
-  - [Never mix tabs and spaces](#never-mix-tabs-and-spaces)
-  - [Don't be afraid of templates](#dont-be-afraid-of-templates)
-  - [Use operator overloads judiciously](#use-operator-overloads-judiciously)
-  - [Avoid implicit conversions](#avoid-implicit-conversions)
-  - [Consider the rule of zero](#consider-the-rule-of-zero)
-
-* [Collaboration Guide](#collaboration-guide)
-
----
+I recommend you a quick read of the Style Guide and then look over carefully the Git Workflow.
 
 Style Guide
 -----------
-> An slightly modified excerpt from [C++ Best Practices](https://www.gitbook.com/book/sadmansk/cpp-best-practices/details)
+Consistent coding style across Minotaur is essential for a readable and understandable codebase. We don't follow a strict style but these are basic guidelines for coding in Minotaur.
 
+### Naming Conventions
+ * Types begin capitalized and follow camel-case: `RowLineHighlighter`, `QSlider`
+   * Generic types are snake-case: `point`, `rect`, `unordered_map`
+ * Functions and variables are snake-case: `reorder_path()`, `row_count`
+   * `override` functions from Qt may be camel-case: `timerEvent(...)`
+ * Constants and macros are all-caps with underscores: `FIND_MIN`
+   * `constexpr` variables follow normal variable naming
+ * Template type parameters are capitalized and camel-case: `typename Element`
+   * None-type or generic template parameters are snake-case: `int block_size`
+ * Files names are all lower-case, no underscores: `simulatorwindow.cpp`
+ * Header files use `.h` and source files use `.cpp`
 
-Consistency is the most important aspect of style. The second most important aspect is following a style that the average C++ programmer is used to reading.
+### Use Four Spaces for Indentation
 
-C++ allows for arbitrary-length identifier names, so there's no reason to be terse when naming things. Use descriptive names, and be consistent in the style.
+Tabs are for losers. Also mixing tabs and spaces gives Git indigestion.
 
- * `CamelCase`
- * `snake_case`
+### Distinguish Private Class Members
 
-are common examples. *snake_case* has the advantage that it can also work with spell checkers, if desired.
+Private class members should be prefixed with `m_`,
 
-### Common C++ Naming Conventions
+```c++
+class Rectangle {
+public:
+    Rectangle(int width, int height);
 
- * Types start with upper case: `MyClass`.
- * Functions and variables start with lower case: `myMethod`.
- * Constants are all upper case: `const double PI = 3.14159265358979323;`.
-
-C++ Standard Library (and other well-known C++ libraries like [Boost](http://www.boost.org/)) use these guidelines:
-
- * Macro names use upper case with underscores: `INT_MAX`.
- * Template parameter names use camel case: `InputIterator`.
- * All other names use snake case: `unordered_map`.
-
-### Distinguish Private Object Data
-
-Name private data with a `m_` prefix to distinguish it from public data. `m_` stands for "member" data.
-
-```cpp
-class PrivateSize
-{
-  public:
-    int width() const { return m_width; }
-    int height() const { return m_height; }
-    PrivateSize(int width, int height) : m_width(width), m_height(height) {}
-
-  private:
+private:
     int m_width;
     int m_height;
 };
 ```
 
 
+### Don't Start and End Names with Underscores
 
+Unless you want to indicate a non-public type,
 
-### Don't Name Anything Starting With `_`
-
-If you do, you risk colliding with names reserved for compiler and standard library implementation use:
-
-http://stackoverflow.com/questions/228783/what-are-the-rules-about-using-an-underscore-in-a-c-identifier
-
-
-### Well-Formed Example
-
-```cpp
-class MyClass
-{
-public:
-    MyClass(int t_data)
-        : m_data(t_data) {
-    }
-
-    int getData() const {
-        return m_data;
-    }
-
-private:
-    int m_data;
-};
+```c++
+namespace det_ {
+    struct __private_helper_type { ... };
+}
 ```
 
+### Use `nullptr` instead of `NULL`
 
-### Enable Out-of-Source-Directory Builds
-
-Make sure generated files go into an output folder that is separate from the source folder.
-
-
-### Use `nullptr`
-
-C++11 introduces `nullptr` which is a special value denoting a null pointer. This should be used instead of `0` or `NULL` to indicate a null pointer.
+`nullptr` is more portable and nicer on the eyes.
 
 ### Comments
 
-Comment blocks should use `//`, not `/* */`. Using `//` makes it much easier to comment out a block of code while debugging.
-
-```cpp
-// this function does something
-int myFunc() {
-
-}
+Single and multi-line comments should always begin with `//`, be followed with a space, and be capitalized: `// Add the x and y components`. Periods should only be used for multi-line comments,
+```c++
+// This is a multi-line comment inside a block
+// of code, which uses double slashes.
 ```
 
-To comment out this function block during debugging we might do:
-
-```cpp
-/*
-// this function does something
-int myFunc() {
-
-}
-*/
+Block comments with `/* */` should be avoided inside code. Javadoc-style comments are encouraged for functions and classes,
+```c++
+/**
+ * Element-wise addition of vectors.
+ * 
+ * @param a    first vector to add
+ * @param b    second vector to add
+ * @param res  vector to store result
+ * @param size number of elements
+ */
+void vector_add(float *a, float *b, float *res, int size);
 ```
 
-which would be impossible if the function comment header used `/* */` (since the comment would only go until the first `*/`
-that is encountered.
+### Never Put `using` in a Header File 
 
-### Never Use `using namespace` in a Header File
-
-This causes the namespace you are `using` to be pulled into the namespace of all files that include the header file.
-It pollutes the namespace and it may lead to name collisions in the future.
-Writing `using namespace` in an implementation file is fine though.
+Headers are copy-pasted with the `#include` directive so including a header with `using` will pollute the namespace.
 
 
-### Include Guards
+### Always Put Include Guards in Headers
 
-Header files must contain a distinctly-named include guard to avoid problems with including the same header multiple times and to prevent conflicts with headers from other projects.
+Prevents a header from being included twice, causing multiple definitions issues. Most IDEs generate them but ours should follow the format `MINOTAUR_CPP_FILENAME_H`. For instance `highlighter.h` would have
 
 ```cpp
-#ifndef MYPROJECT_MYCLASS_H_
-#define MYPROJECT_MYCLASS_H_
-
-namespace MyProject {
-  class MyClass {
-  };
-}
-
+#ifndef MINOTAUR_CPP_HIGHLIGHTER_H
+#define MINOTAUR_CPP_HIGHLIGHTER_H
+...
 #endif
 ```
 
-### {} Are Required for Blocks.
-Leaving them off can lead to semantic errors in the code.
+### Always Use Braces `{}` with Blocks
+Makes code less confusing to read. Inline braces are acceptable for repeatable logic. The open brace `{` should **NOT** be on a new line,
 
 ```cpp
-// Bad Idea
-// This compiles and does what you want, but can lead to confusing
-// errors if modification are made in the future and close attention
-// is not paid.
-for (int i = 0; i < 15; ++i)
-  std::cout << i << std::endl;
-
-// Bad Idea
-// The cout is not part of the loop in this case even though it appears to be.
-int sum = 0;
-for (int i = 0; i < 15; ++i)
-  ++sum;
-  std::cout << i << std::endl;
-
-
-// Good Idea
-// It's clear which statements are part of the loop (or if block, or whatever).
-int sum = 0;
-for (int i = 0; i < 15; ++i) {
-  ++sum;
-  std::cout << i << std::endl;
+int function_with_logic(int a, int b, int c) {
+    if (a > b) { return a - b; }
+    if (b < c && c < a) { return c + b; }
+    return a + b + c;
 }
 ```
 
-Also note that it's better to keep the opening parenthesis, `{` *not* on a new line. That helps save vertical space and makes the code easier to read.
+### Line Continuation
 
-### Keep Lines a Reasonable Length
+Lines should be much less than 120 characters long. Continuation indents should be at least four tabs and align to the previous line, and operators should tail indentations,
 
-```cpp
-// Bad Idea
-// hard to follow
-if (x && y && myFunctionThatReturnsBool() && caseNumber3 && (15 > 12 || 2 < 3)) {
-}
-
-// Good Idea
-// Logical grouping, easier to read
-if (x && y && myFunctionThatReturnsBool()
-    && caseNumber3
-    && (15 > 12 || 2 < 3)) {
+```c++
+int function_with_logic(int a, int b, int c) {
+    if (a + b < c &&
+        abs(c - a) < abs(a - b) &&
+        a + b + c < 0) { ... }
 }
 ```
 
-Many projects and coding standards have a soft guideline that one should try to use less than about 80 or 100 characters per line.
-Such code is generally easier to read.
-It also makes it possible to have two separate files next to each other on one screen without having a tiny font.
 
-
-### Use "" for Including Local Files
-... `<>` is [reserved for system includes](http://blog2.emptycrate.com/content/when-use-include-verses-include).
+### Use `""` to Include Local Files
+Angle brackets `<>` should only be used for library or system includes.
 
 ```cpp
-// Bad Idea. Requires extra -I directives to the compiler
-// and goes against standards.
+// Library includes
 #include <string>
-#include <includes/MyHeader.hpp>
+#include <cmath>
+#include <QSlider>
 
-// Worse Idea
-// Requires potentially even more specific -I directives and
-// makes code more difficult to package and distribute.
-#include <string>
-#include <MyHeader.hpp>
-
-
-// Good Idea
-// Requires no extra params and notifies the user that the file
-// is a local file.
-#include <string>
-#include "MyHeader.hpp"
+// Local includes
+#include "highligher.h"
+#include "../utility/rect.h"
 ```
 
-### Initialize Member Variables
-...with the member initializer list.
+### Use Constructor Initializer List
 
-```cpp
-// Bad Idea
-class MyClass {
-public:
-    MyClass(int t_value) {
-        m_value = t_value;
-    }
+It is more performant and cleaner,
 
-private:
-    int m_value;
-};
-
-
-// Good Idea
-// C++'s member initializer list is unique to the language and leads to
-// cleaner code and potential performance gains that other languages cannot
-// match.
-class MyClass {
-public:
-    MyClass(int t_value)
-        : m_value(t_value) {
-    }
-
+```c++
+class IntBox {
+public: 
+    IntBox(int value) :
+        m_value(value) {}
+    
 private:
     int m_value;
 };
 ```
 
-In C++11 you may consider always giving each member a default value, e.g. by writing
-```cpp
-// ... //
+### Put Default Values in Source File
+
+Most class definitions are in header files, and we'd like to minimize modifications to those. Instead of
+
+```c++
+// intbox.h
+class IntBox {
+public:
+    IntBox();
 private:
-    int m_value = 0;
-// ... //
+    int m_value{0}; // or `int m_value = 0;`
+};
 ```
-inside the class body. This makes sure that no constructor ever "forgets" to initialize a member object.
 
-Use brace initialization; it does not allow narrowing at compile-time:
-```cpp
-// Best Idea
+Do this
 
-// ... //
+```c++
+// intbox.h
+class IntBox {
+public:
+    IntBox();
 private:
-  int m_value{ 0 };
-// ... //
-```
-Prefer {} initialization over alternatives unless you have a strong reason not to.
+    int m_value;
+};
 
-Forgetting to initialize a member is a source of undefined behavior bugs which are often extremely hard to find.
-
-
-### Use the Correct Integer Type for Standard Library Features
-
-The standard library generally uses `std::size_t` for anything related to size. The size of `size_t` is implementation defined.
-
-In general, using `auto` will avoid most of these issues, but not all.
-
-Make sure you stick with the correct integer types and remain consistent with the C++ standard library. It might not warn on the platform you are currently using, but it probably will when you change platforms.
-
-### Use .h and .cpp for Your File Extensions
-
-Ultimately this is a matter of preference, but .h and .cpp are widely recognized by various editors and tools. So the choice is pragmatic. Specifically, Visual Studio only automatically recognizes .cpp and .cxx for C++ files, and Vim doesn't necessarily recognize .cc as a C++ file.
-
-### Never Mix Tabs and Spaces
-
-Some editors like to indent with a mixture of tabs and spaces by default. This makes the code unreadable to anyone not using the exact same tab indentation settings. Configure your editor so this does not happen. Tabs with a width of four spaces is a **MUST** for indentation for this project.
-
-### Never Put Code with Side Effects Inside an assert()
-
-```cpp
-assert(registerSomeThing()); // make sure that registerSomeThing() returns true
+// intbox.cpp
+#define INTBOX_DEFAULT_VALUE	0
+IntBox::IntBox() :
+    m_value(INTBOX_DEFAULT_VALUE) {}
 ```
 
-The above code succeeds when making a debug build, but gets removed by the compiler when making a release build, giving you different behavior between debug and release builds.
-This is because `assert()` is a macro which expands to nothing in release mode.
+### Use `std::size_t` with STL Sizes
+
+The Standard Template Library uses `std::size_t` for things to do with size, such as `my_vector.size()`, `my_map.size()`, and is preferred for indexing.
+
+### Never Put Code with Side Effects inside `assert()`
+
+Assert statements are empty when running a release build, so side-effects will not occur.
+
+```c++
+// different things will occur if running debug or release builds!
+void my_function(int x) {
+    assert(function_with_side_effect(x));
+    ...
+}
+```
 
 ### Don't Be Afraid of Templates
 
-They can help you stick to [DRY principles](http://en.wikipedia.org/wiki/Don%27t_repeat_yourself).
-They should be preferred to macros, because macros do not honor namespaces, etc.
+But use them judiciously.
 
-### Use Operator Overloads Judiciously
+### Overload Operators Insofar as it Makes Code More Readable
 
-Operator overloading was invented to enable expressive syntax. Expressive in the sense that adding two big integers looks like `a + b` and not `a.add(b)`. Another common example is std::string, where it is very common to concatenate two strings with `string1 + string2`.
+So you can write `point1 + point2` instead of `point1.add(point2)`. Arithmetic operators can be overloaded when they make sense, access operators `*`, `[]`, and `->` should be used for pointer-like types, stream operators `<<` and `>>` can be overloaded for log or debug streams, comparison operators for types with order, and so on. More exotic operators can be overloaded as appropriate. Only overload the comma operator if you're edgy.
 
-However, you can easily create unreadable expressions using too much or wrong operator overloading. When overloading operators, there are three basic rules to follow as described [on stackoverflow](http://stackoverflow.com/questions/4421706/operator-overloading/4421708#4421708).
+### Mark Single Argument Constructors as `explicit`
 
-Specifically, you should keep these things in mind:
+Such as
 
-* Overloading `operator=()` when handling resources is a must. See [Consider the Rule of Zero](03-Style.md#consider-the-rule-of-zero) below.
-* For all other operators, only overload them when they are used in a context that is commonly connected to these operators. Typical scenarios are concatenating things with +, negating expressions that can be considered "true" or "false", etc.
-* Always be aware of the [operator precedence](http://en.cppreference.com/w/cpp/language/operator_precedence) and try to circumvent unintuitive constructs.
-* Do not overload exotic operators such as ~ or % unless implementing a numeric type or following a well recognized syntax in specific domain.
-* [Never](http://stackoverflow.com/questions/5602112/when-to-overload-the-comma-operator?answertab=votes#tab-top) overload `operator,()` (the comma operator).
-* Use non-member functions `operator>>()` and `operator<<()` when dealing with streams. For example, you can overload `operator<<(std::ostream &, MyClass const &)` to enable "writing" your class into a stream, such as `std::cout` or an `std::fstream` or `std::stringstream`. The latter is often used to create a string representation of a value.
-* There are more common operators to overload [described here](http://stackoverflow.com/questions/4421706/operator-overloading?answertab=votes#tab-top).
-
-More tips regarding the implementation details of your custom operators can be found [here](http://courses.cms.caltech.edu/cs11/material/cpp/donnie/cpp-ops.html).
-
-### Avoid Implicit Conversions
-
-#### Single Parameter Constructors
-
-Single parameter constructors can be applied at compile time to automatically convert between types. This is handy for things like `std::string(const char *)` but should be avoided in general because they can add to accidental runtime overhead.
-
-Instead mark single parameter constructors as `explicit`, which requires them to be explicitly called.
-
-#### Conversion Operators
-
-Similarly to single parameter constructors, conversion operators can be called by the compiler and introduce unexpected overhead. They should also be marked as `explicit`.
-
-
-### Consider the Rule of Zero
-
-The Rule of Zero states that you do not provide any of the functions that the compiler can provide (copy constructor, assignment operator, move constructor, destructor, move constructor) unless the class you are constructing does some novel form of ownership.
-
-The goal is to let the compiler provide optimal versions that are automatically maintained when more member variables are added.
-
-The [original article](http://flamingdangerzone.com/cxx11/rule-of-zero/) provides the background, while a [follow up article](https://turingtester.wordpress.com/2015/06/27/cs-rule-of-zero/) explains techniques for implementing nearly 100% of the time.
-
-
-Collaboration Guide
--------------------
-The basic steps to starting to work on a change and submitting it:
-
-1. Fork the repo
-2. Clone your fork from your local machine
-3. Add the main repo as a remote (e.g. you can name it upstream)
-4. `git checkout -b <branch_name>` (make sure to use a descriptive name for your branch)
-5. Make your changes and commit them under the new branch
-6. `git pull --rebase upstream develop`
-7. `git push origin <branch_name>`
-8. Open a PR with a nice description.
-9. Make sure the build passes before asking for a review
-
-### Additional Notes:
-Make sure that every single commit message reflects the purpose of the associated changes. The pull requests should also have relevant names with added description as necessary.
-
-### Submitting a PR and reviewing:
-The use of proper labels is highly encouraged, as well as using the assignee field
-for tracking task ownership. For example, assign yourself while the issue/PR is
-being worked on, as well as label it with `DO NOT MERGE`. When it's ready for
-review, assign the reviewer, and remove the `DO NOT MERGE` label. After back and
-forths (by changing assignments between the reviewer and reviewee) and once the changes
-are approved, the reviewer labels the PR as reviewed and assigns the PR to the
-maintainer so they can merge the PR. After the merge is done, the maintainer will
-assign it back to the author to keep track of ownership in the Kanban board (which
-is found under the Projects tab on Github).
-
-# Configuring Vagrant Development Environment
-These will describe the necessary steps to setup a virtual development
-environment on macOS Sierra 10.12.6 using Vagrant. The steps on other operating 
-systems should be the exact same except for installing vagrant.
-
-### Installing Vagrant
-1. Download and install Vagrant from `https://www.vagrantup.com/downloads.html`
-2. Download and install Oracle VirtualBox from `https://www.virtualbox.org/wiki/Downloads`
-
-### Initializing Virtual Environment
-1. Create a directory for Vagrant boxes `mkdir vagrant-boxes`
-2. Setup the official box `vagrant init hashicorp/precise64`
-3. Download and install XQuartz `https://www.xquartz.org/`
-4. Edit the `Vagrantfile` created by `vagrant init` to have the line at the end
-
-```config.ssh.forward_x11 = true```
-
-5. Run `vagrant up`
-6. Run `vagrant ssh-config`
-
-### Automatically Configure the virtual environment
-1. Access the box using `vagrant ssh`
-2. Install git with `sudo apt-get install git`
-3. Clone the repo and configure with 
-
+```c++
+class IntBox {
+public:
+    explicit IntBox(int value);
+};
 ```
-git clone https://github.com/uwnrg/minotaur-cpp.git
+
+To avoid implicit conversion attempts by the compiler. Sometimes implicit conversion operators and constructors are useful, however.
+
+### Speeding Up Compile Times of Headers
+
+Include directives tell the compiler to essentially copy-paste header files. In C++ this can lead hundreds and even thousands of header files to be loaded into memory and copied per source file. 
+
+#### Include only what you need
+
+Instead of including `<cstdio>` you can include only `<iostream>`.
+
+#### Use Class Forward Declarations
+
+If you don't need a class definition, that is, you have only weak references or pointers to `MyClass`, use a forward declaration to avoid an additional inclusion (in the header).
+
+```c++
+// header file
+class MyClass;
+bool verify_object(MyClass *obj);
+
+// source file
+#include "myclass.h"
+bool verify_object(MyClass *obj) { ... } // object definition available
+```
+
+#### Put as much in source files as possible
+
+Especially if you need to change them frequently. This can lead to long recompile times in a header file. These include constants, macros, and functions.
+
+### Use `static` Functions When Possible
+
+For instance, if you want helper functions in your source files. Marking files as `static` makes them "local" to that source file and can aid compiler optimizations.
+
+```c++
+// file1.cpp
+static int get_a_value() { ... } // only visible in this file
+int get_b_value() { ... } // might be visible in other files
+
+// file2.cpp
+extern int get_a_value(); // undefined symbol error
+extern int get_b_value(); // can be used in this file
+```
+
+Though avoid usage of `extern` in Minotaur.
+
+### Be Mindful of Initialization Order
+
+Class member variables are initialized in the order they are declared in the header, regardless of the initialization list. For instance,
+
+```c++
+class DoubleBox {
+public:
+    DoubleBox(double value) :
+        m_first(value),
+        m_second(m_first * 2) {}
+    
+private:
+    double m_second;
+    double m_first;
+};
+```
+
+Here, `m_second` will initialize first, when `m_first` has not been initialized. The result is that `m_second` will have some junk value and `m_first` will be set to `value`. In general it is good practice that class members be initialized in their declaration order.
+
+### Use Smart Pointers
+
+C++ provides `std::unique_ptr` and `std::shared_ptr` that manage dynamically allocated pointers. In most cases `unique_ptr` suffices, and a weak reference can be passed around with `get()`; due to the hierarchical structure of Qt, it is easy to predict when a pointer is deleted. Use `std::make_unique` and `std::make_shared`,
+
+```c++
+int value = 12;
+auto box_uptr = std::make_unique<IntBox>(value);
+auto box_sptr = std::make_shared<IntBox>(value);
+```
+
+### Usage of `auto`
+
+Type deduction can be useful to reduce code bloat in a few instances, but over-usage of `auto` can make code difficult to read and debug. `auto` should be used when casting, making a smart pointer, using an iterator, or dealing with complex (tuple) types,
+
+```c++
+auto integer_value = static_cast<int>(12.64);
+
+auto map_it = my_unordered_map.begin();
+// instead of
+std::unordered_map<int, double>::iterator map_it = ...
+
+auto three_tuple = std::make_tuple(10.5, 10, "hello world");
+// instead of
+std::tuple<double, int, std::string> three_tuple = ...
+```
+
+### Using Appropriate Casts
+
+Never use the basic C-type cast `int integer = (int) decimal`. Always use one of the specific cast types `static_cast`, `reinterpret_cast`, `dynamic_cast`, `const_cast`. A dynamic cast makes use of run-time type info, and returns `nullptr` if the cast is invalid.
+
+### Avoid Lambdas
+
+Lambda expressions are supported in C++11, Minotaur's standard, but they will not be allowed in Minotaur's code-base. Use a functor instead,
+
+```c++
+struct functor_type {
+    bool operator()(int arg) const { ... }
+};
+```
+
+### Pass by Reference and Avoid Copying
+
+To avoid unnecessary copying. Consider the case,
+
+```c++
+class ListHolder {
+...
+public:
+    std::vector<int> get_list() { return m_list; }
+};
+
+...
+std::vector<int> my_list = holder.get_list();
+```
+
+The function `get_list()` will return a copy of `m_list`, then `list = holder.get_list()` will make another
+copy of that list into `my_list`. Instead, we can do
+
+```c++
+std::vector<int> &get_list() { return m_list; }
+...
+std::vector<int> &my_list = holder.get_list();
+```
+
+This way `my_list` is a reference to the list in `holder`, so no copying is done. If you don't want the list to be 
+modified, return `const std::vector<int> &` instead.
+
+The same is for function arguments,
+
+```c++
+int append_and_sum(int v, std::vector<int> list) {
+    list.push_back(v);
+    ...
+    return sum;
+}
+
+...
+int list_sum = append_and_sum(5, my_list);
+```
+
+Here, `my_list` is copied into the function before the summing occurs. Passing by reference, 
+`int append_and_sum(int v, std::vector<int> &list)` removes the copy operation, but side effects
+will now occur on `list`.
+
+### Make Use of Move Operations
+
+Consider the function which creates a returns list,
+
+```c++
+std::vector<int> make_consecutive_list(std::size_t max) {
+    std::vector<int> list(max);
+    for (std::size_t i = 0; i < max; ++i) { list[i] = i; }
+    return list;
+}
+
+...
+std:vector<int> filled_list = make_consecutive_list(128);
+```
+
+In C++11 no copying or destruction of the list is done; the return value is "moved" to `filled_list` using a move constructor:
+`template<typename U> vector(vector<U> &&list)`. This is a bit nicer than having the caller first allocate the list as in
+`void make_consecutive_list(std::size_t max, std::vector<int> &list)`.
+
+### Use Emplace
+
+STL containers typically have `emplace` or similar functions which make code less verbose but may also avoid a copy operation,
+
+```c++
+struct ListItem {
+    ListItem(int first, double second, std::string third) { ... }
+};
+
+...
+std::vector<ListItem> list;
+list.emplace_back(4, 76.33, "hello");
+```
+
+Qt containers like `QList` don't have these operations.
+
+
+
+Qt Guidelines
+-----------
+
+The Qt framework tends to be rather massive and in-depth. Many Qt features overlap with STL, such as `QList`. This section provides some basic tips on Qt.
+
+### `ui` Files
+
+Files ending with `.ui` are XML files that describe a `QWidget`. These can be edited manually or opened with a GUI editor in Qt Creator. When compiling a Qt project, the Qt Meta-Object Compiler (MOC) reads these XML files and generates a `ui_*.h` file. For instance, `ui_imageviewer.h` which is used with `imageviewer.h`. These headers should only be included in the source files.
+
+```c++
+// imageviewer.h
+#ifndef MINOTAUR_CPP_IMAGEVIEWER_H
+#define MINOTAUR_CPP_IMAGEVIEWER_H
+
+#include <QWidget>
+
+namespace Ui {
+    class ImageViewer;
+}
+
+class ImageViewer : public QWidget {
+Q_OBJECT
+
+public:
+    ...
+private:
+    Ui::ImageViewer *m_ui;
+};
+
+#endif
+
+// imageviewer.cpp
+#include "imageviewer.h"
+#include "ui_imageviewer.h"
+
+ImageViewer::ImageViewer(QWidget *parent) :
+    QWidget(parent),
+    m_ui(new Ui::ImageViewer) { // usable because ui_imageviewer.h is included
+	
+    m_ui->setup(this);
+}
+```
+
+The MOC will also generate a `moc_imageviewer.cpp` based on `imageviewer.h` which controls the `Q_SIGNAL`s and `Q_SLOT`s. 
+
+### Use Signal and Slot References
+
+In Minotaur we avoid usage of `SIGNAL(...)` and `SLOT(...)`. Instead do,
+
+```c++
+connect(pButton, &QPushButton::clicked, pWidget, &MyWidget::clicked_slot);
+```
+
+### Connect Signals to Signals
+
+You can connect signals to signals if you need to bounce them around the widget tree,
+
+```c++
+connect(pButton, &QPushButton::clicked, pParent, &ParentWidget::clicked_signal);
+connect(pParent, &ParentWidget::clicked_signal, pChild, &ChildWidget::click_slot);
+```
+
+### Always Pass a Parent
+
+If there is one available. Qt default constructors will have a `nullptr` parent, so we should
+try to pass one if there is one available.
+
+### Sometimes You Don't Need More Slots
+
+Signals and slots are used by Qt with its event and thread management system. Signals and slots are
+recommended for dealing with events or communicating across threads by allowing Qt to handle
+synchronization. But you don't need a series of signals and slots if you're only working in one thread.
+
+### Avoid Usage of Qt Containers
+
+STL containers are typically more optimized and are better handled by the compiler. Keep in mind that some Qt functions will return Qt containers. Also, signals and slots that use STL containers will need to have the type registered,
+
+```c++
+// somewhere in a header file
+Q_DECLARE_METATYPE(std::vector<int>);
+
+// at the start of main()
+qRegisterMetaType<std::vector<int>>();
+```
+
+
+## Common Errors
+
+We recommend using an IDE because it can help detect errors. CLion is free for students and works well with Minotaur, but others work as well. Here is a list of errors that IDEs usually don't detect.
+
+#### Emplacement Constructors
+
+IDEs usually don't detect constructors called from emplacement operations, like container `emplace` functions, or `std::make_unique`. If you get a deluge of template errors from a `make_unique` double check that the parameters passed match the constructor of the type.
+
+
+## Git and Github Guidelines
+
+Git tends to be a fine art and it takes some experience to avoid strange merge or rebasing issues. This section
+will outline some Git best practices.
+
+### Git Workflow
+
+You should always work on a fork of the main `minotaur-cpp` repository. To set up your local workspace, click `fork` on the repo main page and clone your fork. This sets up your fork as the remote named `origin`. You'll then want to add the main
+repo as a remote called `upstream`. This might look like
+
+```bash
+git clone https://github.com/mogball/minotaur-cpp.git
 cd minotaur-cpp
-chmod 755 setup.sh
-./vagrant_setup.sh
+git remote add upstream https://github.com/uwnrg/minotaur-cpp.git
 ```
 
-4. To configure and run in the future, make sure to add Qt to your path
+#### Keeping an Updated `master`
 
-```
-export PATH=/home/vagrant/Qt5.7.0/5.7/gcc_64/bin:$PATH
+You should now have one branch, `master`, which Git will try to synchronize with the `master` branch on your fork. You should
+periodically update your local `master` branch with the upstream `master`. You can "watch" the main repo for any updates to
+the upstream `master` branch. To update your local `master` branch, 
 
-```
+1. Fetch the upstream repo with `git fetch upstream`
+  * This updates a local copy of the upstream repo
+2. Merge or rebase your `master` branch on the `upstream/master`
+  * `git merge upstream master` or
+  * `git rebase upstream master`
+3. If all goes well you should see a "fast-forwarding" message, which means that
+   your local copy of `master` is smoothly updated with the recent changes to the upstream branch
+4. You should also do `git push`, which will update `master` on your fork, in case you need to start over
 
-5. Then use the commands
+If you accidentally made local commits to your `master` branch (i.e. you forgot to create
+a new branch for changes) either you will have merge conflicts, a merge commit from `git merge`,
+or `replaying your changes` message from `git rebase`. In this case your local branch will
+diverge from the upstream `master`, which will only make things worse.
 
-```
-mkdir build
-cd build
-cmake ../CMakeLists.txt
-make
-./minotaur-cpp
-```
+1. If you have merge conflicts, abort the merge first `git merge --abort`
+2. Make a copy of your modified master `git checkout -b master_copy`
+3. Delete your modified master `git branch -D master`
+4. Check out a fresh copy of master from upstream `git checkout master upstream/master`
+5. Point your branch back to your fork `git branch master -u origin/master`
 
-### Manually Configure the virtual environment
-1. Access the box using `vagrant ssh`
+Since pull requests are always squashed when merged, make sure you keep your
+`master` updated with upstream.
 
-#### Installing Qt
-1. Download the Qt 5.7 installer `wget http://download.qt.io/official_releases/qt/5.7/5.7.0/qt-opensource-linux-x64-5.7.0.run`
-2. Adjust permissions `chmod +x qt-opensource-linux-x64-5.7.0.run`
-3. We must now install the required dependecies to run the installer
+#### Create Feature Branches
 
-```
-sudo apt-get update
-sudo apt-get install build-essential
-sudo apt-get install libfontconfig1
-sudo apt-get install mesa-common-dev
-sudo apt-get install libglu1-mesa-dev
-```
+When you make a new feature, first ensure that your local `master` is up-to-date with
+the upstream repo. Then, checkout a new branch hopefully with the name format `<your_name>/<feature_or_fix>`
 
-4. Run the installer with `./qt-opensource-linux-x64-5.7.0.run`, and if all goes 
-well, the installer should open in a new window through `XQuartz`
-5. You can login, or click `Skip`
-6. Hit `Deselect All` and select only `Desktop gcc 64-bit`
-7. Accept and install; do not launch Qt Creator
-8. After install add Qt to the path with `export PATH=/home/vagrant/Qt5.7.0/5.7/gcc_64/bin:$PATH`
-
-#### Installing Python
-1. We require minimum Python 3.4, however Ubuntu 12.04 only goes up to Python 3.2
-2. Run `sudo apt-get install python-software-properties` so that 
-we have `add-apt-repository`
-3. Add the PPA with Python 3.4 by running `sudo add-apt-repository ppa:fkrull/deadsnakes`
-4. Run `sudo apt-get update`
-5. Run `sudo apt-get install python3.4`
-6. Run `sudo apt-get install python3.4-dev`
-
-#### Install cmake
-1. We require minimum cmake 3.1.0, so we will build cmake 3.2.2 from source
-2. Download the source with `wget http://www.cmake.org/files/v3.2/cmake-3.2.2.tar.gz --no-check-certificate`
-3. The `--no-check-certificate` is necessary because of Vagrant, and now install with
-
-```
-tar xf cmake-3.2.2.tar.gz
-cd cmake-3.2.2
-./configure
-make
-sudo make install
+```bash
+git fetch upstream
+git rebase upstream/master
+git checkout -b jeff/fixing_stuff
 ```
 
-4. You can verify the installation with `cmake --version`
+You will make all your changes on this branch. Whenever you feel you have reached a milestone, or may
+need to back up your code, you can add your changes and commit them. You should get into the habit of
+running `git status` to see which changes have not been staged, and which have not been committed, to avoid
+adding or committing accidental changes.
 
-#### Cloning the repo
-1. Install git with `sudo apt-get install git`
-2. Clone the repo with `git clone https://github.com/mogball/minotaur-cpp.git`
-3. Inside the repo, run `cmake CMakeLists.txt`
-4. If all goes well, cmake will generate build files successfully
-
-#### Installing gcc
-1. We require gcc 4.8 to support C++11
-2. Add the PPA `sudo add-apt-repository ppa:ubuntu-toolchain-r/test`
-3. Install gcc 4.8 by running
-
-```
-sudo apt-get update
-sudo apt-get install gcc-4.8 g++-4.8
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
-sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
+```bash
+# Check for unexpected changes
+git status
+# All good! Stage all changes
+git add .
+# Commit staged changes
+git commit -m "my commit message"
 ```
 
-4. You can verify that gcc is at version 4.8 by running `gcc --version`
+Commit messages should briefly describe the changes you have made. Frequent and meaningful commits,
+even if they are one-liners, are good.
 
-#### Installing additional dependencies
-1. We need to install a few more things before we can build and run minotaur-cpp
+If you see in `git status` that you made changes to a file you don't recognize or made by accident (you can
+double check by running `git diff`, you can erase unstaged changes (you will lose these changes!) run
+`git checkout -- folder/file_to_reset.c`. To erase all unstage changes from root run `git checkout -- .` and
+to unstage changes you added do `git reset HEAD folder/file_to_unstage.c`. 
 
+Once you are satisfied with your commit(s), push them to your fork,
+
+```bash
+git push -u origin jeff/fixing_stuff
 ```
-sudo apt-get install libudev-dev
-sudo apt-get install libxi6
-sudo apt-get install libsm6
-sudo apt-get install libxrender1
-sudo apt-get install libegl1-mesa
-```
 
-#### Running minotaur
-1. Build minotaur with `make`
-2. Run minotaur with `./minotaur-cpp`
+You only need to specify the upstream master with `-u` the first time.
+If you forget the names of your branches, `git branch` will list local 
+branches that are checked out and indicate which you are on.
+
+#### Pull Requests
+
+Once you have pushed your new commits, you can create a Pull Request on Github. Usually an option to do so
+from your recently updated branch will appear on the main repo site, or you can go to your fork and click 
+"New Pull Request". PRs will show up on the main repo and will show the changes and additions you've made.
+Usually someone will review your PR, suggesting changes. Additional commits pushed to your fork feature
+branch will automatically be updated on the PR. Once your changes are approved, they will be squashed and merged.
+**No additional changes should be added to this branch.**
+
+You should then go and update your master `git checkout master && git pull upstream master` and delete your 
+local feature branch `git branch -D jeff/fixing_stuff`. You can keep the branches on your fork for history, 
+but I recommend keeping branches to a minimum locally.
+
+### Dealing with Merge Conflicts
+
+Usually we try to work in different files, and coordinate when we modify the same files so that
+features and fixes aren't lost in a merge conflict resolution process. If you are resolving
+merge conflicts in a file that has recently been modified, double check to make sure you aren't
+overriding important features. 
+
+Merge conflicts usually arise when comparing a pull request with `master`. Simple ones can be resolved
+through the Github GUI but more complicated ones need to be resolved through the command line. If conflicts
+are too difficult to resolve you can try merging with a previous commit. If you know the recent few commits to 
+master had lots of changes to a file you are working on, use `git log` to see the commit history. Grab the commit
+hash, looks something like `044d8cd4a4d44e7a307f20999f38daa16f812d3e`, then you can `git merge <commit_hash>` or
+`git rebase <commit_hash>`. Before moving onto the more difficult merges.
+
+### Squashing
+
+Larger pull requests may not be squashed into one commit and can instead be squashed by the 
+PR author into several commits and rebased onto `master`. If you want to squash the last 10 commits
+into 3 commits, run `git rebase -i HEAD~10`. Make sure you leave the top commit as `pick`. 
+Choose 2 other commits to leave as `pick`, and commits below them changed to `squash` will be
+squashed into the `pick` commit above. 
+
+If you have merged commits in your PR things will get messy, because you will need to re-resolve
+all conflicts, and the commit history and git diff will be messed up. More surgical methods
+are needed if we still want to squash. (It is recommended to `rebase` to keep up-to-date with `master`).
+
+### Disaster Recovery
+
+Sometimes Git goes wrong. Here are some things you can do.
+
+#### Commit Splitting
+
+If you need to break apart commits to move around, `git reset HEAD~` will reset and unstage changes of
+the most recent commit. You can then `git add` and `git commit` to separate the file changes into different
+commits. 
+
+#### Commit Recovery
+
+If you've accidentally squashed into master and need to recover your commits, `git reflog` will show you
+commits that have been lost on the tree. Hopefully they show up there. Make a new copy of `master` and `git cherry-pick`
+these commits in order onto that branch, using the commit hashes.
+
+If a lost commit doesn't show up in `git reflog` more advanced disaster recovery is available. Check out
+the Git documentation.
 
