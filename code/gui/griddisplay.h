@@ -31,14 +31,8 @@ public:
     static int default_weight();
     static int grid_size();
 
-    double scene_width();
-    double scene_height();
-
-    double parent_width();
-    double parent_height();
-
-    double x();
-    double y();
+    int x();
+    int y();
 
     GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display);
 

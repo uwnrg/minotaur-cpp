@@ -70,14 +70,6 @@ public:
      */
     Q_SLOT void attempt_disconnect();
 
-    Q_SLOT void change_up_power(int value);
-
-    Q_SLOT void change_down_power(int value);
-
-    Q_SLOT void change_left_power(int value);
-
-    Q_SLOT void change_right_power(int value);
-
     Q_SLOT void change_delay(int value);
 
     /**
@@ -107,7 +99,6 @@ public:
      */
     static QByteArray encode_message(vector2i dir, int time);
 
-private:
     enum Direction {
         LEFT = 97,
         RIGHT = 100,

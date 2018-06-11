@@ -7,6 +7,24 @@
 #include <QMessageBox>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QSlider>
+#include <QLineEdit>
+
+#include <iostream>
+#include <assert.h>
+
+enum Power {
+    POWER_INTERVAL = 1,
+    POWER_MAX = 255,
+    POWER_MIN = 240
+};
+
+enum Delay {
+    DELAY_INTERVAL = 10,
+    DELAY_MAX = 150,
+    DELAY_MIN = 10,
+    DELAY_DEFAULT = 50
+};
 
 SerialBox::SerialBox(
     const std::shared_ptr<Solenoid> &solenoid,
@@ -16,6 +34,7 @@ SerialBox::SerialBox(
     ui(new Ui::SerialBox),
     m_solenoid(solenoid),
     m_status(SerialStatus::DISCONNECTED) {
+
     ui->setupUi(this);
     ui->baud_combo_box->setEditable(false);
 
@@ -68,8 +87,7 @@ SerialBox::SerialBox(
     m_sliders[3] = ui->right_slider;
 
     // Turn default state off for dialog close button
-    QDialogButtonBox *button_box = ui->button_box;
-    QPushButton *close_button = button_box->button(QDialogButtonBox::Close);
+    QPushButton *close_button = ui->button_box->button(QDialogButtonBox::Close);
     close_button->setAutoDefault(false);
     close_button->setDefault(false);
 
@@ -98,16 +116,16 @@ void SerialBox::slider_changed(int value, int dir) {
     m_edit_boxes[dir]->setText(QString::number(value));
     switch (dir) {
         case 0:
-            m_solenoid->change_up_power(value);
+            m_solenoid->change_power(value, Solenoid::UP);
             break;
         case 1:
-            m_solenoid->change_down_power(value);
+            m_solenoid->change_power(value, Solenoid::DOWN);
             break;
         case 2:
-            m_solenoid->change_left_power(value);
+            m_solenoid->change_power(value, Solenoid::LEFT);
             break;
         case 3:
-            m_solenoid->change_right_power(value);
+            m_solenoid->change_power(value, Solenoid::RIGHT);
             break;
     }
 }
@@ -128,7 +146,8 @@ void SerialBox::right_slider_changed(int value) {
     slider_changed(value, 3);
 }
 
-void SerialBox::box_changed(QString value, int dir) {
+void SerialBox::box_changed(int dir) {
+    QString value = m_edit_boxes[dir]->text();
     int power = value.toInt(nullptr, 10);
     if(power >= Power::POWER_MIN && power <= Power::POWER_MAX) {
         m_sliders[dir]->setValue(power);
@@ -136,23 +155,19 @@ void SerialBox::box_changed(QString value, int dir) {
 }
 
 void SerialBox::up_box_changed() {
-    QString value = ui->up_box->text();
-    box_changed(value, 0);
+    box_changed(0);
 }
 
 void SerialBox::down_box_changed() {
-    QString value = ui->down_box->text();
-    box_changed(value, 1);
+    box_changed(1);
 }
 
 void SerialBox::left_box_changed() {
-    QString value = ui->left_box->text();
-    box_changed(value, 2);
+    box_changed(2);
 }
 
 void SerialBox::right_box_changed() {
-    QString value = ui->right_box->text();
-    box_changed(value, 3);
+    box_changed(3);
 }
 
 void SerialBox::attempt_connection() {

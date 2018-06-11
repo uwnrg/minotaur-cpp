@@ -227,7 +227,6 @@ void nrg::search_path(
     node *node_start = world[start.x()][start.y()];
     node *node_dest = world[dest.x()][dest.y()];
     astar_search_path(node_start, node_dest, world, node_path);
-    node_path.push_front(node_start);
     for (node *node : node_path) {
         path.emplace_back(node->x, node->y);
     }
@@ -431,8 +430,8 @@ void nrg::scale_path_pixels(
 ) {
     int b = GridDisplay::grid_size();
     int b2 = b / 2;
-    double gx = grid->x();
-    double gy = grid->y();
+    int gx = grid->x();
+    int gy = grid->y();
     for (vector2i &v : path) {
         v.x() = gx + b2 + v.x() * b;
         v.y() = gy + b2 + v.y() * b;
