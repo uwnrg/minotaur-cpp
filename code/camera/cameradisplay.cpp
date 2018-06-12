@@ -63,14 +63,26 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     populate_effect_box(m_ui->effect_box);
 
     // Setup zoom slider
-    setup_slider(*(m_ui->zoom_slider), 10, Zoom::ZOOM_MIN, Zoom::ZOOM_MAX, Zoom::ZOOM_INTERVAL, true);
+    setup_slider(
+        *(m_ui->zoom_slider), 10, 
+        Zoom::ZOOM_MIN, Zoom::ZOOM_MAX, 
+        Zoom::ZOOM_INTERVAL, true);
 
     // Setup rotation slider
-    setup_slider(*(m_ui->rotate_slider), 0, Rotation::ROTATION_MIN, Rotation::ROTATION_MAX, Rotation::ROTATION_INTERVAL, true);
+    setup_slider(
+        *(m_ui->rotate_slider), 0, 
+        Rotation::ROTATION_MIN, Rotation::ROTATION_MAX, 
+        Rotation::ROTATION_INTERVAL, true);
 
     // Setup griddisplay sliders
-    setup_slider(*(m_ui->horizontal_grid_slider), 0, GridLocation::GRIDLOCATION_MIN, GridLocation::GRIDLOCATION_MAX, GridLocation::GRIDLOCATION_INTERVAL, true);
-    setup_slider(*(m_ui->vertical_grid_slider), 0, GridLocation::GRIDLOCATION_MIN, GridLocation::GRIDLOCATION_MAX, GridLocation::GRIDLOCATION_INTERVAL, true);
+    setup_slider(
+        *(m_ui->horizontal_grid_slider), 0, 
+        GridLocation::GRIDLOCATION_MIN, GridLocation::GRIDLOCATION_MAX, 
+        GridLocation::GRIDLOCATION_INTERVAL, true);
+    setup_slider(
+        *(m_ui->vertical_grid_slider), 0, 
+        GridLocation::GRIDLOCATION_MIN, 
+        GridLocation::GRIDLOCATION_MAX, GridLocation::GRIDLOCATION_INTERVAL, true);
 
     // Setup weight selectors
     m_ui->weight_selector->setRange(Grid::MIN_WEIGHT, Grid::MAX_WEIGHT);
@@ -149,7 +161,8 @@ void CameraDisplay::effect_box_changed(int effect) {
 
 void CameraDisplay::take_screen_shot() {
     // Open file dialog so that the user can select the file
-    QString image_png = QFileDialog::getSaveFileName(this, "Save Screenshot", QDir::currentPath(), "Photos (*.png)");
+    QString image_png = QFileDialog::getSaveFileName(
+        this, "Save Screenshot", QDir::currentPath(), "Photos (*.png)");
     ensure_png(image_png);
     log() << "Saving screenshot: " << image_png;
     Q_EMIT save_screenshot(image_png);
@@ -202,7 +215,10 @@ void CameraDisplay::pressed_play(bool checked) {
     m_ui->play_button->setText(checked ? "⏸" : "▶");
 }
 
-void CameraDisplay::setup_slider(QSlider &slider, int value, int min, int max, int interval, bool tracking) {
+void CameraDisplay::setup_slider(
+    QSlider &slider, 
+    int value, int min, int max,
+    int interval, bool tracking) {
     slider.setTickInterval(interval);
     slider.setTickPosition(QSlider::TicksBelow);
     slider.setMaximum(max);
