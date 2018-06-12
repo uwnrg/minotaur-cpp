@@ -142,7 +142,7 @@ void ObjectMove::correct(double delta) {
         case nrg::dir::RIGHT:
         case nrg::dir::LEFT:
             if (delta > 0) { m_delegate.move_down(delta); }
-            else if (delta < 0) { m_delegate.move_up(delta); }
+            else if (delta < 0) { m_delegate.move_up(-delta); }
             break;
         default:
             break;

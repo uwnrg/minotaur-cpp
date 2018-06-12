@@ -7,6 +7,24 @@
 #include <QMessageBox>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QSlider>
+#include <QLineEdit>
+
+#include <iostream>
+#include <assert.h>
+
+enum Power {
+    POWER_INTERVAL = 1,
+    POWER_MAX = 255,
+    POWER_MIN = 240
+};
+
+enum Delay {
+    DELAY_INTERVAL = 10,
+    DELAY_MAX = 150,
+    DELAY_MIN = 10,
+    DELAY_DEFAULT = 50
+};
 
 SerialBox::SerialBox(
     const std::shared_ptr<Solenoid> &solenoid,
@@ -16,6 +34,7 @@ SerialBox::SerialBox(
     ui(new Ui::SerialBox),
     m_solenoid(solenoid),
     m_status(SerialStatus::DISCONNECTED) {
+
     ui->setupUi(this);
     ui->baud_combo_box->setEditable(false);
 
@@ -58,14 +77,31 @@ SerialBox::SerialBox(
     setup_power_slider(*(ui->left_slider));
     setup_power_slider(*(ui->right_slider));
     setup_slider(*(ui->delay_slider), Delay::DELAY_DEFAULT, Delay::DELAY_MIN, Delay::DELAY_MAX, Delay::DELAY_INTERVAL);
+    m_edit_boxes[0] = ui->up_box;
+    m_edit_boxes[1] = ui->down_box;
+    m_edit_boxes[2] = ui->left_box;
+    m_edit_boxes[3] = ui->right_box;
+    m_sliders[0] = ui->up_slider;
+    m_sliders[1] = ui->down_slider;
+    m_sliders[2] = ui->left_slider;
+    m_sliders[3] = ui->right_slider;
+
+    // Turn default state off for dialog close button
+    QPushButton *close_button = ui->button_box->button(QDialogButtonBox::Close);
+    close_button->setAutoDefault(false);
+    close_button->setDefault(false);
 
     connect(m_solenoid.get(), &Solenoid::serial_status, this, &SerialBox::update_status);
     connect(ui->disconnect_button, &QPushButton::clicked, m_solenoid.get(), &Solenoid::attempt_disconnect);
     connect(ui->connect_button, &QPushButton::clicked, this, &SerialBox::attempt_connection);
-    connect(ui->up_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_up_power);
-    connect(ui->down_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_down_power);
-    connect(ui->left_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_left_power);
-    connect(ui->right_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_right_power);
+    connect(ui->up_slider, &QSlider::valueChanged, this, &SerialBox::up_slider_changed);
+    connect(ui->down_slider, &QSlider::valueChanged, this, &SerialBox::down_slider_changed);
+    connect(ui->left_slider, &QSlider::valueChanged, this, &SerialBox::left_slider_changed);
+    connect(ui->right_slider, &QSlider::valueChanged, this, &SerialBox::right_slider_changed);
+    connect(ui->up_box, &QLineEdit::editingFinished, this, &SerialBox::up_box_changed);
+    connect(ui->down_box, &QLineEdit::editingFinished, this, &SerialBox::down_box_changed);
+    connect(ui->left_box, &QLineEdit::editingFinished, this, &SerialBox::left_box_changed);
+    connect(ui->right_box, &QLineEdit::editingFinished, this, &SerialBox::right_box_changed);
     connect(ui->delay_slider, &QSlider::valueChanged, m_solenoid.get(), &Solenoid::change_delay);
 
     // Close SerialBox when Cancel is clicked
@@ -74,6 +110,64 @@ SerialBox::SerialBox(
 
 SerialBox::~SerialBox() {
     delete ui;
+}
+
+void SerialBox::slider_changed(int value, int dir) {
+    m_edit_boxes[dir]->setText(QString::number(value));
+    switch (dir) {
+        case 0:
+            m_solenoid->change_power(value, Solenoid::UP);
+            break;
+        case 1:
+            m_solenoid->change_power(value, Solenoid::DOWN);
+            break;
+        case 2:
+            m_solenoid->change_power(value, Solenoid::LEFT);
+            break;
+        case 3:
+            m_solenoid->change_power(value, Solenoid::RIGHT);
+            break;
+    }
+}
+
+void SerialBox::up_slider_changed(int value) {
+    slider_changed(value, 0);
+}
+
+void SerialBox::down_slider_changed(int value) {
+    slider_changed(value, 1);
+}
+
+void SerialBox::left_slider_changed(int value) {
+    slider_changed(value, 2);
+}
+
+void SerialBox::right_slider_changed(int value) {
+    slider_changed(value, 3);
+}
+
+void SerialBox::box_changed(int dir) {
+    QString value = m_edit_boxes[dir]->text();
+    int power = value.toInt(nullptr, 10);
+    if(power >= Power::POWER_MIN && power <= Power::POWER_MAX) {
+        m_sliders[dir]->setValue(power);
+    }
+}
+
+void SerialBox::up_box_changed() {
+    box_changed(0);
+}
+
+void SerialBox::down_box_changed() {
+    box_changed(1);
+}
+
+void SerialBox::left_box_changed() {
+    box_changed(2);
+}
+
+void SerialBox::right_box_changed() {
+    box_changed(3);
 }
 
 void SerialBox::attempt_connection() {

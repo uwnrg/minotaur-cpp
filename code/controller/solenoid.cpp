@@ -161,22 +161,6 @@ void Solenoid::change_power(int value, Direction direction) {
     m_serial.write(&power, 1);
 }
 
-void Solenoid::change_up_power(int value) {
-    change_power(value, UP);
-}
-
-void Solenoid::change_down_power(int value) {
-    change_power(value, DOWN);
-}
-
-void Solenoid::change_left_power(int value) {
-    change_power(value, LEFT);
-}
-
-void Solenoid::change_right_power(int value) {
-    change_power(value, RIGHT);
-}
-
 QByteArray Solenoid::encode_message(vector2i dir, int time) {
     shrink_into<int16_t> s;
     nrg::vector<int16_t> short_vec(s(dir.x()), s(dir.y()));

@@ -207,6 +207,22 @@
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
+   <property name="pageStep">
+    <number>1</number>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="left_box">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>238</y>
+     <width>40</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>255</string>
+   </property>
   </widget>
   <widget class="QSlider" name="right_slider">
    <property name="geometry">
@@ -220,6 +236,22 @@
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
+   <property name="pageStep">
+    <number>1</number>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="right_box">
+   <property name="geometry">
+    <rect>
+     <x>268</x>
+     <y>318</y>
+     <width>40</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>255</string>
+   </property>
   </widget>
   <widget class="QSlider" name="up_slider">
    <property name="geometry">
@@ -232,6 +264,22 @@
    </property>
    <property name="orientation">
     <enum>Qt::Vertical</enum>
+   </property>
+   <property name="pageStep">
+    <number>1</number>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="up_box">
+   <property name="geometry">
+    <rect>
+     <x>185</x>
+     <y>145</y>
+     <width>40</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>255</string>
    </property>
   </widget>
   <widget class="QSlider" name="down_slider">
@@ -248,6 +296,22 @@
    </property>
    <property name="orientation">
     <enum>Qt::Vertical</enum>
+   </property>
+   <property name="pageStep">
+    <number>1</number>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="down_box">
+   <property name="geometry">
+    <rect>
+     <x>95</x>
+     <y>411</y>
+     <width>40</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>255</string>
    </property>
   </widget>
   <widget class="QLabel" name="delay_label">

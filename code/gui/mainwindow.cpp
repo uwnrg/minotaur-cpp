@@ -43,7 +43,7 @@ MainWindow::MainWindow() :
     connect(m_solenoid.get(), &Solenoid::serialRead, m_serial_box.get(), &SerialBox::append_text);
 
     // Simulator and controls
-    connect(ui->switch_to_simulator_mode, &QAction::triggered, this, &MainWindow::switchToSimulator);
+    connect(m_camera_display.get(), &CameraDisplay::camera_changed, this, &MainWindow::switchToSimulator);
     connect(ui->move_button, &QPushButton::clicked, this, &MainWindow::moveButtonClicked);
 
     // Opening sub windows
@@ -148,13 +148,11 @@ void MainWindow::switchControllerTo(Controller::Type const type) {
             // Switch to the solenoid controller and hide the simulation window
             log() << "Switching to SOLENOID";
             m_controller = m_solenoid;
-            if (m_simulator_window->isVisible()) { m_simulator_window->hide(); }
             break;
         case Controller::Type::SIMULATOR:
             // Switch to the simulator controller and show the simulator window
             log() << "Switching to SIMULATOR";
             m_controller = m_simulator;
-            if (!m_simulator_window->isVisible()) { m_simulator_window->show(); }
             break;
         default:
             break;

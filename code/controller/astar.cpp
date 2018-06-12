@@ -394,7 +394,7 @@ array2d<int> nrg::grid_kernelize(
     weak_ref<GridDisplay> grid,
     weak_ref<param_manager> pm
 ) {
-    constexpr int wall = GridDisplay::DEFAULT_WEIGHT;
+    int wall = GridDisplay::default_weight();
     int wp0 = pm->wall_penalty_0;
     int wp1 = pm->wall_penalty_1;
     int wp2 = pm->wall_penalty_2;
@@ -428,8 +428,8 @@ void nrg::scale_path_pixels(
     weak_ref<GridDisplay> grid,
     std::vector<vector2i> &path
 ) {
-    constexpr int b = GridDisplay::GRID_SIZE;
-    constexpr int b2 = b / 2;
+    int b = GridDisplay::grid_size();
+    int b2 = b / 2;
     int gx = grid->x();
     int gy = grid->y();
     for (vector2i &v : path) {
@@ -470,9 +470,9 @@ static void wallify(
     array2d<int> &walls,
     std::vector<rect2i> &rects
 ) {
-    constexpr int wall = GridDisplay::DEFAULT_WEIGHT;
-    constexpr int b = GridDisplay::GRID_SIZE;
-    constexpr int b2 = b / 2;
+    int wall = GridDisplay::default_weight();
+    int b = GridDisplay::grid_size();
+    int b2 = b / 2;
     for (std::size_t x = 0; x < walls.x(); ++x) {
         for (std::size_t y = 0; y < walls.y(); ++y) {
             if (walls[x][y] == wall) {
