@@ -36,7 +36,10 @@ public:
      */
     int get_weighting();
 
-    void setup_slider(QSlider &slider, int value, int min, int max, int interval, bool tracking);
+    void setup_slider(
+        QSlider &slider, int value, 
+        int min, int max, int interval,
+        bool tracking);
 
     /**
      * Slot called when the weight list has changed.
