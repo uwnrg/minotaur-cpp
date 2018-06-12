@@ -27,13 +27,17 @@ enum {
     MAX_BUTTONS_Y = 50
 };
 
-#define BUTTON_STYLE "background-color: rgba(0, 0, 0, 0%); width: 0px; height: 0px; border-style: none;"
+#define BUTTON_STYLE \
+"background-color: rgba(0, 0, 0, 0%); width: 0px; height: 0px; border-style: none;"
 
-#define BUTTON_SELECTED_STYLE "background-color: rgba(0, %1, 0, 20%);  width: 0px; height: 0px; border-style: none;"
+#define BUTTON_SELECTED_STYLE \
+"background-color: rgba(0, %1, 0, 20%);  width: 0px; height: 0px; border-style: none;"
 
-#define BUTTON_START_SELECTED_STYLE "background-color: rgba(255, 0, 0, 20%); width: 0px; height: 0px; border-style: none;"
+#define BUTTON_START_SELECTED_STYLE \
+"background-color: rgba(255, 0, 0, 20%); width: 0px; height: 0px; border-style: none;"
 
-#define BUTTON_END_SELECTED_STYLE "background-color: rgba(0, 0, 255, 20%); width: 0px; height: 0px; border-style: none;"
+#define BUTTON_END_SELECTED_STYLE \
+"background-color: rgba(0, 0, 255, 20%); width: 0px; height: 0px; border-style: none;"
 
 // Swap two coordinates so that x is the top left point and y is the bottom right
 static void swap_rect_coords(int &x1, int &y1, int &x2, int &y2) {
