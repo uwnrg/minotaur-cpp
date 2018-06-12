@@ -19,7 +19,7 @@ be sure to run `git submodule update --init` after cloning.
 
 # Setting up Minotaur on Windows
 These will describe the steps for setting up an environment on Windows.
-This has been tested on a clean installation of Windows 10.
+This has been tested on Windows 10.
 
 1. Download and install Git `https://git-scm.com/download/win`
 2. Download and install Python 3.6 `https://www.python.org/downloads`
