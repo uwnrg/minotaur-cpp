@@ -53,6 +53,7 @@ bool __log_out::operator<<(const std::string &) {
 
 bool __log_stdout::operator<<(const std::string &str) {
     std::cout << str << std::endl;
+    return true;
 }
 
 bool __log_text_field::operator<<(const std::string &str) {

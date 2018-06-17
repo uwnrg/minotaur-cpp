@@ -5,12 +5,14 @@
 #include <QDialog>
 #include <QSlider>
 
-#include "actionbox.h"
-#include "imageviewer.h"
 
 namespace Ui {
     class CameraDisplay;
 }
+
+class ActionBox;
+class ImageViewer;
+class VideoModifier;
 
 /**
  * This Dialog is responsible for handling the camera input, robot and object movement
@@ -119,7 +121,7 @@ public:
      */
     Q_SLOT void grid_select_changed(int weight_index);
 
-    Q_SLOT void grid_slider_moved(int value);
+    Q_SLOT void grid_slider_moved();
 
     Q_SLOT void show_grid_button_pushed();
 

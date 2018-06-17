@@ -1,16 +1,21 @@
 #include "simsolenoid.h"
 
-SimulatorSolenoid::SimulatorSolenoid(const RenderSceneBase *scene,
-                   const vector2f &P, float theta, float n, float R, float l, float mu_rel)
-        : m_renderScene(scene),
-          m_pos(P),
-          m_theta(theta),
-          m_N(n),
-          m_radius(R),
-          m_len(l),
-          m_mu(mu_rel),
-          m_I(0.0f) {
-}
+SimulatorSolenoid::SimulatorSolenoid(
+    const RenderSceneBase *scene,
+    const vector2f &P,
+    float theta,
+    float n,
+    float R,
+    float l,
+    float mu_rel) :
+    m_renderScene(scene),
+    m_pos(P),
+    m_theta(theta),
+    m_N(n),
+    m_radius(R),
+    m_len(l),
+    m_mu(mu_rel),
+    m_I(0.0f) {}
 
 void SimulatorSolenoid::setCurrent(float i) {
     m_I = i;
@@ -38,10 +43,10 @@ void SimulatorSolenoid::draw(QPainter *painter, QPaintEvent *, int, float scale)
     float sx = m_pos.x() * scale + center.x() + dx1;
     float sy = -m_pos.y() * scale + center.y() + dy1;
     const pointf vertices[4] = {
-            pointf(nx - dx2, ny + dy2),
-            pointf(nx + dx2, ny - dy2),
-            pointf(sx + dx2, sy - dy2),
-            pointf(sx - dx2, sy + dy2)
+        pointf(nx - dx2, ny + dy2),
+        pointf(nx + dx2, ny - dy2),
+        pointf(sx + dx2, sy - dy2),
+        pointf(sx - dx2, sy + dy2)
     };
     painter->setPen(Qt::magenta);
     painter->drawPolygon(vertices, 4);

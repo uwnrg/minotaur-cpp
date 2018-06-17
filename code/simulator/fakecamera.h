@@ -4,8 +4,6 @@
 #include <QObject>
 #include <opencv2/videoio.hpp>
 
-#include "../utility/vector.h"
-
 /**
  * Mocked VideoCapture class for use with simulated robot and
  * frame production.

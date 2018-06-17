@@ -5,6 +5,7 @@
 #include "video/modify.h"
 
 Q_DECLARE_METATYPE(cv::Rect2d);
+Q_DECLARE_METATYPE(cv::UMat);
 
 int main(int argc, char *argv[]) {
     qRegisterMetaType<cv::UMat>();

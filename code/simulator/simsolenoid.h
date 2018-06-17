@@ -60,6 +60,11 @@ public:
 
 private:
     /**
+     * Pointer to the reference scene.
+     */
+    const RenderSceneBase *m_renderScene;
+
+    /**
      * Position of the solenoid in meters from the origin.
      */
     vector2f m_pos;
@@ -80,18 +85,14 @@ private:
      */
     float m_len;
     /**
-     * Current passing through the solenoid (A).
-     */
-    float m_I;
-    /**
      * Relative permeability (unit-less).
      */
     float m_mu;
-
     /**
-     * Pointer to the reference scene.
+     * Current passing through the solenoid (A).
      */
-    const RenderSceneBase *m_renderScene;
+    float m_I;
+
 
     /**
      * Helper scene for computing magnetic fields.

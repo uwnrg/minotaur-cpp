@@ -17,12 +17,12 @@ static double angle(cv::Point pt1, cv::Point pt2, cv::Point pt0) {
     return (dx1 * dx2 + dy1 * dy2) / sqrt((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2) + 1e-10);
 }
 
-// Draws shapes (triangles and rectangles)
+/*// Draws shapes (triangles and rectangles)
 static void drawShapes(cv::UMat &image, const std::vector<std::vector<cv::Point> > &squares) {
     for (const auto &square : squares) {
         cv::polylines(image, cv::InputArrayOfArrays(square), true, cv::Scalar(255, 0, 0), 3, cv::LINE_AA);
     }
-}
+}*/
 
 // Displays text in the center of a contour
 void setLabel(cv::UMat &im, const std::string &label, std::vector<cv::Point> &contour) {
@@ -90,7 +90,7 @@ static cv::UMat findShapes(
     /*
      * Shape detection using contours.
      */
-    for (int i = 0; i < contours.size(); i++) {
+    for (std::size_t i = 0; i < contours.size(); i++) {
         // Approximate contour with accuracy proportional to the contour parameter
         // Using cv::Mat for now as cv::UMat does not have a move constructor for vectors of points
         cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.02, true);
@@ -106,11 +106,11 @@ static cv::UMat findShapes(
             //std::cout << "Triangle " << i << approx[0] << approx[1] << approx[2] << std::endl;
         } else if (approx.size() >= 4 && approx.size() <= 6) {
             // Number of vertices of polygonal curve
-            unsigned long vtc = approx.size();
+            std::size_t vtc = approx.size();
 
             // Get the cosines of all corners
             std::vector<double> cos;
-            for (int j = 2; j < vtc + 1; j++) {
+            for (std::size_t j = 2; j < vtc + 1; j++) {
                 cos.push_back(angle(approx[j % vtc], approx[j - 2], approx[j - 1]));
             }
 

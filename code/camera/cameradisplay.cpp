@@ -4,6 +4,8 @@
 #include <QStandardItemModel>
 #include <QSpinBox>
 
+#include "actionbox.h"
+#include "imageviewer.h"
 #include "cameradisplay.h"
 #include "ui_cameradisplay.h"
 
@@ -227,7 +229,7 @@ void CameraDisplay::setup_slider(
     slider.setValue(value);
 }
 
-void CameraDisplay::grid_slider_moved(int value) {
+void CameraDisplay::grid_slider_moved() {
     double x = m_ui->horizontal_grid_slider->value() / 100.0;
     double y = m_ui->vertical_grid_slider->value() / 100.0;
     Q_EMIT move_grid(x, y);

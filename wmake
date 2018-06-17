@@ -1,6 +1,11 @@
 #!/bin/bash
 #!/usr/bin/env bash
 
+BUILD_DIR=cmake-build-debug
+MAKEFILES="Unix Makefiles"
+MAKE=make
+MAKE_FLAGS=-j5 --output-sync
+
 set -o errexit
 trap 'echo "Aborting due to errexit on line $LINENO. Exit code: $?" >&2' ERR
 set -o errtrace
@@ -25,29 +30,29 @@ HEREDOC
 }
 
 _build(){
-    mkdir -p build
-    cd build
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
     echo "Running CMake"
-    cmake -G "Ninja" ..
+    cmake -G "$MAKEFILES" ..
     echo "Running Make"
-    ninja
+    $MAKE $MAKE_FLAGS
     echo "Project Built"
     cd ..
 }
 
 _clean(){
-    if [ -d "build" ] ; then
-        cd build
+    if [ -d "$BUILD_DIR" ] ; then
+        cd $BUILD_DIR
         make clean
     fi
 }
 
 _reset() {
-    rm -rf build
+    rm -rf $BUILD_DIR
 }
 
 _run() {
-    ./build/minotaur-cpp
+    ./$BUILD_DIR/minotaur-cpp
 }
 
 _test() {

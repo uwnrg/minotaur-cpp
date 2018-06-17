@@ -2,23 +2,13 @@
 #define MINOTAUR_CPP_ACTIONBOX_H
 
 #include <memory>
-
 #include <QDialog>
-#include <QPushButton>
-#include <QMetaType>
-#include <QVBoxLayout>
+
+#include "actionbutton.h"
 
 // Forward declaration
-class ActionBox;
-
-/**
- * Push button implementation that sets a fixed size
- * and manages the button label. Used with the ActionBox.
- */
-class ActionButton : public QPushButton {
-public:
-    explicit ActionButton(QString &&label, QWidget *parent = nullptr);
-};
+class ActionButton;
+class QVBoxLayout;
 
 /**
  * A Dialog that is shown when VideoModifiers in the camera display
