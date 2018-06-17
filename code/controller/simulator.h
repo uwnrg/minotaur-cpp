@@ -3,6 +3,7 @@
 
 #include "../utility/vector.h"
 #include "controller.h"
+#include <QObject>
 
 class SimulatorScene;
 class GlobalSim;

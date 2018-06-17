@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <code/compstate/common.h>
+#include <code/utility/rect.h>
 
 TEST(common, robot_object_path) {
     rect2d obj(-10, -10, 20, 10);

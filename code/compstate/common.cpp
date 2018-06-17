@@ -1,5 +1,8 @@
 #include "common.h"
 #include "../utility/algorithm.h"
+#include "../utility/rect.h"
+#include "../utility/vector.h"
+#include "../utility/graph2d.h"
 
 #ifndef NDEBUG
 #include <cassert>
@@ -57,7 +60,7 @@ path2d algo::object_traverse_points(
 path2d algo::robot_object_path(
     const rect2d &rob,
     const rect2d &obj,
-    nrg::dir side
+    int side
 ) {
     path2d points =  algo::object_traverse_points(rob, obj);
 #ifndef NDEBUG

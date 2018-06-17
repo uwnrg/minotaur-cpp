@@ -7,6 +7,7 @@
 #include "../utility/weak_ref.h"
 
 #include <QObject>
+#include <QVariant>
 
 #define MANAGE_PARAM(paramType, paramName, defValue)            \
 public:                                                         \

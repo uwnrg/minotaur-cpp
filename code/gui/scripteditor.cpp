@@ -1,11 +1,13 @@
+#include "../interpreter/codeeditor.h"
+#include "../utility/font.h"
+#include "../utility/logger.h"
+#include "../utility/utility.h"
+
+#include "ui_scripteditor.h"
+#include "scripteditor.h"
+
 #include <QFileDialog>
 #include <QTextStream>
-
-#include "scripteditor.h"
-#include "ui_scripteditor.h"
-
-#include "../utility/logger.h"
-#include "../utility/font.h"
 
 ScriptEditor::ScriptEditor(QWidget *parent) :
     QDialog(parent),

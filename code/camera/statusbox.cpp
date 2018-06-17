@@ -1,13 +1,15 @@
-#include <QVBoxLayout>
-
 #include "statusbox.h"
 #include "statuslabel.h"
 #include "../utility/font.h"
 #include "../utility/utility.h"
 
+#include <QVBoxLayout>
+
 #ifndef NDEBUG
 #include <QDebug>
 #endif
+
+StatusBox::~StatusBox() = default;
 
 StatusBox::StatusBox(QWidget *parent) :
     QDialog(parent),

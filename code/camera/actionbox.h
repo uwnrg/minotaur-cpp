@@ -22,6 +22,7 @@ Q_OBJECT
 
 public:
     explicit ActionBox(QWidget *parent = nullptr);
+    ~ActionBox();
 
     /**
      * Create a new action button and return a reference to it

@@ -1,19 +1,24 @@
+#include "compstate.h"
+#include "objectline.h"
 #include "objectprocedure.h"
 #include "parammanager.h"
-#include "compstate.h"
 
+#include "../camera/statusbox.h"
 #include "../camera/statuslabel.h"
 #include "../gui/mainwindow.h"
 #include "../gui/global.h"
 #include "../utility/algorithm.h"
 
+#include <QBasicTimer>
 #include <QTimerEvent>
 
-ObjectProcedure::move_node
-ObjectProcedure::delta_to_move_node(double start, double target, double base, bool ver) {
-#ifndef NDEBUG
-    //assert(fabs(target - start) >= DELTA_THRES);
-#endif
+struct move_node {
+    double base;
+    double target;
+    nrg::dir dir;
+};
+
+static move_node delta_to_move_node(double start, double target, double base, bool ver) {
     // Create a move node
     move_node node{};
     node.base = base;
@@ -23,8 +28,8 @@ ObjectProcedure::delta_to_move_node(double start, double target, double base, bo
     return node;
 }
 
-std::vector<ObjectProcedure::move_node>
-ObjectProcedure::path_to_move_nodes(const path2d &path) {
+static std::vector<move_node>
+path_to_move_nodes(const path2d &path) {
     std::vector<move_node> move_nodes;
     // Translate general plane path to rectangular paths
     for (std::size_t i = 0; i < path.size() - 1; ++i) {
@@ -36,12 +41,26 @@ ObjectProcedure::path_to_move_nodes(const path2d &path) {
     return move_nodes;
 }
 
+class ObjectProcedure::Impl {
+public:
+    Impl(const path2d &t_path);
+
+    path2d path;
+    std::size_t index;
+    vector2d initial;
+    std::vector<move_node> move_nodes;
+    QBasicTimer timer;
+};
+
+ObjectProcedure::Impl::Impl(const path2d &t_path) :
+    path(t_path),
+    index(0) {}
+
 ObjectProcedure::ObjectProcedure(std::weak_ptr<Controller> sol, const path2d &path) :
+    m_impl(std::make_unique<Impl>(path)),
     m_sol(std::move(sol)),
-    m_path(path),
     m_done(false),
-    m_start(false),
-    m_index(0) {
+    m_start(false) {
     if (auto lp = Main::get()->status_box().lock()) {
         m_index_label = lp->add_label("Obj Index: 0");
     }
@@ -54,18 +73,18 @@ ObjectProcedure::~ObjectProcedure() {
 }
 
 void ObjectProcedure::start() {
-    m_timer.start(g_pm->timer_fast, this);
+    m_impl->timer.start(g_pm->timer_fast, this);
 }
 
 void ObjectProcedure::stop() {
-    m_timer.stop();
+    m_impl->timer.stop();
     if (m_object_line != nullptr) {
         m_object_line->stop();
     }
 }
 
 void ObjectProcedure::timerEvent(QTimerEvent *ev) {
-    if (ev->timerId() == m_timer.timerId()) {
+    if (ev->timerId() == m_impl->timer.timerId()) {
         movement_loop();
     }
 }
@@ -75,7 +94,7 @@ bool ObjectProcedure::is_done() {
 }
 
 void ObjectProcedure::movement_loop() {
-    m_index_label->setText("Obj Index: " + QString::number(m_index));
+    m_index_label->setText("Obj Index: " + QString::number(m_impl->index));
     CompetitionState &state = Main::get()->state();
     if (!state.is_robot_box_fresh() || !state.is_robot_box_valid()) {
         return;
@@ -86,26 +105,26 @@ void ObjectProcedure::movement_loop() {
         path2d path;
         vector2d object_loc = rect2d(state.get_object_box(true)).center();
         path.push_back(object_loc);
-        path.insert(path.end(), m_path.begin(), m_path.end());
-        m_path = std::move(path);
-        m_move_nodes = path_to_move_nodes(m_path);
+        path.insert(path.end(), m_impl->path.begin(), m_impl->path.end());
+        m_impl->path = std::move(path);
+        m_impl->move_nodes = path_to_move_nodes(m_impl->path);
     }
     // If there is no active object movement
     if (!m_object_line) {
         // If we have exhausted the move list, we are done
-        if (m_index == m_move_nodes.size()) {
-            m_timer.stop();
+        if (m_impl->index == m_impl->move_nodes.size()) {
+            m_impl->timer.stop();
             m_done = true;
             return;
         }
         // Grab the next move node
-        const move_node &next = m_move_nodes[m_index];
+        const move_node &next = m_impl->move_nodes[m_impl->index];
         m_object_line = std::make_unique<ObjectLine>(m_sol, next.dir, next.target, next.base);
         // Start moving along this line
         m_object_line->start();
     } else if (m_object_line->is_done()) {
         // Completed traversing line so increment the index and invalidate
         m_object_line.reset();
-        ++m_index;
+        ++m_impl->index;
     }
 }

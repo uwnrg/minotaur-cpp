@@ -1,8 +1,10 @@
-#include "embeddedcontroller.h"
-#include "python.h"
+#include "../compstate/compstate.h"
 #include "../controller/controller.h"
 #include "../gui/global.h"
 #include "../simulator/globalsim.h"
+
+#include "embeddedcontroller.h"
+#include "python.h"
 
 EmbeddedController &EmbeddedController::getInstance() {
     static EmbeddedController controller;

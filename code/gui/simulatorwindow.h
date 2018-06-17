@@ -1,13 +1,12 @@
 #ifndef SIMULATORWINDOW_H
 #define SIMULATORWINDOW_H
 
-#include "../simulator/renderscene.h"
 #include <QDialog>
 #include <memory>
 
-class Simulator;
-class SimulatorScene;
 class MainWindow;
+class RenderScene;
+class Simulator;
 
 namespace Ui {
     class SimulatorWindow;

@@ -1,17 +1,19 @@
 #ifndef MINOTAUR_CPP_PROCEDURE_H
 #define MINOTAUR_CPP_PROCEDURE_H
 
-#include "../utility/vector.h"
-
-#include <QBasicTimer>
 #include <QObject>
 #include <memory>
 
 #define DEFAULT_TARGET_LOC_ACCEPTANCE 3.5
 #define DEFAULT_MAX_NORMAL_DEVIATION  6.5
 
+// Forward declarations
+namespace nrg {
+    template<typename val_t> class vector;
+}
 class Controller;
 class StatusLabel;
+typedef std::vector<nrg::vector<double>> path2d;
 
 /**
  * This class and other like it, ObjectLine, ObjectMove, etc., represents
@@ -72,13 +74,9 @@ private:
 
     void movement_loop();
 
-    double m_loc_accept;
-    double m_norm_dev;
-    path2d m_path;
-    vector2d m_initial;
-    std::size_t m_index;
+    class Impl;
+    std::unique_ptr<Impl> m_impl;
     std::weak_ptr<Controller> m_sol;
-    QBasicTimer m_timer;
 
     StatusLabel *m_dir_label;
     StatusLabel *m_err_label;

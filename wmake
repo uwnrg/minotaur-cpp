@@ -4,7 +4,7 @@
 BUILD_DIR=cmake-build-debug
 MAKEFILES="Unix Makefiles"
 MAKE=make
-MAKE_FLAGS=-j5 --output-sync
+MAKE_FLAGS=-j5
 
 set -o errexit
 trap 'echo "Aborting due to errexit on line $LINENO. Exit code: $?" >&2' ERR
@@ -47,6 +47,11 @@ _clean(){
     fi
 }
 
+_make() {
+    cd $BUILD_DIR
+    $MAKE
+}
+
 _reset() {
     rm -rf $BUILD_DIR
 }
@@ -78,6 +83,8 @@ _simple() {
         _run
     elif [ "$1" == 'test' ] ; then
         _test
+    elif [ "$1" == 'make' ] ; then
+        _make
     else
         _print_help
     fi

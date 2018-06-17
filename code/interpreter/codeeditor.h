@@ -1,12 +1,11 @@
 #ifndef MINOTAUR_CPP_CODEEDITOR_H
 #define MINOTAUR_CPP_CODEEDITOR_H
 
-#include "../utility/utility.h"
-#include "highlighter.h"
 #include <QPlainTextEdit>
 #include <memory>
 
 class CodeEditor;
+class HighLighter;
 
 class LineNumberArea : public QWidget {
 public:

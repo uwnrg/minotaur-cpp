@@ -2,7 +2,6 @@
 #define MINOTAUR_CPP_RESULTSTEXTDISPLAY_H
 
 #include "codeeditor.h"
-#include <QTextEdit>
 
 class ResultsTextDisplay : public CodeEditor {
 Q_OBJECT
@@ -17,9 +16,10 @@ private:
 public Q_SLOTS:
     // Slot for script submitted signal
     // append script results/errors to the display
-    void appendResults(const QString &script,
-                       const QString &out,
-                       const QString &err);
+    void appendResults(
+        const QString &script,
+        const QString &out,
+        const QString &err);
 };
 
 

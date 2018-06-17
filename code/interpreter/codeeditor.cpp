@@ -1,6 +1,10 @@
+#include "../utility/utility.h"
+
+#include "codeeditor.h"
+#include "highlighter.h"
+
 #include <QPainter>
 #include <QTextBlock>
-#include "codeeditor.h"
 
 LineNumberArea::LineNumberArea(CodeEditor *editor) :
     QWidget(editor),

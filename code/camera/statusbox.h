@@ -21,6 +21,7 @@ Q_OBJECT
 
 public:
     explicit StatusBox(QWidget *parent = nullptr);
+    ~StatusBox();
 
     /**
      * Create a label with an initial string value.

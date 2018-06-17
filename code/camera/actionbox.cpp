@@ -4,6 +4,8 @@
 #include "actionbox.h"
 #include "../utility/utility.h"
 
+ActionBox::~ActionBox() = default;
+
 ActionBox::ActionBox(QWidget *parent) :
     QDialog(parent),
     m_layout(std::make_unique<QVBoxLayout>()) {

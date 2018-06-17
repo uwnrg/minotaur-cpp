@@ -1,4 +1,5 @@
 #include "controller.h"
+#include "../utility/logger.h"
 
 Controller::Controller(bool invert_x, bool invert_y) :
     m_invert_x(invert_x),

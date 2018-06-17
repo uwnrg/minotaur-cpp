@@ -1,12 +1,13 @@
 #ifndef SCRIPTEDITOR_H
 #define SCRIPTEDITOR_H
 
-#include "../interpreter/codeeditor.h"
 #include <QDialog>
+#include <memory>
 
 namespace Ui {
     class ScriptEditor;
 }
+class CodeEditor;
 
 class ScriptEditor : public QDialog {
 Q_OBJECT

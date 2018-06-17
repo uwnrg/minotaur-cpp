@@ -1,13 +1,15 @@
 Contributing Guidelines
 =======================
 
-It is expected that you have basic C++, STL, and Object-Oriented knowledge before diving into Minotaur. Wherever you may lack, Google and Stack Overflow are your friends (so are your fellow members!). 
+It is expected that you have basic C++, STL, and Object-Oriented knowledge before diving into Minotaur.
+ Wherever you may lack, Google and Stack Overflow are your friends (so are your fellow members!).
 
 I recommend you a quick read of the Style Guide and then look over carefully the Git Workflow.
 
 Style Guide
 -----------
-Consistent coding style across Minotaur is essential for a readable and understandable codebase. We don't follow a strict style but these are basic guidelines for coding in Minotaur.
+Consistent coding style across Minotaur is essential for a readable and understandable codebase.
+ We don't follow a strict style but these are basic guidelines for coding in Minotaur.
 
 ### Naming Conventions
  * Types begin capitalized and follow camel-case: `RowLineHighlighter`, `QSlider`
@@ -57,7 +59,8 @@ namespace det_ {
 
 ### Comments
 
-Single and multi-line comments should always begin with `//`, be followed with a space, and be capitalized: `// Add the x and y components`. Periods should only be used for multi-line comments,
+Single and multi-line comments should always begin with `//`, be followed with a space, and be capitalized:
+`// Add the x and y components`. Periods should only be used for multi-line comments,
 ```c++
 // This is a multi-line comment inside a block
 // of code, which uses double slashes.
@@ -83,7 +86,8 @@ Headers are copy-pasted with the `#include` directive so including a header with
 
 ### Always Put Include Guards in Headers
 
-Prevents a header from being included twice, causing multiple definitions issues. Most IDEs generate them but ours should follow the format `MINOTAUR_CPP_FILENAME_H`. For instance `highlighter.h` would have
+Prevents a header from being included twice, causing multiple definitions issues. Most IDEs generate them but
+ ours should follow the format `MINOTAUR_CPP_FILENAME_H`. For instance `highlighter.h` would have
 
 ```cpp
 #ifndef MINOTAUR_CPP_HIGHLIGHTER_H
@@ -93,7 +97,8 @@ Prevents a header from being included twice, causing multiple definitions issues
 ```
 
 ### Always Use Braces `{}` with Blocks
-Makes code less confusing to read. Inline braces are acceptable for repeatable logic. The open brace `{` should **NOT** be on a new line,
+Makes code less confusing to read. Inline braces are acceptable for repeatable logic. The open brace
+ `{` should **NOT** be on a new line,
 
 ```cpp
 int function_with_logic(int a, int b, int c) {
@@ -105,7 +110,8 @@ int function_with_logic(int a, int b, int c) {
 
 ### Line Continuation
 
-Lines should be much less than 120 characters long. Continuation indents should be at least four tabs and align to the previous line, and operators should tail indentations,
+Lines should be much less than 120 characters long. Continuation indents should be at least four tabs
+and align to the previous line, and operators should tail indentations,
 
 ```c++
 int function_with_logic(int a, int b, int c) {
@@ -178,7 +184,8 @@ IntBox::IntBox() :
 
 ### Use `std::size_t` with STL Sizes
 
-The Standard Template Library uses `std::size_t` for things to do with size, such as `my_vector.size()`, `my_map.size()`, and is preferred for indexing.
+The Standard Template Library uses `std::size_t` for things to do with size, such as `my_vector.size()`,
+`my_map.size()`, and is preferred for indexing.
 
 ### Never Put Code with Side Effects inside `assert()`
 
@@ -198,7 +205,10 @@ But use them judiciously.
 
 ### Overload Operators Insofar as it Makes Code More Readable
 
-So you can write `point1 + point2` instead of `point1.add(point2)`. Arithmetic operators can be overloaded when they make sense, access operators `*`, `[]`, and `->` should be used for pointer-like types, stream operators `<<` and `>>` can be overloaded for log or debug streams, comparison operators for types with order, and so on. More exotic operators can be overloaded as appropriate. Only overload the comma operator if you're edgy.
+So you can write `point1 + point2` instead of `point1.add(point2)`. Arithmetic operators can be overloaded when they
+make sense, access operators `*`, `[]`, and `->` should be used for pointer-like types, stream operators `<<` and `>>`
+can be overloaded for log or debug streams, comparison operators for types with order, and so on. More exotic operators
+can be overloaded as appropriate. Only overload the comma operator if you're edgy.
 
 ### Mark Single Argument Constructors as `explicit`
 
@@ -211,11 +221,13 @@ public:
 };
 ```
 
-To avoid implicit conversion attempts by the compiler. Sometimes implicit conversion operators and constructors are useful, however.
+To avoid implicit conversion attempts by the compiler. Sometimes implicit conversion operators
+and constructors are useful, however.
 
 ### Speeding Up Compile Times of Headers
 
-Include directives tell the compiler to essentially copy-paste header files. In C++ this can lead hundreds and even thousands of header files to be loaded into memory and copied per source file. 
+Include directives tell the compiler to essentially copy-paste header files. In C++ this can lead hundreds and even
+thousands of header files to be loaded into memory and copied per source file.
 
 #### Include only what you need
 
@@ -223,7 +235,8 @@ Instead of including `<cstdio>` you can include only `<iostream>`.
 
 #### Use Class Forward Declarations
 
-If you don't need a class definition, that is, you have only weak references or pointers to `MyClass`, use a forward declaration to avoid an additional inclusion (in the header).
+If you don't need a class definition, that is, you have only weak references or pointers to `MyClass`,
+ use a forward declaration to avoid an additional inclusion (in the header).
 
 ```c++
 // header file
@@ -237,11 +250,13 @@ bool verify_object(MyClass *obj) { ... } // object definition available
 
 #### Put as much in source files as possible
 
-Especially if you need to change them frequently. This can lead to long recompile times in a header file. These include constants, macros, and functions.
+Especially if you need to change them frequently. This can lead to long recompile times in a header file.
+These include constants, macros, and functions.
 
 ### Use `static` Functions When Possible
 
-For instance, if you want helper functions in your source files. Marking files as `static` makes them "local" to that source file and can aid compiler optimizations.
+For instance, if you want helper functions in your source files. Marking files as `static` makes them "local" to that
+source file and can aid compiler optimizations.
 
 ```c++
 // file1.cpp
@@ -257,7 +272,8 @@ Though avoid usage of `extern` in Minotaur.
 
 ### Be Mindful of Initialization Order
 
-Class member variables are initialized in the order they are declared in the header, regardless of the initialization list. For instance,
+Class member variables are initialized in the order they are declared in the header, regardless of the
+initialization list. For instance,
 
 ```c++
 class DoubleBox {
@@ -272,11 +288,15 @@ private:
 };
 ```
 
-Here, `m_second` will initialize first, when `m_first` has not been initialized. The result is that `m_second` will have some junk value and `m_first` will be set to `value`. In general it is good practice that class members be initialized in their declaration order.
+Here, `m_second` will initialize first, when `m_first` has not been initialized. The result is that `m_second`
+will have some junk value and `m_first` will be set to `value`. In general it is good practice that class members
+ be initialized in their declaration order.
 
 ### Use Smart Pointers
 
-C++ provides `std::unique_ptr` and `std::shared_ptr` that manage dynamically allocated pointers. In most cases `unique_ptr` suffices, and a weak reference can be passed around with `get()`; due to the hierarchical structure of Qt, it is easy to predict when a pointer is deleted. Use `std::make_unique` and `std::make_shared`,
+C++ provides `std::unique_ptr` and `std::shared_ptr` that manage dynamically allocated pointers. In most cases
+ `unique_ptr` suffices, and a weak reference can be passed around with `get()`; due to the hierarchical structure
+ of Qt, it is easy to predict when a pointer is deleted. Use `std::make_unique` and `std::make_shared`,
 
 ```c++
 int value = 12;
@@ -286,7 +306,9 @@ auto box_sptr = std::make_shared<IntBox>(value);
 
 ### Usage of `auto`
 
-Type deduction can be useful to reduce code bloat in a few instances, but over-usage of `auto` can make code difficult to read and debug. `auto` should be used when casting, making a smart pointer, using an iterator, or dealing with complex (tuple) types,
+Type deduction can be useful to reduce code bloat in a few instances, but over-usage of `auto` can make code
+difficult to read and debug. `auto` should be used when casting, making a smart pointer, using an iterator,
+or dealing with complex (tuple) types,
 
 ```c++
 auto integer_value = static_cast<int>(12.64);
@@ -302,7 +324,9 @@ std::tuple<double, int, std::string> three_tuple = ...
 
 ### Using Appropriate Casts
 
-Never use the basic C-type cast `int integer = (int) decimal`. Always use one of the specific cast types `static_cast`, `reinterpret_cast`, `dynamic_cast`, `const_cast`. A dynamic cast makes use of run-time type info, and returns `nullptr` if the cast is invalid.
+Never use the basic C-type cast `int integer = (int) decimal`. Always use one of the specific cast types `static_cast`,
+ `reinterpret_cast`, `dynamic_cast`, `const_cast`. A dynamic cast makes use of run-time type info,
+ and returns `nullptr` if the cast is invalid.
 
 ### Avoid Lambdas
 
@@ -379,7 +403,8 @@ In C++11 no copying or destruction of the list is done; the return value is "mov
 
 ### Use Emplace
 
-STL containers typically have `emplace` or similar functions which make code less verbose but may also avoid a copy operation,
+STL containers typically have `emplace` or similar functions which make code less
+verbose but may also avoid a copy operation,
 
 ```c++
 struct ListItem {
@@ -398,11 +423,15 @@ Qt containers like `QList` don't have these operations.
 Qt Guidelines
 -----------
 
-The Qt framework tends to be rather massive and in-depth. Many Qt features overlap with STL, such as `QList`. This section provides some basic tips on Qt.
+The Qt framework tends to be rather massive and in-depth. Many Qt features overlap with STL, such as `QList`.
+This section provides some basic tips on Qt.
 
 ### `ui` Files
 
-Files ending with `.ui` are XML files that describe a `QWidget`. These can be edited manually or opened with a GUI editor in Qt Creator. When compiling a Qt project, the Qt Meta-Object Compiler (MOC) reads these XML files and generates a `ui_*.h` file. For instance, `ui_imageviewer.h` which is used with `imageviewer.h`. These headers should only be included in the source files.
+Files ending with `.ui` are XML files that describe a `QWidget`. These can be edited manually or opened with a
+GUI editor in Qt Creator. When compiling a Qt project, the Qt Meta-Object Compiler (MOC) reads these XML files
+and generates a `ui_*.h` file. For instance, `ui_imageviewer.h` which is used with `imageviewer.h`. These headers
+should only be included in the source files.
 
 ```c++
 // imageviewer.h
@@ -470,7 +499,8 @@ synchronization. But you don't need a series of signals and slots if you're only
 
 ### Avoid Usage of Qt Containers
 
-STL containers are typically more optimized and are better handled by the compiler. Keep in mind that some Qt functions will return Qt containers. Also, signals and slots that use STL containers will need to have the type registered,
+STL containers are typically more optimized and are better handled by the compiler. Keep in mind that some Qt functions
+will return Qt containers. Also, signals and slots that use STL containers will need to have the type registered,
 
 ```c++
 // somewhere in a header file
@@ -483,12 +513,44 @@ qRegisterMetaType<std::vector<int>>();
 
 ## Common Errors
 
-We recommend using an IDE because it can help detect errors. CLion is free for students and works well with Minotaur, but others work as well. Here is a list of errors that IDEs usually don't detect.
+We recommend using an IDE because it can help detect errors. CLion is free for students and works well with Minotaur,
+but others work as well. Here is a list of errors that IDEs usually don't detect.
 
 #### Emplacement Constructors
 
-IDEs usually don't detect constructors called from emplacement operations, like container `emplace` functions, or `std::make_unique`. If you get a deluge of template errors from a `make_unique` double check that the parameters passed match the constructor of the type.
+IDEs usually don't detect constructors called from emplacement operations, like container `emplace` functions, or
+`std::make_unique`. If you get a deluge of template errors from a `make_unique` double check that the parameters
+passed match the constructor of the type.
 
+#### Incomplete Types
+Qt tends to issue forward declarations of its classes. A frequent example are its event types: `QMouseEvent`,
+`QTimerEvent`, and `QPaintEvent`. If you include `<QBasicTimer>` you will get a forward declaration of `QTimerEvent`
+and will need to include `<QTimerEvent>` explicitly to have the whole definition.
+
+#### Destructor of Incomplete Types
+You might get very confusing error messages when using a smart pointer on an incomplete type that itself
+has a smart pointer to an incomplete type. Consider the case
+
+```c++
+// MyClassA.h
+class IncompleteType;
+class MyClassA {
+    // ...
+    std::unique_ptr<IncompleteType> m_val;
+};
+
+// MyClassB.h
+class MyClassA; // type is incomplete
+class MyClassB {
+    // ...
+    std::unique_ptr<MyClassA> m_a;
+};
+```
+
+In compiling `MyClassB.cpp` you might get an incomplete type error to `IncompleteType`. This is because
+the `unique_ptr` deleter instantiates the compiler-generated destructor of `MyClassA`, which needs
+to know the complete definition of `IncompleteType`. Since explicitly define a destructor `~MyClassA`
+and set it as `= default` in `MyClassA.cpp`.
 
 ## Git and Github Guidelines
 

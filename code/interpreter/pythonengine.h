@@ -1,14 +1,14 @@
 #ifndef MINOTAUR_CPP_PYTHONENGINE_H
 #define MINOTAUR_CPP_PYTHONENGINE_H
 
-
 #define PyObject_GetAttrString(object, strName) PyObject_GetAttrString(object, strName)
 #define PyObject_SetAttrString(object, strName, value) PyObject_SetAttrString(object, strName, value)
 
-#include "../controller/controller.h"
-#include "python.h"
 #include <string>
-#include <memory>
+
+// PyObject forward declaration
+struct _object;
+typedef _object PyObject;
 
 class PythonEngine {
 public:

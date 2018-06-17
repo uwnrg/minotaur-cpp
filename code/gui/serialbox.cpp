@@ -1,8 +1,9 @@
-#include "serialbox.h"
-#include "ui_serialbox.h"
-
+#include "../controller/solenoid.h"
 #include "../utility/utility.h"
 #include "../utility/font.h"
+
+#include "ui_serialbox.h"
+#include "serialbox.h"
 
 #include <QMessageBox>
 #include <QSerialPort>
@@ -11,7 +12,7 @@
 #include <QLineEdit>
 
 #include <iostream>
-#include <assert.h>
+#include <cassert>
 
 enum Power {
     POWER_INTERVAL = 1,
@@ -179,7 +180,7 @@ void SerialBox::attempt_connection() {
     m_solenoid->attempt_connection(serial_port, baud_rate);
 }
 
-void SerialBox::update_status(SerialStatus new_status) {
+void SerialBox::update_status(int new_status) {
     m_status = new_status;
     QPalette palette = ui->serial_status->palette();
     Qt::GlobalColor color;

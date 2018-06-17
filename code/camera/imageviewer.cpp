@@ -1,12 +1,14 @@
 #include "ui_imageviewer.h"
 #include "imageviewer.h"
 
-#include "capture.h"
-#include "preprocessor.h"
-#include "converter.h"
-#include "recorder.h"
+#include "cameradisplay.h"
 #include "camerathread.h"
+#include "capture.h"
+#include "converter.h"
+#include "preprocessor.h"
+#include "recorder.h"
 
+#include "../compstate/compstate.h"
 #include "../compstate/parammanager.h"
 #include "../controller/astar.h"
 #include "../gui/global.h"
@@ -14,8 +16,10 @@
 #include "../utility/logger.h"
 
 #include <opencv2/videoio.hpp>
+#include <QPainter>
 #include <QBasicTimer>
 #include <QFileDialog>
+#include <QMouseEvent>
 
 // Static instances of camera threads
 static IThread s_thread_capture;

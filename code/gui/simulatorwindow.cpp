@@ -1,7 +1,11 @@
-#include <QGridLayout>
-#include "simulatorwindow.h"
+#include "../utility/utility.h"
+#include "../simulator/renderscene.h"
+
 #include "ui_simulatorwindow.h"
 #include "mainwindow.h"
+#include "simulatorwindow.h"
+
+#include <QGridLayout>
 
 #ifndef NDEBUG
 #include <QDebug>

@@ -1,19 +1,24 @@
 #ifndef MINOTAUR_CPP_COMPSTATE_H
 #define MINOTAUR_CPP_COMPSTATE_H
 
-#include "../utility/array2d.h"
-#include "../utility/vector.h"
-#include "../camera/statusbox.h"
-
-#include "procedure.h"
-#include "objectprocedure.h"
-
-#include <memory>
 #include <QObject>
-#include <opencv2/core/types.hpp>
+#include <vector>
+#include <memory>
 
+// Forward declarations
+namespace cv {
+    template<typename _Tp> class Rect_;
+    typedef Rect_<double> Rect2d;
+}
+namespace nrg {
+    template<typename val_t> class vector;
+}
+template<typename val_t, typename size_t> class array2d;
 class MainWindow;
 class StatusLabel;
+class Procedure;
+class ObjectProcedure;
+typedef std::vector<nrg::vector<double>> path2d;
 
 /**
  * This competition state object is held global and is used as the middleman
@@ -47,6 +52,7 @@ public:
     };
 
     explicit CompetitionState(MainWindow *parent);
+    ~CompetitionState();
 
     Q_SIGNAL void request_robot_box();
     Q_SIGNAL void request_object_box();
@@ -87,7 +93,12 @@ public:
     bool is_object_box_valid() const;
 
 private:
+    // Pointer to MainWindow parent
     MainWindow *m_parent;
+
+    // Impl pointer containing rectangles for robot, object, and target boxes
+    class Impl;
+    std::unique_ptr<Impl> m_impl;
 
     // Status labels to display the robot and object positions
     // based on rectangles posted to the object
@@ -102,11 +113,6 @@ private:
     // from the trackers has been consumed by a procedure
     bool m_robot_box_fresh;
     bool m_object_box_fresh;
-
-    // Contained rectangles for the robot and object boxes
-    cv::Rect2d m_robot_box;
-    cv::Rect2d m_object_box;
-    cv::Rect2d m_target_box;
 
     std::shared_ptr<wall_arr> m_walls;
 
@@ -127,7 +133,5 @@ private:
      */
     std::unique_ptr<ObjectProcedure> m_object_procedure;
 };
-
-Q_DECLARE_METATYPE(std::shared_ptr<CompetitionState::wall_arr>);
 
 #endif //MINOTAUR_CPP_COMPSTATE_H

@@ -1,11 +1,13 @@
 #include <QApplication>
 
+#include "compstate/compstate.h"
 #include "gui/global.h"
 #include "gui/mainwindow.h"
 #include "video/modify.h"
 
 Q_DECLARE_METATYPE(cv::Rect2d);
 Q_DECLARE_METATYPE(cv::UMat);
+Q_DECLARE_METATYPE(std::shared_ptr<CompetitionState::wall_arr>);
 
 int main(int argc, char *argv[]) {
     qRegisterMetaType<cv::UMat>();

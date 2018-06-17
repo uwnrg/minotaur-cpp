@@ -11,12 +11,17 @@
 #include "../camera/cameradisplay.h"
 #include "../camera/statusbox.h"
 #include "../camera/statuslabel.h"
+#include "../compstate/compstate.h"
+#include "../compstate/objectprocedure.h"
 #include "../compstate/parammanager.h"
+#include "../compstate/procedure.h"
 #include "../controller/controller.h"
 #include "../controller/solenoid.h"
 #include "../controller/simulator.h"
-#include "../simulator/globalsim.h"
 #include "../interpreter/embeddedcontroller.h"
+#include "../interpreter/pythonengine.h"
+#include "../utility/logger.h"
+#include "../simulator/globalsim.h"
 
 param_manager *g_pm = nullptr;
 
@@ -38,9 +43,9 @@ MainWindow::MainWindow() :
     m_serial_box(std::make_unique<SerialBox>(m_solenoid, this)),
     m_simulator_window(std::make_unique<SimulatorWindow>(m_simulator, this)),
 
-    m_controller_type(Controller::SOLENOID),
+    m_compstate(std::make_unique<CompetitionState>(this)),
 
-    m_compstate(this) {
+    m_controller_type(Controller::SOLENOID) {
 
     ui->setupUi(this);
 
@@ -144,7 +149,10 @@ void MainWindow::moveButtonClicked() {
     m_controller->move(dir);
 }
 
-void MainWindow::switchControllerTo(Controller::Type const type) {
+void MainWindow::switchToSolenoid() { switchControllerTo(Controller::Type::SOLENOID); }
+void MainWindow::switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }
+
+void MainWindow::switchControllerTo(int type) {
 #ifndef NDEBUG
     debug() << "Switch controller button clicked";
 #endif
@@ -207,5 +215,5 @@ std::weak_ptr<GlobalSim> MainWindow::global_sim() const {
 }
 
 CompetitionState &MainWindow::state() {
-    return m_compstate;
+    return *m_compstate;
 }
