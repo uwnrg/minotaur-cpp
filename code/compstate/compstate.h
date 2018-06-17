@@ -1,12 +1,6 @@
 #ifndef MINOTAUR_CPP_COMPSTATE_H
 #define MINOTAUR_CPP_COMPSTATE_H
 
-#include <memory>
-
-#include <opencv2/core/types.hpp>
-
-#include <QObject>
-
 #include "../utility/array2d.h"
 #include "../utility/vector.h"
 #include "../camera/statusbox.h"
@@ -14,18 +8,12 @@
 #include "procedure.h"
 #include "objectprocedure.h"
 
-class MainWindow;
+#include <memory>
+#include <QObject>
+#include <opencv2/core/types.hpp>
 
-/**
- * Determine the likelihood that a bounding box actually contains the
- * object or robot that is tracked, based on the squareness of the rectangle
- * and its closeness to the calibrated area.
- *
- * @param rect            bounding box rectangle
- * @param calibrated_area the expected area of the object or robot
- * @return a value representing accuracy
- */
-double acquisition_r(const cv::Rect2d &rect, double calibrated_area);
+class MainWindow;
+class StatusLabel;
 
 /**
  * This competition state object is held global and is used as the middleman

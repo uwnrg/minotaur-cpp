@@ -1,5 +1,6 @@
 #include <QVBoxLayout>
 
+#include "actionbutton.h"
 #include "actionbox.h"
 #include "../utility/utility.h"
 
@@ -30,7 +31,8 @@ ActionButton *ActionBox::add_action(QString &&label) {
     std::size_t size = m_actions.size();
     // Emplace the pointer
     m_actions.push_back(std::make_unique<ActionButton>(std::forward<QString>(label), this));
-    m_layout->addWidget(m_actions[size].get());
+    ActionButton *button = dynamic_cast<ActionButton *>(m_actions[size].get());
+    m_layout->addWidget(button);
     // Return reference to the button
-    return m_actions[size].get();
+    return button;
 }

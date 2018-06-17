@@ -2,9 +2,11 @@
 #include "compstate.h"
 #include "common.h"
 #include "parammanager.h"
-#include "../gui/global.h"
+
 #include "../camera/statusbox.h"
+#include "../camera/statuslabel.h"
 #include "../controller/controller.h"
+#include "../gui/global.h"
 
 #include <QTimerEvent>
 

@@ -6,7 +6,6 @@
 #include "../utility/weak_ref.h"
 
 class GridDisplay;
-
 class param_manager;
 
 namespace nrg {

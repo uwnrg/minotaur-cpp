@@ -1,12 +1,11 @@
 #ifndef MINOTAUR_CPP_PROCEDURE_H
 #define MINOTAUR_CPP_PROCEDURE_H
 
-#include <memory>
-
-#include <QObject>
-#include <QBasicTimer>
-
 #include "../utility/vector.h"
+
+#include <QBasicTimer>
+#include <QObject>
+#include <memory>
 
 #define DEFAULT_TARGET_LOC_ACCEPTANCE 3.5
 #define DEFAULT_MAX_NORMAL_DEVIATION  6.5

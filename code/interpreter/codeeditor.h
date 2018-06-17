@@ -1,12 +1,10 @@
 #ifndef MINOTAUR_CPP_CODEEDITOR_H
 #define MINOTAUR_CPP_CODEEDITOR_H
 
-#include <memory>
-
-#include <QPlainTextEdit>
-
-#include "highlighter.h"
 #include "../utility/utility.h"
+#include "highlighter.h"
+#include <QPlainTextEdit>
+#include <memory>
 
 class CodeEditor;
 

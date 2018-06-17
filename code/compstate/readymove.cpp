@@ -1,9 +1,10 @@
 #include "readymove.h"
 #include "common.h"
 #include "parammanager.h"
-#include "../utility/algorithm.h"
+#include "../camera/statuslabel.h"
 #include "../gui/mainwindow.h"
 #include "../gui/global.h"
+#include "../utility/algorithm.h"
 
 ReadyMove::ReadyMove(std::weak_ptr<Controller> sol, nrg::dir dir) :
     m_sol(std::move(sol)),

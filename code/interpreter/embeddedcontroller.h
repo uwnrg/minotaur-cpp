@@ -1,13 +1,11 @@
 #ifndef MINOTAUR_CPP_EMBEDDEDCONTROLLER_H
 #define MINOTAUR_CPP_EMBEDDEDCONTROLLER_H
 
-#include "python.h"
-
-#include <memory>
-
 #include "../controller/controller.h"
 #include "../gui/mainwindow.h"
 #include "../gui/global.h"
+#include "python.h"
+#include <memory>
 
 // Singleton controller instance
 class EmbeddedController {

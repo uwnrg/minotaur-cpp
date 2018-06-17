@@ -2,8 +2,21 @@
 #include "ui_mainwindow.h"
 #include "ui_serialbox.h"
 
-#include "../interpreter/embeddedcontroller.h"
+#include "actionabout.h"
+#include "scriptwindow.h"
+#include "serialbox.h"
+#include "simulatorwindow.h"
+#include "parameterbox.h"
+
+#include "../camera/cameradisplay.h"
+#include "../camera/statusbox.h"
+#include "../camera/statuslabel.h"
 #include "../compstate/parammanager.h"
+#include "../controller/controller.h"
+#include "../controller/solenoid.h"
+#include "../controller/simulator.h"
+#include "../simulator/globalsim.h"
+#include "../interpreter/embeddedcontroller.h"
 
 param_manager *g_pm = nullptr;
 

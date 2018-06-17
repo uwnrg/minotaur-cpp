@@ -1,11 +1,9 @@
 #ifndef MINOTAUR_CPP_SERIAL_H_H
 #define MINOTAUR_CPP_SERIAL_H_H
 
-#include <memory>
-
-#include <QDialog>
-
 #include "../controller/solenoid.h"
+#include <QDialog>
+#include <memory>
 
 // Forward declaration
 class QSlider;

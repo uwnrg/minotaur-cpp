@@ -1,6 +1,12 @@
 #ifndef MINOTAUR_CPP_GRIDDISPLAY_H
 #define MINOTAUR_CPP_GRIDDISPLAY_H
 
+#include "../utility/array2d.h"
+#include "../utility/utility.h"
+#include "../utility/vector.h"
+#include "../camera/cameradisplay.h"
+#include "../camera/imageviewer.h"
+
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -14,14 +20,7 @@
 #include <QMouseEvent>
 #include <QRubberBand>
 
-#include "../utility/array2d.h"
-#include "../utility/utility.h"
-#include "../utility/vector.h"
-#include "../camera/cameradisplay.h"
-#include "../camera/imageviewer.h"
-
 class CameraDisplay;
-
 class GridButton;
 
 class GridDisplay : public QWidget {

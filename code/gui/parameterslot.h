@@ -1,8 +1,8 @@
 #ifndef PARAMETERSLOT_H
 #define PARAMETERSLOT_H
 
-#include <QWidget>
 #include <QVariant>
+#include <QWidget>
 
 namespace Ui {
     class ParameterSlot;

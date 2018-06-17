@@ -1,13 +1,13 @@
 #ifndef MINOTAUR_CPP_OBJECTMOVE_H
 #define MINOTAUR_CPP_OBJECTMOVE_H
 
-#include <QObject>
-#include <QBasicTimer>
+#include "../controller/controller.h"
+#include "../utility/rect.h"
 
 #include "readymove.h"
 
-#include "../controller/controller.h"
-#include "../utility/rect.h"
+#include <QBasicTimer>
+#include <QObject>
 
 class StatusLabel;
 

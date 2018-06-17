@@ -1,9 +1,9 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <unordered_map>
 #include "../utility/logger.h"
 #include "../utility/vector.h"
+#include <unordered_map>
 
 class Controller : public QObject {
 Q_OBJECT

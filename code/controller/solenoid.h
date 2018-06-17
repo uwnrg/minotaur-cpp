@@ -3,11 +3,8 @@
 
 #include "controller.h"
 
-#include <fstream>
-#include <queue>
-
-#include <QObject>
 #include <QSerialPort>
+#include <QObject>
 
 enum SerialStatus {
     DISCONNECTED,

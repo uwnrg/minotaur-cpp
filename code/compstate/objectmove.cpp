@@ -1,5 +1,6 @@
 #include "objectmove.h"
 #include "parammanager.h"
+#include "../camera/statuslabel.h"
 #include "../gui/mainwindow.h"
 #include "../gui/global.h"
 

@@ -1,6 +1,8 @@
 #include "objectline.h"
 #include "compstate.h"
 #include "parammanager.h"
+
+#include "../camera/statuslabel.h"
 #include "../gui/global.h"
 #include "../utility/algorithm.h"
 

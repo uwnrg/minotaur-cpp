@@ -1,10 +1,10 @@
 #ifndef MINOTAUR_CPP_OBJECTLINE_H
 #define MINOTAUR_CPP_OBJECTLINE_H
 
-#include <QObject>
-
 #include "objectmove.h"
 #include "readymove.h"
+
+#include <QObject>
 
 class StatusLabel;
 

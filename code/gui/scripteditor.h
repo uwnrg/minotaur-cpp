@@ -1,8 +1,8 @@
 #ifndef SCRIPTEDITOR_H
 #define SCRIPTEDITOR_H
 
+#include "../interpreter/codeeditor.h"
 #include <QDialog>
-#include <code/interpreter/codeeditor.h>
 
 namespace Ui {
     class ScriptEditor;

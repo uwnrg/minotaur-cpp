@@ -1,8 +1,8 @@
 #ifndef MINOTAUR_CPP_RESULTSTEXTDISPLAY_H
 #define MINOTAUR_CPP_RESULTSTEXTDISPLAY_H
 
-#include <QTextEdit>
 #include "codeeditor.h"
+#include <QTextEdit>
 
 class ResultsTextDisplay : public CodeEditor {
 Q_OBJECT

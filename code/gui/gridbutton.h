@@ -1,9 +1,8 @@
 #ifndef MINOTAUR_CPP_GRIDBUTTON_H
 #define MINOTAUR_CPP_GRIDBUTTON_H
 
-#include <QPushButton>
 #include <QRubberBand>
-
+#include <QPushButton>
 #include <memory>
 
 class GridDisplay;

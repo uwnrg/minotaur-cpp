@@ -1,5 +1,6 @@
 #include "compstate.h"
 #include "parammanager.h"
+#include "../camera/statuslabel.h"
 #include "../gui/global.h"
 
 #ifndef NDEBUG
@@ -8,14 +9,18 @@
 #endif
 
 /**
+ * Determine the likelihood that a bounding box actually contains the
+ * object or robot that is tracked, based on the squareness of the rectangle
+ * and its closeness to the calibrated area.
+ *
  * Based off formula in
  * https://users.cs.cf.ac.uk/Paul.Rosin/resources/papers/squareness-JMIV-postprint.pdf
  *
- * @param rect
- * @param calibrated_area
- * @return
+ * @param rect            bounding box rectangle
+ * @param calibrated_area the expected area of the object or robot
+ * @return a value representing accuracy
  */
-double acquisition_r(const cv::Rect2d &rect, double calibrated_area) {
+static double acquisition_r(const cv::Rect2d &rect, double calibrated_area) {
     double area = rect.width * rect.height;
     if (!area) { return 1000; }
     double t = rect.width > rect.height

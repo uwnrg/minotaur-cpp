@@ -2,7 +2,9 @@
 #define MINOTAUR_CPP_PARAMMANAGER_H
 
 #include "../gui/mainwindow.h"
+#include "../gui/parameterbox.h"
 #include "../gui/parameterslot.h"
+#include "../utility/weak_ref.h"
 
 #include <QObject>
 

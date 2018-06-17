@@ -1,10 +1,10 @@
 #ifndef MINOTAUR_CPP_ACTIONBOX_H
 #define MINOTAUR_CPP_ACTIONBOX_H
 
-#include <memory>
-#include <QDialog>
+#include "../base/actionbutton.h"
 
-#include "actionbutton.h"
+#include <QDialog>
+#include <memory>
 
 // Forward declaration
 class ActionButton;
@@ -52,7 +52,7 @@ private:
      * List of the button pointers, which are managed by
      * unique pointers.
      */
-    std::vector<std::unique_ptr<ActionButton>> m_actions;
+    std::vector<std::unique_ptr<base::ActionButton>> m_actions;
 };
 
 #endif //MINOTAUR_CPP_ACTIONBOX_H

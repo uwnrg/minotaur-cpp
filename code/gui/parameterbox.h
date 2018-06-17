@@ -1,10 +1,10 @@
 #ifndef PARAMETERBOX_H
 #define PARAMETERBOX_H
 
+#include "../utility/weak_ref.h"
 #include <QDialog>
 #include <memory>
 
-#include "../utility/weak_ref.h"
 
 namespace Ui {
     class ParameterBox;

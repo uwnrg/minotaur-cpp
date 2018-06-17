@@ -2,7 +2,6 @@
 #define MINOTAUR_CPP_CAPTURE_H
 
 #include <QObject>
-#include <QBasicTimer>
 #include <memory>
 
 // OpenCV forward declarations
@@ -46,11 +45,6 @@ public:
 private:
     void timerEvent(QTimerEvent *ev) override;
 
-    /**
-     * Timer fires at a fixed interval to pull images
-     * from the capture.
-     */
-    QBasicTimer m_timer;
     /**
      * Video Capture instance that produces images.
      */

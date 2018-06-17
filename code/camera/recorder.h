@@ -2,9 +2,13 @@
 #define MINOTAUR_CPP_RECORDER_H
 
 #include <QObject>
-
 #include <memory>
-#include <opencv2/videoio.hpp>
+
+// OpenCV forward declarations
+namespace cv {
+    class UMat;
+    class VideoWriter;
+}
 
 /**
  * This class handles a cv::VideoWriter instance that is used to
@@ -24,8 +28,20 @@ public:
         bool color = true
     );
 
+    /**
+     * Tell the recorder to start capturing video from
+     * its stream, given by Qt signals.
+     *
+     * @param file   the file name to save to
+     * @param width  the width of the video
+     * @param height the height of the video
+     */
     Q_SLOT void start_recording(const QString &file, int width, int height);
 
+    /**
+     * Tell the recorder to stop recording video from the
+     * signal stream. The file will be closed.
+     */
     Q_SLOT void stop_recording();
 
     /**

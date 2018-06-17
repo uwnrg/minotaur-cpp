@@ -1,14 +1,14 @@
 #ifndef MINOTAUR_CPP_OBJECTSTRATEGY_H
 #define MINOTAUR_CPP_OBJECTSTRATEGY_H
 
-#include "procedure.h"
-
 #include "../controller/controller.h"
 #include "../utility/vector.h"
 #include "../utility/rect.h"
 
-#include <QObject>
+#include "procedure.h"
+
 #include <QTimer>
+#include <QObject>
 
 class StatusLabel;
 

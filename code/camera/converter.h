@@ -2,7 +2,6 @@
 #define MINOTAUR_CPP_CONVERTER_H
 
 #include <QObject>
-#include <QBasicTimer>
 
 // Forward declarations
 class ImageViewer;

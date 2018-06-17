@@ -1,15 +1,15 @@
 #ifndef SCRIPTWINDOW_H
 #define SCRIPTWINDOW_H
 
-#include <QDialog>
-#include <QFileDialog>
-#include <memory>
-
 #include "../interpreter/pythonengine.h"
 #include "../interpreter/interpretertextedit.h"
 #include "../interpreter/resultstextdisplay.h"
-
 #include "scripteditor.h"
+
+#include <QFileDialog>
+#include <QDialog>
+#include <memory>
+
 
 namespace Ui {
     class ScriptWindow;

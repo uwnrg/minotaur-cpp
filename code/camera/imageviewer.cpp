@@ -1,5 +1,3 @@
-#include <QBasicTimer>
-
 #include "ui_imageviewer.h"
 #include "imageviewer.h"
 
@@ -14,6 +12,10 @@
 #include "../gui/global.h"
 #include "../gui/griddisplay.h"
 #include "../utility/logger.h"
+
+#include <opencv2/videoio.hpp>
+#include <QBasicTimer>
+#include <QFileDialog>
 
 // Static instances of camera threads
 static IThread s_thread_capture;

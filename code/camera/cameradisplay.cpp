@@ -8,6 +8,7 @@
 #include "cameradisplay.h"
 
 #include "actionbox.h"
+#include "actionbutton.h"
 #include "imageviewer.h"
 
 #include "../utility/logger.h"

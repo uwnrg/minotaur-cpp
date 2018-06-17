@@ -1,26 +1,15 @@
 #ifndef MINOTAUR_CPP_STATUSBOX_H
 #define MINOTAUR_CPP_STATUSBOX_H
 
-#include <QDialog>
-#include <QLabel>
-#include <QVBoxLayout>
+#include "../base/statuslabel.h"
 
+#include <QDialog>
 #include <memory>
 #include <unordered_map>
 
-/**
- * Status label is a QLabel with an attached ID so
- * that one can be removed from the StatusBox.
- */
-class StatusLabel : public QLabel {
-public:
-    StatusLabel(QWidget *parent, std::size_t id, const QString &initial);
-
-    std::size_t id() const;
-
-private:
-    std::size_t m_id;
-};
+// Forward declarations
+class QVBoxLayout;
+class StatusLabel;
 
 /**
  * A Dialog instance to which any QObject can add a label, receive
@@ -62,7 +51,7 @@ private:
     /**
      * Map of ID to label pointer for easy lookup.
      */
-    std::unordered_map<std::size_t, std::unique_ptr<StatusLabel>> m_labels;
+    std::unordered_map<std::size_t, std::unique_ptr<base::StatusLabel>> m_labels;
 };
 
 #endif //MINOTAUR_CPP_STATUSBOX_H

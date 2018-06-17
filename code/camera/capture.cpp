@@ -1,9 +1,15 @@
+#include <QBasicTimer>
 #include <QTimerEvent>
 
 #include "capture.h"
 #include "../utility/utility.h"
 #include "../simulator/fakecamera.h"
 
+/**
+ * Timer fires at a fixed interval to pull images
+ * from the capture.
+ */
+static QBasicTimer s_capture_timer;
 
 Capture::Capture() = default;
 
@@ -20,13 +26,13 @@ void Capture::start_capture(int cam) {
         // Max at 30 frames per second
         // Limit mainly applies to the FakeCamera so that
         // Qt's event resources are clogged up
-        m_timer.start(33, this);
+        s_capture_timer.start(33, this);
         Q_EMIT capture_started();
     }
 }
 
 void Capture::stop_capture() {
-    m_timer.stop();
+    s_capture_timer.stop();
     // Release the video capture resources
     if (m_video_capture && m_video_capture->isOpened()) {
         m_video_capture->release();
@@ -41,7 +47,7 @@ void Capture::change_camera(int camera) {
 }
 
 void Capture::timerEvent(QTimerEvent *ev) {
-    if (ev->timerId() != m_timer.timerId()) {
+    if (ev->timerId() != s_capture_timer.timerId()) {
         return;
     }
     // Grab the frame from the video capture and emit

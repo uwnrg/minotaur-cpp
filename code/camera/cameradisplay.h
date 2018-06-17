@@ -1,8 +1,8 @@
 #ifndef MINOTAUR_CPP_CAMERADISPLAY_H
 #define MINOTAUR_CPP_CAMERADISPLAY_H
 
-#include <memory>
 #include <QDialog>
+#include <memory>
 
 // ui_cameradisplay
 namespace Ui {

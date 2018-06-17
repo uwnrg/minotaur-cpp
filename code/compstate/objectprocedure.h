@@ -1,10 +1,10 @@
 #ifndef MINOTAUR_CPP_OBJECTPROCEDURE_H
 #define MINOTAUR_CPP_OBJECTPROCEDURE_H
 
-#include <QObject>
-#include <QBasicTimer>
-
 #include "objectline.h"
+
+#include <QBasicTimer>
+#include <QObject>
 
 class StatusLabel;
 
