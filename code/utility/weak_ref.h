@@ -1,6 +1,8 @@
 #ifndef MINOTAUR_CPP_WEAK_REF_H
 #define MINOTAUR_CPP_WEAK_REF_H
 
+#include <cstddef>
+
 template<typename ref_t>
 class weak_ref {
 public:

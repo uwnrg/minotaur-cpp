@@ -1,9 +1,9 @@
 #ifndef MINOTAUR_UTILITY_H
 #define MINOTAUR_UTILITY_H
 
+#include <limits>
 #include <memory>
 #include <type_traits>
-#include <climits>
 
 namespace std {
 

@@ -2,7 +2,6 @@
 #define MINOTAUR_CPP_STATUSLABEL_H
 
 #include "../base/statuslabel.h"
-
 #include <QLabel>
 
 /**

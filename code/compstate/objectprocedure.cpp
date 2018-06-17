@@ -1,10 +1,13 @@
 #include "objectprocedure.h"
 #include "parammanager.h"
 #include "compstate.h"
+
 #include "../camera/statuslabel.h"
 #include "../gui/mainwindow.h"
 #include "../gui/global.h"
 #include "../utility/algorithm.h"
+
+#include <QTimerEvent>
 
 ObjectProcedure::move_node
 ObjectProcedure::delta_to_move_node(double start, double target, double base, bool ver) {

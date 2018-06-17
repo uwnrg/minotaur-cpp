@@ -1,8 +1,11 @@
 #include "objectmove.h"
 #include "parammanager.h"
+
 #include "../camera/statuslabel.h"
 #include "../gui/mainwindow.h"
 #include "../gui/global.h"
+
+#include <QTimerEvent>
 
 QString align_text(double align_err) {
     QString text;
