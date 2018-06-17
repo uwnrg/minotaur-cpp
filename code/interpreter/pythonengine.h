@@ -5,6 +5,7 @@
 #define PyObject_SetAttrString(object, strName, value) PyObject_SetAttrString(object, strName, value)
 
 #include <string>
+#include <vector>
 
 // PyObject forward declaration
 struct _object;

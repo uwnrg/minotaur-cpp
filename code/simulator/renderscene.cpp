@@ -1,7 +1,10 @@
+#include "../controller/simulator.h"
 #include "../gui/mainwindow.h"
 #include "arrow.h"
 #include "renderscene.h"
 #include "statsdisplay.h"
+
+#include <QPaintEvent>
 #include <QPainter>
 #include <chrono>
 

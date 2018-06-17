@@ -1,7 +1,8 @@
 #include <QPainter>
 
-#include "statsdisplay.h"
+#include "renderscenebase.h"
 #include "sam.h"
+#include "statsdisplay.h"
 
 StatsDisplay::StatsDisplay(RenderSceneBase *render_scene)
         : m_render_scene(render_scene) {}

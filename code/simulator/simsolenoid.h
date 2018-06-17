@@ -2,11 +2,8 @@
 #define MINOTAUR_CPP_SOLENOID_H
 
 #include "drawable.h"
-#include "renderscenebase.h"
 
-#include <QVector2D>
-#include <QPainter>
-#include <QPaintEvent>
+class RenderSceneBase;
 
 /**
  * SimulatorSolenoid class represents an electromagnetic that is

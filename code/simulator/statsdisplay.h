@@ -2,7 +2,8 @@
 #define MINOTAUR_CPP_STATSDISPLAY_H
 
 #include "drawable.h"
-#include "renderscenebase.h"
+
+class RenderSceneBase;
 
 class StatsDisplay : public Drawable {
 public:

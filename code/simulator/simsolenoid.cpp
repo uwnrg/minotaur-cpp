@@ -1,4 +1,7 @@
+#include "renderscenebase.h"
 #include "simsolenoid.h"
+
+#include <QPainter>
 
 SimulatorSolenoid::SimulatorSolenoid(
     const RenderSceneBase *scene,

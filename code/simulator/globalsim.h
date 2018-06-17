@@ -1,9 +1,8 @@
 #ifndef MINOTAUR_CPP_GLOBAL_SIM_H
 #define MINOTAUR_CPP_GLOBAL_SIM_H
 
-#include <QObject>
-
 #include "../utility/vector.h"
+#include <QObject>
 
 class GlobalSim : public QObject {
 Q_OBJECT

@@ -1,24 +1,22 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <QTextEdit>
-#include <QString>
-#include <QTextStream>
-
 #include <iostream>
 #include <string>
-#include <memory>
 #include <sstream>
+#include <memory>
 
 #include "clock_time.h"
 
-class __log_stream;
+class QString;
+class QTextEdit;
+class log_stream;
 
 /**
  * Objects of this type forward log outputs.
  * Thie base class is no-op.
  */
-struct __log_out {
+struct log_out {
     virtual bool operator<<(const std::string &str);
 
     virtual bool clear();
@@ -27,7 +25,7 @@ struct __log_out {
 /**
  * Forward log outputs to stdout.
  */
-struct __log_stdout : public __log_out {
+struct log_stdout : public log_out {
     bool operator<<(const std::string &str) override;
 
     bool clear() override;
@@ -36,8 +34,8 @@ struct __log_stdout : public __log_out {
 /**
  * Forward log outputs to a QTextEdit.
  */
-struct __log_text_field : public __log_out {
-    explicit __log_text_field(QTextEdit *output_field);
+struct log_text_field : public log_out {
+    explicit log_text_field(QTextEdit *output_field);
 
     bool operator<<(const std::string &str) override;
 
@@ -63,10 +61,8 @@ public:
      * @param type    the log type
      * @return        true if the log was successful
      */
-    template<typename string_t>
-    static bool log(const string_t &message, LogType type = INFO) {
-        return s_logger.log_message<string_t>(message, type);
-    }
+    static bool log(const std::string &message, LogType type = INFO);
+    static bool log(const QString &message, LogType type = INFO);
 
     /**
      * Set the QTextEdit to which logging output should be
@@ -93,48 +89,28 @@ private:
 
     Logger();
 
-    template<typename string_t>
-    bool log_message(const string_t &message, LogType type) {
-        std::stringstream ss;
-        ss << "<font color=\"";
-        switch (type) {
-            case FATAL:
-                ss << "red";
-                break;
-            case DEBUG:
-                ss << "blue";
-                break;
-            default: // INFO
-                ss << "black";
-                break;
-        }
-        ss << "\">"
-           << ClockTime::getCurrentTime()
-           << message
-           << "</font>";
-        return *m_log_out << ss.str();
-    }
+    bool log_message(const std::string &message, LogType type);
 
-    std::unique_ptr<__log_out> m_log_out;
+    std::unique_ptr<log_out> m_log_out;
 
-    friend class __log_stream;
+    friend class log_stream;
 };
 
 /**
  * Log stream class returned by @code log(Logger::LogType) @endcode
  * which accepts logging output as a stream.
  */
-class __log_stream {
+class log_stream {
 public:
-    explicit __log_stream(Logger::LogType log_type);
+    explicit log_stream(Logger::LogType log_type);
 
-    __log_stream(__log_stream &&o) noexcept;
+    log_stream(log_stream &&o) noexcept;
 
     /**
      * Destructor inserts a newline in the buffer then outputs
      * the message.
      */
-    ~__log_stream();
+    ~log_stream();
 
     /**
      * Insert a value into the output buffer.
@@ -144,7 +120,7 @@ public:
      * @return       reference to this output stream
      */
     template<typename out_t>
-    __log_stream &operator<<(const out_t &v) {
+    log_stream &operator<<(const out_t &v) {
         m_buffer << v;
         return *this;
     }
@@ -160,10 +136,10 @@ private:
  * @param log_type the log type
  * @return a logging stream
  */
-__log_stream log(Logger::LogType log_type = Logger::INFO);
+log_stream log(Logger::LogType log_type = Logger::INFO);
 
-__log_stream debug();
+log_stream debug();
 
-__log_stream fatal();
+log_stream fatal();
 
 #endif // LOGGER_H

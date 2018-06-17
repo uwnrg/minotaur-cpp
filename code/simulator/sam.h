@@ -2,7 +2,8 @@
 #define MINOTAUR_CPP_SAM_H
 
 #include "drawable.h"
-#include "renderscenebase.h"
+
+class RenderSceneBase;
 
 /**
  * This class represents SAM, a robot with an orientation and

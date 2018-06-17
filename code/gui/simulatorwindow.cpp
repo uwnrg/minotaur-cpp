@@ -1,3 +1,4 @@
+#include "../controller/simulator.h"
 #include "../utility/utility.h"
 #include "../simulator/renderscene.h"
 
