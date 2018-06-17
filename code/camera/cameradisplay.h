@@ -3,13 +3,13 @@
 
 #include <memory>
 #include <QDialog>
-#include <QSlider>
 
-
+// ui_cameradisplay
 namespace Ui {
     class CameraDisplay;
 }
 
+// Forward declarations
 class ActionBox;
 class ImageViewer;
 class VideoModifier;
@@ -37,11 +37,6 @@ public:
      * @return the currently selected grid weighting
      */
     int get_weighting();
-
-    void setup_slider(
-        QSlider &slider, int value, 
-        int min, int max, int interval,
-        bool tracking);
 
     /**
      * Slot called when the weight list has changed.
@@ -239,29 +234,6 @@ public:
     Q_SIGNAL void move_grid(double x, double y);
 
 private:
-    enum Zoom {
-        ZOOM_INTERVAL = 2,
-        ZOOM_MAX = 40,
-        ZOOM_MIN = 10
-    };
-
-    enum Rotation {
-        ROTATION_INTERVAL = 45,
-        ROTATION_MIN = -180,
-        ROTATION_MAX = 180
-    };
-
-    enum GridLocation {
-        GRIDLOCATION_INTERVAL = 10,
-        GRIDLOCATION_MIN = -100,
-        GRIDLOCATION_MAX = 100
-    };
-
-    enum Grid {
-        MAX_WEIGHT = 10,
-        MIN_WEIGHT = -1
-    };
-
     Ui::CameraDisplay *m_ui;
 
     /**

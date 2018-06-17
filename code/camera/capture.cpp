@@ -1,9 +1,9 @@
-    #include "capture.h"
+#include <QTimerEvent>
 
+#include "capture.h"
 #include "../utility/utility.h"
 #include "../simulator/fakecamera.h"
 
-#include <QTimerEvent>
 
 Capture::Capture() = default;
 

@@ -1,5 +1,9 @@
+#include <opencv2/imgproc.hpp>
 #include "converter.h"
 #include "imageviewer.h"
+
+static void umat_delete(void *mat)
+{ delete static_cast<cv::UMat *>(mat); }
 
 Converter::Converter(ImageViewer *image_viewer) :
     m_scale(1.0),
@@ -23,10 +27,6 @@ void Converter::process_frame(const cv::UMat &frame) {
     ++m_frames;
     // Emit the image
     Q_EMIT image_ready(image);
-}
-
-void Converter::umat_delete(void *mat) {
-    delete static_cast<cv::UMat *>(mat);
 }
 
 int Converter::get_and_reset_frames() {

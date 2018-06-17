@@ -4,7 +4,7 @@
 BUILD_DIR=cmake-build-debug
 MAKEFILES="Unix Makefiles"
 MAKE=make
-MAKE_FLAGS=-j5 --output-sync
+MAKE_FLAGS=-j5
 
 set -o errexit
 trap 'echo "Aborting due to errexit on line $LINENO. Exit code: $?" >&2' ERR

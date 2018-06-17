@@ -3,10 +3,13 @@
 
 #include <QObject>
 #include <QBasicTimer>
+#include <memory>
 
-#include <opencv2/opencv.hpp>
-
-Q_DECLARE_METATYPE(cv::UMat);
+// OpenCV forward declarations
+namespace cv {
+    class UMat;
+    class VideoCapture;
+}
 
 /**
  * This object is the beginning of the image pipeline and
