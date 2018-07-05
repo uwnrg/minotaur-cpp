@@ -1,5 +1,5 @@
-#include "ui_imageviewer.h"
 #include "imageviewer.h"
+#include "ui_imageviewer.h"
 
 #include "cameradisplay.h"
 #include "camerathread.h"

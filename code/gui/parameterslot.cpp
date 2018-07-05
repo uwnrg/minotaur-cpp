@@ -1,6 +1,6 @@
-#include "ui_parameterslot.h"
 #include "parameterslot.h"
 #include "parameterbox.h"
+#include "ui_parameterslot.h"
 
 #include <QVariant>
 
