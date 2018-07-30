@@ -1,12 +1,16 @@
+#include "../camera/cameradisplay.h"
+#include "../camera/imageviewer.h"
+#include "../utility/logger.h"
 #include "griddisplay.h"
 #include "gridbutton.h"
-#include "../camera/cameradisplay.h"
-#include "../utility/logger.h"
+
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QRubberBand>
+#include <QMouseEvent>
 
 #ifndef NDEBUG
-
 #include <QDebug>
-
 #endif
 
 /* TODO (improvements):
@@ -66,6 +70,8 @@ int GridDisplay::x() {
 int GridDisplay::y() {
     return m_view->y();
 }
+
+GridDisplay::~GridDisplay() = default;
 
 GridDisplay::GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display) :
     QWidget(image_viewer),

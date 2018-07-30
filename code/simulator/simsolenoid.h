@@ -1,12 +1,9 @@
 #ifndef MINOTAUR_CPP_SOLENOID_H
 #define MINOTAUR_CPP_SOLENOID_H
 
-#include <QVector2D>
-#include <QPainter>
-#include <QPaintEvent>
-
 #include "drawable.h"
-#include "renderscenebase.h"
+
+class RenderSceneBase;
 
 /**
  * SimulatorSolenoid class represents an electromagnetic that is
@@ -60,6 +57,11 @@ public:
 
 private:
     /**
+     * Pointer to the reference scene.
+     */
+    const RenderSceneBase *m_renderScene;
+
+    /**
      * Position of the solenoid in meters from the origin.
      */
     vector2f m_pos;
@@ -80,18 +82,14 @@ private:
      */
     float m_len;
     /**
-     * Current passing through the solenoid (A).
-     */
-    float m_I;
-    /**
      * Relative permeability (unit-less).
      */
     float m_mu;
-
     /**
-     * Pointer to the reference scene.
+     * Current passing through the solenoid (A).
      */
-    const RenderSceneBase *m_renderScene;
+    float m_I;
+
 
     /**
      * Helper scene for computing magnetic fields.

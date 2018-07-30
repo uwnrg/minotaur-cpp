@@ -1,5 +1,6 @@
-#include "simulator.h"
+#include "../utility/logger.h"
 #include "../simulator/globalsim.h"
+#include "simulator.h"
 
 Simulator::Simulator(GlobalSim *sim) :
     Controller(false, false) {

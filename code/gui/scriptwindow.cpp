@@ -1,10 +1,17 @@
-#include <QDir>
-#include <QtCore/QTextStream>
-
-#include "scriptwindow.h"
-#include "ui_scriptwindow.h"
-
+#include "../interpreter/interpretertextedit.h"
+#include "../interpreter/pythonengine.h"
+#include "../interpreter/resultstextdisplay.h"
 #include "../utility/font.h"
+#include "../utility/logger.h"
+#include "../utility/utility.h"
+
+#include "ui_scriptwindow.h"
+#include "scripteditor.h"
+#include "scriptwindow.h"
+
+#include <QDir>
+#include <QFileDialog>
+#include <QTextStream>
 
 ScriptWindow::ScriptWindow(QWidget *parent) :
     QDialog(parent),

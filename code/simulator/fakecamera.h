@@ -1,10 +1,8 @@
 #ifndef MINOTAUR_CPP_FAKECAMERA_H
 #define MINOTAUR_CPP_FAKECAMERA_H
 
-#include <QObject>
 #include <opencv2/videoio.hpp>
-
-#include "../utility/vector.h"
+#include <QObject>
 
 /**
  * Mocked VideoCapture class for use with simulated robot and

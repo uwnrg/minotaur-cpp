@@ -1,10 +1,6 @@
 #ifndef MINOTAUR_CPP_INTERPRETERTEXTEDIT_H
 #define MINOTAUR_CPP_INTERPRETERTEXTEDIT_H
 
-#include <QTextEdit>
-#include <QKeyEvent>
-#include <QPlainTextEdit>
-#include "highlighter.h"
 #include "codeeditor.h"
 
 class InterpreterTextEdit : public CodeEditor {

@@ -2,11 +2,12 @@
 #define MINOTAUR_CPP_OBJECTLINE_H
 
 #include <QObject>
+#include <memory>
 
-#include "objectmove.h"
-#include "readymove.h"
-
+class Controller;
 class StatusLabel;
+class ObjectMove;
+class ReadyMove;
 
 /**
  * This object combines ReadyMove and ObjectMove to have the robot push the
@@ -23,7 +24,7 @@ class ObjectLine : public QObject {
 Q_OBJECT
 
 public:
-    explicit ObjectLine(std::weak_ptr<Controller> sol, nrg::dir dir, double target, double base);
+    explicit ObjectLine(std::weak_ptr<Controller> sol, int dir, double target, double base);
     ~ObjectLine() override;
 
     void start();
@@ -32,22 +33,9 @@ public:
     bool is_done() const;
 
 private:
-    enum State {
-        REQUIRE_READY_MOVE,
-        DOING_READY_MOVE,
-
-        REQUIRE_OBJECT_MOVE,
-        DOING_OBJECT_MOVE,
-
-        REQUIRE_CORRECTION,
-        REQUIRE_CORRECTION_READY_MOVE,
-        DOING_CORRECTION_READY_MOVE,
-        REQUIRE_CORRECTION_OBJECT_MOVE,
-        DOING_CORRECTION_OBJECT_MOVE
-    };
-
     void timerEvent(QTimerEvent *ev) override;
 
+    class Impl;
     void movement_loop();
 
     void do_require_ready_move();
@@ -62,22 +50,14 @@ private:
     void do_doing_correction_object_move();
 
     std::weak_ptr<Controller> m_sol;
-    nrg::dir m_dir;
-    double m_target;
-    double m_base;
-
+    std::unique_ptr<Impl> m_impl;
     bool m_done;
-
-    State m_state;
-
-    QBasicTimer m_timer;
 
     StatusLabel *m_state_label;
 
     std::unique_ptr<ReadyMove> m_ready_move;
     std::unique_ptr<ObjectMove> m_object_move;
 
-    nrg::dir m_correction_dir;
 };
 
 #endif //MINOTAUR_CPP_OBJECTLINE_H

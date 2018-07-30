@@ -2,14 +2,15 @@
 #define MINOTAUR_CPP_OBJECTMOVE_H
 
 #include <QObject>
-#include <QBasicTimer>
+#include <memory>
 
-#include "readymove.h"
-
-#include "../controller/controller.h"
-#include "../utility/rect.h"
-
+// Forward declarations
+namespace nrg {
+    template<typename val_t> class vector;
+}
+class Controller;
 class StatusLabel;
+typedef nrg::vector<double> vector2d;
 
 /**
  * This class moves the robot directly, through a delegate Procedure object,
@@ -58,7 +59,7 @@ public:
      */
     explicit ObjectMove(
         std::weak_ptr<Controller> sol,
-        nrg::dir dir,
+        int dir,
         double target,
         double norm_base,
         double norm_dev
@@ -76,55 +77,9 @@ private:
 
     void movement_loop();
 
-    void do_move(double delta);
-    void correct(double delta);
-
-    /**
-     * Whether the object is at or exceeded the target value.
-     *
-     * @param obj_loc the object's current center location
-     * @return true if the object is past the target
-     */
-    bool beyond_target(const vector2d &obj_loc) const;
-    /**
-     * Whether the robot is on the correct side of the object
-     * for pushing in the desired direction.
-     *
-     * @param rob_loc the robot's center location
-     * @param obj_loc the object's center location
-     * @return true if the robot is on the correct side
-     */
-    bool robot_correct_side(const vector2d &rob_loc, const vector2d &obj_loc) const;
-    /**
-     * Whether the object's location is beyond the acceptable
-     * normal deviation value.
-     *
-     * @param obj_loc the object's center location
-     * @return true if the object has exceeded the norm
-     */
-    bool exceeded_norm(const vector2d &obj_loc) const;
-    /**
-     * Determine the robot's alignment error the object's location
-     * in the axis perpendicular to the axis of movement. I.e. if
-     * the object is to be moved horizontally, this returns the
-     * difference in y values of the robot and object.
-     *
-     * @param rob_loc the robot's center location
-     * @param obj_loc the object's center location
-     * @return the difference in alignment
-     */
-    double alignment_err(const vector2d &rob_loc, const vector2d &obj_loc) const;
-    /**
-     * @param obj_loc the object's center location
-     * @return distance to the target location
-     */
-    double target_err(const vector2d &obj_loc) const;
-
+    class Impl;
+    std::unique_ptr<Impl> m_impl;
     std::weak_ptr<Controller> m_sol;
-    nrg::dir m_dir;
-    double m_target;
-    double m_norm_base;
-    double m_norm_dev;
 
     bool m_done;
     /**
@@ -136,13 +91,6 @@ private:
 
     StatusLabel *m_align_label;
     StatusLabel *m_target_label;
-
-    QBasicTimer m_timer;
-
-    /**
-     * Delegate procedure which is used to fire the controller.
-     */
-    Procedure m_delegate;
 };
 
 #endif //MINOTAUR_CPP_OBJECTMOVE_H

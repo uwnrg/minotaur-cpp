@@ -2,18 +2,15 @@
 #define SCRIPTWINDOW_H
 
 #include <QDialog>
-#include <QFileDialog>
 #include <memory>
-
-#include "../interpreter/pythonengine.h"
-#include "../interpreter/interpretertextedit.h"
-#include "../interpreter/resultstextdisplay.h"
-
-#include "scripteditor.h"
 
 namespace Ui {
     class ScriptWindow;
 }
+class QFileDialog;
+class InterpreterTextEdit;
+class ResultsTextDisplay;
+class ScriptEditor;
 
 /**
  * The script window has two text areas, one in which

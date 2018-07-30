@@ -4,14 +4,54 @@
 #include <QStandardItemModel>
 #include <QSpinBox>
 
-#include "cameradisplay.h"
 #include "ui_cameradisplay.h"
+#include "cameradisplay.h"
 
-#include "../video/modify.h"
+#include "actionbox.h"
+#include "actionbutton.h"
+#include "imageviewer.h"
+
 #include "../utility/logger.h"
+#include "../utility/utility.h"
+#include "../video/modify.h"
 #include "../simulator/fakecamera.h"
 
-void populate_camera_box(QComboBox *box) {
+enum Zoom {
+    ZOOM_INTERVAL = 2,
+    ZOOM_MAX = 40,
+    ZOOM_MIN = 10
+};
+
+enum Rotation {
+    ROTATION_INTERVAL = 45,
+    ROTATION_MIN = -180,
+    ROTATION_MAX = 180
+};
+
+enum GridLocation {
+    GRIDLOCATION_INTERVAL = 10,
+    GRIDLOCATION_MIN = -100,
+    GRIDLOCATION_MAX = 100
+};
+
+enum Grid {
+    MAX_WEIGHT = 10,
+    MIN_WEIGHT = -1
+};
+
+static void setup_slider(
+    QSlider &slider,
+    int value, int min, int max,
+    int interval, bool tracking) {
+    slider.setTickInterval(interval);
+    slider.setTickPosition(QSlider::TicksBelow);
+    slider.setMaximum(max);
+    slider.setMinimum(min);
+    slider.setTracking(tracking);
+    slider.setValue(value);
+}
+
+static void populate_camera_box(QComboBox *box) {
     // Grab the list of selected cameras
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
     log() << "Found " << cameras.size() << " cameras";
@@ -24,19 +64,19 @@ void populate_camera_box(QComboBox *box) {
     box->addItem("Simulated", QVariant::fromValue(i));
 }
 
-void populate_effect_box(QComboBox *box) {
+static void populate_effect_box(QComboBox *box) {
     // Call the video modifier list adder
     VideoModifier::add_modifier_list(box);
 }
 
-void ensure_png(QString &file) {
+static void ensure_png(QString &file) {
     // Ensure that the file extension ends with png
     if (file.rightRef(4) != ".png") {
         file.append(".png");
     }
 }
 
-int get_camera_index(const QCameraInfo &info) {
+static int get_camera_index(const QCameraInfo &info) {
     // The camera index is the last character value
     // This method is only really reliable on Linux, where the
     // hardware indices are in the name as /dev/vid1, for example
@@ -65,24 +105,32 @@ CameraDisplay::CameraDisplay(QWidget *parent) :
     // Setup zoom slider
     setup_slider(
         *(m_ui->zoom_slider), 10, 
-        Zoom::ZOOM_MIN, Zoom::ZOOM_MAX, 
-        Zoom::ZOOM_INTERVAL, true);
+        Zoom::ZOOM_MIN,
+        Zoom::ZOOM_MAX,
+        Zoom::ZOOM_INTERVAL,
+        true);
 
     // Setup rotation slider
     setup_slider(
         *(m_ui->rotate_slider), 0, 
-        Rotation::ROTATION_MIN, Rotation::ROTATION_MAX, 
-        Rotation::ROTATION_INTERVAL, true);
+        Rotation::ROTATION_MIN,
+        Rotation::ROTATION_MAX,
+        Rotation::ROTATION_INTERVAL,
+        true);
 
     // Setup griddisplay sliders
     setup_slider(
         *(m_ui->horizontal_grid_slider), 0, 
-        GridLocation::GRIDLOCATION_MIN, GridLocation::GRIDLOCATION_MAX, 
-        GridLocation::GRIDLOCATION_INTERVAL, true);
+        GridLocation::GRIDLOCATION_MIN,
+        GridLocation::GRIDLOCATION_MAX,
+        GridLocation::GRIDLOCATION_INTERVAL,
+        true);
     setup_slider(
         *(m_ui->vertical_grid_slider), 0, 
         GridLocation::GRIDLOCATION_MIN, 
-        GridLocation::GRIDLOCATION_MAX, GridLocation::GRIDLOCATION_INTERVAL, true);
+        GridLocation::GRIDLOCATION_MAX,
+        GridLocation::GRIDLOCATION_INTERVAL,
+        true);
 
     // Setup weight selectors
     m_ui->weight_selector->setRange(Grid::MIN_WEIGHT, Grid::MAX_WEIGHT);
@@ -215,19 +263,7 @@ void CameraDisplay::pressed_play(bool checked) {
     m_ui->play_button->setText(checked ? "⏸" : "▶");
 }
 
-void CameraDisplay::setup_slider(
-    QSlider &slider, 
-    int value, int min, int max,
-    int interval, bool tracking) {
-    slider.setTickInterval(interval);
-    slider.setTickPosition(QSlider::TicksBelow);
-    slider.setMaximum(max);
-    slider.setMinimum(min);
-    slider.setTracking(tracking);
-    slider.setValue(value);
-}
-
-void CameraDisplay::grid_slider_moved(int value) {
+void CameraDisplay::grid_slider_moved() {
     double x = m_ui->horizontal_grid_slider->value() / 100.0;
     double y = m_ui->vertical_grid_slider->value() / 100.0;
     Q_EMIT move_grid(x, y);

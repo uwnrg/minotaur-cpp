@@ -1,24 +1,14 @@
 #ifndef MINOTAUR_CPP_ACTIONBOX_H
 #define MINOTAUR_CPP_ACTIONBOX_H
 
-#include <memory>
+#include "../base/actionbutton.h"
 
 #include <QDialog>
-#include <QPushButton>
-#include <QMetaType>
-#include <QVBoxLayout>
+#include <memory>
 
 // Forward declaration
-class ActionBox;
-
-/**
- * Push button implementation that sets a fixed size
- * and manages the button label. Used with the ActionBox.
- */
-class ActionButton : public QPushButton {
-public:
-    explicit ActionButton(QString &&label, QWidget *parent = nullptr);
-};
+class ActionButton;
+class QVBoxLayout;
 
 /**
  * A Dialog that is shown when VideoModifiers in the camera display
@@ -32,6 +22,7 @@ Q_OBJECT
 
 public:
     explicit ActionBox(QWidget *parent = nullptr);
+    ~ActionBox();
 
     /**
      * Create a new action button and return a reference to it
@@ -62,7 +53,7 @@ private:
      * List of the button pointers, which are managed by
      * unique pointers.
      */
-    std::vector<std::unique_ptr<ActionButton>> m_actions;
+    std::vector<std::unique_ptr<base::ActionButton>> m_actions;
 };
 
 #endif //MINOTAUR_CPP_ACTIONBOX_H

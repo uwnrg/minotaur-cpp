@@ -1,8 +1,9 @@
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
-#include "controller.h"
 #include "../utility/vector.h"
+#include "controller.h"
+#include <QObject>
 
 class SimulatorScene;
 class GlobalSim;

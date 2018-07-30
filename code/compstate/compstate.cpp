@@ -1,6 +1,16 @@
 #include "compstate.h"
+#include "objectprocedure.h"
 #include "parammanager.h"
+#include "procedure.h"
+
+#include "../camera/statusbox.h"
+#include "../camera/statuslabel.h"
 #include "../gui/global.h"
+#include "../utility/logger.h"
+#include "../utility/utility.h"
+#include "../utility/vector.h"
+
+#include <opencv2/core/types.hpp>
 
 #ifndef NDEBUG
 #include <cassert>
@@ -8,14 +18,18 @@
 #endif
 
 /**
+ * Determine the likelihood that a bounding box actually contains the
+ * object or robot that is tracked, based on the squareness of the rectangle
+ * and its closeness to the calibrated area.
+ *
  * Based off formula in
  * https://users.cs.cf.ac.uk/Paul.Rosin/resources/papers/squareness-JMIV-postprint.pdf
  *
- * @param rect
- * @param calibrated_area
- * @return
+ * @param rect            bounding box rectangle
+ * @param calibrated_area the expected area of the object or robot
+ * @return a value representing accuracy
  */
-double acquisition_r(const cv::Rect2d &rect, double calibrated_area) {
+static double acquisition_r(const cv::Rect2d &rect, double calibrated_area) {
     double area = rect.width * rect.height;
     if (!area) { return 1000; }
     double t = rect.width > rect.height
@@ -25,14 +39,21 @@ double acquisition_r(const cv::Rect2d &rect, double calibrated_area) {
     return fabs(area - calibrated_area) / (area > calibrated_area ? area : calibrated_area) * t;
 }
 
-QString center_text(const cv::Rect2d &rect, const char *label) {
+static QString center_text(const cv::Rect2d &rect, const char *label) {
     QString text;
     text.sprintf("%6s: (%6.1f , %6.1f )", label, rect.x + rect.width / 2, rect.y + rect.height / 2);
     return text;
 }
 
+struct CompetitionState::Impl {
+    cv::Rect2d box_robot;
+    cv::Rect2d box_object;
+    cv::Rect2d box_target;
+};
+
 CompetitionState::CompetitionState(MainWindow *parent) :
     m_parent(parent),
+    m_impl(std::make_unique<Impl>()),
     m_tracking_robot(false),
     m_tracking_object(false),
     m_acquire_walls(false),
@@ -43,12 +64,14 @@ CompetitionState::CompetitionState(MainWindow *parent) :
     }
 }
 
+CompetitionState::~CompetitionState() = default;
+
 void CompetitionState::acquire_robot_box(const cv::Rect2d &robot_box) {
 #ifndef NDEBUG
     assert(m_robot_loc_label != nullptr);
 #endif
     m_robot_loc_label->setText(center_text(robot_box, "Robot"));
-    m_robot_box = robot_box;
+    m_impl->box_robot = robot_box;
     m_robot_box_fresh = true;
 }
 
@@ -57,12 +80,12 @@ void CompetitionState::acquire_object_box(const cv::Rect2d &object_box) {
     assert(m_object_loc_label != nullptr);
 #endif
     m_object_loc_label->setText(center_text(object_box, "Object"));
-    m_object_box = object_box;
+    m_impl->box_object = object_box;
     m_object_box_fresh = true;
 }
 
 void CompetitionState::acquire_target_box(const cv::Rect2d &target_box) {
-    m_target_box = target_box;
+    m_impl->box_target = target_box;
 }
 
 void CompetitionState::acquire_walls(std::shared_ptr<wall_arr> &walls) {
@@ -95,16 +118,16 @@ void CompetitionState::set_object_type(int object_type) {
 
 cv::Rect2d &CompetitionState::get_robot_box(bool consume) {
     m_robot_box_fresh = m_robot_box_fresh && !consume;
-    return m_robot_box;
+    return m_impl->box_robot;
 }
 
 cv::Rect2d &CompetitionState::get_object_box(bool consume) {
     m_object_box_fresh = m_object_box_fresh && !consume;
-    return m_object_box;
+    return m_impl->box_object;
 }
 
 cv::Rect2d &CompetitionState::get_target_box() {
-    return m_target_box;
+    return m_impl->box_target;
 }
 
 bool CompetitionState::is_robot_box_fresh() const {
@@ -116,11 +139,11 @@ bool CompetitionState::is_object_box_fresh() const {
 }
 
 bool CompetitionState::is_robot_box_valid() const {
-    return acquisition_r(m_robot_box, g_pm->robot_calib_area) < g_pm->area_acq_r_sigma;
+    return acquisition_r(m_impl->box_robot, g_pm->robot_calib_area) < g_pm->area_acq_r_sigma;
 }
 
 bool CompetitionState::is_object_box_valid() const {
-    return acquisition_r(m_object_box, g_pm->object_calib_area) < g_pm->area_acq_r_sigma;
+    return acquisition_r(m_impl->box_object, g_pm->object_calib_area) < g_pm->area_acq_r_sigma;
 }
 
 void CompetitionState::clear_path() {

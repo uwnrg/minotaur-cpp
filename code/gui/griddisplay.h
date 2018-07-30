@@ -1,27 +1,16 @@
 #ifndef MINOTAUR_CPP_GRIDDISPLAY_H
 #define MINOTAUR_CPP_GRIDDISPLAY_H
 
-#include <QWidget>
-#include <QGraphicsScene>
-#include <QGraphicsView>
-#include <QPainter>
-#include <QDialog>
-#include <QVBoxLayout>
-#include <QButtonGroup>
-#include <QPushButton>
-#include <QGraphicsGridLayout>
-#include <QSignalMapper>
-#include <QMouseEvent>
-#include <QRubberBand>
-
 #include "../utility/array2d.h"
-#include "../utility/utility.h"
 #include "../utility/vector.h"
-#include "../camera/cameradisplay.h"
-#include "../camera/imageviewer.h"
 
+#include <QWidget>
+
+class QGraphicsScene;
+class QGraphicsView;
+class QRubberBand;
 class CameraDisplay;
-
+class ImageViewer;
 class GridButton;
 
 class GridDisplay : public QWidget {
@@ -35,6 +24,7 @@ public:
     int y();
 
     GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_display);
+    ~GridDisplay();
 
     void mousePressEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;

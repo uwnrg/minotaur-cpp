@@ -1,11 +1,12 @@
-#include <QPainter>
-#include <chrono>
-
+#include "../controller/simulator.h"
+#include "../gui/mainwindow.h"
 #include "arrow.h"
 #include "renderscene.h"
 #include "statsdisplay.h"
 
-#include "../gui/mainwindow.h"
+#include <QPaintEvent>
+#include <QPainter>
+#include <chrono>
 
 RenderScene::RenderScene(std::shared_ptr<Simulator> simulator, QWidget *parent)
         : QOpenGLWidget(parent),

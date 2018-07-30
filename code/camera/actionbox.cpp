@@ -1,17 +1,14 @@
-#include "actionbox.h"
+#include <QVBoxLayout>
 
+#include "actionbutton.h"
+#include "actionbox.h"
 #include "../utility/utility.h"
 
-ActionButton::ActionButton(QString &&label, QWidget *parent)
-    : QPushButton(label, parent) {
-    // Set a fixed size for the buttons
-    setMinimumSize(150, 50);
-    setMaximumSize(200, 75);
-}
+ActionBox::~ActionBox() = default;
 
-ActionBox::ActionBox(QWidget *parent)
-    : QDialog(parent),
-      m_layout(std::make_unique<QVBoxLayout>()) {
+ActionBox::ActionBox(QWidget *parent) :
+    QDialog(parent),
+    m_layout(std::make_unique<QVBoxLayout>()) {
     // Create the layout and set it
     reset_actions();
     setLayout(m_layout.get());
@@ -35,8 +32,9 @@ ActionButton *ActionBox::add_action(QString &&label) {
     // New button index
     std::size_t size = m_actions.size();
     // Emplace the pointer
-    m_actions.emplace_back(new ActionButton(std::forward<QString>(label), this));
-    m_layout->addWidget(m_actions[size].get());
+    m_actions.push_back(std::make_unique<ActionButton>(std::forward<QString>(label), this));
+    ActionButton *button = dynamic_cast<ActionButton *>(m_actions[size].get());
+    m_layout->addWidget(button);
     // Return reference to the button
-    return m_actions[size].get();
+    return button;
 }

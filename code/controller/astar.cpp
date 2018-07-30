@@ -1,7 +1,8 @@
 #include "astar.h"
 
-#include "../gui/griddisplay.h"
+#include "../camera/imageviewer.h"
 #include "../compstate/parammanager.h"
+#include "../gui/griddisplay.h"
 #include "../utility/algorithm.h"
 
 #include <unordered_set>
@@ -10,9 +11,7 @@
 #include <map>
 
 #ifndef NDEBUG
-
 #include <cassert>
-
 #endif
 
 #define TERRAIN_WALL -1

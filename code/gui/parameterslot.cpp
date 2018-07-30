@@ -1,7 +1,8 @@
 #include "parameterslot.h"
+#include "parameterbox.h"
 #include "ui_parameterslot.h"
 
-#include "parameterbox.h"
+#include <QVariant>
 
 ParameterSlot::ParameterSlot(
     const QString &name,

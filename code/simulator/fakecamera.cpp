@@ -1,7 +1,9 @@
+#include <opencv2/imgproc.hpp>
 #include "fakecamera.h"
 #include "globalsim.h"
 #include "../gui/mainwindow.h"
 #include "../gui/global.h"
+#include "../utility/vector.h"
 
 FakeCamera::FakeCamera() {
     open(FAKE_CAMERA);

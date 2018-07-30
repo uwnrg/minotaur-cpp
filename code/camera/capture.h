@@ -2,11 +2,13 @@
 #define MINOTAUR_CPP_CAPTURE_H
 
 #include <QObject>
-#include <QBasicTimer>
+#include <memory>
 
-#include <opencv2/opencv.hpp>
-
-Q_DECLARE_METATYPE(cv::UMat);
+// OpenCV forward declarations
+namespace cv {
+    class UMat;
+    class VideoCapture;
+}
 
 /**
  * This object is the beginning of the image pipeline and
@@ -43,11 +45,6 @@ public:
 private:
     void timerEvent(QTimerEvent *ev) override;
 
-    /**
-     * Timer fires at a fixed interval to pull images
-     * from the capture.
-     */
-    QBasicTimer m_timer;
     /**
      * Video Capture instance that produces images.
      */

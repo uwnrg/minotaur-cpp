@@ -2,12 +2,12 @@
 #define MINOTAUR_CPP_PREPROCESSOR_H
 
 #include <QObject>
-#include <QBasicTimer>
-
 #include <memory>
 
-#include <opencv2/core/mat.hpp>
-
+// Forward declarations
+namespace cv {
+    class UMat;
+}
 class VideoModifier;
 
 /**
@@ -59,21 +59,15 @@ public:
     double get_zoom_factor() const;
 
 private:
+    // Delegate friend declaration
+    friend struct PreprocessorDelegate;
+
     /**
      * Queue a frame to be processed.
      *
      * @param frame
      */
     void queue_frame(const cv::UMat &frame);
-
-    /**
-     * Delegate function with a copied cv::UMat pointer.
-     * Needed since some OpenCV functions do not accept const references
-     * and Qt cannot handle non-const reference to Mat as a metatype.
-     *
-     * @param frame frame to preprocess
-     */
-    void preprocess_frame_delegate(cv::UMat frame);
 
     /**
      * Timer fired to trigger a frame processing.
@@ -83,9 +77,6 @@ private:
     void timerEvent(QTimerEvent *ev) override;
 
     std::shared_ptr<VideoModifier> m_modifier;
-    cv::UMat m_frame;
-
-    QBasicTimer m_queue_timer;
 
     double m_zoom_factor;
     int m_rotation_angle;

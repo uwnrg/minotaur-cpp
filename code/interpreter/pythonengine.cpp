@@ -1,4 +1,6 @@
+#include "../utility/logger.h"
 #include "pythonengine.h"
+#include "python.h"
 
 PythonEngine::PythonEngine() = default;
 

@@ -1,17 +1,13 @@
 #ifndef MINOTAUR_CPP_RENDERSCENE_H
 #define MINOTAUR_CPP_RENDERSCENE_H
 
-#include <QOpenGLWidget>
-#include <QVector2D>
-#include <QPoint>
-#include <QTimer>
-#include <memory>
-
-#include "../controller/simulator.h"
 #include "renderscenebase.h"
-#include "drawable.h"
 #include "simsolenoid.h"
 #include "sam.h"
+
+#include <QOpenGLWidget>
+#include <QTimer>
+#include <memory>
 
 /**
  * Render scene which is where entities are to be drawn.

@@ -2,28 +2,28 @@
 #define MAINWINDOW_H
 
 #include <memory>
-
 #include <QMainWindow>
 
-#include "../controller/controller.h"
-#include "../controller/solenoid.h"
-#include "../controller/simulator.h"
-#include "../camera/cameradisplay.h"
-#include "../camera/statusbox.h"
-#include "../compstate/compstate.h"
-#include "../simulator/globalsim.h"
-
-#include "actionabout.h"
-#include "scriptwindow.h"
-#include "serialbox.h"
-#include "simulatorwindow.h"
-#include "parameterbox.h"
-
+// UI forward declaration
 namespace Ui {
     class MainWindow;
 }
-
+// Qt forward declarations
 class QKeyEvent;
+class QTextEdit;
+// Forward declarations
+class ActionAbout;
+class CameraDisplay;
+class CompetitionState;
+class Controller;
+class GlobalSim;
+class ParameterBox;
+class ScriptWindow;
+class SerialBox;
+class Simulator;
+class SimulatorWindow;
+class Solenoid;
+class StatusBox;
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -41,13 +41,9 @@ public:
 
 public:
     std::weak_ptr<Controller> controller() const;
-
     std::weak_ptr<Solenoid> solenoid() const;
-
     std::weak_ptr<StatusBox> status_box() const;
-
     std::weak_ptr<ParameterBox> param_box() const;
-
     std::weak_ptr<GlobalSim> global_sim() const;
 
     CompetitionState &state();
@@ -70,9 +66,8 @@ public Q_SLOTS:
      */
     void invertControllerY();
 
-    inline void switchToSolenoid() { switchControllerTo(Controller::Type::SOLENOID); }
-
-    inline void switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }
+    void switchToSolenoid();
+    void switchToSimulator();
 
 
 private Q_SLOTS:
@@ -86,7 +81,7 @@ private Q_SLOTS:
 private:
     bool eventFilter(QObject *, QEvent *) override;
 
-    void switchControllerTo(Controller::Type type);
+    void switchControllerTo(int type);
 
 private:
     std::unique_ptr<Ui::MainWindow> ui;
@@ -106,9 +101,9 @@ private:
     std::unique_ptr<SerialBox> m_serial_box;
     std::unique_ptr<SimulatorWindow> m_simulator_window;
 
-    Controller::Type m_controller_type;
+    std::unique_ptr<CompetitionState> m_compstate;
 
-    CompetitionState m_compstate;
+    int m_controller_type;
 };
 
 #endif // MAINWINDOW_H

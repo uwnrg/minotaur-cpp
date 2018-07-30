@@ -2,12 +2,12 @@
 #define PARAMETERSLOT_H
 
 #include <QWidget>
-#include <QVariant>
 
 namespace Ui {
     class ParameterSlot;
 }
 
+class QVariant;
 class ParameterBox;
 
 class ParameterSlot : public QWidget {

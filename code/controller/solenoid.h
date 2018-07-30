@@ -2,12 +2,8 @@
 #define SOLENOID_H
 
 #include "controller.h"
-
-#include <fstream>
-#include <queue>
-
-#include <QObject>
 #include <QSerialPort>
+#include <QObject>
 
 enum SerialStatus {
     DISCONNECTED,
@@ -31,8 +27,7 @@ public:
 
     explicit Solenoid(
         const QString &serial_port,
-        QSerialPort::BaudRate baud_rate = QSerialPort::Baud9600
-    );
+        QSerialPort::BaudRate baud_rate = QSerialPort::Baud9600);
 
     ~Solenoid() override;
 
@@ -85,7 +80,7 @@ public:
      *
      * @param status the new port status
      */
-    Q_SIGNAL void serial_status(SerialStatus status);
+    Q_SIGNAL void serial_status(int status);
 
     /**
      * Convert a move vector into a binary representation understood by the

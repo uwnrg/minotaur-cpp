@@ -1,5 +1,8 @@
+#include "renderscenebase.h"
 #include "sam.h"
 #include "simsolenoid.h"
+
+#include <QPainter>
 
 SAMRobot::SAMRobot(RenderSceneBase *scene, float mu_s, float mass, float length)
         : m_renderScene(scene),

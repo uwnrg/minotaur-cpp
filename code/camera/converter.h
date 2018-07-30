@@ -2,12 +2,12 @@
 #define MINOTAUR_CPP_CONVERTER_H
 
 #include <QObject>
-#include <QBasicTimer>
 
-#include <opencv2/opencv.hpp>
-
-// Forward declaration for circular imports
+// Forward declarations
 class ImageViewer;
+namespace cv {
+    class UMat;
+}
 
 /**
  * This object is responsible for taking processed video frames
@@ -51,14 +51,6 @@ public:
     double get_previous_scale() const;
 
 private:
-    /**
-     * cv::Mat pointer deleter function used when converting a Mat
-     * to a QImage.
-     *
-     * @param mat pointer to Mat to delete
-     */
-    static void umat_delete(void *mat);
-
     /**
      * Number of frames processed since last call to get_and_reset_frames().
      */

@@ -1,15 +1,11 @@
 #ifndef MINOTAUR_CPP_OBJECTSTRATEGY_H
 #define MINOTAUR_CPP_OBJECTSTRATEGY_H
 
-#include "procedure.h"
-
-#include "../controller/controller.h"
-#include "../utility/vector.h"
-#include "../utility/rect.h"
-
 #include <QObject>
-#include <QTimer>
+#include <memory>
 
+class Controller;
+class Procedure;
 class StatusLabel;
 
 /**
@@ -23,23 +19,7 @@ class ReadyMove : public QObject {
 Q_OBJECT
 
 public:
-    /**
-     * States of the object. The ReadyMove can be uninitialized, which requires
-     * checking the status of the robot.
-     *
-     * In COLLIDING, the robot and object's bounding box collision is resolved, and
-     * in READY_MOVE the robot is moved along a path to the correct location.
-     */
-    enum State {
-        UNINITIALIZED,
-        COLLIDING,
-        READY_MOVE,
-
-        COLLIDING_PROC,
-        READY_MOVE_PROC,
-    };
-
-    explicit ReadyMove(std::weak_ptr<Controller> sol, nrg::dir dir);
+    explicit ReadyMove(std::weak_ptr<Controller> sol, int dir);
     ~ReadyMove();
 
     void start();
@@ -59,20 +39,9 @@ private:
     void do_ready_move_proc();
 
 private:
+    class Impl;
+    std::unique_ptr<Impl> m_impl;
     std::weak_ptr<Controller> m_sol;
-    /**
-     * The desired side of the object to be on.
-     */
-    nrg::dir m_dir;
-
-    /**
-     * Internal state of the object.
-     */
-    State m_state;
-    /**
-     * The collision resolution vector.
-     */
-    vector2d m_resolve;
 
     /**
      * Procedure instance used to traverse paths and
@@ -81,9 +50,6 @@ private:
     std::unique_ptr<Procedure> m_proc;
 
     StatusLabel *m_state_label;
-
-    QBasicTimer m_timer;
-
     bool m_done;
 };
 

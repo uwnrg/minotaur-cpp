@@ -2,7 +2,8 @@
 #define MINOTAUR_CPP_SAM_H
 
 #include "drawable.h"
-#include "renderscenebase.h"
+
+class RenderSceneBase;
 
 /**
  * This class represents SAM, a robot with an orientation and
@@ -61,6 +62,18 @@ private:
      */
     RenderSceneBase *m_renderScene;
     /**
+     * Coefficient of state friction on this SAM.
+     */
+    float m_fric;
+    /**
+     * The mass of this SAM.
+     */
+    float m_mass;
+    /**
+     * The length of a side of this SAM.
+     */
+    float m_len;
+    /**
      * Current position vector.
      */
     vector2f m_pos;
@@ -73,18 +86,6 @@ private:
      * variable for access by other classes.
      */
     vector2f m_mag;
-    /**
-     * The mass of this SAM.
-     */
-    float m_mass;
-    /**
-     * The length of a side of this SAM.
-     */
-    float m_len;
-    /**
-     * Coefficient of state friction on this SAM.
-     */
-    float m_fric;
 };
 
 

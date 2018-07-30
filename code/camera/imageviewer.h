@@ -1,29 +1,24 @@
 #ifndef MINOTAUR_CPP_IMAGEVIEWER_H_H
 #define MINOTAUR_CPP_IMAGEVIEWER_H_H
 
-#include <QObject>
-#include <QImage>
 #include <QWidget>
+#include <memory>
 
-#include <opencv2/opencv.hpp>
-
-#include "capture.h"
-#include "preprocessor.h"
-#include "converter.h"
-#include "recorder.h"
-#include "camerathread.h"
-
-#include "../gui/griddisplay.h"
-#include "../utility/vector.h"
-
+// Forward declarations
 namespace Ui {
     class ImageViewer;
 }
-
 class QPaintEvent;
+namespace nrg {
+    template<typename val_t> class vector;
+}
 class CameraDisplay;
 class GridDisplay;
-class GridDisplay;
+class Capture;
+class Preprocessor;
+class Converter;
+class Recorder;
+typedef nrg::vector<int> vector2i;
 
 /**
  * The ImageViewer is a widget responsible for displaying the images captured
@@ -34,13 +29,6 @@ class ImageViewer : public QWidget {
     Q_OBJECT
 
 public:
-    enum {
-        // Time in milliseconds between each framerate update
-        FRAMERATE_UPDATE_INTERVAL = 1000,
-        // Time in milliseconds between each rotation update
-        ROTATE_UPDATE_INTERVAL = 25
-    };
-
     explicit ImageViewer(CameraDisplay *parent = nullptr);
 
     ~ImageViewer() override;
@@ -178,26 +166,10 @@ private:
     QImage m_image;
 
     // Pipeline elements
-    Capture m_capture;
-    Preprocessor m_preprocessor;
-    Converter m_converter;
-    Recorder m_recorder;
-
-    // Each of the pipelines elements belong in a thread
-    IThread m_thread_capture;
-    IThread m_thread_preprocessor;
-    IThread m_thread_converter;
-    IThread m_thread_recorder;
-
-    /**
-     * Timer fired to increment rotation.
-     */
-    QBasicTimer m_rotation_timer;
-    /**
-     * Timer fired to grab the number of processed frames
-     * and display them.
-     */
-    QBasicTimer m_frame_timer;
+    std::unique_ptr<Capture> m_capture;
+    std::unique_ptr<Preprocessor> m_preprocessor;
+    std::unique_ptr<Converter> m_converter;
+    std::unique_ptr<Recorder> m_recorder;
 
     /**
      * Whether mouse events should be handled to add path nodes.

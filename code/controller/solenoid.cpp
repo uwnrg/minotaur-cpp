@@ -1,7 +1,5 @@
-#include "solenoid.h"
-
 #include "../utility/logger.h"
-
+#include "solenoid.h"
 #include <QSerialPortInfo>
 
 Solenoid::Solenoid()
@@ -34,10 +32,8 @@ void Solenoid::attempt_connection(
         bool found_port = false;
         auto ports = QSerialPortInfo::availablePorts();
         for (auto &port : ports) {
-            if (
-                !port.isBusy() && (port.description().contains("Arduino") ||
-                                   port.manufacturer().contains("Arduino"))
-                ) {
+            if (!port.isBusy() && (port.description().contains("Arduino") ||
+                                   port.manufacturer().contains("Arduino"))) {
                 port_to_use = port;
                 found_port = true;
                 break;

@@ -1,5 +1,6 @@
 #include "arrow.h"
-#include "QPainter"
+#include "renderscenebase.h"
+#include <QPainter>
 
 Arrow::Arrow(RenderSceneBase *scene, const vector2f &P, const vector2f &B)
         : m_renderScene(scene),

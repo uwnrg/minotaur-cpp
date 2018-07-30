@@ -1,15 +1,13 @@
 #ifndef MINOTAUR_CPP_SERIAL_H_H
 #define MINOTAUR_CPP_SERIAL_H_H
 
-#include <memory>
-
 #include <QDialog>
-
-#include "../controller/solenoid.h"
+#include <memory>
 
 // Forward declaration
 class QSlider;
 class QLineEdit;
+class Solenoid;
 
 namespace Ui {
     class SerialBox;
@@ -30,7 +28,7 @@ public:
 
     void setup_slider(QSlider &slider, int value, int min, int max, int interval);
 
-    Q_SLOT void update_status(SerialStatus new_status);
+    Q_SLOT void update_status(int new_status);
 
     Q_SLOT void attempt_connection();
 
@@ -57,7 +55,7 @@ private:
     QSlider *m_sliders[4];
     QLineEdit *m_edit_boxes[4];
 
-    SerialStatus m_status;
+    int m_status;
 };
 
 #endif //MINOTAUR_CPP_SERIAL_H_H

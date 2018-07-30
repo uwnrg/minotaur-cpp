@@ -1,17 +1,48 @@
 #include "logger.h"
 
+#include <QString>
+#include <QTextEdit>
+
 std::ostream &operator<<(std::ostream &ss, const QString &qstr) {
     return ss << qstr.toStdString();
 }
 
+bool Logger::log(const std::string &message, LogType type) {
+    return s_logger.log_message(message, type);
+}
+bool Logger::log(const QString &message, LogType type) {
+    return s_logger.log_message(message.toStdString(), type);
+}
+
 Logger Logger::s_logger;
 
+bool Logger::log_message(const std::string &message, LogType type) {
+    std::stringstream ss;
+    ss << "<font color=\"";
+    switch (type) {
+        case FATAL:
+            ss << "red";
+            break;
+        case DEBUG:
+            ss << "blue";
+            break;
+        default: // INFO
+            ss << "black";
+            break;
+    }
+    ss << "\">"
+       << ClockTime::getCurrentTime()
+       << message
+       << "</font>";
+    return *m_log_out << ss.str();
+}
+
 void Logger::setStream(QTextEdit *output_field) {
-    s_logger.m_log_out.reset(reinterpret_cast<__log_out *>(new __log_text_field(output_field)));
+    s_logger.m_log_out.reset(reinterpret_cast<log_out *>(new log_text_field(output_field)));
 }
 
 void Logger::setStdout() {
-    s_logger.m_log_out.reset(reinterpret_cast<__log_out *>(new __log_stdout));
+    s_logger.m_log_out.reset(reinterpret_cast<log_out *>(new log_stdout));
 }
 
 bool Logger::clear_log() {
@@ -19,43 +50,44 @@ bool Logger::clear_log() {
 }
 
 Logger::Logger() :
-    m_log_out(reinterpret_cast<__log_out *>(new __log_stdout)) {}
+    m_log_out(reinterpret_cast<log_out *>(new log_stdout)) {}
 
-__log_stream::__log_stream(Logger::LogType log_type) :
+log_stream::log_stream(Logger::LogType log_type) :
     m_log_type(log_type) {}
 
-__log_stream::~__log_stream() {
+log_stream::~log_stream() {
     m_buffer << std::endl;
     Logger::log(m_buffer.str(), m_log_type);
 }
 
-__log_stream::__log_stream(__log_stream &&o) noexcept :
+log_stream::log_stream(log_stream &&o) noexcept :
     m_log_type(o.m_log_type) {
     m_buffer = std::move(o.m_buffer);
 }
 
-__log_stream log(Logger::LogType log_type) {
-    return __log_stream(log_type);
+log_stream log(Logger::LogType log_type) {
+    return log_stream(log_type);
 }
 
-__log_stream debug() {
+log_stream debug() {
     return log(Logger::DEBUG);
 }
 
-__log_stream fatal() {
+log_stream fatal() {
     return log(Logger::FATAL);
 }
 
-bool __log_out::operator<<(const std::string &) {
+bool log_out::operator<<(const std::string &) {
     // Base class is no-op
     return false;
 }
 
-bool __log_stdout::operator<<(const std::string &str) {
+bool log_stdout::operator<<(const std::string &str) {
     std::cout << str << std::endl;
+    return true;
 }
 
-bool __log_text_field::operator<<(const std::string &str) {
+bool log_text_field::operator<<(const std::string &str) {
     if (m_output_field) {
         m_output_field->append(QString::fromStdString(str));
         return true;
@@ -63,17 +95,17 @@ bool __log_text_field::operator<<(const std::string &str) {
     return false;
 }
 
-bool __log_out::clear() {
+bool log_out::clear() {
     // Base class is no-op
     return false;
 }
 
-bool __log_stdout::clear() {
+bool log_stdout::clear() {
     // Cannot clear the console
     return false;
 }
 
-bool __log_text_field::clear() {
+bool log_text_field::clear() {
     if (m_output_field) {
         m_output_field->clear();
         return true;
@@ -81,5 +113,5 @@ bool __log_text_field::clear() {
     return false;
 }
 
-__log_text_field::__log_text_field(QTextEdit *output_field) :
+log_text_field::log_text_field(QTextEdit *output_field) :
     m_output_field(output_field) {}

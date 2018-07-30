@@ -1,9 +1,19 @@
 #ifndef MINOTAUR_CPP_COMMON_H
 #define MINOTAUR_CPP_COMMON_H
 
-#include "../utility/vector.h"
-#include "../utility/rect.h"
-#include "../utility/graph2d.h"
+#include <vector>
+
+namespace cv {
+    template<typename _Tp> class Rect_;
+    typedef Rect_<double> Rect2d;
+}
+namespace nrg {
+    template<typename val_t> class vector;
+    template<typename val_t> class rect;
+}
+typedef nrg::vector<double> vector2d;
+typedef nrg::rect<double> rect2d;
+typedef std::vector<nrg::vector<double>> path2d;
 
 namespace algo {
 
@@ -53,7 +63,7 @@ namespace algo {
     path2d robot_object_path(
         const rect2d &rob,
         const rect2d &obj,
-        nrg::dir side
+        int side
     );
 
 }

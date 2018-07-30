@@ -2,7 +2,6 @@
 #define ACTIONABOUT_H
 
 #include <QDialog>
-
 #include <memory>
 
 namespace Ui {

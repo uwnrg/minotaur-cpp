@@ -1,5 +1,7 @@
 #include "gridbutton.h"
 #include "griddisplay.h"
+#include <QMouseEvent>
+#include <QRubberBand>
 
 #ifndef NDEBUG
 #include <QDebug>

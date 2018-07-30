@@ -2,8 +2,10 @@
 #define MINOTAUR_CPP_DRAWABLE_H
 
 #include <cmath>
+#include <QVector2D>
 
-#include <QPaintEvent>
+class QPainter;
+class QPaintEvent;
 
 /**
  * This class represents any entity that has a position

@@ -3,13 +3,10 @@
 
 #include <QDialog>
 #include <memory>
-#include "../simulator/renderscene.h"
-
-class Simulator;
-
-class SimulatorScene;
 
 class MainWindow;
+class RenderScene;
+class Simulator;
 
 namespace Ui {
     class SimulatorWindow;

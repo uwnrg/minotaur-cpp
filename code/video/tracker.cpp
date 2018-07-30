@@ -5,8 +5,9 @@
 #include <QPushButton>
 
 #include "tracker.h"
-#include "../gui/global.h"
+#include "../camera/actionbutton.h"
 #include "../compstate/compstate.h"
+#include "../gui/global.h"
 
 #ifndef NDEBUG
 

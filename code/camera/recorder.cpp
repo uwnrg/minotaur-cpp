@@ -1,8 +1,8 @@
-#include "recorder.h"
-
-#include "../utility/utility.h"
-
 #include <opencv2/videoio/videoio_c.h>
+#include <opencv2/videoio.hpp>
+
+#include "recorder.h"
+#include "../utility/utility.h"
 
 Recorder::Recorder(int frame_rate, bool color) :
     m_frame_rate(frame_rate),

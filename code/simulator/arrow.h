@@ -7,7 +7,8 @@
 #define ARR_Y 9
 
 #include "drawable.h"
-#include "renderscenebase.h"
+
+class RenderSceneBase;
 
 /**
  * Arrow class represents an arrow that is drawn in
