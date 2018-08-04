@@ -1,16 +1,19 @@
 # Path to project cmake files
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+    ${CMAKE_CURRENT_LIST_DIR}/cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cotire/CMake)
 # Include utility and Python build functions
 include(Util)
 include(Python)
+include(cotire)
 
 # Release and Debug builds
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif ()
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -ffunction-sections -fdata-sections")
+set(CMAKE_CXX_FLAGS_DEBUG "-O2 -g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 if (NOT (CMAKE_BUILD_TYPE MATCHES Debug))
     set(NO_DEBUG ON)
 endif ()
@@ -75,6 +78,7 @@ set(CMAKE_AUTOUIC ON)
 
 get_target_property(QtCore_location Qt5::Core LOCATION)
 add_library(minotaur-lib ${SOURCE_FILES} ${HEADER_FILES} ${FORM_FILES})
+cotire(minotaur-lib)
 
 # Qt5 modules
 qt5_use_modules(minotaur-lib SerialPort)
@@ -88,6 +92,7 @@ if (NO_DEBUG)
 else ()
     log("Building with debugging on")
 endif ()
+unset(NO_DEBUG)
 
 # Find and link OpenCV 3 package
 find_package(OpenCV 3 REQUIRED)
@@ -132,4 +137,5 @@ endif ()
 
 # Create the Minotaur executable
 add_executable(minotaur-cpp ${MINOTAUR_EXECUTABLE_MAIN})
+cotire(minotaur-cpp)
 target_link_libraries(minotaur-cpp minotaur-lib)

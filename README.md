@@ -14,7 +14,7 @@ with the following goals in mind:
 Please checkout the *Projects* tab for information about roadmap and current progress.
 
 # Cloning Repo and Submodules
-This repository has the `googletest` submodule, clone with `--recursive` or 
+This repository has the `googletest` submodule, clone with `--recursive` or
 be sure to run `git submodule update --init` after cloning.
 
 # Setting up Minotaur on Windows
@@ -84,7 +84,7 @@ Here you can either install CLion and import the project (recommended) or
 5. `cmake ../ -DCMAKE_PREFIX_PATH=/path/to/qt/%VERSION%/clang_64/lib/cmake`
 6. `make`
 
-And then run with `./minotaur-cpp`. Note that if you're using CLion, go to 
+And then run with `./minotaur-cpp`. Note that if you're using CLion, go to
 `Preference -> Build, Execution, Deployment -> CMake` and add the same `CMAKE_PREFIX_PATH`
 argument.
 
@@ -107,7 +107,7 @@ sudo apt install qtmultimedia5-dev libqt5multimedia5-plugins libqt5serialport5-d
 If some packages cannot be found, you may need to run `sudo add-apt-repository universe && sudo apt update`.
 
 You will need to build OpenCV 3 from source. Download the OpenCV 3 source
-and build. It is recommended to build with `USE_QT=ON` instead of GTK. 
+and build. It is recommended to build with `USE_QT=ON` instead of GTK.
 Additional instructions found [here](https://github.com/BVLC/caffe/wiki/OpenCV-3.3-Installation-Guide-on-Ubuntu-16.04).
 
 Alternatively, if your computer is running `amd64` architecture with Ubuntu 16.04, a prebuilt Debian
