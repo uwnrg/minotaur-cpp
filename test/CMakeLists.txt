@@ -13,6 +13,7 @@ file(GLOB TEST_FILES
         "./**/*.cpp")
 
 add_executable(tests ${TEST_FILES})
+cotire(tests)
 target_link_libraries(tests gtest)
 target_link_libraries(tests minotaur-lib)
 add_dependencies(tests gtest)
