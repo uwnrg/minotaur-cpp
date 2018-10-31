@@ -119,7 +119,6 @@ Then clone the repository and build with
 ```bash
 git clone --recursive https://github.com/uwnrg/minotaur-cpp.git
 cd minotaur-cpp
-git clone https://github.com/sakra/cotire
 mkdir build
 cd build
 cmake ../
