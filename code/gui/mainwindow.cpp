@@ -62,7 +62,6 @@ MainWindow::MainWindow() :
 
     // Simulator and controls
     connect(m_camera_display.get(), &CameraDisplay::camera_changed, this, &MainWindow::switchToSimulator);
-    connect(ui->move_button, &QPushButton::clicked, this, &MainWindow::moveButtonClicked);
 
     // Opening sub windows
     connect(ui->start_python_interpreter, &QAction::triggered, m_script_window.get(), &QDialog::show);
@@ -144,10 +143,10 @@ void MainWindow::mousePressEvent(QMouseEvent *) {
     this->setFocus();
 }
 
-void MainWindow::moveButtonClicked() {
-    auto dir = (Controller::Dir) ui->selected_direction->currentIndex();
-    m_controller->move(dir);
-}
+//void MainWindow::moveButtonClicked() {
+    //auto dir = (Controller::Dir) ui->selected_direction->currentIndex();
+    //m_controller->move(dir);
+//}
 
 void MainWindow::switchToSolenoid() { switchControllerTo(Controller::Type::SOLENOID); }
 void MainWindow::switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }
