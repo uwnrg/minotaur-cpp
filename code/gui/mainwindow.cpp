@@ -143,11 +143,6 @@ void MainWindow::mousePressEvent(QMouseEvent *) {
     this->setFocus();
 }
 
-//void MainWindow::moveButtonClicked() {
-    //auto dir = (Controller::Dir) ui->selected_direction->currentIndex();
-    //m_controller->move(dir);
-//}
-
 void MainWindow::switchToSolenoid() { switchControllerTo(Controller::Type::SOLENOID); }
 void MainWindow::switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }
 
