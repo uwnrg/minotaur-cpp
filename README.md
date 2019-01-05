@@ -139,6 +139,11 @@ in the `CMakeLists.txt` directory.
 ### Building with Debug output off
 Configure the CMake project with `cmake -DNO_DEBUG=ON ...`
 
+## Running Minotaur With SAM
+Steps for running Minotaur with the microscope camera setup
+1. Run `./tcam_view`. On the tcam window, select an option in each dropdown menu. Make sure to close the window before continuing
+2. Run minotaur as usual
+
 ### Contributing
 Please refer to the [Contributing Guidelines](CONTRIBUTING.md).
 
