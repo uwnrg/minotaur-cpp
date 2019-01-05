@@ -9,7 +9,7 @@ public:
     weak_ref() :
         m_ptr(nullptr) {}
 
-    weak_ref(nullptr_t) :
+    weak_ref(std::nullptr_t) :
         m_ptr(nullptr) {}
 
     weak_ref(ref_t *ptr) :
@@ -34,7 +34,7 @@ public:
         return *this;
     }
 
-    weak_ref<ref_t> &operator=(nullptr_t) {
+    weak_ref<ref_t> &operator=(std::nullptr_t) {
         m_ptr = nullptr;
         return *this;
     }
