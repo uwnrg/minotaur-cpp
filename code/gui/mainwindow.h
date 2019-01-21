@@ -72,9 +72,6 @@ public Q_SLOTS:
 
 private Q_SLOTS:
 
-    // Button click events
-    void moveButtonClicked();
-
     // Mouse events
     void mousePressEvent(QMouseEvent *event) override;
 
