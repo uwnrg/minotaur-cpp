@@ -9,7 +9,7 @@ std::ostream &operator<<(std::ostream &ss, const QString &qstr) {
 }
 
 void Logger::write_to_file(const std::string &message){
-    std::ofstream myfile("logs_to_file.txt", std::fstream::app);
+    std::ofstream myfile("log.txt", std::fstream::app);
     if (myfile.is_open()) {
         myfile << ClockTime::getCurrentTime() << message << "\n";
         myfile.close();
