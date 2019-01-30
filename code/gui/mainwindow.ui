@@ -13,101 +13,19 @@
   <property name="minimumSize">
    <size>
     <width>650</width>
-    <height>420</height>
+    <height>280</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>650</width>
-    <height>420</height>
+    <height>280</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Minotaur</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>300</y>
-      <width>571</width>
-      <height>59</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="instruction_interface">
-     <item>
-      <widget class="QLabel" name="movement_label">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Enter Manual Movement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLineEdit" name="move_command_edit">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-         <property name="placeholderText">
-          <string>Disabled</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="selected_direction">
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>0</height>
-          </size>
-         </property>
-         <item>
-          <property name="text">
-           <string>Up</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Down</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Right</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Left</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="move_button">
-         <property name="minimumSize">
-          <size>
-           <width>125</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Enter Instruction</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
    <widget class="QWidget" name="layoutWidget1">
     <property name="geometry">
      <rect>
