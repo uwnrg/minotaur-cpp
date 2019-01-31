@@ -55,6 +55,11 @@ public:
     };
 
     /**
+     * Log a message to a text file, with a timestamp.
+     */
+    static void write_to_file(const std::string &message);
+
+    /**
      * Log a message to a set output stream, with a timestamp.
      *
      * @param message message to log

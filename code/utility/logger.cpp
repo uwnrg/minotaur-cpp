@@ -1,15 +1,25 @@
 #include "logger.h"
-
 #include <QString>
 #include <QTextEdit>
+#include <fstream>
+#include <string.h>
 
 std::ostream &operator<<(std::ostream &ss, const QString &qstr) {
     return ss << qstr.toStdString();
 }
 
+void Logger::write_to_file(const std::string &message){
+    std::ofstream myfile("log.txt", std::fstream::app);
+    if (myfile.is_open()) {
+        myfile << ClockTime::getCurrentTime() << message << "\n";
+        myfile.close();
+    }
+}
+
 bool Logger::log(const std::string &message, LogType type) {
     return s_logger.log_message(message, type);
 }
+
 bool Logger::log(const QString &message, LogType type) {
     return s_logger.log_message(message.toStdString(), type);
 }
@@ -34,6 +44,7 @@ bool Logger::log_message(const std::string &message, LogType type) {
        << ClockTime::getCurrentTime()
        << message
        << "</font>";
+    write_to_file(message);
     return *m_log_out << ss.str();
 }
 
