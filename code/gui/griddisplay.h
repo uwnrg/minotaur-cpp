@@ -5,9 +5,13 @@
 #include "../utility/vector.h"
 
 #include <QWidget>
+#include <QPen>
 
 class QGraphicsScene;
 class QGraphicsView;
+class QGraphicsRectItem;
+class QBrush;
+class QPen;
 class QRubberBand;
 class CameraDisplay;
 class ImageViewer;
@@ -42,6 +46,10 @@ public:
     const vector2i &get_pos_end() const;
 
     array2d<int> &selected();
+
+    QRect view_geometry();
+
+    bool is_displayed();
 
 public Q_SLOTS:
 
@@ -92,7 +100,7 @@ private:
     double m_x;
     double m_y;
 
-    array2d<GridButton *> m_button;
+    array2d<QGraphicsRectItem *> m_button;
     array2d<int> m_square_selected;
 
     std::unique_ptr<QGraphicsScene> m_scene;
@@ -117,7 +125,15 @@ private:
     vector2i m_select_start;
     QRect m_select_box;
 
+    QBrush m_default_brush;
+    QBrush m_selected_brush;
+    QBrush m_start_brush;
+    QBrush m_end_brush;
+
+    QPen m_default_pen;
+
     std::unique_ptr<QRubberBand> m_rubber_band;
+
 };
 
 #endif //MINOTAUR_CPP_GRIDDISPLAY_H

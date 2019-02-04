@@ -2,12 +2,14 @@
 #include "../camera/imageviewer.h"
 #include "../utility/logger.h"
 #include "griddisplay.h"
-#include "gridbutton.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QRubberBand>
 #include <QMouseEvent>
+#include <QPen>
+#include <QBrush>
+#include <QGraphicsRectItem>
 
 #ifndef NDEBUG
 #include <QDebug>
@@ -30,18 +32,6 @@ enum {
     MAX_BUTTONS_X = 50,
     MAX_BUTTONS_Y = 50
 };
-
-#define BUTTON_STYLE \
-"background-color: rgba(0, 0, 0, 0%); width: 0px; height: 0px; border-style: none;"
-
-#define BUTTON_SELECTED_STYLE \
-"background-color: rgba(0, %1, 0, 20%);  width: 0px; height: 0px; border-style: none;"
-
-#define BUTTON_START_SELECTED_STYLE \
-"background-color: rgba(255, 0, 0, 20%); width: 0px; height: 0px; border-style: none;"
-
-#define BUTTON_END_SELECTED_STYLE \
-"background-color: rgba(0, 0, 255, 20%); width: 0px; height: 0px; border-style: none;"
 
 // Swap two coordinates so that x is the top left point and y is the bottom right
 static void swap_rect_coords(int &x1, int &y1, int &x2, int &y2) {
@@ -91,6 +81,14 @@ GridDisplay::GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_displa
     m_scene->setSceneRect(QRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT));
     
     //TODO: set bounding rectangle to m_img.size()
+    m_default_pen = QPen(Qt::darkGray);
+    m_default_pen.setWidth(1);
+    m_default_brush = QBrush();
+    m_selected_brush = QBrush(Qt::green);
+    m_start_brush = QBrush(Qt::red);
+    m_end_brush = QBrush(Qt::blue);
+    
+
 
     m_view = std::make_unique<QGraphicsView>(m_scene.get(), image_viewer);
     m_view->setStyleSheet("background: transparent");
@@ -104,7 +102,7 @@ GridDisplay::GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_displa
 void GridDisplay::button_clicked(int x, int y) {
     if (m_start_pos_selected) {
         m_square_selected[x][y] = START_WEIGHT;
-        m_button[x][y]->setStyleSheet(BUTTON_START_SELECTED_STYLE);
+        m_button[x][y]->setBrush(m_start_brush);
         m_start_position = {x, y};
         m_start_pos_selected = false;
         log() << "Robot Start Position (" << x << "," << y << ") = " << m_square_selected[x][y];
@@ -113,10 +111,10 @@ void GridDisplay::button_clicked(int x, int y) {
         if (m_end_position.x() == END_WEIGHT &&
             m_end_position.y() == END_WEIGHT) {
             m_square_selected[m_end_position.x()][m_end_position.y()] = -1;
-            m_button[m_end_position.x()][m_end_position.y()]->setStyleSheet(BUTTON_STYLE);
+            m_button[m_end_position.x()][m_end_position.y()]->setBrush(m_default_brush);
         }
         m_square_selected[x][y] = END_WEIGHT;
-        m_button[x][y]->setStyleSheet(BUTTON_END_SELECTED_STYLE);
+        m_button[x][y]->setBrush(m_end_brush);
         m_end_position = {x, y};
         m_end_pos_selected = false;
         log() << "Robot End Position (" << x << "," << y << ") = " << m_square_selected[x][y];
@@ -126,11 +124,11 @@ void GridDisplay::button_clicked(int x, int y) {
         m_square_selected[x][y] == END_WEIGHT
         ) {
         m_square_selected[x][y] = NOT_SELECTED_WEIGHT;
-        m_button[x][y]->setStyleSheet(BUTTON_STYLE);
+        m_button[x][y]->setBrush(m_default_brush);
     } else {
         m_square_selected[x][y] = m_camera_display->get_weighting();
         // Sets button to different shades of green based on weighting assigned
-        m_button[x][y]->setStyleSheet(QString::fromLocal8Bit(BUTTON_SELECTED_STYLE).arg(255 - 10 * m_camera_display->get_weighting()));
+        m_button[x][y]->setBrush(m_selected_brush);
     }
 #ifndef NDEBUG
     qDebug() << "Button (" << x << "," << y << ") = " << m_square_selected[x][y];
@@ -138,16 +136,13 @@ void GridDisplay::button_clicked(int x, int y) {
 }
 
 void GridDisplay::draw_buttons() {
+    
     for (int y = 0; y < m_row_count; y++) {
         for (int x = 0; x < m_column_count; x++) {
-            QString text = QString::number(x);
-            m_button[x][y] = new GridButton(this);
-            m_button[x][y]->setGeometry(QRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE));
-            m_button[x][y]->setStyleSheet(BUTTON_STYLE);
+            // QString text = QString::number(x);
+            QGraphicsRectItem *rect = m_scene->addRect(QRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE), m_default_pen, m_default_brush); 
+            m_button[x][y] = rect;
             m_square_selected[x][y] = NOT_SELECTED_WEIGHT;
-            // Lambda function to receive signals from multiple buttons
-            //connect(m_button[x][y], &GridButton::clicked, [=]() { this->button_clicked(x, y); });
-            m_scene->addWidget(m_button[x][y]);
         }
     }
     m_view->adjustSize();
@@ -166,7 +161,7 @@ void GridDisplay::clear_selection() {
     std::cout << m_column_count << std::endl;
     for (int y = 0; y < m_row_count; y++) {
         for (int x = 0; x < m_column_count; x++) {
-            m_button[x][y]->setStyleSheet(BUTTON_STYLE);
+            m_button[x][y]->setBrush(m_default_brush);
             m_square_selected[x][y] = NOT_SELECTED_WEIGHT;
         }
     }
@@ -177,12 +172,11 @@ void GridDisplay::show_grid() {
     if (!m_grid_displayed) {
         m_row_count = (m_image_viewer->height() / 2) / GRID_SIZE;
         m_column_count = (m_image_viewer->width() / 2) / GRID_SIZE;
-        m_scene->setSceneRect(QRect(0, 0, m_column_count * GRID_SIZE, m_row_count * GRID_SIZE));
+        m_scene->setSceneRect(QRect(0, 0, m_column_count * GRID_SIZE + 1, m_row_count * GRID_SIZE + 1));
         m_view->resize(m_column_count * GRID_SIZE, m_row_count * GRID_SIZE);
         move_grid();
-        m_button = array2d<GridButton *>(m_column_count, m_row_count);
+        m_button = array2d<QGraphicsRectItem *>(m_column_count, m_row_count);
         m_square_selected = array2d<int>(m_column_count, m_row_count);
-        draw_grid();
         draw_buttons();
         show_view();
         init_start_end_pos();
@@ -221,6 +215,7 @@ void GridDisplay::init_start_end_pos() {
 }
 
 void GridDisplay::mousePressEvent(QMouseEvent *ev) {
+    log() << "mousePress";
     QWidget::mousePressEvent(ev);
     m_select_start = QPoint(m_mouse_click_start.x(), m_mouse_click_start.y());
 
@@ -231,15 +226,18 @@ void GridDisplay::mousePressEvent(QMouseEvent *ev) {
 }
 
 void GridDisplay::mouseReleaseEvent(QMouseEvent *ev) {
+    log() << "release";
     QWidget::mouseReleaseEvent(ev);
     m_rubber_band->hide();
     rect_select_buttons(m_mouse_click_start, m_mouse_click_release);
 }
 
 void GridDisplay::mouseMoveEvent(QMouseEvent *ev) {
+    log() << "move";
 #ifndef NDEBUG
     qDebug() << "Mouse move event: " << ev->pos() << endl;
 #endif
+    log() << "mouse move event";
     QWidget::mouseMoveEvent(ev);
     m_rubber_band->setGeometry(QRect(
         QPoint(m_mouse_click_start.x(), m_mouse_click_start.y()),
@@ -288,7 +286,7 @@ void GridDisplay::rect_select_all_buttons(
     for (int x = x0; x <= x1; ++x) {
         for (int y = y0; y <= y1; ++y) {
             m_square_selected[x][y] = m_camera_display->get_weighting();
-            m_button[x][y]->setStyleSheet(QString::fromLocal8Bit(BUTTON_SELECTED_STYLE).arg(255 - 10 * m_camera_display->get_weighting()));
+            m_button[x][y]->setBrush(m_selected_brush);
         }
     }
 }
@@ -304,7 +302,7 @@ void GridDisplay::rect_deselect_all_buttons(
     for (int x = x0; x <= x1; ++x) {
         for (int y = y0; y <= y1; ++y) {
             m_square_selected[x][y] = NOT_SELECTED_WEIGHT;
-            m_button[x][y]->setStyleSheet(BUTTON_STYLE);
+            m_button[x][y]->setBrush(m_default_brush);
         }
     }
 }
@@ -361,4 +359,12 @@ void GridDisplay::update_grid_location(double x, double y) {
 void GridDisplay::move_grid() {
     // Update location to match m_x and m_y
     m_view->move((1 + m_x) * (m_image_viewer->width() / 2 - m_scene->width() / 2), (1 - m_y) * (m_image_viewer->height() / 2 - m_scene->height() / 2));
+}
+
+QRect GridDisplay::view_geometry() {
+    return m_view->geometry();
+}
+
+bool GridDisplay::is_displayed() {
+    return m_grid_displayed;
 }
