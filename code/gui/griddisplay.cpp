@@ -84,7 +84,6 @@ GridDisplay::GridDisplay(ImageViewer *image_viewer, CameraDisplay *camera_displa
     m_default_pen = QPen(Qt::darkGray);
     m_default_pen.setWidth(1);
     m_default_brush = QBrush();
-    //TODO: create brush array to allow for different weights
     for (int i=0; i <= 10; i++) {
         m_selected_brushes[i] = QBrush(QColor(0, 255, 0, 255 - 15 * i));
     }
