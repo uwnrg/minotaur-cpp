@@ -90,7 +90,7 @@ private:
         const vector2i &bottom_right
     );
 
-    void is_valid_coord(vector2i &point);
+    bool is_valid_coord(vector2i &point);
 
     void move_grid();
 
@@ -126,7 +126,7 @@ private:
     QRect m_select_box;
 
     QBrush m_default_brush;
-    QBrush m_selected_brush;
+    QBrush m_selected_brushes[11];
     QBrush m_start_brush;
     QBrush m_end_brush;
 
