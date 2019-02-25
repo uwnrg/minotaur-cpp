@@ -15,7 +15,6 @@ class QPen;
 class QRubberBand;
 class CameraDisplay;
 class ImageViewer;
-class GridButton;
 
 class GridDisplay : public QWidget {
 Q_OBJECT

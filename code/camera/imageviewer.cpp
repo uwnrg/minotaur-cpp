@@ -164,7 +164,6 @@ void ImageViewer::mousePressEvent(QMouseEvent *ev) {
 
 void ImageViewer::mouseReleaseEvent(QMouseEvent *ev) {
     releaseMouse();
-    log() << "release imageviewer";
     if (m_grid_display->is_displayed()) {
         QRect geometry = m_grid_display->view_geometry();
         m_grid_display->set_mouse_release(QPoint((ev->x() - geometry.x()), (ev->y() - geometry.y())));
@@ -174,7 +173,6 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *ev) {
 }
 
 void ImageViewer::mouseMoveEvent(QMouseEvent *ev) {
-    log() << "move";
     if (m_grid_display->is_displayed()) {
         QRect geometry = m_grid_display->view_geometry();
         m_grid_display->set_mouse_move(QPoint((ev->x() - geometry.x()), (ev->y() - geometry.y())));

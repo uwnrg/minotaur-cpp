@@ -161,16 +161,12 @@ void GridDisplay::clear_selection() {
 #ifndef NDEBUG
     qDebug() << "Clear Selection";
 #endif
-    std::cout << "clear" << std::endl;
-    std::cout << m_row_count << std::endl;
-    std::cout << m_column_count << std::endl;
     for (int y = 0; y < m_row_count; y++) {
         for (int x = 0; x < m_column_count; x++) {
             m_button[x][y]->setBrush(m_default_brush);
             m_square_selected[x][y] = NOT_SELECTED_WEIGHT;
         }
     }
-    std::cout << "clear done" << std::endl;
 }
 
 void GridDisplay::show_grid() {
@@ -221,7 +217,6 @@ void GridDisplay::init_start_end_pos() {
 }
 
 void GridDisplay::mousePressEvent(QMouseEvent *ev) {
-    log() << "mousePress";
     QWidget::mousePressEvent(ev);
     m_select_start = QPoint(std::max(std::min(m_mouse_click_start.x(), (int)((m_scene->width() - 1) / GRID_SIZE) - 1), 0),
         std::max(std::min(m_mouse_click_start.y(), (int)((m_scene->height() - 1) / GRID_SIZE) - 1), 0));
@@ -233,18 +228,15 @@ void GridDisplay::mousePressEvent(QMouseEvent *ev) {
 }
 
 void GridDisplay::mouseReleaseEvent(QMouseEvent *ev) {
-    log() << "release";
     QWidget::mouseReleaseEvent(ev);
     m_rubber_band->hide();
     rect_select_buttons(m_mouse_click_start, m_mouse_click_release);
 }
 
 void GridDisplay::mouseMoveEvent(QMouseEvent *ev) {
-    log() << "move";
 #ifndef NDEBUG
     qDebug() << "Mouse move event: " << ev->pos() << endl;
 #endif
-    log() << "mouse move event";
     QWidget::mouseMoveEvent(ev);
     m_rubber_band->setGeometry(QRect(
         QPoint(m_mouse_click_start.x(), m_mouse_click_start.y()),
@@ -255,14 +247,8 @@ void GridDisplay::rect_select_buttons(
     vector2i top_left,
     vector2i bottom_right
 ) {
-    std::cout << "rect_select_buttons" << std::endl;
     // If only one button is selected
-    std::cout << top_left.x() << ", " << top_left.y() << std::endl;
-    std::cout << bottom_right.x() << ", " << bottom_right.y() << std::endl;
-
     bool both_valid = is_valid_coord(top_left) && is_valid_coord(bottom_right);
-    std::cout << top_left.x() << ", " << top_left.y() << std::endl;
-    std::cout << bottom_right.x() << ", " << bottom_right.y() << std::endl;
     if (abs(top_left.x() - bottom_right.x()) < GRID_SIZE &&
         abs(top_left.y() - bottom_right.y()) < GRID_SIZE && 
         both_valid) {
@@ -298,7 +284,6 @@ void GridDisplay::rect_select_all_buttons(
     const vector2i &top_left,
     const vector2i &bottom_right
 ) {
-    std::cout << "rect_select_all_buttons" << std::endl;
     int x0 = top_left.x() / GRID_SIZE;
     int y0 = top_left.y() / GRID_SIZE;
     int x1 = bottom_right.x() / GRID_SIZE;
@@ -315,7 +300,6 @@ void GridDisplay::rect_deselect_all_buttons(
     const vector2i &top_left,
     const vector2i &bottom_right
 ) {
-    std::cout << "rect_deselect_all_buttons" << std::endl;
     int x0 = top_left.x() / GRID_SIZE;
     int y0 = top_left.y() / GRID_SIZE;
     int x1 = bottom_right.x() / GRID_SIZE;
