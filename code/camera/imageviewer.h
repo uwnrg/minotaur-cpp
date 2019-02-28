@@ -141,6 +141,10 @@ private:
      */
     void mousePressEvent(QMouseEvent *ev) override;
 
+    void mouseReleaseEvent(QMouseEvent *ev) override;
+    
+    void mouseMoveEvent(QMouseEvent *ev) override;
+
     /**
      * Handle the framerate and rotation timers.
      *

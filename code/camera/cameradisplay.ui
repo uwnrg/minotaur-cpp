@@ -247,17 +247,17 @@
    </property>
    <item>
     <property name="text">
-     <string>Select Robot Position</string>
+     <string>Obstacle Selector</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>Start Configuration</string>
+     <string>Object Starting Position</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>End Configuration</string>
+     <string>Object Target Position</string>
     </property>
    </item>
   </widget>

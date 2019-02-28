@@ -76,6 +76,7 @@ ImageViewer::ImageViewer(CameraDisplay *parent) :
     m_converter->moveToThread(&s_thread_converter);
     m_recorder->moveToThread(&s_thread_recorder);
 
+
     // Start the framerate update timer
     s_frame_timer.start(FRAMERATE_UPDATE_INTERVAL, this);
 
@@ -148,11 +149,38 @@ void ImageViewer::set_path(const std::vector<vector2i> &pixel_path) {
 }
 
 void ImageViewer::mousePressEvent(QMouseEvent *ev) {
+
+    grabMouse();
     if (m_selecting_path) {
         add_path_point(ev->x(), ev->y());
     }
+    if (m_grid_display->is_displayed()) {
+        QRect geometry = m_grid_display->view_geometry();
+        m_grid_display->set_mouse_start(QPoint((ev->x() - geometry.x()), (ev->y() - geometry.y())));
+        m_grid_display->mousePressEvent(ev);
+    }
     QWidget::mousePressEvent(ev);
 }
+
+void ImageViewer::mouseReleaseEvent(QMouseEvent *ev) {
+    releaseMouse();
+    if (m_grid_display->is_displayed()) {
+        QRect geometry = m_grid_display->view_geometry();
+        m_grid_display->set_mouse_release(QPoint((ev->x() - geometry.x()), (ev->y() - geometry.y())));
+        m_grid_display->mouseReleaseEvent(ev);
+    }
+    QWidget::mouseReleaseEvent(ev);
+}
+
+void ImageViewer::mouseMoveEvent(QMouseEvent *ev) {
+    if (m_grid_display->is_displayed()) {
+        QRect geometry = m_grid_display->view_geometry();
+        m_grid_display->set_mouse_move(QPoint((ev->x() - geometry.x()), (ev->y() - geometry.y())));
+        m_grid_display->mouseMoveEvent(ev);
+    }
+    QWidget::mouseMoveEvent(ev);
+}
+
 
 void ImageViewer::timerEvent(QTimerEvent *ev) {
     if (ev->timerId() == s_frame_timer.timerId()) {
@@ -241,3 +269,4 @@ void ImageViewer::toggle_rotation(bool rotate) {
         s_rotation_timer.stop();
     }
 }
+
