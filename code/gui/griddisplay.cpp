@@ -108,10 +108,14 @@ void GridDisplay::button_clicked(int x, int y) {
             m_square_selected[m_start_position.x()][m_start_position.y()] = NOT_SELECTED_WEIGHT;
             m_button[m_start_position.x()][m_start_position.y()]->setBrush(m_default_brush);
         }
-        m_square_selected[x][y] = START_WEIGHT;
-        m_button[x][y]->setBrush(m_start_brush);
-        m_start_position = {x, y};
-        log() << "Robot Start Position (" << x << "," << y << ") = " << m_square_selected[x][y];
+        if (m_start_position.x() != x && m_start_position.y() != y) {
+            m_square_selected[x][y] = START_WEIGHT;
+            m_button[x][y]->setBrush(m_start_brush);
+            m_start_position = {x, y};
+            log() << "Robot Start Position (" << x << "," << y << ") = " << m_square_selected[x][y];
+        } else {
+            m_start_position = {NOT_SELECTED_WEIGHT, NOT_SELECTED_WEIGHT};
+        }
     } else if (m_end_pos_selected) {
         // Executes if another end position was previously selected
         if (m_end_position.x() != NOT_SELECTED_WEIGHT &&
@@ -119,10 +123,14 @@ void GridDisplay::button_clicked(int x, int y) {
             m_square_selected[m_end_position.x()][m_end_position.y()] = NOT_SELECTED_WEIGHT;
             m_button[m_end_position.x()][m_end_position.y()]->setBrush(m_default_brush);
         }
-        m_square_selected[x][y] = END_WEIGHT;
-        m_button[x][y]->setBrush(m_end_brush);
-        m_end_position = {x, y};
-        log() << "Robot End Position (" << x << "," << y << ") = " << m_square_selected[x][y];
+        if (m_end_position.x() != x && m_end_position.y() != y) {
+            m_square_selected[x][y] = END_WEIGHT;
+            m_button[x][y]->setBrush(m_end_brush);
+            m_end_position = {x, y};
+            log() << "Robot End Position (" << x << "," << y << ") = " << m_square_selected[x][y];
+        } else {
+            m_end_position = {NOT_SELECTED_WEIGHT, NOT_SELECTED_WEIGHT};
+        }
     } else if (
         m_square_selected[x][y] > NOT_SELECTED_WEIGHT ||
         m_square_selected[x][y] == START_WEIGHT ||
@@ -207,8 +215,8 @@ void GridDisplay::hide_grid() {
 
 void GridDisplay::select_robot_position(QString weight_selected) {
     // TODO: Use enum instead of strings
-    m_start_pos_selected = (weight_selected == "Start Configuration");
-    m_end_pos_selected = (weight_selected == "End Configuration");
+    m_start_pos_selected = (weight_selected == "Object Starting Position");
+    m_end_pos_selected = (weight_selected == "Object Target Position");
 }
 
 void GridDisplay::init_start_end_pos() {
